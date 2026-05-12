@@ -394,29 +394,90 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
         out.append(f'<td>{html_escape(r["activity"])}</td>')
         out.append('</tr>')
 
-    # Sección Backups permanentes
+    # Sección Backups permanentes: agrupar consola+manípulo del mismo número (C00418 + H00418 → 1 fila)
     if backups:
-        out.append(f'<tr><th colspan="{NCOLS}" style="background:#5A6B82;color:white;text-align:left;padding:6px 10px">Backups permanentes ({len(backups)})</th></tr>')
+        def is_console(b):
+            ta = (b.get("type_asset", "") or "").lower()
+            return "console" in ta or "consola" in ta
+        def is_handpiece(b):
+            ta = (b.get("type_asset", "") or "").lower()
+            return "handpiece" in ta or "manípulo" in ta or "manipulo" in ta
+        def number_key(serial):
+            """Extrae solo dígitos del serial (C00418 → 00418). SUSTMHR033 → 033. Vacío si raro."""
+            s = (serial or "").strip().upper()
+            m = re.search(r"(\d+)$", s)
+            return m.group(1).lstrip("0") if m else ""
+
+        # Agrupar por número, separando consolas y manípulos
+        groups = {}  # key=number, val={"consola":b, "manipulo":b}
+        loose = []   # backups que no se pueden emparejar
         for b in backups:
+            n = number_key(b.get("serial", ""))
+            if not n:
+                loose.append(b)
+                continue
+            g = groups.setdefault(n, {})
+            if is_console(b) and "consola" not in g:
+                g["consola"] = b
+            elif is_handpiece(b) and "manipulo" not in g:
+                g["manipulo"] = b
+            else:
+                # ya hay uno del mismo tipo o no clasificable
+                loose.append(b)
+
+        # Construir filas agrupadas
+        merged_rows = []
+        for n, g in groups.items():
+            c = g.get("consola")
+            m = g.get("manipulo")
+            modelo_c = (c or {}).get("console_model", "") or ""
+            modelo_m = (m or {}).get("console_model", "") or ""
+            spot = (m or {}).get("spot_size", "") or ""
+            # Modelo: "Console / Spot" si hay manípulo con spot, sino solo console_model
+            modelo_parts = []
+            if modelo_c:
+                modelo_parts.append(modelo_c)
+            elif modelo_m:
+                modelo_parts.append(modelo_m)
+            if spot:
+                modelo_parts.append(spot)
+            modelo_full = " / ".join(modelo_parts)
+            customer = (c or m or {}).get("customer", "") or chain
+            activity = (c or m or {}).get("activity", "")
+            merged_rows.append({
+                "consola_serial": (c or {}).get("serial", ""),
+                "manipulo_serial": (m or {}).get("serial", ""),
+                "modelo": modelo_full,
+                "customer": customer,
+                "activity": activity,
+                "sort_n": n,
+            })
+        # Añadir loose (no agrupados) como filas separadas
+        for b in loose:
             ta = (b.get("type_asset", "") or "").lower()
             modelo = b.get("console_model", "") or ""
             spot = b.get("spot_size", "") or ""
-            if spot and modelo:
-                modelo_full = f"{modelo} / {spot}"
-            elif spot:
-                modelo_full = spot
-            else:
-                modelo_full = modelo
-            consola_col = b.get("serial", "") if "console" in ta or "consola" in ta else ""
-            manipulo_col = b.get("serial", "") if "handpiece" in ta or "manípulo" in ta or "manipulo" in ta else ""
+            modelo_full = " / ".join([x for x in [modelo, spot] if x])
+            merged_rows.append({
+                "consola_serial": b.get("serial", "") if is_console(b) else "",
+                "manipulo_serial": b.get("serial", "") if is_handpiece(b) else "",
+                "modelo": modelo_full,
+                "customer": b.get("customer", "") or chain,
+                "activity": b.get("activity", ""),
+                "sort_n": number_key(b.get("serial", "")) or "zzz",
+            })
+        merged_rows.sort(key=lambda r: r["sort_n"])
+
+        out.append(f'<tr><th colspan="{NCOLS}" style="background:#5A6B82;color:white;text-align:left;padding:6px 10px">Backups permanentes ({len(merged_rows)})</th></tr>')
+        for r in merged_rows:
             out.append('<tr>')
-            out.append(f'<td style="text-align:left">{html_escape(b.get("customer", "") or chain)}</td>')
+            out.append(f'<td style="text-align:left">{html_escape(r["customer"])}</td>')
             out.append('<td>—</td>')
-            out.append(f'<td style="text-align:center">{html_escape(consola_col or "—")}</td>')
-            out.append(f'<td style="text-align:center">{html_escape(manipulo_col or "—")}</td>')
-            out.append(f'<td style="text-align:left">{html_escape(modelo_full)}</td>')
+            out.append(f'<td style="text-align:center">{html_escape(r["consola_serial"] or "—")}</td>')
+            out.append(f'<td style="text-align:center">{html_escape(r["manipulo_serial"] or "—")}</td>')
+            out.append(f'<td style="text-align:left">{html_escape(r["modelo"])}</td>')
             out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
-            out.append(f'<td>{html_escape(b.get("activity", ""))}</td>')
+            out.append(f'<td>{html_escape(r["activity"])}</td>')
             out.append('</tr>')
 
     out.append('</table></div>')
@@ -621,6 +682,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     }
 
 
+
 def build_resumen_pane(stats):
     out = ['<table class="breakdown-table" style="margin-top:8px"><thead><tr>',
            '<th>Cadena</th><th>Nuevas</th><th>Bloqueantes</th><th>Parque</th>',
@@ -681,6 +743,7 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
         pane_html, s = build_chain_pane(ch, by_chain.get(ch, []), ventas,
                                         serial_year, max_known, year, num_months,
                                         sustis_items=sustis_items, inmov_items=inmov_items)
+        stats_per_chain[ch] = s
         meta = (f'{s["nuevas"]} nuevas YTD · {s["bloq"]} bloqueantes · '
                 f'{s["abiertas"]} abiertas hoy')
         panes.append(
