@@ -186,244 +186,237 @@ def enrich(t, serial_year, max_known, year):
 # CRUCE INMOVILIZADO SAT
 # ========================
 
+
 def normalize_serial(s):
-    """Normaliza serial para matching: upper, strip, sin sufijo BIS."""
+    """Normaliza serial — para matching genera variantes pero el str canónico es upper+strip."""
     if s is None: return ""
     s = str(s).strip().upper()
-    s = re.sub(r'\s*BIS\s*$', '', s)
-    # Strip .0 si viene como float string
-    if s.endswith('.0') and s[:-2].replace('-', '').isdigit():
+    s = re.sub(r"\s*BIS\s*$", "", s)
+    if s.endswith(".0") and s[:-2].replace("-", "").isdigit():
         s = s[:-2]
     return s
 
 
+def serial_variants_all(s):
+    """Genera TODAS las variantes posibles de un serial para matching agresivo."""
+    out = set()
+    if not s: return out
+    base = normalize_serial(s)
+    if not base: return out
+    out.add(base)
+    out.add(base.lower())
+    # Quitar prefijos conocidos
+    for prefix in ("SUSTMHR", "SUSTDUAL", "SUSTQUAD", "SUSTSINGLE", "SUSTSRF", "SUST",
+                   "DEMOMHR", "DEMODUAL", "DEMOQUAD", "DEMO",
+                   "MHP", "MHR", "AHR", "HP", "C", "H"):
+        if base.startswith(prefix):
+            rest = base[len(prefix):]
+            if rest:
+                out.add(rest)
+                out.add(rest.lstrip("0"))
+    # Si es numérico puro, probar con C/H prefix + zfill
+    if base.isdigit():
+        out.add(base.lstrip("0"))
+        padded = base.zfill(5)
+        for p in ("C", "H", "MHR", "AHR", "MHP"):
+            out.add(p + base)
+            out.add(p + padded)
+    # Quitar todos los espacios
+    out.add(base.replace(" ", ""))
+    return {v for v in out if v}
+
+
 def get_serial_aliases(inmov_item):
-    """Devuelve set de aliases para un equipo de Airtable (ID + Renombrada)."""
+    """Devuelve set de TODAS las variantes para un equipo Airtable (ID + Renombrada)."""
     aliases = set()
-    sid = normalize_serial(inmov_item.get("serial", ""))
-    if sid:
-        aliases.add(sid)
+    aliases |= serial_variants_all(inmov_item.get("serial", ""))
     renombrada = inmov_item.get("renombrada", "") or ""
-    for a in re.split(r'[,;\n/]', renombrada):
-        a = normalize_serial(a)
-        if a and a not in ("IDEAL", "CU", "—", "BAJA", "BIS"):
-            aliases.add(a)
+    for a in re.split(r"[,;\n/]+", renombrada):
+        a = a.strip()
+        if a and a.upper() not in ("IDEAL", "CU", "—", "BAJA", "BIS", ""):
+            aliases |= serial_variants_all(a)
     return aliases
 
 
-def section_for_inmov(item):
-    """A/B/C/D según Type of Asset + Console + Spot Size."""
-    spot = (item.get("spot_size", "") or "").upper()
-    type_a = (item.get("type_asset", "") or "").lower()
-    console = (item.get("console_model", "") or "").upper()
-    if "SRF" in spot:
-        return "D"
-    if "console" in type_a or "consola" in type_a:
-        if console == "AHR":
-            return "C"
-        return "A"
-    if "handpiece" in type_a or "manípulo" in type_a or "manipulo" in type_a:
-        return "B"
-    return "A"
-
-
-def section_for_solo_jira(serial):
-    """Cuando solo_jira (sin match en Airtable), infiere sección por prefijo del serial."""
-    s = (serial or "").upper().strip()
-    if not s: return "A"
-    if s.startswith("SUSTSRF") or "SRF" in s: return "D"
-    if s.startswith("SUSTMHR"): return "A"
-    if s.startswith("SUSTDUAL") or s.startswith("SUSTQUAD") or s.startswith("SUSTSINGLE"): return "B"
-    if re.match(r'^C\d', s): return "A"
-    if re.match(r'^H\d', s): return "B"
-    if re.match(r'^9\d{4}$', s): return "A"
-    if re.match(r'^(30|40)\d{3}$', s): return "B"
-    if s == "DEMO": return "A"
-    return "A"
+def find_inmov(serial, alias_to_inmov):
+    """Busca un equipo Airtable por serial probando todas las variantes."""
+    if not serial: return None
+    for v in serial_variants_all(serial):
+        if v in alias_to_inmov:
+            return alias_to_inmov[v]
+    return None
 
 
 def chain_of_inmov(customer):
-    """Mapea Customer de Airtable Inmovilizado a una cadena."""
     return chain_of(customer or "", "")
 
 
 def chain_of_sustis(s):
-    """Mapea sustitución (Jira) a cadena."""
     return chain_of(s.get("cliente", "") or s.get("parent_cliente", ""), s.get("loc", ""))
 
 
 def build_inmovilizado_section(chain, sustis_items, inmov_items):
-    """Genera el HTML de la tabla Inmovilizado SAT para una cadena.
-    Devuelve "" si no hay nada que mostrar."""
-    # Filtrar sustis e inmov por cadena
+    """Tabla Inmovilizado SAT formato Nacho: 1 fila por sub-task + sección Backups perm + cabecera por cadena."""
+    # Filtrar por cadena
     sustis_chain = [s for s in sustis_items if chain_of_sustis(s) == chain]
     inmov_chain = [i for i in inmov_items if chain_of_inmov(i.get("customer", "")) == chain]
 
-    # Construir lookup de Airtable por serial alias
+    # Lookup global de Airtable (todos los aliases)
     alias_to_inmov = {}
-    for it in inmov_chain:
-        for a in get_serial_aliases(it):
-            alias_to_inmov[a] = it
-    # También global (no filtrado por cadena) para resolver matches que crucen
-    alias_to_inmov_global = {}
     for it in inmov_items:
         for a in get_serial_aliases(it):
-            alias_to_inmov_global.setdefault(a, it)
+            alias_to_inmov.setdefault(a, it)
 
-    # Por cada sub-task Jira, generar fila por serial prestado (consola y/o manípulo)
-    rows = []  # cada fila: dict con todos los campos + kind + color + section
-    matched_inmov_ids = set()
+    # Detectar duplicados: mismo serial en múltiples sub-tasks
+    serial_to_sustis = {}
+    for s in sustis_chain:
+        for serial in [s.get("consola_susti"), s.get("manipulo_susti")]:
+            ns = normalize_serial(serial)
+            if ns:
+                serial_to_sustis.setdefault(ns, []).append(s)
+
     now_utc = datetime.now(timezone.utc)
-
-    def make_row_from_sustis(s, serial, role):
-        n_serial = normalize_serial(serial)
-        if not n_serial:
-            return None
-        inmov_match = alias_to_inmov_global.get(n_serial)
-        is_match = inmov_match is not None
-        if is_match:
-            matched_inmov_ids.add(inmov_match.get("id_rec"))
-            modelo = inmov_match.get("console_model", "") or inmov_match.get("type_asset", "")
-            activity = inmov_match.get("activity", "")
-            section = section_for_inmov(inmov_match)
-        else:
-            modelo = ""
-            activity = ""
-            section = section_for_solo_jira(serial)
-        fe_dt = parse_iso(s.get("fecha_envio"))
-        dias = (now_utc - fe_dt).days if fe_dt else None
-        return {
-            "num_serie": serial,
-            "modelo": modelo,
-            "cliente": s.get("cliente", ""),
-            "subtask_key": s.get("key", ""),
-            "parent_key": s.get("parent_key", ""),
-            "parent_status": s.get("parent_status", ""),
-            "consola_avr": s.get("consola_averiada", ""),
-            "hp_avr": s.get("manipulo_averiado", ""),
-            "subtask_status": s.get("subtask_status", ""),
-            "loc": s.get("loc", ""),
-            "fecha_envio": s.get("fecha_envio"),
-            "fecha_envio_fmt": fe_dt.strftime("%d/%m/%Y %H:%M") if fe_dt else (s.get("fecha_envio") or ""),
-            "dias": dias,
-            "activity": activity,
-            "kind": "union" if is_match else "solo_jira",
-            "section": section,
-        }
+    matched_inmov_ids = set()
+    rows_data = []
 
     for s in sustis_chain:
-        for serial, role in [(s.get("consola_susti"), "consola"), (s.get("manipulo_susti"), "manipulo")]:
-            r = make_row_from_sustis(s, serial, role)
-            if r:
-                rows.append(r)
+        consola = s.get("consola_susti") or ""
+        manipulo = s.get("manipulo_susti") or ""
+        c_match = find_inmov(consola, alias_to_inmov) if consola else None
+        m_match = find_inmov(manipulo, alias_to_inmov) if manipulo else None
+        if c_match: matched_inmov_ids.add(c_match.get("id_rec"))
+        if m_match: matched_inmov_ids.add(m_match.get("id_rec"))
 
-    # Detectar duplicados (mismo serial en múltiples filas)
-    serial_counts = {}
-    for r in rows:
-        n = normalize_serial(r["num_serie"])
-        serial_counts.setdefault(n, []).append(r)
-    for serials, group in serial_counts.items():
-        if len(group) > 1:
-            # marcar todas menos la más reciente como duplicado amarillo
-            group.sort(key=lambda r: r["dias"] if r["dias"] is not None else -1)
-            # El de menos días (más reciente) es el actual; los demás son antiguos
-            for r in group[:-1]:
-                r["kind"] = "duplicado"
+        # Modelo combinado: "Console / Spot" (ej "MHR / Quad")
+        parts = []
+        if c_match and c_match.get("console_model"):
+            parts.append(c_match["console_model"])
+        if m_match and m_match.get("spot_size"):
+            parts.append(m_match["spot_size"])
+        elif m_match and m_match.get("console_model") and not parts:
+            parts.append(m_match["console_model"])
+        modelo = " / ".join(parts)
 
-    # Añadir equipos Airtable SAT que NO están en ninguna sub-task (disponibles)
-    for it in inmov_chain:
-        if it.get("activity") != "SAT": continue
-        if it.get("id_rec") in matched_inmov_ids: continue
-        section = section_for_inmov(it)
-        rows.append({
-            "num_serie": it.get("serial", ""),
-            "modelo": it.get("console_model", "") or it.get("type_asset", ""),
-            "cliente": "—",
-            "subtask_key": "", "parent_key": "", "parent_status": "",
-            "consola_avr": "", "hp_avr": "",
-            "subtask_status": "", "loc": "",
-            "fecha_envio": None, "fecha_envio_fmt": "",
-            "dias": None,
-            "activity": "SAT",
-            "kind": "solo_at",
-            "section": section,
+        # Activity (preferir consola, fallback manípulo)
+        activity = (c_match or {}).get("activity") if c_match else None
+        if not activity and m_match:
+            activity = m_match.get("activity")
+        activity = activity or ""
+
+        # Días con sustitución
+        fe_dt = parse_iso(s.get("fecha_envio"))
+        dias = (now_utc - fe_dt).days if fe_dt else None
+
+        # Es duplicado antiguo? (mismo serial en otra sub-task más reciente)
+        is_dup_old = False
+        for serial in [consola, manipulo]:
+            ns = normalize_serial(serial)
+            if ns and len(serial_to_sustis.get(ns, [])) > 1:
+                # Ordenar por fecha_envio descendente; los antiguos son dup
+                group = sorted(serial_to_sustis[ns], key=lambda x: x.get("fecha_envio") or "", reverse=True)
+                if s in group and group.index(s) > 0:
+                    is_dup_old = True
+                    break
+
+        rows_data.append({
+            "cliente": s.get("cliente", ""),
+            "loc": s.get("loc", ""),
+            "consola_susti": consola,
+            "manipulo_susti": manipulo,
+            "modelo": modelo,
+            "parent_key": s.get("parent_key", ""),
+            "parent_status": s.get("parent_status", ""),
+            "subtask_key": s.get("key", ""),
+            "subtask_status": s.get("subtask_status", ""),
+            "consola_avr": s.get("consola_averiada", ""),
+            "manipulo_avr": s.get("manipulo_averiado", ""),
+            "fecha_envio_fmt": fe_dt.strftime("%d/%m/%Y %H:%M") if fe_dt else (s.get("fecha_envio") or ""),
+            "fecha_sort": s.get("fecha_envio") or "",
+            "dias": dias,
+            "activity": activity,
+            "color": INMOV_YELLOW if is_dup_old else "",
         })
 
-    if not rows:
+    # Backups permanentes: Airtable Backups for customers de la cadena que NO están en sub-tasks activas
+    backups = [i for i in inmov_chain
+               if i.get("activity") == "Backups for customers"
+               and i.get("id_rec") not in matched_inmov_ids]
+
+    if not rows_data and not backups:
         return ""
 
-    # Orden dentro de cada sección
-    def sort_key(r):
-        is_avail = (r["kind"] == "solo_at")
-        days = r["dias"] if isinstance(r["dias"], int) else -1
-        return (1 if is_avail else 0, -days, r["num_serie"] or "")
-    rows.sort(key=sort_key)
-
-    # Agrupar por sección
-    by_section = {"A": [], "B": [], "C": [], "D": []}
-    for r in rows:
-        by_section[r["section"]].append(r)
-
-    section_titles = {
-        "A": "A — Consolas (MHR y otras, excl. AHR y SRF)",
-        "B": "B — Manípulos (Quad / Dual / Single, excl. SRF)",
-        "C": "C — Consolas AHR",
-        "D": "D — Tecnología SRF (consolas + manípulos)",
-    }
-    color_map = {
-        "solo_jira": INMOV_RED,
-        "duplicado": INMOV_YELLOW,
-        "solo_at": INMOV_GREEN,
-    }
+    # Ordenar por días desc (más antiguo primero, pero los amarillos están entre medias por orden temporal)
+    rows_data.sort(key=lambda r: -(r["dias"] if r["dias"] is not None else -1))
 
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
     out = []
-    today = date.today().isoformat()
-    out.append(f'<p class="chain-section-title">Inmovilizado SAT — {today} <span style="color:var(--grey);font-weight:400">— {len(rows)} equipos en cadena {html_escape(chain)}</span></p>')
+    out.append(f'<p class="chain-section-title">Inmovilizado SAT — {date.today().isoformat()} <span style="color:var(--grey);font-weight:400">— Total {chain}: {len(rows_data)} ticket(s) + {len(backups)} backup(s)</span></p>')
     out.append('<p class="legend">Leyenda: '
-               f'<span class="pill" style="background:{INMOV_RED};padding:2px 8px;border-radius:3px">Solo en Jira</span> · '
                f'<span class="pill" style="background:{INMOV_YELLOW};padding:2px 8px;border-radius:3px">Duplicado antiguo</span> · '
-               f'<span class="pill" style="background:{INMOV_GREEN};padding:2px 8px;border-radius:3px">Disponible (SAT sin ticket activo)</span> · '
-               'normal: en ambos</p>')
+               'normal: ticket activo</p>')
     out.append('<div class="scroller"><table style="font-size:11px;min-width:1700px">')
 
-    headers = ["Num. Serie", "Modelo", "Cliente",
-               "Incidencia (sub-task)", "Incidencia principal", "Estado principal",
-               "Consola principal (avería)", "HP principal (avería)",
-               "Estado Jira (sub-task)", "Localización equipo averiado",
-               "Fecha y hora de envío", "Días con sustitución",
+    headers = ["Cliente", "Localización", "Num Serie consola susti", "Num Serie manípulo susti",
+               "Modelo", "LEAS Incidencia principal", "Estado principal",
+               "Incidencia subtarea", "Estado subtarea",
+               "Consola averiada", "Manípulo averiado",
+               "Fecha y hora con sustitución", "Días con sustitución",
                "Current Activity (Airtable)"]
     NCOLS = len(headers)
 
-    for sec_key in ["A", "B", "C", "D"]:
-        rows_s = by_section[sec_key]
-        if not rows_s:
-            continue
-        out.append(f'<tr><th colspan="{NCOLS}" style="background:{INMOV_HDR_DARK};color:white;text-align:left;padding:6px 10px">{section_titles[sec_key]}</th></tr>')
-        out.append('<tr>')
-        for h in headers:
-            out.append(f'<th style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px">{h}</th>')
+    # Cabecera "CADENA — XXX"
+    out.append(f'<tr><th colspan="{NCOLS}" style="background:{INMOV_HDR_DARK};color:white;text-align:left;padding:6px 10px">CADENA — {html_escape(chain.upper())}</th></tr>')
+    out.append('<tr>')
+    for h in headers:
+        out.append(f'<th style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px">{html_escape(h)}</th>')
+    out.append('</tr>')
+
+    for r in rows_data:
+        bg = r["color"]
+        style = f' style="background:{bg}"' if bg else ""
+        sub_link = f'<a href="{JIRA_URL}{r["subtask_key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["subtask_key"]}</a>' if r["subtask_key"] else "—"
+        par_link = f'<a href="{JIRA_URL}{r["parent_key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["parent_key"]}</a>' if r["parent_key"] else "—"
+        dias_v = r["dias"] if r["dias"] is not None else "—"
+        out.append(f'<tr{style}>')
+        out.append(f'<td style="text-align:left">{html_escape(r["cliente"])}</td>')
+        out.append(f'<td class="d-trunc" style="text-align:left" title="{html_escape(r["loc"])}">{html_escape(r["loc"])}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["consola_susti"] or "—")}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["manipulo_susti"] or "—")}</td>')
+        out.append(f'<td style="text-align:left">{html_escape(r["modelo"])}</td>')
+        out.append(f'<td style="text-align:center">{par_link}</td>')
+        out.append(f'<td>{html_escape(r["parent_status"])}</td>')
+        out.append(f'<td style="text-align:center">{sub_link}</td>')
+        out.append(f'<td>{html_escape(r["subtask_status"])}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["consola_avr"] or "—")}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["manipulo_avr"] or "—")}</td>')
+        out.append(f'<td>{html_escape(r["fecha_envio_fmt"])}</td>')
+        out.append(f'<td style="text-align:center">{dias_v}</td>')
+        out.append(f'<td>{html_escape(r["activity"])}</td>')
         out.append('</tr>')
-        for r in rows_s:
-            bg = color_map.get(r["kind"], "")
-            style = f' style="background:{bg}"' if bg else ""
-            sub_link = f'<a href="{JIRA_URL}{r["subtask_key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["subtask_key"]}</a>' if r["subtask_key"] else "—"
-            par_link = f'<a href="{JIRA_URL}{r["parent_key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["parent_key"]}</a>' if r["parent_key"] else "—"
-            dias_v = r["dias"] if r["dias"] is not None else "—"
-            out.append(f'<tr{style}>')
-            out.append(f'<td style="text-align:center"><b>{html_escape(r["num_serie"])}</b></td>')
-            out.append(f'<td>{html_escape(r["modelo"])}</td>')
-            out.append(f'<td style="text-align:left">{html_escape(r["cliente"])}</td>')
-            out.append(f'<td style="text-align:center">{sub_link}</td>')
-            out.append(f'<td style="text-align:center">{par_link}</td>')
-            out.append(f'<td>{html_escape(r["parent_status"])}</td>')
-            out.append(f'<td style="text-align:center">{html_escape(r["consola_avr"])}</td>')
-            out.append(f'<td style="text-align:center">{html_escape(r["hp_avr"])}</td>')
-            out.append(f'<td>{html_escape(r["subtask_status"])}</td>')
-            out.append(f'<td class="d-trunc" style="text-align:left" title="{html_escape(r["loc"])}">{html_escape(r["loc"])}</td>')
-            out.append(f'<td>{html_escape(r["fecha_envio_fmt"])}</td>')
-            out.append(f'<td style="text-align:center">{dias_v}</td>')
-            out.append(f'<td>{html_escape(r["activity"])}</td>')
+
+    # Sección Backups permanentes
+    if backups:
+        out.append(f'<tr><th colspan="{NCOLS}" style="background:#5A6B82;color:white;text-align:left;padding:6px 10px">Backups permanentes ({len(backups)})</th></tr>')
+        for b in backups:
+            ta = (b.get("type_asset", "") or "").lower()
+            modelo = b.get("console_model", "") or ""
+            spot = b.get("spot_size", "") or ""
+            if spot and modelo:
+                modelo_full = f"{modelo} / {spot}"
+            elif spot:
+                modelo_full = spot
+            else:
+                modelo_full = modelo
+            consola_col = b.get("serial", "") if "console" in ta or "consola" in ta else ""
+            manipulo_col = b.get("serial", "") if "handpiece" in ta or "manípulo" in ta or "manipulo" in ta else ""
+            out.append('<tr>')
+            out.append(f'<td style="text-align:left">{html_escape(b.get("customer", "") or chain)}</td>')
+            out.append('<td>—</td>')
+            out.append(f'<td style="text-align:center">{html_escape(consola_col or "—")}</td>')
+            out.append(f'<td style="text-align:center">{html_escape(manipulo_col or "—")}</td>')
+            out.append(f'<td style="text-align:left">{html_escape(modelo_full)}</td>')
+            out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+            out.append(f'<td>{html_escape(b.get("activity", ""))}</td>')
             out.append('</tr>')
 
     out.append('</table></div>')
@@ -688,7 +681,6 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
         pane_html, s = build_chain_pane(ch, by_chain.get(ch, []), ventas,
                                         serial_year, max_known, year, num_months,
                                         sustis_items=sustis_items, inmov_items=inmov_items)
-        stats_per_chain[ch] = s
         meta = (f'{s["nuevas"]} nuevas YTD · {s["bloq"]} bloqueantes · '
                 f'{s["abiertas"]} abiertas hoy')
         panes.append(
