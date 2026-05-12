@@ -1,0 +1,79 @@
+name: Refresh SAT dashboard
+
+on:
+  # Manual trigger from the Actions tab
+  workflow_dispatch: {}
+  # Daily at 06:00 UTC (08:00 Madrid)
+  schedule:
+    - cron: "0 6 * * *"
+
+permissions:
+  contents: write   # to commit cache + output back
+  pages: write      # to publish to GitHub Pages
+  id-token: write   # for the deploy-pages action
+
+concurrency:
+  group: refresh-sat
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Refresh cache from Jira
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER:     ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN:    ${{ secrets.JIRA_TOKEN }}
+        run: |
+          if [ -f cache/jira_status_timeline.json ]; then
+            python scripts/fetch_jira.py --cache cache/jira_status_timeline.json --mode update
+          else
+            python scripts/fetch_jira.py --cache cache/jira_status_timeline.json --mode seed
+          fi
+
+      - name: Build report
+        run: |
+          mkdir -p output
+          python scripts/build_report.py \
+            --cache cache/jira_status_timeline.json \
+            --output-xlsx output/Evolucion_SAT.xlsx \
+            --output-html output/index.html
+
+      - name: Commit cache + output back to repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cache/ output/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: refresh SAT cache + report ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output
+
+  deploy:
+    needs: refresh
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

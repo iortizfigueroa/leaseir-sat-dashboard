@@ -1,0 +1,366 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Leaseir SAT — Dashboard incidencias</title>
+<style>
+  :root { --blue:#0b3d91; --blue2:#2a59c4; --grey:#7d8590; --bg:#fafbfc; --line:#d0d7de; --zebra:#f6f8fa; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; max-width: 1500px; margin: 24px auto; padding: 0 20px; color:#1f2328; background: white; }
+  h1 { margin: 0 0 4px; font-size: 22px; color: var(--blue); }
+  h2 { margin: 28px 0 12px; font-size: 16px; color: var(--blue); border-bottom: 1px solid var(--line); padding-bottom: 6px; }
+  .meta { color: var(--grey); font-size: 12px; margin-bottom: 18px; }
+  .banner { background:#fff8e1; border:1px solid #facc15; color:#7a5b00; padding:8px 12px; border-radius:6px; font-size:13px; margin: 12px 0 18px; }
+  .legend { color: var(--grey); font-size: 11px; margin: 4px 0 8px; }
+  .legend .pill { display: inline-block; padding: 1px 6px; border-radius: 3px; margin: 0 4px; font-weight: 500; }
+  .nav { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0 6px; }
+  .nav a { font-size: 12px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 6px; color: var(--blue); text-decoration: none; background: white; }
+  .nav a:hover { background: var(--bg); }
+  .kpis { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px 0 8px; }
+  .kpi { flex: 1 1 180px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; }
+  .kpi .v { font-size: 28px; font-weight: 600; color: var(--blue); }
+  .kpi .k { font-size: 11px; color: var(--grey); text-transform: uppercase; letter-spacing: .04em; }
+  .kpi .d { font-size: 12px; margin-top: 2px; }
+  .scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 6px; max-height: 600px; }
+  table { border-collapse: collapse; font-size: 12px; min-width: 100%; }
+  th, td { padding: 6px 9px; border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); white-space: nowrap; }
+  th { background: var(--blue); color: white; font-weight: 600; text-align: center; position: sticky; top: 0; z-index: 1; }
+  th.hdr-dia { background: var(--blue2); font-weight: 500; }
+  th.sticky-l1 { left: 0; z-index: 2; background: var(--blue); }
+  th.sticky-l2 { left: 60px; z-index: 2; background: var(--blue); text-align: left; }
+  td.lbl-funnel { font-weight: 600; text-align: center; position: sticky; left: 0; background: white; z-index: 1; }
+  td.lbl-name { text-align: left; position: sticky; left: 60px; background: white; z-index: 1; }
+  tr:nth-child(even) td.lbl-funnel, tr:nth-child(even) td.lbl-name { background: var(--zebra); }
+  tr:nth-child(even) { background: var(--zebra); }
+  td.num { text-align: center; font-variant-numeric: tabular-nums; }
+  td.num.n0 { color: #c0d0e0; }
+  tr.total td { background: #fff4d6 !important; font-weight: 600; }
+  tr.otros td { background: #eaeaea; }
+  tr.otros td.lbl-name { font-weight: 600; }
+  .d-trunc { max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+  .footer { color: var(--grey); font-size: 11px; margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--line); }
+  .toolbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 8px 0 10px; padding: 10px 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+  .toolbar input, .toolbar select { font-size: 13px; padding: 5px 8px; border: 1px solid var(--line); border-radius: 4px; background: white; color: inherit; }
+  .toolbar input { min-width: 220px; }
+  .toolbar .count { margin-left: auto; font-size: 12px; color: var(--grey); }
+  .toolbar .count b { color: var(--blue); font-weight: 600; }
+  th.sortable { cursor: pointer; user-select: none; }
+  th.sortable:hover { background: var(--blue2); }
+  th.sortable::after { content: " ↕"; opacity: 0.4; font-size: 10px; }
+  th.sortable.asc::after { content: " ▲"; opacity: 1; }
+  th.sortable.desc::after { content: " ▼"; opacity: 1; }
+  td.ah-cell { cursor: pointer; transition: background 0.1s; }
+  td.ah-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
+  .multi-wrap { position: relative; display: inline-block; }
+  .multi-btn { font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 4px; background: white; cursor: pointer; color: inherit; }
+  .multi-btn:hover { background: var(--bg); }
+  .multi-btn.active { background: #e7eefa; border-color: #2a59c4; }
+  .multi-pop { display: none; position: absolute; top: 100%; left: 0; margin-top: 4px; background: white; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); padding: 8px; min-width: 280px; max-height: 320px; overflow-y: auto; z-index: 100; }
+  .multi-pop.open { display: block; }
+  .multi-pop label { display: flex; align-items: center; gap: 8px; padding: 4px 6px; font-size: 12px; cursor: pointer; border-radius: 3px; }
+  .multi-pop label:hover { background: var(--bg); }
+  .multi-pop label.all-row { border-bottom: 1px solid var(--line); margin-bottom: 4px; padding-bottom: 8px; font-weight: 500; }
+</style>
+</head>
+<body>
+<h1>Leaseir SAT — Dashboard de incidencias</h1>
+<div class="meta">Generado el __TODAY__. Datos de Jira (LEAS).</div>
+__DEMO_BANNER__
+
+<div class="nav">
+  <a href="#kpis">KPIs</a>
+  <a href="#abiertas">Abiertas hoy</a>
+  <a href="#detalle">Detalle</a>
+  <a href="#evol-estado">Evol. por estado</a>
+  <a href="#evol-cadena">Evol. por cadena</a>
+</div>
+
+<div id="kpis" class="kpis">
+  <div class="kpi"><div class="k">Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
+  <div class="kpi"><div class="k">Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
+  <div class="kpi"><div class="k">En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div></div>
+  <div class="kpi"><div class="k">% sobre el pico</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico: __PEAK__ el __PEAK_LBL__</div></div>
+</div>
+
+<h2 id="abiertas">Abiertas hoy por estado y cadena</h2>
+<div class="legend">Formato: Total <span class="pill" style="color:#1f8a4c">verde &lt;5d</span>/<span class="pill" style="color:#b8860b">amarillo 5-15d</span>/<span class="pill" style="color:#c0392b">rojo &gt;15d</span> (días en el estado actual)</div>
+<div class="scroller">
+<table>
+__AH_HEADER__
+__AH_ROWS__
+</table>
+</div>
+
+<h2 id="detalle">Detalle de incidencias abiertas</h2>
+<div class="legend">Clic en el ticket abre el issue en Jira. Clic en columna ordena. Días en estado coloreados por bucket.</div>
+<div class="toolbar">
+  <input type="text" id="detalle-search" placeholder="Buscar texto en cualquier columna...">
+  <select id="filter-chain"><option value="">Cadena: todas</option></select>
+  <div class="multi-wrap">
+    <button type="button" class="multi-btn" id="status-btn">Estado: todos ▾</button>
+    <div class="multi-pop" id="status-pop">
+      <label class="all-row"><input type="checkbox" id="status-all" checked> Todos</label>
+      <div id="status-list"></div>
+    </div>
+  </div>
+  <select id="filter-gestion"><option value="">Gestión: toda</option><option value="externo">Técnico externo</option><option value="interna">Gestión interna</option></select>
+  <select id="filter-bloq"><option value="">Bloqueante: todos</option><option>Sí</option><option>No</option></select>
+  <select id="filter-susti"><option value="">Sustitución: todas</option><option>Sí</option><option>No</option></select>
+  <select id="filter-bucket"><option value="">Días: todos</option><option value="g">🟢 &lt;5d</option><option value="y">🟡 5-15d</option><option value="r">🔴 &gt;15d</option></select>
+  <button type="button" id="clear-filters" class="multi-btn" title="Resetea todos los filtros">✕ Limpiar</button>
+  <span class="count"><b id="detalle-count">0</b> de <span id="detalle-total">0</span> visibles</span>
+</div>
+<div class="scroller">
+<table id="detalle-table">
+<thead><tr>
+  <th class="sortable" data-col="0" data-type="text">Cadena</th>
+  <th class="sortable" data-col="1" data-type="text">Ticket</th>
+  <th class="sortable" data-col="2" data-type="text">Cliente / Centro</th>
+  <th class="sortable" data-col="3" data-type="text">Estado</th>
+  <th class="sortable" data-col="4" data-type="text">Gestión</th>
+  <th class="sortable" data-col="5" data-type="num">Días</th>
+  <th class="sortable" data-col="6" data-type="text">Localización</th>
+  <th class="sortable" data-col="7" data-type="date">Creada</th>
+  <th class="sortable" data-col="8" data-type="text">Tipo avería</th>
+  <th class="sortable" data-col="9" data-type="text">Bloq</th>
+  <th class="sortable" data-col="10" data-type="text">Susti</th>
+  <th class="sortable" data-col="11" data-type="date">Fecha venta</th>
+  <th class="sortable" data-col="12" data-type="text">Consola</th>
+  <th class="sortable" data-col="13" data-type="text">HP</th>
+  <th class="sortable" data-col="14" data-type="text">Garantía</th>
+  <th class="sortable" data-col="15" data-type="text">Descripción</th>
+  <th class="sortable" data-col="16" data-type="text">Téc. taller</th>
+  <th class="sortable" data-col="17" data-type="num">Importe</th>
+  <th class="sortable" data-col="18" data-type="text">Téc. externo</th>
+  <th class="sortable" data-col="19" data-type="text">Último comentario</th>
+</tr></thead>
+<tbody>
+__DETALLE_ROWS__
+</tbody>
+</table>
+</div>
+
+<h2 id="evol-estado">Evolución por estado (23:59h en cada corte)</h2>
+<div class="scroller">
+<table>
+__STATE_HEADER__
+__STATE_ROWS__
+__STATE_TOTAL__
+</table>
+</div>
+
+<h2 id="evol-cadena">Evolución por cadena</h2>
+<div class="scroller">
+<table>
+__CHAIN_HEADER__
+__CHAIN_ROWS__
+__CHAIN_TOTAL__
+</table>
+</div>
+
+<div class="footer">Generado por <code>build_report.py</code> desde <code>cache/jira_status_timeline.json</code>. Refresh diario via GitHub Action.</div>
+
+<script>
+(function(){
+  const tbl = document.getElementById('detalle-table');
+  if (!tbl) return;
+  const tbody = tbl.tBodies[0];
+  const allRows = Array.from(tbody.rows);
+  const search = document.getElementById('detalle-search');
+  const filterChain = document.getElementById('filter-chain');
+  const filterGestion = document.getElementById('filter-gestion');
+  const filterBloq = document.getElementById('filter-bloq');
+  const filterSusti = document.getElementById('filter-susti');
+  const cnt = document.getElementById('detalle-count');
+  const tot = document.getElementById('detalle-total');
+  tot.textContent = allRows.length;
+
+  // Populate cadena dropdown
+  const chains = new Set();
+  const statuses = new Set();
+  allRows.forEach(r => {
+    chains.add(r.cells[0].textContent.trim());
+    statuses.add(r.cells[3].textContent.trim());
+  });
+  Array.from(chains).sort().forEach(c => {
+    const o = document.createElement('option');
+    o.value = c; o.textContent = c;
+    filterChain.appendChild(o);
+  });
+
+  // Populate status multi-select
+  const statusList = document.getElementById('status-list');
+  const statusBtn = document.getElementById('status-btn');
+  const statusPop = document.getElementById('status-pop');
+  const statusAll = document.getElementById('status-all');
+  const selectedStatuses = new Set();
+  Array.from(statuses).sort().forEach(st => {
+    const lbl = document.createElement('label');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.dataset.status = st;
+    lbl.appendChild(cb);
+    lbl.appendChild(document.createTextNode(' ' + st));
+    statusList.appendChild(lbl);
+    cb.addEventListener('change', () => {
+      if (cb.checked) selectedStatuses.add(st); else selectedStatuses.delete(st);
+      statusAll.checked = (selectedStatuses.size === 0);
+      updateStatusBtn();
+      applyFilters();
+    });
+  });
+  statusAll.addEventListener('change', () => {
+    if (statusAll.checked) {
+      selectedStatuses.clear();
+      statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    }
+    updateStatusBtn();
+    applyFilters();
+  });
+  function updateStatusBtn() {
+    const n = selectedStatuses.size;
+    statusBtn.textContent = n === 0 ? 'Estado: todos ▾' : `Estado: ${n} sel. ▾`;
+    statusBtn.classList.toggle('active', n > 0);
+  }
+  statusBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    statusPop.classList.toggle('open');
+  });
+  document.addEventListener('click', (e) => {
+    if (!statusPop.contains(e.target) && e.target !== statusBtn) {
+      statusPop.classList.remove('open');
+    }
+  });
+
+  function dateKey(s) {
+    const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s.trim());
+    if (m) return m[3] + m[2] + m[1];
+    return s;
+  }
+
+  function applyFilters(){
+    const q = search.value.toLowerCase().trim();
+    const ch = filterChain.value;
+    const ge = filterGestion.value;
+    const bl = filterBloq.value;
+    const su = filterSusti.value;
+    const bk = filterBucket.value;
+    const useStatusFilter = selectedStatuses.size > 0;
+    let visible = 0;
+    for (const row of allRows) {
+      const text = row.textContent.toLowerCase();
+      const rowChain = row.cells[0].textContent.trim();
+      const rowStatus = row.cells[3].textContent.trim();
+      const rowGestion = row.cells[4].textContent.trim();
+      const rowDays = parseInt(row.cells[5].textContent.trim());
+      const rowBloq = row.cells[9].textContent.trim();
+      const rowSusti = row.cells[10].textContent.trim();
+      const isExterno = (rowGestion === 'Externa');
+      const matchGestion = !ge || (ge === 'externo' ? isExterno : !isExterno);
+      const matchStatus = !useStatusFilter || selectedStatuses.has(rowStatus);
+      let matchBucket = true;
+      if (bk === 'g') matchBucket = (rowDays < 5);
+      else if (bk === 'y') matchBucket = (rowDays >= 5 && rowDays <= 15);
+      else if (bk === 'r') matchBucket = (rowDays > 15);
+      const ok = (!q || text.includes(q))
+              && (!ch || rowChain === ch)
+              && matchStatus
+              && matchGestion
+              && (!bl || rowBloq === bl)
+              && (!su || rowSusti === su)
+              && matchBucket;
+      row.style.display = ok ? '' : 'none';
+      if (ok) visible++;
+    }
+    cnt.textContent = visible;
+  }
+
+  // Sort
+  let lastSort = {col: -1, dir: 1};
+  const headers = tbl.tHead.rows[0].cells;
+  for (let i = 0; i < headers.length; i++) {
+    const th = headers[i];
+    th.addEventListener('click', () => {
+      const col = parseInt(th.dataset.col);
+      const type = th.dataset.type || 'text';
+      const dir = (lastSort.col === col) ? -lastSort.dir : 1;
+      for (const h of headers) h.classList.remove('asc','desc');
+      th.classList.add(dir > 0 ? 'asc' : 'desc');
+      lastSort = {col: col, dir: dir};
+      const rows = Array.from(tbody.rows);
+      rows.sort((a, b) => {
+        let av = a.cells[col].textContent.trim();
+        let bv = b.cells[col].textContent.trim();
+        if (type === 'num') {
+          av = parseFloat(av.replace(/\./g,'').replace(',','.')) || 0;
+          bv = parseFloat(bv.replace(/\./g,'').replace(',','.')) || 0;
+          return (av - bv) * dir;
+        }
+        if (type === 'date') {
+          return dateKey(av).localeCompare(dateKey(bv)) * dir;
+        }
+        return av.localeCompare(bv, 'es') * dir;
+      });
+      for (const r of rows) tbody.appendChild(r);
+    });
+  }
+
+  const filterBucket = document.getElementById('filter-bucket');
+  [search, filterChain, filterGestion, filterBloq, filterSusti, filterBucket].forEach(el => {
+    el.addEventListener('input', applyFilters);
+    el.addEventListener('change', applyFilters);
+  });
+
+  // Clear filters button
+  const clearBtn = document.getElementById('clear-filters');
+  function resetAllFilters() {
+    search.value = '';
+    filterChain.value = '';
+    filterGestion.value = '';
+    filterBloq.value = '';
+    filterSusti.value = '';
+    filterBucket.value = '';
+    selectedStatuses.clear();
+    statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+    statusAll.checked = true;
+    updateStatusBtn();
+    statusPop.classList.remove('open');
+    applyFilters();
+  }
+  clearBtn.addEventListener('click', resetAllFilters);
+
+  // Click handler for "Abiertas hoy" cells - pre-filter Detalle and scroll
+  document.querySelectorAll('td.ah-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const estado = cell.dataset.estado || '';
+      const cadena = cell.dataset.cadena || '';
+      search.value = '';
+      filterGestion.value = '';
+      filterBloq.value = '';
+      filterSusti.value = '';
+      filterBucket.value = '';
+      filterChain.value = cadena;
+      // Reset status checkboxes, then check just this one if specified
+      selectedStatuses.clear();
+      statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      if (estado) {
+        const target = statusList.querySelector(`input[data-status="${estado}"]`);
+        if (target) {
+          target.checked = true;
+          selectedStatuses.add(estado);
+        }
+      }
+      statusAll.checked = (selectedStatuses.size === 0);
+      updateStatusBtn();
+      applyFilters();
+      document.getElementById('detalle').scrollIntoView({behavior: 'smooth'});
+    });
+  });
+
+  applyFilters();
+})();
+</script>
+</body>
+</html>

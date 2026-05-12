@@ -1,0 +1,2809 @@
+{
+  "_meta": {
+    "last_fetched_at": "2026-05-12T11:48:18.751008+00:00",
+    "schema_version": 2,
+    "note": "DEMO cache — built from current-state snapshot only. Historical columns are approximations."
+  },
+  "tickets": {
+    "LEAS-6209": {
+      "key": "LEAS-6209",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Ces Depilación",
+      "loc": "Rúa Federico Tapia, 31, bajo, 15005 A Coruña Teléfono: 671 79 88 09",
+      "created": "2026-05-12T11:59:27.260+0200",
+      "current_status": "Pendiente definir servicio externo",
+      "tipo": "Pantalla",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "1999-12-31",
+      "consola": "90421",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "pantalla en negro pero el laser funciona, seguramente sea la pila de la bios",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Isaac Sanchez — se envia material ( pila de bios) y se avisa a GEE por mail.",
+      "transitions": [
+        [
+          "2026-05-12T12:00:15+0200",
+          "",
+          "Pendiente definir servicio externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751533+00:00"
+    },
+    "LEAS-6207": {
+      "key": "LEAS-6207",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Zaragoza",
+      "loc": "C. de Espoz y Mina, 29, Casco Antiguo, 50003 Zaragoza",
+      "created": "2026-05-12T11:29:36.941+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "C00745",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "se ha caido la rueda trasera.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "GEE",
+      "ult_comentario": "2026-05-12 Isaac Sanchez — se avisa a GEE.",
+      "transitions": [
+        [
+          "2026-05-12T11:37:01+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751577+00:00"
+    },
+    "LEAS-6206": {
+      "key": "LEAS-6206",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point Andria",
+      "loc": "Corso Cavour, 126, 76123 Andria BT, Italia",
+      "created": "2026-05-12T10:39:08.947+0200",
+      "current_status": "Pendiente definir servicio externo",
+      "tipo": "SSD",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2024-01-25",
+      "consola": "91344",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "El ssd de la máquina se ha vuelto corrupto",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T10:39:39+0200",
+          "",
+          "Pendiente definir servicio externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751589+00:00"
+    },
+    "LEAS-6205": {
+      "key": "LEAS-6205",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Laser fcatory Sant Boi",
+      "loc": "Carrer de Marià Fortuny, 57, 08830 Sant Boi de Llobregat, Barcelona",
+      "created": "2026-05-12T10:17:58.641+0200",
+      "current_status": "Abierto",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "2024-09-10",
+      "consola": "C00684",
+      "hp": "H00684",
+      "garantia": "",
+      "descripcion": "actualizacion soft.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T10:17:58+0200",
+          "",
+          "Abierto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751598+00:00"
+    },
+    "LEAS-6204": {
+      "key": "LEAS-6204",
+      "summary": "Petición de servicio técnico",
+      "cliente": "123 Clinics",
+      "loc": "Tarragona",
+      "created": "2026-05-11T19:21:14.534+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "bahia de calibración quemada.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Carlos Mora",
+      "ult_comentario": "2026-05-11 Isaac Sanchez — se envía bahia a la clinica y se avisa a Carlos.",
+      "transitions": [
+        [
+          "2026-05-11T19:29:14+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751621+00:00"
+    },
+    "LEAS-6203": {
+      "key": "LEAS-6203",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Villaroel",
+      "loc": "Barcelona",
+      "created": "2026-05-11T15:33:09.053+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Energía",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "40731",
+      "garantia": "Sí",
+      "descripcion": "auqnue la puntera enfria dicen que notan muchisimo pinchazo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Carlos Mora",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-11T15:34:24+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751630+00:00"
+    },
+    "LEAS-6202": {
+      "key": "LEAS-6202",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Irún",
+      "loc": "Irún",
+      "created": "2026-05-11T15:27:57.818+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "H00751",
+      "garantia": "Sí",
+      "descripcion": "Umbilical suelto en la empuñadura",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "GEE",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T09:00:18+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751640+00:00"
+    },
+    "LEAS-6198": {
+      "key": "LEAS-6198",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Luxlaser andre belgica",
+      "loc": "belgica",
+      "created": "2026-05-11T14:06:50.565+0200",
+      "current_status": "Pendiente asignar técnico",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2023-05-08",
+      "consola": "91297",
+      "hp": "30610",
+      "garantia": "Sí",
+      "descripcion": "El cliente sigue teniendo Stop 7 , ya vino esta consola un montón de veces, el cliente tiene una de \"sustitución\" de demo que le dio Andre, es un Xcell y no tiene problemas con ella.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-11T15:54:34+0200",
+          "",
+          "Pendiente asignar técnico"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751649+00:00"
+    },
+    "LEAS-6196": {
+      "key": "LEAS-6196",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centro Unico Astermas Lugo",
+      "loc": "Lugo",
+      "created": "2026-05-11T11:33:10.284+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "1999-12-31",
+      "consola": "91128",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "stop8",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-11 Isaac Sanchez — se devuelve a fabrica",
+      "transitions": [
+        [
+          "2026-05-11T11:52:54+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751684+00:00"
+    },
+    "LEAS-6193": {
+      "key": "LEAS-6193",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Zurimed Parque Principado - 91139 40571",
+      "loc": "Parque Principado (Siero)",
+      "created": "2026-05-11T08:30:24.677+0200",
+      "current_status": "Pendiente asignar técnico",
+      "tipo": "Puntera - Zafiro",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "No aparece",
+      "hp": "No aparece",
+      "garantia": "No",
+      "descripcion": "Informan de que la puntera tiene un golpe; también indican que las temperaturas suben mucho y se les bloquea la máquina por ello",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-11 Jesús Fernández Porrúa — Informaron del golpe el día 4 de mayo y de los problemas con temperaturas desde el 28 de abril.Pistola Quad con golpe en puntera y 14.527.956 disparos. Habrá que recoger a taller para su revisión y reparación, previa gestión de máquina de sustitución completa; según la disponibilidad de sustituciones, igual hay que recoger primero la pistola y después la consola…",
+      "transitions": [
+        [
+          "2026-05-11T15:43:05+0200",
+          "",
+          "Pendiente asignar técnico"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751773+00:00"
+    },
+    "LEAS-6191": {
+      "key": "LEAS-6191",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Algeciras",
+      "loc": "Av. Virgen del Carmen, 32, 11204 Algeciras, Cádiz",
+      "created": "2026-05-09T13:51:26.646+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Pantalla",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2025-08-05",
+      "consola": "C00903",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "La pantalla de la consola está un poco decalibrada y no permite grabar caliports",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "GEE",
+      "ult_comentario": "2026-05-09 Gonzalo — Calibración de pantalla",
+      "transitions": [
+        [
+          "2026-05-09T13:55:18+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751800+00:00"
+    },
+    "LEAS-6190": {
+      "key": "LEAS-6190",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Dermasana Princesa",
+      "loc": "Dirección: Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
+      "created": "2026-05-08T18:23:04.990+0200",
+      "current_status": "Pendiente definir servicio externo",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2021-05-17",
+      "consola": "90663",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Stop 6 seguramente por el umbilical , a la espera de más info",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-08T18:23:33+0200",
+          "",
+          "Pendiente definir servicio externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751810+00:00"
+    },
+    "LEAS-6189": {
+      "key": "LEAS-6189",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha  C. de Jaime el Conquistador, 33, bajos, Arganzuela, 28045 Madrid",
+      "loc": "C. de Jaime el Conquistador, 33, bajos, Arganzuela, 28045 Madrid",
+      "created": "2026-05-08T18:15:14.500+0200",
+      "current_status": "Gestionado transporte",
+      "tipo": "Buffer",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2020-09-25",
+      "consola": "",
+      "hp": "40253",
+      "garantia": "No",
+      "descripcion": "stop3 con sensores 1037ºC",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-08 Isaac Sanchez — nos avisan cuando este lista para recoger",
+      "transitions": [
+        [
+          "2026-05-08T18:52:12+0200",
+          "",
+          "Gestionado transporte"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751828+00:00"
+    },
+    "LEAS-6188": {
+      "key": "LEAS-6188",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point CASTELLAMMARE",
+      "loc": "Corso Vittorio Emanuele, 14, 80053 Castellammare di Stabia NA, Italia",
+      "created": "2026-05-08T17:59:41.795+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "Tiene la versión de 400ms en vez de la de 300ms  SUSTMHR20",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Sincronis",
+      "ult_comentario": "2026-05-08 Gonzalo — Se envia material para realizar la intervención",
+      "transitions": [
+        [
+          "2026-05-08T18:13:17+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751846+00:00"
+    },
+    "LEAS-6182": {
+      "key": "LEAS-6182",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Dermasana Orense",
+      "loc": "C. de Orense, 22, B, Tetuán, 28020 Madrid",
+      "created": "2026-05-07T18:47:17.619+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Umbilical",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2022-05-15",
+      "consola": "",
+      "hp": "40407",
+      "garantia": "No",
+      "descripcion": "El umbilical está dañado hay que cambiarlo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Innet",
+      "ult_comentario": "2026-05-07 Gonzalo — Se envía umbilical al centro",
+      "transitions": [
+        [
+          "2026-05-08T13:30:08+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751868+00:00"
+    },
+    "LEAS-6180": {
+      "key": "LEAS-6180",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Chamberi",
+      "loc": "C. de Andrés Mellado, 27, Chamberí, 28015 Madrid",
+      "created": "2026-05-07T17:47:53.797+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2023-09-11",
+      "consola": "C00159",
+      "hp": "H00159",
+      "garantia": "No",
+      "descripcion": "El umbilical se les ha soltado y tiene problemas de temperatura,  está a 18ºC el compresor de la consola",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Innet",
+      "ult_comentario": "2026-05-07 Gonzalo — Vamos a enviar a innet para que reparen la pieza de mano y que limpien la consola",
+      "transitions": [
+        [
+          "2026-05-07T18:04:31+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751893+00:00"
+    },
+    "LEAS-6168": {
+      "key": "LEAS-6168",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Laser Factory St Boi",
+      "loc": "Carrer de Marià Fortuny, 57, 08830 Sant Boi de Llobregat, Barcelona",
+      "created": "2026-05-07T10:29:40.900+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-09-10",
+      "consola": "C00684",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Un tornillo de los que sujetan el reposador a la consola está flojo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Carlos Mora",
+      "ult_comentario": "2026-05-07 Gonzalo — Ajustar el tornillo",
+      "transitions": [
+        [
+          "2026-05-07T10:37:36+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751911+00:00"
+    },
+    "LEAS-6166": {
+      "key": "LEAS-6166",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Roales Beauty",
+      "loc": "Paracuellos",
+      "created": "2026-05-07T08:57:51.958+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Revisión",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-02-07",
+      "consola": "C00332",
+      "hp": "H00332",
+      "garantia": "Sí",
+      "descripcion": "REvisión anual",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Innet",
+      "ult_comentario": "2026-05-07 Borja Canteli Trabanco — texto subrayado",
+      "transitions": [
+        [
+          "2026-05-07T09:27:04+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751925+00:00"
+    },
+    "LEAS-6163": {
+      "key": "LEAS-6163",
+      "summary": "Petición de servicio técnico",
+      "cliente": "DGLOW",
+      "loc": "C/ de Lluís Martí, 4b, bajos, Llevant, 07006 Palma, Balearic Islands",
+      "created": "2026-05-06T17:54:45.706+0200",
+      "current_status": "Pendiente definir servicio externo",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2023-12-15",
+      "consola": "",
+      "hp": "H00276",
+      "garantia": "No",
+      "descripcion": "Un umbilical antiguo con el casquillo de metal se ha rajado y necesitamos que se repare.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-08 Gonzalo",
+      "transitions": [
+        [
+          "2026-05-06T17:56:25+0200",
+          "",
+          "Pendiente definir servicio externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751940+00:00"
+    },
+    "LEAS-6160": {
+      "key": "LEAS-6160",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Castellon",
+      "loc": "Castellon",
+      "created": "2026-05-06T14:15:47.805+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2022-09-13",
+      "consola": "",
+      "hp": "30476",
+      "garantia": "No",
+      "descripcion": "umbilical rajado por la parte de la pistola",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-06T14:16:19+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751948+00:00"
+    },
+    "LEAS-6159": {
+      "key": "LEAS-6159",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Africa - Daniel Jaramillo",
+      "loc": "Jaén",
+      "created": "2026-05-06T11:35:41.517+0200",
+      "current_status": "En cola taller",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2017-09-12",
+      "consola": "90114",
+      "hp": "30078",
+      "garantia": "No",
+      "descripcion": "dicen que enfria mal",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T09:26:44+0200",
+          "",
+          "En cola taller"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751957+00:00"
+    },
+    "LEAS-6158": {
+      "key": "LEAS-6158",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point Aprillia",
+      "loc": "Italia",
+      "created": "2026-05-06T10:38:41.967+0200",
+      "current_status": "Abierto",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "",
+      "fventa": "2021-06-30",
+      "consola": "90674",
+      "hp": "",
+      "garantia": "",
+      "descripcion": "Stop 3 - no carga el voltaje",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-06T10:38:41+0200",
+          "",
+          "Abierto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751964+00:00"
+    },
+    "LEAS-6153": {
+      "key": "LEAS-6153",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Mario Pinto Portugal DS178",
+      "loc": "Portugal",
+      "created": "2026-05-05T18:51:46.678+0200",
+      "current_status": "En cola taller",
+      "tipo": "Pantalla",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "La pantalla responde mal, hay que cambiarla y hay que revisar el interlock  DS-178 DS178 DS 178",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T09:27:10+0200",
+          "",
+          "En cola taller"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751973+00:00"
+    },
+    "LEAS-6151": {
+      "key": "LEAS-6151",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Utrera",
+      "loc": "Virgen de Consolación, 10, 41710 Utrera, Sevilla",
+      "created": "2026-05-05T14:18:31.665+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2023-03-31",
+      "consola": "",
+      "hp": "30576",
+      "garantia": "Sí",
+      "descripcion": "segun cliente el técnico que estuvo 3en Febrero dejo el umbilical en la siguientes condiciones, adjunto foto.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Ernesto — Golpe en la carcasa , manipulo muy sucio",
+      "transitions": [
+        [
+          "2026-05-12T11:20:18+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.751995+00:00"
+    },
+    "LEAS-6146": {
+      "key": "LEAS-6146",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centro Unico Euroma 2 Euroma2",
+      "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
+      "created": "2026-05-05T12:12:37.704+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "El umbilical se les ha soltado",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Sincronis",
+      "ult_comentario": "2026-05-05 Gonzalo — Se avisa a Sincronis para que vayan a reparar el umbilcial",
+      "transitions": [
+        [
+          "2026-05-07T11:10:28+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752014+00:00"
+    },
+    "LEAS-6145": {
+      "key": "LEAS-6145",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Alicante",
+      "loc": "Alicante",
+      "created": "2026-05-05T11:56:02.140+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-03-22",
+      "consola": "C00405",
+      "hp": "H00405",
+      "garantia": "No",
+      "descripcion": "temperaturas altas ( sin valores) y ruedas sueltas.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-08T06:43:24+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752023+00:00"
+    },
+    "LEAS-6142": {
+      "key": "LEAS-6142",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centro Unico Orio",
+      "loc": "Via Portico, 71, 24050 Orio al Serio BG, Italia",
+      "created": "2026-05-05T11:15:47.828+0200",
+      "current_status": "En cola taller",
+      "tipo": "Otros",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2024-01-15",
+      "consola": "",
+      "hp": "H00212",
+      "garantia": "No",
+      "descripcion": "\"Del equipo ha salido humo de la puntera de la pieza de mano\"",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-08T09:43:34+0200",
+          "",
+          "En cola taller"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752108+00:00"
+    },
+    "LEAS-6141": {
+      "key": "LEAS-6141",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Torremolinos",
+      "loc": "MALAGA",
+      "created": "2026-05-05T11:13:18.924+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2024-01-15",
+      "consola": "C00311",
+      "hp": "H00311",
+      "garantia": "No",
+      "descripcion": "temperatura de la puntera y el deposito muy altas",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-08T06:39:56+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752118+00:00"
+    },
+    "LEAS-6137": {
+      "key": "LEAS-6137",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Leaseir tecnologies",
+      "loc": "Gijon",
+      "created": "2026-05-05T10:09:25.624+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Casquillo nuevo",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2023-07-27",
+      "consola": "C00107",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "casquillo nuevo se gira sobre si mismo y la consola vino volcada.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-05 Ernesto — Casquillo de pistola suelto, equipo aparentemente volcado, refrigerante en espumas y funda , etiqueta saltada.",
+      "transitions": [
+        [
+          "2026-05-08T06:37:33+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752145+00:00"
+    },
+    "LEAS-6136": {
+      "key": "LEAS-6136",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Miguel parra",
+      "loc": "Barcelona",
+      "created": "2026-05-05T09:49:53.494+0200",
+      "current_status": "Esperando inicio reparación",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "No enfria, se le para por temperatura 90038",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Jonathan Zarauza — fusible fundido. Termostato dañado. Nevera dañada, no enfría. Presupuestar:Termostato nuevo.Nevera nueva.fusible 10A.",
+      "transitions": [
+        [
+          "2026-05-12T11:23:14+0200",
+          "",
+          "Esperando inicio reparación"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752172+00:00"
+    },
+    "LEAS-6133": {
+      "key": "LEAS-6133",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin vello las Rozas",
+      "loc": ": Av. de Atenas, 75, Planta 1 Local 42, 28232 Las Rozas de Madrid, Madrid",
+      "created": "2026-05-04T18:23:09.874+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-09-28",
+      "consola": "C00190",
+      "hp": "H00190",
+      "garantia": "No",
+      "descripcion": "Le da Stop 7 en la calibración de la pieza de mano, se reparó el 05/03/2026 dicen que notan que el umbilical es más duro en esa zona del umbilical , tambien tiene la pantalla descalibrada.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-04T18:24:09+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752181+00:00"
+    },
+    "LEAS-6128": {
+      "key": "LEAS-6128",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point Aprilia",
+      "loc": "Via dei Lauri, 52d, 04011 Aprilia LT, Italia",
+      "created": "2026-05-04T13:05:47.188+0200",
+      "current_status": "Pendiente asignar técnico",
+      "tipo": "Umbilical",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2021-06-30",
+      "consola": "",
+      "hp": "40326",
+      "garantia": "Sí",
+      "descripcion": "Fuga en la pieza de mano 40326 , se recoge para mirar por donde ha partido y ver el buffer se mueve la pieza de mano 40733 de Bari",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-04 Gonzalo — Recogida por DHL: 2534255581",
+      "transitions": [
+        [
+          "2026-05-04T13:51:56+0200",
+          "",
+          "Pendiente asignar técnico"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752197+00:00"
+    },
+    "LEAS-6127": {
+      "key": "LEAS-6127",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point Aprilia",
+      "loc": "Via dei Lauri, 52d, 04011 Aprilia LT, Italia",
+      "created": "2026-05-04T13:01:55.099+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2024-02-12",
+      "consola": "91345",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "Stop 8 nada más llegar al centro",
+      "tec_taller": "",
+      "importe": 3636,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-11T12:06:56+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752228+00:00"
+    },
+    "LEAS-6125": {
+      "key": "LEAS-6125",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Dermoscan",
+      "loc": "Alemania",
+      "created": "2026-05-04T10:39:56.992+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Puntera - Zafiro",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-04-22",
+      "consola": "",
+      "hp": "H00464",
+      "garantia": "Sí",
+      "descripcion": "manchas y humedad en la  puntera",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-11T12:07:27+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752245+00:00"
+    },
+    "LEAS-6118": {
+      "key": "LEAS-6118",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Belgica Luxlaser Andre",
+      "loc": "Belgica",
+      "created": "2026-04-30T18:56:52.225+0200",
+      "current_status": "En reparación",
+      "tipo": "Casquillo nuevo",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2019-11-13",
+      "consola": "",
+      "hp": "30143",
+      "garantia": "Sí",
+      "descripcion": "Se ha roto el casquillo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-08 Gonzalo",
+      "transitions": [
+        [
+          "2026-05-08T09:43:32+0200",
+          "",
+          "En reparación"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752266+00:00"
+    },
+    "LEAS-6111": {
+      "key": "LEAS-6111",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Regina 91400 30836",
+      "loc": "Granada",
+      "created": "2026-04-30T14:46:18.020+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "No aparece",
+      "garantia": "Sí",
+      "descripcion": "sensor segundo de diodo das saltos de temperatura y aparece el termometro con copo de nieve.",
+      "tec_taller": "",
+      "importe": 87.12,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-04 Isaac Sanchez — se pide recogida de su manipulo.",
+      "transitions": [
+        [
+          "2026-05-12T10:53:28+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752293+00:00"
+    },
+    "LEAS-6105": {
+      "key": "LEAS-6105",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Harmonie Salamanca",
+      "loc": "Salamanca",
+      "created": "2026-04-30T10:50:07.231+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2022-06-27",
+      "consola": "90943",
+      "hp": "40425",
+      "garantia": "No",
+      "descripcion": "Stop 7 durante la sesion",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-08T13:15:46+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752303+00:00"
+    },
+    "LEAS-6099": {
+      "key": "LEAS-6099",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Logroño",
+      "loc": "Logroño",
+      "created": "2026-04-30T08:08:51.897+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Umbilical",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2021-02-02",
+      "consola": "",
+      "hp": "40284",
+      "garantia": "No",
+      "descripcion": "El cliente indica que saltan chispas durante las sesiones en el harting, justo por donde entra el umbilical",
+      "tec_taller": "",
+      "importe": 15028.2,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-30 Jesús Fernández Porrúa — Se le ha sugerido al cliente recoger la pistola a taller para su revisión. A la espera de la confirmación para efectuar la recogida",
+      "transitions": [
+        [
+          "2026-05-11T15:08:12+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752332+00:00"
+    },
+    "LEAS-6091": {
+      "key": "LEAS-6091",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Velez Malaga",
+      "loc": "MALAGA",
+      "created": "2026-04-29T10:48:45.658+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "C00564",
+      "hp": "H00564",
+      "garantia": "No",
+      "descripcion": "stop 6 y umbilical rajado por la parte de la pistola",
+      "tec_taller": "",
+      "importe": 2256.65,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-07 Ernesto — Viene con consola se corrige en el formulario",
+      "transitions": [
+        [
+          "2026-05-11T11:18:01+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752350+00:00"
+    },
+    "LEAS-6088": {
+      "key": "LEAS-6088",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha  Passeig de Pere III, 94, Ent. 2ª, 08242 Manresa, Barcelona",
+      "loc": "Manresa",
+      "created": "2026-04-28T20:09:07.604+0200",
+      "current_status": "Gestionado transporte",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2020-07-05",
+      "consola": "",
+      "hp": "40221",
+      "garantia": "No",
+      "descripcion": "umbilical roto por la parte de la empuñadura.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-28 Isaac Sanchez — a la espera que me digan para recoger.",
+      "transitions": [
+        [
+          "2026-05-11T11:48:42+0200",
+          "",
+          "Gestionado transporte"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752367+00:00"
+    },
+    "LEAS-6087": {
+      "key": "LEAS-6087",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Nerma Centros",
+      "loc": "C/Cristófol Colom, 22, 08130 Santa de Mogoda, Barcelona",
+      "created": "2026-04-28T19:59:41.150+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2022-01-12",
+      "consola": "",
+      "hp": "30339",
+      "garantia": "No",
+      "descripcion": "cuando se hizo la revisión el técnico insitu comento quie el umbilical estaba ya para cambiar xq iba a dar problema, la clienta me avisa de que se lo cambiemos.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Carlos Mora",
+      "ult_comentario": "2026-04-28 Isaac Sanchez — se ha mandado umbilical y se avisa a Carlos Mora por mail.",
+      "transitions": [
+        [
+          "2026-04-28T20:01:17+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752385+00:00"
+    },
+    "LEAS-6086": {
+      "key": "LEAS-6086",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Sant andreu   40713",
+      "loc": "Carrer Gran de Sant Andreu, 105, Sant Andreu, 08030 Barcelona",
+      "created": "2026-04-28T19:53:48.584+0200",
+      "current_status": "Esperando inicio reparación",
+      "tipo": "Diodo",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "No aparece",
+      "garantia": "Sí",
+      "descripcion": "nos envia una foto el cliente con el diodo quemado, este manipulo se fabrico hace poco.",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-30 Ernesto — OJO Viene de Elha Carrer de Sao Paulo BCN",
+      "transitions": [
+        [
+          "2026-05-11T15:15:31+0200",
+          "",
+          "Esperando inicio reparación"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752402+00:00"
+    },
+    "LEAS-6073": {
+      "key": "LEAS-6073",
+      "summary": "Petición de servicio técnico",
+      "cliente": "MP Estetic DS_170",
+      "loc": "Portugal",
+      "created": "2026-04-28T11:45:20.155+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "No aparece",
+      "hp": "30773",
+      "garantia": "Sí",
+      "descripcion": "Stop 3- se queda el voltaje en 1 v",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-06T14:13:31+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752411+00:00"
+    },
+    "LEAS-6067": {
+      "key": "LEAS-6067",
+      "summary": "Petición de servicio técnico",
+      "cliente": "SinVello! Sant Cugat del Valles",
+      "loc": "Carrer de Sant Jordi, 27, 08172 Sant Cugat del Vallès, Barcelona",
+      "created": "2026-04-27T19:02:23.139+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2024-06-17",
+      "consola": "C00540",
+      "hp": "H00540",
+      "garantia": "No",
+      "descripcion": "La temperatura de la sonda es de 6ºC mientras que de la puntera es de 13ºC y del diodo 12ºC",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-04-27T19:02:55+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752425+00:00"
+    },
+    "LEAS-6065": {
+      "key": "LEAS-6065",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Goya",
+      "loc": "C. de Antonio Acuña, 12, Salamanca, 28009 Madrid",
+      "created": "2026-04-27T19:00:31.593+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-01-27",
+      "consola": "",
+      "hp": "30539",
+      "garantia": "No",
+      "descripcion": "Stop 3 todos los sensores a 1037ºC es del manipulo, probado con otra pieza de mano",
+      "tec_taller": "",
+      "importe": 1076.9,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-06 Jonathan Zarauza — No se ha logrado replicar el fallo.Umbilical antiguo sin casquillo.Manchas de sulfato en el buffer, en pines de TO2. Presupuestar (contrato de mantenimiento):Buffer nuevo.Umbilical nuevo con casquillo.Lanyard.Soporte de manípulo nuevo.",
+      "transitions": [
+        [
+          "2026-05-08T13:12:30+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752484+00:00"
+    },
+    "LEAS-6064": {
+      "key": "LEAS-6064",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin vello LUCENA",
+      "loc": "C. Federico García Lorca, 8, Bajo, 14900 Lucena, Córdoba",
+      "created": "2026-04-27T18:59:29.675+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2021-03-10",
+      "consola": "90611",
+      "hp": "30224",
+      "garantia": "No",
+      "descripcion": "Stop 7 \"Me dicen que al segundo disparo les sale STOP 7\"",
+      "tec_taller": "",
+      "importe": 532.4,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-05 Ernesto — Mal embalada daños en la carcasa por culpa del m,aletin , ver fotos revisar pantalla",
+      "transitions": [
+        [
+          "2026-05-11T12:08:02+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752508+00:00"
+    },
+    "LEAS-6058": {
+      "key": "LEAS-6058",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Bella Forme",
+      "loc": "Marruecos",
+      "created": "2026-04-27T15:33:47.410+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2024-01-24",
+      "consola": "20031",
+      "hp": "60034",
+      "garantia": "Sí",
+      "descripcion": "Stop 7",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Leaseir",
+      "ult_comentario": "2026-05-08 Borja Canteli Trabanco — Va A ir Chus a repararlo in situ la semana del 11/05",
+      "transitions": [
+        [
+          "2026-05-07T14:03:28+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752532+00:00"
+    },
+    "LEAS-6055": {
+      "key": "LEAS-6055",
+      "summary": "Petición de servicio técnico",
+      "cliente": "AVANTI FUERTEVENTURA - LEASEIR SUSTQUAD035",
+      "loc": "FUERTEVENTURA",
+      "created": "2026-04-27T14:00:31.528+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Diodo",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "No aparece",
+      "garantia": "No",
+      "descripcion": "clienta nos indica que se las ha caido el manipulo de sustitucíon y han dañado el manipulo.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-08T06:36:24+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752542+00:00"
+    },
+    "LEAS-6050": {
+      "key": "LEAS-6050",
+      "summary": "Petición de servicio técnico",
+      "cliente": "S&R Salud y Relax",
+      "loc": "C/ de Luis de Medina, 1, 28805 Alcalá de Henares, Madrid",
+      "created": "2026-04-27T12:06:06.326+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "1999-12-31",
+      "consola": "",
+      "hp": "20090",
+      "garantia": "No",
+      "descripcion": "stop 6  y stop 3",
+      "tec_taller": "",
+      "importe": 497.31,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-27 Isaac Sanchez — tiene contrato de mto antiguo.",
+      "transitions": [
+        [
+          "2026-05-08T13:20:03+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752559+00:00"
+    },
+    "LEAS-6049": {
+      "key": "LEAS-6049",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Smart Duck Lyon Part Dieu C03206 / H03206",
+      "loc": "Lyon, Francia",
+      "created": "2026-04-27T09:26:45.839+0200",
+      "current_status": "Gestionado transporte",
+      "tipo": "Otros",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "No aparece",
+      "hp": "No aparece",
+      "garantia": "Sí",
+      "descripcion": "Durante las sesiones, el equipo se apaga por completo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-27 Jesús Fernández Porrúa — Gestionando cómo se actuará para su reparación; por la descripción del cliente, podría ser un corto entre los cables de selección del tipo de pistola",
+      "transitions": [
+        [
+          "2026-05-07T13:56:32+0200",
+          "",
+          "Gestionado transporte"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752597+00:00"
+    },
+    "LEAS-6048": {
+      "key": "LEAS-6048",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Daniel Jaramillo (Grupo Dos)",
+      "loc": "Burgos",
+      "created": "2026-04-27T08:55:53.655+0200",
+      "current_status": "Pendiente asignar técnico",
+      "tipo": "Caída",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2018-09-04",
+      "consola": "366",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "El cliente trae la máquina para hacerle un upgrade a versión con códigos pero, durante la inspección de entrada, se detecta que la puntera tiene un golpe y las ópticas están rotas",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-27 Jesús Fernández Porrúa — Presupuestar para la reparación",
+      "transitions": [
+        [
+          "2026-04-27T08:59:47+0200",
+          "",
+          "Pendiente asignar técnico"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752618+00:00"
+    },
+    "LEAS-6042": {
+      "key": "LEAS-6042",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Sanchez Pacheco",
+      "loc": "Madrid",
+      "created": "2026-04-24T19:04:29.568+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2021-05-25",
+      "consola": "",
+      "hp": "40316",
+      "garantia": "No",
+      "descripcion": "stop 7, supuestamente es el umbilical, lo han probado en mas consolas.",
+      "tec_taller": "",
+      "importe": 883.3,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-05 Jonathan Zarauza — Cable de potencia roto dentro del umbilical.Puntera muy descromada.Metacrilato de chapa identificativa Presupuestar:Umbilical nuevo con casquillo.Soporte de manípulo nuevo.Cambio de puntera y zafiro.Placa de metacrilato nueva.",
+      "transitions": [
+        [
+          "2026-05-12T11:24:25+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752729+00:00"
+    },
+    "LEAS-6040": {
+      "key": "LEAS-6040",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Pantera LLeida 20247",
+      "loc": "Lleida",
+      "created": "2026-04-24T18:22:41.755+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "No aparece",
+      "garantia": "Sí",
+      "descripcion": "se para por temperatura",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T08:00:14+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752746+00:00"
+    },
+    "LEAS-6037": {
+      "key": "LEAS-6037",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Brull",
+      "loc": "Begues",
+      "created": "2026-04-24T15:57:30.898+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Puntera - Zafiro",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2023-07-27",
+      "consola": "",
+      "hp": "H00114",
+      "garantia": "No",
+      "descripcion": "Tiene una raja en la óptica",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-07 Gonzalo — Con energiá, 36.30 30ms a 147A un poco de curva Auto 31.16 a 134 A , señal buena, plana",
+      "transitions": [
+        [
+          "2026-05-12T10:15:09+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752781+00:00"
+    },
+    "LEAS-6036": {
+      "key": "LEAS-6036",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Alzira",
+      "loc": "Av. del Parc, 4, 46600 Alzira, Valencia",
+      "created": "2026-04-24T13:22:06.437+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2023-12-29",
+      "consola": "C00268",
+      "hp": "H00268",
+      "garantia": "No",
+      "descripcion": "El cliente se queja de la temperatura, lo hace todo correctamente, tienen la temperatura del centro a 20ºC , no ha pasado nunca por taller seguramente esté lleno de polvo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-24 Gonzalo — Le pasa cuando está con clientes a 22ºJulios 100ms a 4hz, cuerpos grandes. No apagan el equipo si no que esperan a que baje la temperatura",
+      "transitions": [
+        [
+          "2026-05-07T14:41:46+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752808+00:00"
+    },
+    "LEAS-6033": {
+      "key": "LEAS-6033",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Illescas",
+      "loc": "Toleda",
+      "created": "2026-04-24T13:02:11.128+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-10-23",
+      "consola": "C00226",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "fue innet y parece ser que hay fuga de gas ya que se congela el capilar donde la valvula de expansión.",
+      "tec_taller": "",
+      "importe": 1766.6,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Jonathan Zarauza — Nevera averiada. Presupuestar: cambio de nevera.",
+      "transitions": [
+        [
+          "2026-05-12T11:05:55+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752827+00:00"
+    },
+    "LEAS-6030": {
+      "key": "LEAS-6030",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Oloriz",
+      "loc": "Granada",
+      "created": "2026-04-24T12:54:59.977+0200",
+      "current_status": "Esperando inicio reparación",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2024-05-10",
+      "consola": "C00491",
+      "hp": "H00491",
+      "garantia": "Sí",
+      "descripcion": "Vuelven a decir que calienta mucho el TIP",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-11 Jonathan Zarauza — Prueba de calor: TIP se pone a 5ºC a los 1200 disparos. Se le cambiará la puntera y zafiro para comprobar si con eso se soluciona el problema.",
+      "transitions": [
+        [
+          "2026-05-11T16:02:49+0200",
+          "",
+          "Esperando inicio reparación"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752853+00:00"
+    },
+    "LEAS-6026": {
+      "key": "LEAS-6026",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Láser y Estética Avanzada Ciudad Real",
+      "loc": "Ciudad Real",
+      "created": "2026-04-24T12:36:27.555+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-07-15",
+      "consola": "91138",
+      "hp": "40570",
+      "garantia": "Sí",
+      "descripcion": "No han apretado bien las grapas de la pieza de mano y salió todo el líquido , se les dijo de recoger el equipo de sustitución y se ha recogido el suyo",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-04-27T13:34:00+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752863+00:00"
+    },
+    "LEAS-6025": {
+      "key": "LEAS-6025",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Girona",
+      "loc": "Girona",
+      "created": "2026-04-24T12:34:26.658+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Puntera - Zafiro",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-10-23",
+      "consola": "",
+      "hp": "H00198",
+      "garantia": "No",
+      "descripcion": "humedad en el zafiro",
+      "tec_taller": "",
+      "importe": 1458.05,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-04 Jonathan Zarauza — Diodo un poco por debajo del 80%.Humedad dentro del zafiro, es necesario abrir la puntera para confirmar si la humedad a afectado al prisma o lente trasera.Puntera antigua.Refrigeración de diodo en paralelo.Umbilical roto en zona de harting y de manípulo. Presupuestar:Diodo nuevo (opcional y recomendado)Cambio de puntera y zafiro (posiblemente prisma y lente trasera. Consultar a Bea antes de enviar presupuesto.)Actualización de refrigeración de diodo.Umbilical nuevo con casquillo.",
+      "transitions": [
+        [
+          "2026-05-11T12:10:08+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752931+00:00"
+    },
+    "LEAS-6024": {
+      "key": "LEAS-6024",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Santiago de compostela",
+      "loc": "Santiago de compostela",
+      "created": "2026-04-24T12:30:45.753+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Stop",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2023-09-28",
+      "consola": "C00191",
+      "hp": "H00191",
+      "garantia": "Sí",
+      "descripcion": "stop 7 recurrentemente",
+      "tec_taller": "",
+      "importe": 1530.65,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-11 Jonathan Zarauza — Se ha hecho una prueba de 2000 disparos en todos los modos y fluencias y no se ha logrado replicar el STOP7.Umbilical despegado en harting y rajado en tornillo de nylon de carcasas. Umbilical rígido y ya saneado.Pegamento de zafiro desgastado pero sin marcas de haber entrado la humedad aún.La temperatura del TIP cambia mucho durante las pruebas de disparo. Presupuestar:Umbilical nuevo con casquillo.puntera y zafiro nuevos (opcional).",
+      "transitions": [
+        [
+          "2026-05-11T11:55:26+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752975+00:00"
+    },
+    "LEAS-6019": {
+      "key": "LEAS-6019",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Slyou La maison",
+      "loc": "Italia",
+      "created": "2026-04-24T09:51:33.385+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Otros",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "C00682",
+      "hp": "H00682",
+      "garantia": "No",
+      "descripcion": "LA consola disparar mucho más fuerte a 12 >Julios, tanto que quema los caliports, esto ha sido después de que un técnico haya cambiado el buzzer",
+      "tec_taller": "",
+      "importe": 860,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T11:39:01+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752984+00:00"
+    },
+    "LEAS-6012": {
+      "key": "LEAS-6012",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Nacho Condiodo",
+      "loc": "Nacho Condiodo",
+      "created": "2026-04-23T10:46:45.148+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2016-10-13",
+      "consola": "90022",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Se ha probado la consola con dos manípulos distintos y los dos dan Stop 6,  esos dos manípulos no dan ningún stop en otra consola",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T09:57:03+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.752993+00:00"
+    },
+    "LEAS-6002": {
+      "key": "LEAS-6002",
+      "summary": "Petición de servicio técnico",
+      "cliente": "SIN VELLO ALICANTE",
+      "loc": "ALICANTE",
+      "created": "2026-04-22T16:18:03.530+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-06-04",
+      "consola": "",
+      "hp": "H00526",
+      "garantia": "No",
+      "descripcion": "umbilicasl roto en la empuñadura. tiene un golpe en la puntera",
+      "tec_taller": "",
+      "importe": 4101.9,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-04-28T13:44:48+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753001+00:00"
+    },
+    "LEAS-5998": {
+      "key": "LEAS-5998",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centri Unico Ostia",
+      "loc": "Italia",
+      "created": "2026-04-22T15:24:19.339+0200",
+      "current_status": "Esperando inicio reparación",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-12-13",
+      "consola": "",
+      "hp": "H00240",
+      "garantia": "Sí",
+      "descripcion": "desde que se cambió el umbilical nuevo da stop 7",
+      "tec_taller": "",
+      "importe": 6460,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Jonathan Zarauza — Conexión del cable de potencia al polo positivo del diodo mal apretado.Diodo degradado y caída de pulso en disparo simple. Es probable que el STOP7 sea provocado por la caída de pulso por debajo de la línea de undercurrent (no se ha podido probar porque han enviado un caliport que no corresponde con el manipulo: P 1025).En el umbilical se ha detectado un cable de potencia pegado a uno de los tubos de refrigeración dentro del casquillo.Refrigeración de diodo en paralelo. Presupuestar:Umbilical nuevo.Diodo nuevo.",
+      "transitions": [
+        [
+          "2026-05-12T10:48:41+0200",
+          "",
+          "Esperando inicio reparación"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753053+00:00"
+    },
+    "LEAS-5977": {
+      "key": "LEAS-5977",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello  ROQUETAS de Mar",
+      "loc": "Almeria",
+      "created": "2026-04-20T14:38:14.597+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2024-05-12",
+      "consola": "",
+      "hp": "H00742",
+      "garantia": "No",
+      "descripcion": "stop 6 y umbilical suelto.",
+      "tec_taller": "",
+      "importe": 883.3,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-30 Francisco Fernández Porrúa — Durante la inspección de salida se identifica humedad en la óptica. Esperando aprobación y cambio de puntera",
+      "transitions": [
+        [
+          "2026-05-07T14:46:26+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753077+00:00"
+    },
+    "LEAS-5965": {
+      "key": "LEAS-5965",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Carrer de la Unió",
+      "loc": "Terrassa",
+      "created": "2026-04-20T10:21:19.708+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Diodo",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2020-09-25",
+      "consola": "",
+      "hp": "40247",
+      "garantia": "No",
+      "descripcion": "Informan de que las ópticas están rotas (lente trasera) y el fondo se ve negro (diodo quemado)",
+      "tec_taller": "",
+      "importe": 15028.2,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-07 Borja Canteli Trabanco",
+      "transitions": [
+        [
+          "2026-05-07T14:22:45+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753093+00:00"
+    },
+    "LEAS-5961": {
+      "key": "LEAS-5961",
+      "summary": "Petición de servicio técnico",
+      "cliente": "LEASEIR SUST Centro Unico Splau  MED",
+      "loc": "Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
+      "created": "2026-04-18T14:03:32.765+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Umbilical",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "El umbilical de la sustitución se ha salido SUSTDUAL022",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-24 Borja Canteli Trabanco — no lo reparamos de momento hasta que acepten el presupuesto de cambio de diodo de su equipo",
+      "transitions": [
+        [
+          "2026-04-29T16:26:31+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753117+00:00"
+    },
+    "LEAS-5958": {
+      "key": "LEAS-5958",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Avanti Clinics La Palma",
+      "loc": "Av. Dr. Fleming, 7, 38760 Los Llanos, Santa Cruz de Tenerife",
+      "created": "2026-04-17T18:13:50.341+0200",
+      "current_status": "Gestionado transporte",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Se tiene que cambiar el umbilical, harting y zona de la carcasa está rota",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-24 Gonzalo — Ahora les da Stop 3",
+      "transitions": [
+        [
+          "2026-05-06T13:08:54+0200",
+          "",
+          "Gestionado transporte"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753134+00:00"
+    },
+    "LEAS-5951": {
+      "key": "LEAS-5951",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centro Unico life dos mares",
+      "loc": ": Centro Comercial Dos Mares C, Autovía de Alicante, salida 777 de la AP-7, 30730 San Javier, Murcia",
+      "created": "2026-04-17T11:27:26.877+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Tiene temperatura muy alta tanto de la pieza de mano como de la consola, han movido la consola a otra sala y han puesto el aire acondicioado",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-12T11:25:39+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753143+00:00"
+    },
+    "LEAS-5947": {
+      "key": "LEAS-5947",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Mario Baia Portugal AHR0176",
+      "loc": "Portugal",
+      "created": "2026-04-16T14:57:34.325+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "No aparece",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "error de pulsto en auto y sp y comprobar pedal",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-05-05T14:24:05+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753152+00:00"
+    },
+    "LEAS-5946": {
+      "key": "LEAS-5946",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Mario Baia AHR0189",
+      "loc": "Portugal",
+      "created": "2026-04-16T14:46:11.471+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "",
+      "consola": "No aparece",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "Error de pulso en Auto y Sp y  no funciona bien el pedal",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-05 Jesús Fernández Porrúa — Inspección por error de pulso:• Limpieza de fuente de alimentación• Añadido diodo antirretorno• Añadido filtro EMI a la salida del grupo de refrigeración• Añadido cordón de estaño en resistencias de la placa de carga• Cambio de cableado de potencia • Apriete de pilaretes de la placa principal• Pruebas exhaustivas de estabilidad de pulso y operaciones en todos los modos, tanto en bajas como en altas fluencias Tras los trabajos realizados, el problema parece solucionado",
+      "transitions": [
+        [
+          "2026-04-23T12:24:10+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753210+00:00"
+    },
+    "LEAS-5937": {
+      "key": "LEAS-5937",
+      "summary": "Petición de servicio técnico",
+      "cliente": "ELha Caceres",
+      "loc": "Caceres",
+      "created": "2026-04-16T10:43:49.111+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "C00725",
+      "hp": "H00725",
+      "garantia": "Sí",
+      "descripcion": "Después de 20 dias de llegar de la revisión vuelven a decir que",
+      "tec_taller": "",
+      "importe": 0,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-30 Ernesto — Daños en el interlock por mal embalado de la maquina , embalada al reves",
+      "transitions": [
+        [
+          "2026-05-11T11:31:20+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753260+00:00"
+    },
+    "LEAS-5927": {
+      "key": "LEAS-5927",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Murcia",
+      "loc": "Murcia",
+      "created": "2026-04-15T14:04:43.526+0200",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2024-09-10",
+      "consola": "C00626",
+      "hp": "H00626",
+      "garantia": "No",
+      "descripcion": "stop7",
+      "tec_taller": "",
+      "importe": 1197.9,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-04 Isaac Sanchez — se vuelve a comentar a Sin vello para que digan que quieren hacer.",
+      "transitions": [
+        [
+          "2026-05-07T12:54:32+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753291+00:00"
+    },
+    "LEAS-5918": {
+      "key": "LEAS-5918",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Estética Yai",
+      "loc": "Irún",
+      "created": "2026-04-15T11:32:19.632+0200",
+      "current_status": "Inspección de salida",
+      "tipo": "Revisión",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2022-06-09",
+      "consola": "552",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Revisión anual - no suena el buzzer",
+      "tec_taller": "",
+      "importe": 5445,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Francisco Fernández Porrúa — tras hacer las pruebas extra solicitadas de disparos en cada modo con distintas fluencias y frecuencias, comprobando entregas correctas de energía y ningún fallo, los disparos de salida finales ascienden a 2071091",
+      "transitions": [
+        [
+          "2026-05-12T09:54:31+0200",
+          "",
+          "Inspección de salida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753320+00:00"
+    },
+    "LEAS-5909": {
+      "key": "LEAS-5909",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello la Laguna",
+      "loc": "C. Nuñez de la Peña, 41, 38203 La Laguna, Santa Cruz de Tenerife",
+      "created": "2026-04-14T16:47:13.561+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-09-22",
+      "consola": "C00182",
+      "hp": "H00182",
+      "garantia": "No",
+      "descripcion": "La consola da Stop 6, debe de ser por el umbilical que se encuentra roto, el técnico de GEE rompio el racor de la puntera, hay que cambiar la puntera.",
+      "tec_taller": "",
+      "importe": 738.1,
+      "tec_externo": "GC Electromed",
+      "ult_comentario": "2026-04-28 Isaac Sanchez — se ha llevado el manipulo el tecnico, no entiendo xq la verdad, mañana va ir a llevar el manipulo a la clinica que es donde tienen la maleta para pedir la recogida de la clienta.",
+      "transitions": [
+        [
+          "2026-05-08T14:52:16+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753348+00:00"
+    },
+    "LEAS-5903": {
+      "key": "LEAS-5903",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Avanti Sur Adeje",
+      "loc": "Adeje",
+      "created": "2026-04-14T12:47:27.482+0200",
+      "current_status": "En preparación presupuesto",
+      "tipo": "Casquillo nuevo",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "umbilical rajado por la parte del casquillo y ademas da stop6",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-15 Isaac Sanchez — IMPORTANTE MANDAR SOPORTE PISTOLA PARA CASQUILLO NUEVO",
+      "transitions": [
+        [
+          "2026-05-07T13:54:07+0200",
+          "",
+          "En preparación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753368+00:00"
+    },
+    "LEAS-5872": {
+      "key": "LEAS-5872",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Palencia",
+      "loc": "Palencia",
+      "created": "2026-04-13T13:30:18.454+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Casquillo nuevo",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2024-07-17",
+      "consola": "",
+      "hp": "H00565",
+      "garantia": "Sí",
+      "descripcion": "se ha rajado el umbilical por la zona del casquillo nuevo.",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-05 Borja Canteli Trabanco — esperando sustitución. no es urgente",
+      "transitions": [
+        [
+          "2026-04-20T10:58:14+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753386+00:00"
+    },
+    "LEAS-5853": {
+      "key": "LEAS-5853",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Harmonie Salamanca",
+      "loc": "Salamanca",
+      "created": "2026-04-13T08:43:07.890+0200",
+      "current_status": "Pendiente recogida",
+      "tipo": "Revisión",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2020-09-04",
+      "consola": "90522",
+      "hp": "40422",
+      "garantia": "No",
+      "descripcion": "REvision anual. Calienta la pistola siempre",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-04-13T08:43:48+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753395+00:00"
+    },
+    "LEAS-5851": {
+      "key": "LEAS-5851",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Único Life Jerez de la Frontera",
+      "loc": "Jerez de la Frontera",
+      "created": "2026-04-11T10:23:28.642+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Energía",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "Durante los tratamientos no notan efecto. Además, últimamente se calienta más de lo habitual",
+      "tec_taller": "",
+      "importe": 4549,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-11 Jonathan Zarauza — Prisma roto. Stacks de diodo quemados.Se debe de poner diodo nuevo.Nº de serie diodo viejo: 25130143",
+      "transitions": [
+        [
+          "2026-05-11T10:39:29+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753420+00:00"
+    },
+    "LEAS-5837": {
+      "key": "LEAS-5837",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centro del vello y Belleza Denia (Damaris)",
+      "loc": "Denia",
+      "created": "2026-04-10T11:47:52.676+0200",
+      "current_status": "Pendiente asignar técnico",
+      "tipo": "Revisión",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2016-10-25",
+      "consola": "90019",
+      "hp": "30015",
+      "garantia": "No",
+      "descripcion": "La máquina se le para por temperatura (sin más detalles) y solicita revisión anual Piden hacerla sin pedal",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-12 Ernesto — Mal embalado posible rotura carcasa trasera parte del soporte",
+      "transitions": [
+        [
+          "2026-05-12T11:23:22+0200",
+          "",
+          "Pendiente asignar técnico"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753440+00:00"
+    },
+    "LEAS-5789": {
+      "key": "LEAS-5789",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centro Unico Euroma 2 FS",
+      "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
+      "created": "2026-04-08T10:04:29.909+0200",
+      "current_status": "Enviado a técnico externo",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "Sí",
+      "descripcion": "La carcasa de la pieza de mano SRF FS se ha roto y hay que reemplazarla",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Sincronis",
+      "ult_comentario": "2026-04-09 Gonzalo — Se ha enviado el material y se ha avisado al técnico",
+      "transitions": [
+        [
+          "2026-04-09T16:11:44+0200",
+          "",
+          "Enviado a técnico externo"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753503+00:00"
+    },
+    "LEAS-5740": {
+      "key": "LEAS-5740",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello motril granada",
+      "loc": "Pl. Javier de Burgos, 1, 18600 Motril, Granada",
+      "created": "2026-03-31T17:08:31.992+0200",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-05-31",
+      "consola": "91292",
+      "hp": "30605",
+      "garantia": "No",
+      "descripcion": "Le ha salido un Stop 6 , se habla con ellos por tlf , se quita la pieza de mano y nada más ponerla da Stop 6 , puede que sea la consola",
+      "tec_taller": "",
+      "importe": 7477.8,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-11 Iván Lozano Fernández",
+      "transitions": [
+        [
+          "2026-05-11T19:05:29+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753530+00:00"
+    },
+    "LEAS-5736": {
+      "key": "LEAS-5736",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Depil&Bell - 30751  91107",
+      "loc": "Vigo",
+      "created": "2026-03-31T14:37:22.731+0200",
+      "current_status": "Presupuesto preparado pendiente de enviar",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "No aparece",
+      "garantia": "Sí",
+      "descripcion": "se para por temperatura o tra vez del tip",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-05-07 Jonathan Zarauza — Detectada fosforescencia por mosfet de disparo 2 dañado, también se dañó la placa driver por una entrada de corriente de retorno a través de gate. Estos daños fueron independientes de la causa de avería por la que vino el equipo.Diodo degradado (era un diodo reutilizado y se instaló en 2024) Puede que el diodo ya estuviera degradado antes de la fosforescencia.Se ha realizado una prueba de calor y el tip no supera los 0ºC hasta los 1800 disparos. Si se observa calentamiento en el diodo, registrando temperaturas de TO1= 19ºC y TO2= 23ºC, lo cual confirmaría una degradación ya existente del diodo previa al incidente de la fluorescencia.Umbilical rajado en agujero de tornillo de nylon y sin casquillo. Presupuestar (Garantía):Mosfets de disparo nuevos.Placa de carga nueva.Placa driver nueva.Saneamiento de umbilical o umbilical nuevo con casquillo (opcional).",
+      "transitions": [
+        [
+          "2026-05-07T08:14:58+0200",
+          "",
+          "Presupuesto preparado pendiente de enviar"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753614+00:00"
+    },
+    "LEAS-5695": {
+      "key": "LEAS-5695",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point Aprilia",
+      "loc": "Via XX Settembre, 118, 29121 Piacenza PC, Italia",
+      "created": "2026-03-26T10:48:36.794+0100",
+      "current_status": "Pendiente recogida",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2022-04-21",
+      "consola": "90901",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "En este centro de Epil Point, se quejan de temperaturas altas y problemas de fuga de refrigerante, que supuestamente se",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "Sincronis",
+      "ult_comentario": "2026-05-04 Gonzalo — Se les ha dicho que tenemos que recoger para poder realizarles el presupuesto, pero no han comentado nada más",
+      "transitions": [
+        [
+          "2026-04-16T09:43:45+0200",
+          "",
+          "Pendiente recogida"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753642+00:00"
+    },
+    "LEAS-5657": {
+      "key": "LEAS-5657",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Benalmadena",
+      "loc": "Malaga",
+      "created": "2026-03-23T14:51:24.343+0100",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Energía",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2024-02-16",
+      "consola": "C00336",
+      "hp": "H00336",
+      "garantia": "No",
+      "descripcion": "segun cliente no notan energía y se para por temperatura",
+      "tec_taller": "",
+      "importe": 7211.6,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-21 Jesús Fernández Porrúa — Máquina mal colocada en la caja (el frontal hacia adelante). Falta uno de los tornillos del elevador del soporte y uno de los thumbscrew del soporte está insertado en el elevador, sin cabeza. Carcasa trasera marcada con lápiz rojo en la zona del interlock. Bahía del interlock rajada a la altura del tornillo de sujeción.Recibido también el caliport P01042 en el maletín de la pistola (la consola tiene puesto otro).Se aprecia mancha en la cara interna del zafiro y sobre la esquina del prisma.El soporte no corresponde con el tipo del umbilical",
+      "transitions": [
+        [
+          "2026-05-07T12:53:07+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753730+00:00"
+    },
+    "LEAS-5636": {
+      "key": "LEAS-5636",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Belenus H00348",
+      "loc": "Chile",
+      "created": "2026-03-20T16:50:17.821+0100",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Puntera - Zafiro",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2024-02-08",
+      "consola": "",
+      "hp": "H00348",
+      "garantia": "No",
+      "descripcion": "Daños internos en las ópticas; cambio de puntera o de prisma y lente trasera",
+      "tec_taller": "",
+      "importe": 1210,
+      "tec_externo": "",
+      "ult_comentario": "2026-05-06 Ernesto — Sin fotos de salida se ponen las de entrada",
+      "transitions": [
+        [
+          "2026-05-06T14:18:11+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753751+00:00"
+    },
+    "LEAS-5544": {
+      "key": "LEAS-5544",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Dermasana Alcobendas",
+      "loc": "Av. Olímpica, 24, 28108 Alcobendas, Madrid",
+      "created": "2026-03-12T17:45:26.375+0100",
+      "current_status": "Esperando inicio reparación",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-11-24",
+      "consola": "",
+      "hp": "H00228",
+      "garantia": "No",
+      "descripcion": "El diodo se caliente muy raipdo y da Stop de temperatura incluso después de que fuera el innet a limpiar la consola, se ha parado con temperatura en el diodo 17-25ºC",
+      "tec_taller": "",
+      "importe": 7005.9,
+      "tec_externo": "",
+      "ult_comentario": "2026-03-20 Jonathan Zarauza — Se han hecho pruebas de calor tanto con su umbilical como con un umbilical de pruebas, la puntera tarda en bajar por debajo de los 0ºC, el diodo se calienta internamente en las pruebas de calor, alcanzando los 25ºC antes de los 1000 disparos.Umbilical antiguo sin casquillo. Presupuestar:Diodo nuevo.Umbilical nuevo con casquillo.",
+      "transitions": [
+        [
+          "2026-05-11T07:33:20+0200",
+          "",
+          "Esperando inicio reparación"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753790+00:00"
+    },
+    "LEAS-5480": {
+      "key": "LEAS-5480",
+      "summary": "Petición de servicio técnico",
+      "cliente": "CleanBody CC NIVARIA",
+      "loc": "Santa cruz de Tenerife",
+      "created": "2026-03-09T14:57:09.433+0100",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Stop",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2022-12-02",
+      "consola": "91175",
+      "hp": "30521",
+      "garantia": "No",
+      "descripcion": "stop 7 al intentar pasar el test.",
+      "tec_taller": "",
+      "importe": 2499,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-27 Isaac Sanchez — presupuesto enviado por whatsapp a la clienta.",
+      "transitions": [
+        [
+          "2026-05-06T14:19:14+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753809+00:00"
+    },
+    "LEAS-5263": {
+      "key": "LEAS-5263",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Centri Ideal Turin Torino",
+      "loc": "Se encuentra en: I Viali Shopping Park Dirección: I viali Shopping Park, Via dei Cacciatori, 111, 10042 Nichelino TO, Italia Provincia: Turín Teléfono: +39 011 925 6824",
+      "created": "2026-02-23T11:23:53.191+0100",
+      "current_status": "Presupuesto preparado pendiente de enviar",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "El equipo tiene el interruptor atascado en posición de encendido y se le para por temperatura AHR0369",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-04-29 Ernesto — Equipo con carcasa superior abierta",
+      "transitions": [
+        [
+          "2026-05-08T09:42:46+0200",
+          "",
+          "Presupuesto preparado pendiente de enviar"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753827+00:00"
+    },
+    "LEAS-5118": {
+      "key": "LEAS-5118",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Brull",
+      "loc": "Begues",
+      "created": "2026-02-11T13:44:55.770+0100",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Energía",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2023-11-24",
+      "consola": "",
+      "hp": "H00251",
+      "garantia": "No",
+      "descripcion": "creen que tiene problemas de energía",
+      "tec_taller": "",
+      "importe": 11398.2,
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-04-23T09:02:10+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753835+00:00"
+    },
+    "LEAS-5087": {
+      "key": "LEAS-5087",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Santa Coloma",
+      "loc": "Barcelona",
+      "created": "2026-02-10T13:38:14.712+0100",
+      "current_status": "Abierto",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "2024-05-31",
+      "consola": "C00519",
+      "hp": "H00519",
+      "garantia": "",
+      "descripcion": "Dicen que el equipo calienta duele - Además tiene e casquillo que se mueve algo el umbilical",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-02-10T13:38:14+0100",
+          "",
+          "Abierto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753843+00:00"
+    },
+    "LEAS-5030": {
+      "key": "LEAS-5030",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Epil Point Novara",
+      "loc": "italia",
+      "created": "2026-02-04T11:51:30.021+0100",
+      "current_status": "Gestionado transporte",
+      "tipo": "Temperatura",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "",
+      "consola": "91372",
+      "hp": "",
+      "garantia": "No",
+      "descripcion": "Comentan que saltaron los plomos y desde entonces cada vez que enchufan el equipo saltan",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "2026-02-18 Gonzalo — Se ha recogido para novara, la ha recogido Francesco para enviarla a taller",
+      "transitions": [
+        [
+          "2026-02-18T18:28:57+0100",
+          "",
+          "Gestionado transporte"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753865+00:00"
+    },
+    "LEAS-4912": {
+      "key": "LEAS-4912",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Limoneros",
+      "loc": "Almeria",
+      "created": "2026-01-27T16:37:01.258+0100",
+      "current_status": "Abierto",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "Sí",
+      "fventa": "2024-06-18",
+      "consola": "C00538",
+      "hp": "H00538",
+      "garantia": "Sí",
+      "descripcion": "Dicen que quema/duele en todos los modos",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-04-14T15:21:23+0200",
+          "",
+          "Abierto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753874+00:00"
+    },
+    "LEAS-4908": {
+      "key": "LEAS-4908",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Pintor Felo Monzon",
+      "loc": "Canarias",
+      "created": "2026-01-27T16:31:14.944+0100",
+      "current_status": "Abierto",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "",
+      "consola": "C03045",
+      "hp": "H03045",
+      "garantia": "",
+      "descripcion": "Dicen que quema/duele  100ms 10J 12J y 8J",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-01-27T16:31:14+0100",
+          "",
+          "Abierto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753881+00:00"
+    },
+    "LEAS-4905": {
+      "key": "LEAS-4905",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Elha Castells",
+      "loc": "Lleida",
+      "created": "2026-01-27T16:27:05.561+0100",
+      "current_status": "Abierto",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "2024-05-30",
+      "consola": "C00510",
+      "hp": "H00510",
+      "garantia": "",
+      "descripcion": "Dicen que quema/duele sube el tip sin llegar a pararse",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-01-27T16:27:05+0100",
+          "",
+          "Abierto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753902+00:00"
+    },
+    "LEAS-4892": {
+      "key": "LEAS-4892",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Galaxy",
+      "loc": "Israel",
+      "created": "2026-01-26T15:20:38.864+0100",
+      "current_status": "Devuelto a cliente",
+      "tipo": "Caída",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2025-11-07",
+      "consola": "",
+      "hp": "H00918",
+      "garantia": "No",
+      "descripcion": "Prisma roto tras una caída",
+      "tec_taller": "",
+      "importe": 1770,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-16 Jonathan Zarauza",
+      "transitions": [
+        [
+          "2026-05-07T12:56:07+0200",
+          "",
+          "Devuelto a cliente"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753916+00:00"
+    },
+    "LEAS-4668": {
+      "key": "LEAS-4668",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Majadahonda",
+      "loc": "Majadahonda",
+      "created": "2026-01-12T12:10:23.052+0100",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2024-02-23",
+      "consola": "",
+      "hp": "H00369",
+      "garantia": "No",
+      "descripcion": "umbilical con casquillo viejo suelto",
+      "tec_taller": "",
+      "importe": 12729.2,
+      "tec_externo": "",
+      "ult_comentario": "2026-02-23 Isaac Sanchez — se vuelve a recordar al cliente.",
+      "transitions": [
+        [
+          "2026-01-19T10:56:13+0100",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753935+00:00"
+    },
+    "LEAS-4443": {
+      "key": "LEAS-4443",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Dermoscan",
+      "loc": "Alemania",
+      "created": "2025-12-16T13:12:16.273+0100",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Energía",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2022-09-21",
+      "consola": "",
+      "hp": "40443",
+      "garantia": "No",
+      "descripcion": "EL dido esta casi al 50% según sus medidas de energía",
+      "tec_taller": "",
+      "importe": 12560,
+      "tec_externo": "",
+      "ult_comentario": "2026-04-17 Borja Canteli Trabanco — Johann nos escribe esto: Hola, Borja:Por desgracia, la aseguradora ha rechazado finalmente hacerse cargo de los daños.Como por el momento no necesitamos el 40443 en nuestros estudios, no lo voy a reparar, sino que lo canjearé cuando compremos una nueva pieza de mano Quad en el futuro. Hablaré con Oliver y él te lo comunicará entonces.Johann cancelamos el presupuesto",
+      "transitions": [
+        [
+          "2026-05-07T14:30:06+0200",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753975+00:00"
+    },
+    "LEAS-4350": {
+      "key": "LEAS-4350",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Brull",
+      "loc": "Brull",
+      "created": "2025-12-04T11:42:15.408+0100",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Energía",
+      "bloq": "Sí",
+      "susti": "Sí",
+      "fventa": "2023-07-27",
+      "consola": "",
+      "hp": "H00141",
+      "garantia": "No",
+      "descripcion": "Tiene la energia baja, con pocos disparos, unos 2 millones",
+      "tec_taller": "",
+      "importe": 11398.2,
+      "tec_externo": "",
+      "ult_comentario": "2026-01-20 Isaac Sanchez — lo esta gestionando Oliver, estamos esperando que nos diga como proceder.",
+      "transitions": [
+        [
+          "2026-01-27T09:16:58+0100",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.753991+00:00"
+    },
+    "LEAS-4024": {
+      "key": "LEAS-4024",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Brull",
+      "loc": "Begues",
+      "created": "2025-11-03T12:51:37.071+0100",
+      "current_status": "Pendiente confirmación presupuesto",
+      "tipo": "Diodo",
+      "bloq": "Sí",
+      "susti": "No",
+      "fventa": "2023-07-27",
+      "consola": "",
+      "hp": "H00131",
+      "garantia": "No",
+      "descripcion": "da poca energía",
+      "tec_taller": "",
+      "importe": 11325.6,
+      "tec_externo": "",
+      "ult_comentario": "2026-01-13 Isaac Sanchez — Oliver gestiona esta incidencia, nos pidió una sust para dejarles mientras solucionaba el tema. Aun no se ha dejado sust xq no disponemos.",
+      "transitions": [
+        [
+          "2025-11-11T09:08:41+0100",
+          "",
+          "Pendiente confirmación presupuesto"
+        ]
+      ],
+      "fetched_at": "2026-05-12T11:48:18.754011+00:00"
+    }
+  }
+}
