@@ -833,27 +833,19 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
 def build_inmovilizado_full_html(sustis_items, inmov_items):
     """Vista inmovilizado completo: tabla por tipo (consolas / manípulos) con status.
     Colores: amarillo=duplicado, rojo=solo en Jira (sin registro en Airtable), blanco=resto."""
-    # Construir lookup serial→sustis con todas las variantes
-    sustis_serials = {}  # normalized variant → list of sustis items
+    # Construir lookup serial→[sub-task keys únicas] (deduplicado por key)
+    # Cada variant apunta al set de sub-task KEYS que contienen ese serial (no duplicado por variantes)
+    sustis_serials = {}  # variant → dict {sustis_key: sustis_item}
     for s in sustis_items:
+        skey = s.get("key", "")
+        if not skey: continue
+        seen_v = set()
         for serial in [s.get("consola_susti"), s.get("manipulo_susti")]:
-            ns = normalize_serial(serial)
-            if ns:
-                for v in serial_variants_all(serial):
-                    sustis_serials.setdefault(v, []).append(s)
-                sustis_serials.setdefault(ns, []).append(s)
-
-    # Detectar duplicados: mismo serial en múltiples sub-tasks (por número de equipo)
-    def number_key(s):
-        s = (s or "").strip().upper()
-        m = re.search(r"(\d+)$", s)
-        return m.group(1).lstrip("0") if m else ""
-    serial_to_sustis = {}
-    for s in sustis_items:
-        for serial in [s.get("consola_susti"), s.get("manipulo_susti")]:
-            ns = normalize_serial(serial)
-            if ns:
-                serial_to_sustis.setdefault(ns, []).append(s)
+            if not serial: continue
+            for v in serial_variants_all(serial):
+                if v in seen_v: continue
+                seen_v.add(v)
+                sustis_serials.setdefault(v, {})[skey] = s
 
     def is_console(it):
         ta = (it.get("type_asset", "") or "").lower()
@@ -863,23 +855,19 @@ def build_inmovilizado_full_html(sustis_items, inmov_items):
         return "handpiece" in ta or "manípulo" in ta or "manipulo" in ta
 
     def status_of(it):
-        # Buscar si está prestado
-        matched_susti = None
+        # Buscar todas las sub-tasks únicas que contienen este equipo (deduplicado por key)
+        matched_keys = {}  # sustis_key → sustis_item
         for a in get_serial_aliases(it):
             if a in sustis_serials:
-                matched_susti = sustis_serials[a][0]
-                break
-        if matched_susti:
-            # Verificar si es duplicado (mismo serial en múltiples sub-tasks)
-            ns = normalize_serial(matched_susti.get("consola_susti")) or normalize_serial(matched_susti.get("manipulo_susti"))
-            is_dup = False
-            for a in get_serial_aliases(it):
-                if len(sustis_serials.get(a, [])) > 1:
-                    is_dup = True
-                    break
-            bg = INMOV_YELLOW if is_dup else ""
-            label = "Prestado (duplicado antiguo)" if is_dup else "Prestado en sustitución"
-            return (label, matched_susti, bg)
+                matched_keys.update(sustis_serials[a])
+        if matched_keys:
+            # Si el MISMO equipo está prestado en >1 sub-task activa simultánea, hay duplicado real (anomalía)
+            all_subs = list(matched_keys.values())
+            all_subs.sort(key=lambda x: x.get("fecha_envio") or "", reverse=True)
+            primary = all_subs[0]
+            if len(all_subs) > 1:
+                return ("Prestado (DUPLICADO: " + str(len(all_subs)) + " sub-tasks)", primary, INMOV_YELLOW)
+            return ("Prestado en sustitución", primary, "")
         if it.get("activity") == "SAT":
             return ("Disponible", None, INMOV_GREEN)
         if it.get("activity") == "Backups for customers":
