@@ -567,7 +567,11 @@ def build_html(cache, out_path, template_path):
         sy_path = out_path.parent.parent / "data" / "serial_year.json"
         if sy_path.exists():
             serial_year = json.loads(sy_path.read_text(encoding="utf-8"))
-        chains_html = build_chains_html(cache, airtable, serial_year)
+        sustis = None
+        sustis_path = out_path.parent.parent / "cache" / "sustis_activas.json"
+        if sustis_path.exists():
+            sustis = json.loads(sustis_path.read_text(encoding="utf-8"))
+        chains_html = build_chains_html(cache, airtable, serial_year, sustis)
     except Exception as e:
         chains_html = f'<p style="color:#c0392b;padding:20px">Error generando Fase 2: {e}</p>'
 

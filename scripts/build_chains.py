@@ -1,11 +1,4 @@
-"""
-Genera HTML de pestaña "Por cadena" (Fase 2 iter D).
-- Sort por click en cabeceras
-- Multi-select Estado con checkboxes
-- Columnas en mismo orden que Fase 1 + 3 nuevas al final
-- Barra de filtros propia por cadena
-- Celdas clicables en tablas mensuales
-"""
+"""build_chains.py — Fase 2 iter E2: Inmovilizado SAT con 4 secciones + colores."""
 from __future__ import annotations
 
 import json as _json
@@ -17,7 +10,6 @@ from build_report import (
     last_status_change_dt, days_since, days_bucket,
     COLOR_GREEN, COLOR_YELLOW, COLOR_RED, FUNNEL_COLOR,
 )
-
 
 CHAIN_ORDER = ["Elha", "Sin Vello", "Dermasana", "Smart Duck",
                "Epil Point", "Laser Factory", "Unico Italia", "Otros"]
@@ -34,6 +26,13 @@ MOTIVO_BUCKETS = ["Diodo", "Umbilical", "Puntera", "Placa",
                   "Pantalla", "Gatillo", "Buffer", "Otros", "No resuelto aún"]
 COSTE_BUCKETS = ["Sin coste", "< 1.000 €", "1.000 - 6.000 €", "> 6.000 €"]
 YEAR_BUCKETS = ["2026", "2025", "2024", "2023", "2022", "<2022", "Sin compra"]
+
+# Colores del brief
+INMOV_RED = "#FFD1D1"     # solo en Jira
+INMOV_YELLOW = "#FFF2A8"  # duplicado
+INMOV_GREEN = "#D9F2D6"   # disponible (solo en AT con SAT)
+INMOV_HDR_DARK = "#1F3B5E"
+INMOV_HDR_BLUE = "#2E5496"
 
 
 def html_escape(s):
@@ -55,9 +54,7 @@ def add_serial_variants(s, variants):
         return
     if re.match(r'^\d+\.0$', s):
         s = s[:-2]
-    variants.add(s)
-    variants.add(s.lower())
-    variants.add(s.upper())
+    variants.add(s); variants.add(s.lower()); variants.add(s.upper())
     m = re.match(r'^([CH])(\d+)$', s, re.IGNORECASE)
     if m:
         digits = m.group(2).lstrip('0')
@@ -111,20 +108,16 @@ def lookup_year(serial_year, ticket, max_known=None):
 
 
 def bucket_year(y):
-    if y is None:
-        return "Sin compra"
-    if y >= 2026:
-        return "2026"
-    if y in (2025, 2024, 2023, 2022):
-        return str(y)
+    if y is None: return "Sin compra"
+    if y >= 2026: return "2026"
+    if y in (2025, 2024, 2023, 2022): return str(y)
     return "<2022"
 
 
 def bucket_motivo(motivos, status):
     cerrados = ("Finalizada", "Resuelto", "Cancelado", "Finalizado técnico externo")
     if not motivos:
-        if status in cerrados:
-            return "Otros"
+        if status in cerrados: return "Otros"
         return "No resuelto aún"
     txt = " ".join(motivos).lower()
     if "diodo" in txt: return "Diodo"
@@ -142,12 +135,9 @@ def bucket_coste(importe):
         v = float(importe) if importe not in ("", None) else 0
     except (TypeError, ValueError):
         v = 0
-    if v == 0:
-        return "Sin coste"
-    if v < 1000:
-        return "< 1.000 €"
-    if v <= 6000:
-        return "1.000 - 6.000 €"
+    if v == 0: return "Sin coste"
+    if v < 1000: return "< 1.000 €"
+    if v <= 6000: return "1.000 - 6.000 €"
     return "> 6.000 €"
 
 
@@ -160,8 +150,7 @@ def compute_max_known_per_prefix(serial_year):
     for k in serial_year.keys():
         m = re.match(r'^([CH])(\d+)$', k)
         if m:
-            p = m.group(1)
-            n = int(m.group(2))
+            p = m.group(1); n = int(m.group(2))
             if n > max_n.get(p, 0):
                 max_n[p] = n
     return max_n
@@ -193,8 +182,256 @@ def enrich(t, serial_year, max_known, year):
     }
 
 
+# ========================
+# CRUCE INMOVILIZADO SAT
+# ========================
+
+def normalize_serial(s):
+    """Normaliza serial para matching: upper, strip, sin sufijo BIS."""
+    if s is None: return ""
+    s = str(s).strip().upper()
+    s = re.sub(r'\s*BIS\s*$', '', s)
+    # Strip .0 si viene como float string
+    if s.endswith('.0') and s[:-2].replace('-', '').isdigit():
+        s = s[:-2]
+    return s
+
+
+def get_serial_aliases(inmov_item):
+    """Devuelve set de aliases para un equipo de Airtable (ID + Renombrada)."""
+    aliases = set()
+    sid = normalize_serial(inmov_item.get("serial", ""))
+    if sid:
+        aliases.add(sid)
+    renombrada = inmov_item.get("renombrada", "") or ""
+    for a in re.split(r'[,;\n/]', renombrada):
+        a = normalize_serial(a)
+        if a and a not in ("IDEAL", "CU", "—", "BAJA", "BIS"):
+            aliases.add(a)
+    return aliases
+
+
+def section_for_inmov(item):
+    """A/B/C/D según Type of Asset + Console + Spot Size."""
+    spot = (item.get("spot_size", "") or "").upper()
+    type_a = (item.get("type_asset", "") or "").lower()
+    console = (item.get("console_model", "") or "").upper()
+    if "SRF" in spot:
+        return "D"
+    if "console" in type_a or "consola" in type_a:
+        if console == "AHR":
+            return "C"
+        return "A"
+    if "handpiece" in type_a or "manípulo" in type_a or "manipulo" in type_a:
+        return "B"
+    return "A"
+
+
+def section_for_solo_jira(serial):
+    """Cuando solo_jira (sin match en Airtable), infiere sección por prefijo del serial."""
+    s = (serial or "").upper().strip()
+    if not s: return "A"
+    if s.startswith("SUSTSRF") or "SRF" in s: return "D"
+    if s.startswith("SUSTMHR"): return "A"
+    if s.startswith("SUSTDUAL") or s.startswith("SUSTQUAD") or s.startswith("SUSTSINGLE"): return "B"
+    if re.match(r'^C\d', s): return "A"
+    if re.match(r'^H\d', s): return "B"
+    if re.match(r'^9\d{4}$', s): return "A"
+    if re.match(r'^(30|40)\d{3}$', s): return "B"
+    if s == "DEMO": return "A"
+    return "A"
+
+
+def chain_of_inmov(customer):
+    """Mapea Customer de Airtable Inmovilizado a una cadena."""
+    return chain_of(customer or "", "")
+
+
+def chain_of_sustis(s):
+    """Mapea sustitución (Jira) a cadena."""
+    return chain_of(s.get("cliente", "") or s.get("parent_cliente", ""), s.get("loc", ""))
+
+
+def build_inmovilizado_section(chain, sustis_items, inmov_items):
+    """Genera el HTML de la tabla Inmovilizado SAT para una cadena.
+    Devuelve "" si no hay nada que mostrar."""
+    # Filtrar sustis e inmov por cadena
+    sustis_chain = [s for s in sustis_items if chain_of_sustis(s) == chain]
+    inmov_chain = [i for i in inmov_items if chain_of_inmov(i.get("customer", "")) == chain]
+
+    # Construir lookup de Airtable por serial alias
+    alias_to_inmov = {}
+    for it in inmov_chain:
+        for a in get_serial_aliases(it):
+            alias_to_inmov[a] = it
+    # También global (no filtrado por cadena) para resolver matches que crucen
+    alias_to_inmov_global = {}
+    for it in inmov_items:
+        for a in get_serial_aliases(it):
+            alias_to_inmov_global.setdefault(a, it)
+
+    # Por cada sub-task Jira, generar fila por serial prestado (consola y/o manípulo)
+    rows = []  # cada fila: dict con todos los campos + kind + color + section
+    matched_inmov_ids = set()
+    now_utc = datetime.now(timezone.utc)
+
+    def make_row_from_sustis(s, serial, role):
+        n_serial = normalize_serial(serial)
+        if not n_serial:
+            return None
+        inmov_match = alias_to_inmov_global.get(n_serial)
+        is_match = inmov_match is not None
+        if is_match:
+            matched_inmov_ids.add(inmov_match.get("id_rec"))
+            modelo = inmov_match.get("console_model", "") or inmov_match.get("type_asset", "")
+            activity = inmov_match.get("activity", "")
+            section = section_for_inmov(inmov_match)
+        else:
+            modelo = ""
+            activity = ""
+            section = section_for_solo_jira(serial)
+        fe_dt = parse_iso(s.get("fecha_envio"))
+        dias = (now_utc - fe_dt).days if fe_dt else None
+        return {
+            "num_serie": serial,
+            "modelo": modelo,
+            "cliente": s.get("cliente", ""),
+            "subtask_key": s.get("key", ""),
+            "parent_key": s.get("parent_key", ""),
+            "parent_status": s.get("parent_status", ""),
+            "consola_avr": s.get("consola_averiada", ""),
+            "hp_avr": s.get("manipulo_averiado", ""),
+            "subtask_status": s.get("subtask_status", ""),
+            "loc": s.get("loc", ""),
+            "fecha_envio": s.get("fecha_envio"),
+            "fecha_envio_fmt": fe_dt.strftime("%d/%m/%Y %H:%M") if fe_dt else (s.get("fecha_envio") or ""),
+            "dias": dias,
+            "activity": activity,
+            "kind": "union" if is_match else "solo_jira",
+            "section": section,
+        }
+
+    for s in sustis_chain:
+        for serial, role in [(s.get("consola_susti"), "consola"), (s.get("manipulo_susti"), "manipulo")]:
+            r = make_row_from_sustis(s, serial, role)
+            if r:
+                rows.append(r)
+
+    # Detectar duplicados (mismo serial en múltiples filas)
+    serial_counts = {}
+    for r in rows:
+        n = normalize_serial(r["num_serie"])
+        serial_counts.setdefault(n, []).append(r)
+    for serials, group in serial_counts.items():
+        if len(group) > 1:
+            # marcar todas menos la más reciente como duplicado amarillo
+            group.sort(key=lambda r: r["dias"] if r["dias"] is not None else -1)
+            # El de menos días (más reciente) es el actual; los demás son antiguos
+            for r in group[:-1]:
+                r["kind"] = "duplicado"
+
+    # Añadir equipos Airtable SAT que NO están en ninguna sub-task (disponibles)
+    for it in inmov_chain:
+        if it.get("activity") != "SAT": continue
+        if it.get("id_rec") in matched_inmov_ids: continue
+        section = section_for_inmov(it)
+        rows.append({
+            "num_serie": it.get("serial", ""),
+            "modelo": it.get("console_model", "") or it.get("type_asset", ""),
+            "cliente": "—",
+            "subtask_key": "", "parent_key": "", "parent_status": "",
+            "consola_avr": "", "hp_avr": "",
+            "subtask_status": "", "loc": "",
+            "fecha_envio": None, "fecha_envio_fmt": "",
+            "dias": None,
+            "activity": "SAT",
+            "kind": "solo_at",
+            "section": section,
+        })
+
+    if not rows:
+        return ""
+
+    # Orden dentro de cada sección
+    def sort_key(r):
+        is_avail = (r["kind"] == "solo_at")
+        days = r["dias"] if isinstance(r["dias"], int) else -1
+        return (1 if is_avail else 0, -days, r["num_serie"] or "")
+    rows.sort(key=sort_key)
+
+    # Agrupar por sección
+    by_section = {"A": [], "B": [], "C": [], "D": []}
+    for r in rows:
+        by_section[r["section"]].append(r)
+
+    section_titles = {
+        "A": "A — Consolas (MHR y otras, excl. AHR y SRF)",
+        "B": "B — Manípulos (Quad / Dual / Single, excl. SRF)",
+        "C": "C — Consolas AHR",
+        "D": "D — Tecnología SRF (consolas + manípulos)",
+    }
+    color_map = {
+        "solo_jira": INMOV_RED,
+        "duplicado": INMOV_YELLOW,
+        "solo_at": INMOV_GREEN,
+    }
+
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+    out = []
+    today = date.today().isoformat()
+    out.append(f'<p class="chain-section-title">Inmovilizado SAT — {today} <span style="color:var(--grey);font-weight:400">— {len(rows)} equipos en cadena {html_escape(chain)}</span></p>')
+    out.append('<p class="legend">Leyenda: '
+               f'<span class="pill" style="background:{INMOV_RED};padding:2px 8px;border-radius:3px">Solo en Jira</span> · '
+               f'<span class="pill" style="background:{INMOV_YELLOW};padding:2px 8px;border-radius:3px">Duplicado antiguo</span> · '
+               f'<span class="pill" style="background:{INMOV_GREEN};padding:2px 8px;border-radius:3px">Disponible (SAT sin ticket activo)</span> · '
+               'normal: en ambos</p>')
+    out.append('<div class="scroller"><table style="font-size:11px;min-width:1700px">')
+
+    headers = ["Num. Serie", "Modelo", "Cliente",
+               "Incidencia (sub-task)", "Incidencia principal", "Estado principal",
+               "Consola principal (avería)", "HP principal (avería)",
+               "Estado Jira (sub-task)", "Localización equipo averiado",
+               "Fecha y hora de envío", "Días con sustitución",
+               "Current Activity (Airtable)"]
+    NCOLS = len(headers)
+
+    for sec_key in ["A", "B", "C", "D"]:
+        rows_s = by_section[sec_key]
+        if not rows_s:
+            continue
+        out.append(f'<tr><th colspan="{NCOLS}" style="background:{INMOV_HDR_DARK};color:white;text-align:left;padding:6px 10px">{section_titles[sec_key]}</th></tr>')
+        out.append('<tr>')
+        for h in headers:
+            out.append(f'<th style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px">{h}</th>')
+        out.append('</tr>')
+        for r in rows_s:
+            bg = color_map.get(r["kind"], "")
+            style = f' style="background:{bg}"' if bg else ""
+            sub_link = f'<a href="{JIRA_URL}{r["subtask_key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["subtask_key"]}</a>' if r["subtask_key"] else "—"
+            par_link = f'<a href="{JIRA_URL}{r["parent_key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["parent_key"]}</a>' if r["parent_key"] else "—"
+            dias_v = r["dias"] if r["dias"] is not None else "—"
+            out.append(f'<tr{style}>')
+            out.append(f'<td style="text-align:center"><b>{html_escape(r["num_serie"])}</b></td>')
+            out.append(f'<td>{html_escape(r["modelo"])}</td>')
+            out.append(f'<td style="text-align:left">{html_escape(r["cliente"])}</td>')
+            out.append(f'<td style="text-align:center">{sub_link}</td>')
+            out.append(f'<td style="text-align:center">{par_link}</td>')
+            out.append(f'<td>{html_escape(r["parent_status"])}</td>')
+            out.append(f'<td style="text-align:center">{html_escape(r["consola_avr"])}</td>')
+            out.append(f'<td style="text-align:center">{html_escape(r["hp_avr"])}</td>')
+            out.append(f'<td>{html_escape(r["subtask_status"])}</td>')
+            out.append(f'<td class="d-trunc" style="text-align:left" title="{html_escape(r["loc"])}">{html_escape(r["loc"])}</td>')
+            out.append(f'<td>{html_escape(r["fecha_envio_fmt"])}</td>')
+            out.append(f'<td style="text-align:center">{dias_v}</td>')
+            out.append(f'<td>{html_escape(r["activity"])}</td>')
+            out.append('</tr>')
+
+    out.append('</table></div>')
+    return "".join(out)
+
+
 def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
-                     year, num_months):
+                     year, num_months, sustis_items=None, inmov_items=None):
     enriched = []
     for t in tickets_chain:
         e = enrich(t, serial_year, max_known, year)
@@ -211,15 +448,12 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
             continue
         b = monthly[m]
         b["nuevas"] += 1
-        if e["bloq"] == "Sí":
-            b["bloq"] += 1
+        if e["bloq"] == "Sí": b["bloq"] += 1
         b["motivo"][e["motivo"]] = b["motivo"].get(e["motivo"], 0) + 1
         b["yearcompra"][e["yearcompra"]] = b["yearcompra"].get(e["yearcompra"], 0) + 1
         b["coste"][e["coste"]] = b["coste"].get(e["coste"], 0) + 1
-        if e["susti"] == "Sí":
-            b["susti_si"] += 1
-        else:
-            b["susti_no"] += 1
+        if e["susti"] == "Sí": b["susti_si"] += 1
+        else: b["susti_no"] += 1
 
     ytd_nuevas = sum(monthly[m]["nuevas"] for m in range(1, num_months + 1))
     ytd_bloq = sum(monthly[m]["bloq"] for m in range(1, num_months + 1))
@@ -234,8 +468,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     out.append('<table class="evol-table"><thead><tr><th>Métrica</th>' + headers + '<th class="ytd">YTD</th></tr></thead><tbody>')
 
     def cell_filter(val, fdict):
-        if not val:
-            return '<td>-</td>'
+        if not val: return '<td>-</td>'
         return f'<td class="filter-cell" data-filter=\'{jdata(fdict)}\' title="Click para filtrar">{val}</td>'
 
     cells = [cell_filter(monthly[m]["nuevas"], {"month": m}) for m in range(1, num_months + 1)]
@@ -252,8 +485,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
 
     tasa_cells = []
     for m in range(1, num_months + 1):
-        p_m = parque_vals[m - 1]
-        b_m = monthly[m]["bloq"]
+        p_m = parque_vals[m - 1]; b_m = monthly[m]["bloq"]
         t_m = (b_m / p_m) if p_m else 0
         tasa_cells.append(f'<td>{t_m*100:.2f}%</td>' if t_m else '<td>-</td>')
     out.append('<tr><td class="lbl">Tasa bloqueantes</td>' + "".join(tasa_cells) +
@@ -261,8 +493,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
 
     ba_cells = []
     for m in range(1, num_months + 1):
-        p_m = parque_vals[m - 1]
-        b_m = monthly[m]["bloq"]
+        p_m = parque_vals[m - 1]; b_m = monthly[m]["bloq"]
         t_m = (b_m / p_m) if p_m else 0
         ba_cells.append(f'<td>{t_m*12:.2f}</td>' if t_m else '<td>-</td>')
     out.append('<tr class="zebra"><td class="lbl">Bloq/año/equipo</td>' + "".join(ba_cells) +
@@ -280,14 +511,11 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
         for b in buckets:
             mvals = [monthly[m][key_field].get(b, 0) for m in range(1, num_months + 1)]
             ytd_v = sum(mvals)
-            if ytd_v == 0:
-                continue
+            if ytd_v == 0: continue
             cs = []
             for i, v in enumerate(mvals):
-                if v == 0:
-                    cs.append('<td>-</td>')
-                else:
-                    cs.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": i+1, key_field: b})}\'>{v}</td>')
+                if v == 0: cs.append('<td>-</td>')
+                else: cs.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": i+1, key_field: b})}\'>{v}</td>')
             klass = 'zebra' if idx % 2 else ''
             out.append(f'<tr class="{klass}"><td class="lbl">{html_escape(b)}</td>' + "".join(cs) +
                        f'<td class="filter-cell" data-filter=\'{jdata({key_field: b})}\'>{ytd_v}</td></tr>')
@@ -303,10 +531,8 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     si_cells, no_cells = [], []
     si_ytd, no_ytd = 0, 0
     for m in range(1, num_months + 1):
-        s = monthly[m]["susti_si"]
-        n = monthly[m]["susti_no"]
-        si_ytd += s
-        no_ytd += n
+        s = monthly[m]["susti_si"]; n = monthly[m]["susti_no"]
+        si_ytd += s; no_ytd += n
         si_cells.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": m, "susti": "Sí"})}\'>{s}</td>' if s else '<td>-</td>')
         no_cells.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": m, "susti": "No"})}\'>{n}</td>' if n else '<td>-</td>')
     out.append('<tr><td class="lbl">Sí entregada</td>' + "".join(si_cells) +
@@ -314,6 +540,11 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     out.append('<tr class="zebra"><td class="lbl">Sin sustitución</td>' + "".join(no_cells) +
                f'<td class="filter-cell" data-filter=\'{jdata({"susti":"No"})}\'>{no_ytd}</td></tr>')
     out.append('</tbody></table>')
+
+    # === Tabla Inmovilizado SAT con 4 secciones + colores ===
+    inmov_html = build_inmovilizado_section(chain, sustis_items or [], inmov_items or [])
+    if inmov_html:
+        out.append(inmov_html)
 
     enriched.sort(key=lambda x: (x[1]["month"] or 99, -(days_since(last_status_change_dt(x[0])) or 0)))
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
@@ -408,14 +639,8 @@ def build_resumen_pane(stats):
         if not s and ch == "Otros":
             continue
         nu, bl = s.get("nuevas", 0), s.get("bloq", 0)
-        p = s.get("parque", 0)
-        ta = s.get("tasa", 0)
-        ba = s.get("bloq_ano", 0)
-        ab = s.get("abiertas", 0)
-        totals["nuevas"] += nu
-        totals["bloq"] += bl
-        totals["parque"] += p
-        totals["abiertas"] += ab
+        p = s.get("parque", 0); ta = s.get("tasa", 0); ba = s.get("bloq_ano", 0); ab = s.get("abiertas", 0)
+        totals["nuevas"] += nu; totals["bloq"] += bl; totals["parque"] += p; totals["abiertas"] += ab
         klass = "zebra" if i % 2 else ""
         out.append(
             f'<tr class="{klass}"><td class="lbl">{ch}</td>'
@@ -432,7 +657,7 @@ def build_resumen_pane(stats):
     return "".join(out)
 
 
-def build_chains_html(cache, airtable, serial_year):
+def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
     today = date.today()
     year = today.year
     num_months = today.month
@@ -442,12 +667,14 @@ def build_chains_html(cache, airtable, serial_year):
     by_chain = {ch: [] for ch in CHAIN_ORDER}
     for k, t in tickets.items():
         ch = chain_of_ticket(t)
-        if ch not in by_chain:
-            by_chain[ch] = []
+        if ch not in by_chain: by_chain[ch] = []
         by_chain[ch].append(t)
 
     ventas = (airtable or {}).get("ventas_by_chain_month", {})
     chains_to_show = [ch for ch in CHAIN_ORDER if ch != "Otros"]
+
+    sustis_items = (sustis or {}).get("items", []) if sustis else []
+    inmov_items = (inmov or {}).get("items", []) if inmov else []
 
     tabs = ['<div class="tabs2">']
     tabs.append('<button type="button" data-chain="resumen" class="active">Resumen</button>')
@@ -459,7 +686,8 @@ def build_chains_html(cache, airtable, serial_year):
     panes = []
     for ch in chains_to_show:
         pane_html, s = build_chain_pane(ch, by_chain.get(ch, []), ventas,
-                                        serial_year, max_known, year, num_months)
+                                        serial_year, max_known, year, num_months,
+                                        sustis_items=sustis_items, inmov_items=inmov_items)
         stats_per_chain[ch] = s
         meta = (f'{s["nuevas"]} nuevas YTD · {s["bloq"]} bloqueantes · '
                 f'{s["abiertas"]} abiertas hoy')

@@ -49,6 +49,22 @@ jobs:
         run: |
           python scripts/fetch_airtable.py --cache cache/airtable_pedidos.json
 
+      - name: Refresh Airtable Inmovilizado (Fase 2)
+        continue-on-error: true
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        run: |
+          python scripts/fetch_inmovilizado.py --cache cache/airtable_inmovilizado.json
+
+      - name: Refresh Jira sustituciones activas (Fase 2)
+        continue-on-error: true
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER:     ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN:    ${{ secrets.JIRA_TOKEN }}
+        run: |
+          python scripts/fetch_sustis.py --cache cache/sustis_activas.json
+
       - name: Build report
         run: |
           mkdir -p output
