@@ -120,7 +120,10 @@ def is_open(s):
 
 
 def compute_cutoffs(today):
+    """Devuelve hasta 21 cortes únicos: 6 fin-de-mes + 15 días laborables.
+    Si un fin-de-mes cae en uno de los 15 días laborables, se conserva una sola vez."""
     cutoffs = []
+    seen = set()
     y, m = today.year, today.month
     monthly = []
     for _ in range(6):
@@ -131,7 +134,11 @@ def compute_cutoffs(today):
         monthly.append(date(ny, nm, 1) - timedelta(days=1))
     monthly.sort()
     for d in monthly:
-        cutoffs.append((d.strftime("%Y-%m-%d"), d))
+        lbl = d.strftime("%Y-%m-%d")
+        if lbl in seen:
+            continue
+        seen.add(lbl)
+        cutoffs.append((lbl, d))
     bd, d = [], today
     while len(bd) < 15:
         if d.weekday() < 5:
@@ -139,7 +146,11 @@ def compute_cutoffs(today):
         d -= timedelta(days=1)
     bd.sort()
     for x in bd:
-        cutoffs.append((x.strftime("%Y-%m-%d"), x))
+        lbl = x.strftime("%Y-%m-%d")
+        if lbl in seen:
+            continue
+        seen.add(lbl)
+        cutoffs.append((lbl, x))
     return cutoffs
 
 
@@ -456,7 +467,17 @@ def build_html(cache, out_path, template_path):
                 present.add(s)
     states = [s for s in FUNNEL_ORDER if s in present] + sorted(s for s in present if s not in FUNNEL_ORDER)
 
-    monthly_count = 6
+    # Determinar cuántos cortes son fin-de-mes para clase CSS (cortes mensuales primero)
+    monthly_count = 0
+    for lbl, d in cutoffs:
+        try:
+            dnext = d + timedelta(days=1)
+            if dnext.day == 1:
+                monthly_count += 1
+            else:
+                break
+        except Exception:
+            break
 
     def hdr_cls(i):
         return "hdr-mes" if i < monthly_count else "hdr-dia"
@@ -501,7 +522,6 @@ def build_html(cache, out_path, template_path):
     dweek = today_total - week_ago_total
     arrow = "▲" if dweek > 0 else ("▼" if dweek < 0 else "→")
     dcolor = "#c0392b" if dweek > 0 else ("#1f8a4c" if dweek < 0 else "#7d8590")
-    # Tickets actualmente en flujo de taller (de Pendiente asignar técnico a Inspección de salida)
     TALLER_STATUSES = {
         "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
         "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
@@ -512,14 +532,12 @@ def build_html(cache, out_path, template_path):
         if t.get("current_status") in TALLER_STATUSES
     )
 
-    # Estancadas >15 días en el estado actual
     estancadas_15 = sum(
         1 for k, t in cache.get("tickets", {}).items()
         if is_open(t.get("current_status"))
         and (days_since(last_status_change_dt(t)) or 0) > 15
     )
 
-    # Pico de abiertas a lo largo de los cortes
     peak = 0
     peak_lbl = ""
     for lbl, _ in cutoffs:
@@ -589,4 +607,3 @@ def main():
 if __name__ == "__main__":
     import sys
     sys.exit(main())
-
