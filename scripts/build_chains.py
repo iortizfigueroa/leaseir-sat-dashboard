@@ -1,35 +1,27 @@
 """
-Genera el HTML de la pestaña "Por cadena" (Fase 2).
+Genera el HTML de la pestaña "Por cadena" (Fase 2 iter B).
 
-Dependencias:
-  - cache/jira_status_timeline.json (cache de fetch_jira.py)
-  - data/serial_year.json (mapping serial→año)
-  - cache/airtable_pedidos.json (ventas nuevas, opcional)
-
-Exporta: build_chains_html(cache, airtable, serial_year) → string HTML
-para reemplazar __CHAINS_HTML__ en el template.
+Cambios vs iter A:
+- Tabla detalle muestra TODAS las incidencias del año (no solo abiertas)
+- Cada celda numérica de las tablas mensuales lleva class="filter-cell" y data-filter
+  JSON para que JS filtre la tabla detalle al click.
 """
 from __future__ import annotations
 
+import json as _json
 import re
 from datetime import date, datetime, timezone
 
-# Re-uso constantes de build_report.py
-try:
-    from build_report import (
-        OPEN_STATUSES, FUNNEL_TAG, chain_of, parse_iso, is_open,
-        last_status_change_dt, days_since, days_bucket,
-        COLOR_GREEN, COLOR_YELLOW, COLOR_RED, FUNNEL_COLOR,
-    )
-except ImportError:
-    # Fallback: importar individualmente si hay problemas
-    pass
+from build_report import (
+    OPEN_STATUSES, FUNNEL_TAG, chain_of, parse_iso, is_open,
+    last_status_change_dt, days_since, days_bucket,
+    COLOR_GREEN, COLOR_YELLOW, COLOR_RED, FUNNEL_COLOR,
+)
 
 
 CHAIN_ORDER = ["Elha", "Sin Vello", "Dermasana", "Smart Duck",
                "Epil Point", "Laser Factory", "Unico Italia", "Otros"]
 
-# Parque base a diciembre 2025 (último cierre confirmado)
 PARQUE_DEC25 = {
     "Elha": 455, "Sin Vello": 267, "Dermasana": 49, "Smart Duck": 12,
     "Epil Point": 97, "Laser Factory": 52, "Unico Italia": 36, "Otros": 0,
@@ -40,9 +32,7 @@ MONTH_LABELS_ES = ["Ene", "Feb", "Mar", "Abr", "May", "Jun",
 
 MOTIVO_BUCKETS = ["Diodo", "Umbilical", "Puntera", "Placa",
                   "Pantalla", "Gatillo", "Buffer", "Otros", "No resuelto aún"]
-
 COSTE_BUCKETS = ["Sin coste", "< 1.000 €", "1.000 - 6.000 €", "> 6.000 €"]
-SUSTI_BUCKETS = ["Sí entregada", "Sin sustitución"]
 YEAR_BUCKETS = ["2026", "2025", "2024", "2023", "2022", "<2022", "Sin compra"]
 
 
@@ -51,6 +41,11 @@ def html_escape(s):
         return ""
     return (str(s).replace("&", "&amp;").replace("<", "&lt;")
             .replace(">", "&gt;").replace('"', "&quot;"))
+
+
+def jdata(d):
+    """Serializa dict a JSON para data-filter attr (con escape HTML)."""
+    return html_escape(_json.dumps(d, ensure_ascii=False))
 
 
 def add_serial_variants(s, variants):
@@ -94,8 +89,6 @@ def serial_candidates(ticket):
 
 
 def lookup_year(serial_year, ticket, max_known=None):
-    """Devuelve el año (int) o None si no se encuentra.
-    Si no hay match y el serial es mayor que max_known[prefijo], asume año actual."""
     cands = serial_candidates(ticket)
     yr = None
     for s in cands:
@@ -105,7 +98,6 @@ def lookup_year(serial_year, ticket, max_known=None):
                 yr = y
     if yr is not None:
         return yr
-    # Heurística: serial avanzado no mapeado → año actual
     if max_known:
         cur_year = datetime.now().year
         for c in cands:
@@ -130,7 +122,6 @@ def bucket_year(y):
 
 
 def bucket_motivo(motivos, status):
-    """Clasifica la lista de motivos en 1 bucket. Si status no es cerrado y no hay motivo, 'No resuelto aún'."""
     cerrados = ("Finalizada", "Resuelto", "Cancelado", "Finalizado técnico externo")
     if not motivos:
         if status in cerrados:
@@ -138,7 +129,7 @@ def bucket_motivo(motivos, status):
         return "No resuelto aún"
     txt = " ".join(motivos).lower()
     if "diodo" in txt: return "Diodo"
-    if "umbilical" in txt or "reparación de umbilical" in txt: return "Umbilical"
+    if "umbilical" in txt: return "Umbilical"
     if "puntera" in txt or "zafiro" in txt: return "Puntera"
     if "placa" in txt: return "Placa"
     if "pantalla" in txt: return "Pantalla"
@@ -166,7 +157,6 @@ def chain_of_ticket(t):
 
 
 def compute_max_known_per_prefix(serial_year):
-    """Para la heurística 2026: máximo número por prefijo C/H en el mapping."""
     max_n = {"C": 0, "H": 0}
     for k in serial_year.keys():
         m = re.match(r'^([CH])(\d+)$', k)
@@ -179,7 +169,6 @@ def compute_max_known_per_prefix(serial_year):
 
 
 def parque_for_chain(chain, ventas, month_idx, year):
-    """parque acumulado para una cadena al final del mes month_idx (1-12)."""
     base = PARQUE_DEC25.get(chain, 0)
     extra = 0
     if ventas and chain in ventas:
@@ -189,177 +178,221 @@ def parque_for_chain(chain, ventas, month_idx, year):
     return base + extra
 
 
+def enrich(t, serial_year, max_known, year):
+    """Calcula campos derivados de un ticket para el detalle: month, bloq, susti, motivo, year_compra, coste, isopen."""
+    created = parse_iso(t.get("created"))
+    month = created.month if created and created.year == year else None
+    y = lookup_year(serial_year, t, max_known)
+    yb = bucket_year(y)
+    return {
+        "month": month,
+        "bloq": t.get("bloq") or "No",
+        "susti": t.get("susti") or "No",
+        "motivo": bucket_motivo(t.get("motivo") or [], t.get("current_status") or ""),
+        "yearcompra": yb,
+        "coste": bucket_coste(t.get("importe")),
+        "isopen": 1 if is_open(t.get("current_status")) else 0,
+    }
+
+
 def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
-                     year, num_months, today_total_open):
-    """Construye el HTML para el panel de una cadena."""
-    monthly = {m: {"nuevas": 0, "bloq": 0, "motivo": {}, "compra": {},
+                     year, num_months):
+    """HTML para el pane de una cadena."""
+    # Enrich y filtrar a YTD
+    enriched = []
+    for t in tickets_chain:
+        e = enrich(t, serial_year, max_known, year)
+        if e["month"] is not None:
+            enriched.append((t, e))
+
+    # Stats mensuales
+    monthly = {m: {"nuevas": 0, "bloq": 0, "motivo": {}, "yearcompra": {},
                    "coste": {}, "susti_si": 0, "susti_no": 0}
                for m in range(1, num_months + 1)}
-    abiertas_hoy = 0
-    for t in tickets_chain:
-        created = parse_iso(t.get("created"))
-        if not created or created.year != year:
-            # Para 2026 only; los de años pasados no cuentan en YTD
-            pass
-        if is_open(t.get("current_status")):
-            abiertas_hoy += 1
-        if not created:
-            continue
-        m = created.month
+    abiertas_hoy = sum(1 for t in tickets_chain if is_open(t.get("current_status")))
+    for t, e in enriched:
+        m = e["month"]
         if m > num_months:
-            continue
-        if created.year != year:
             continue
         b = monthly[m]
         b["nuevas"] += 1
-        if t.get("bloq") == "Sí":
+        if e["bloq"] == "Sí":
             b["bloq"] += 1
-        mot = bucket_motivo(t.get("motivo") or [], t.get("current_status") or "")
-        b["motivo"][mot] = b["motivo"].get(mot, 0) + 1
-        y = lookup_year(serial_year, t, max_known)
-        yb = bucket_year(y)
-        b["compra"][yb] = b["compra"].get(yb, 0) + 1
-        cb = bucket_coste(t.get("importe"))
-        b["coste"][cb] = b["coste"].get(cb, 0) + 1
-        if t.get("susti") == "Sí":
+        b["motivo"][e["motivo"]] = b["motivo"].get(e["motivo"], 0) + 1
+        b["yearcompra"][e["yearcompra"]] = b["yearcompra"].get(e["yearcompra"], 0) + 1
+        b["coste"][e["coste"]] = b["coste"].get(e["coste"], 0) + 1
+        if e["susti"] == "Sí":
             b["susti_si"] += 1
         else:
             b["susti_no"] += 1
 
-    # YTD totals
     ytd_nuevas = sum(monthly[m]["nuevas"] for m in range(1, num_months + 1))
     ytd_bloq = sum(monthly[m]["bloq"] for m in range(1, num_months + 1))
     parque_ult = parque_for_chain(chain, ventas, num_months, year)
     tasa_ytd = (ytd_bloq / parque_ult / num_months) if (parque_ult and num_months) else 0
     bloq_ano = tasa_ytd * 12
 
-    # === Tabla Evolución mensual ===
     headers = "".join(f'<th>{MONTH_LABELS_ES[m-1]}</th>' for m in range(1, num_months + 1))
     out = []
-    out.append('<p class="chain-section-title">Evolución mensual</p>')
+
+    # === Evolución mensual ===
+    out.append('<p class="chain-section-title">Evolución mensual <span style="color:var(--grey);font-weight:400">— click en cualquier número para filtrar la tabla de incidencias abajo</span></p>')
     out.append('<table class="evol-table"><thead><tr><th>Métrica</th>')
     out.append(headers)
     out.append('<th class="ytd">YTD</th></tr></thead><tbody>')
 
-    def row(label, values, ytd, klass=""):
-        cells = "".join(f'<td>{v}</td>' for v in values)
-        return f'<tr class="{klass}"><td class="lbl">{label}</td>{cells}<td>{ytd}</td></tr>'
+    def cell_filter(val, fdict, klass=""):
+        if not val or val == "-":
+            return f'<td>-</td>'
+        return f'<td class="filter-cell {klass}" data-filter=\'{jdata(fdict)}\' title="Click para filtrar">{val}</td>'
 
-    nu_vals = [monthly[m]["nuevas"] or "-" for m in range(1, num_months + 1)]
-    bl_vals = [monthly[m]["bloq"] or "-" for m in range(1, num_months + 1)]
+    # Nuevas
+    cells = [cell_filter(monthly[m]["nuevas"] or 0, {"month": m})
+             for m in range(1, num_months + 1)]
+    out.append('<tr class="zebra"><td class="lbl">Nuevas incidencias</td>' +
+               "".join(cells) +
+               f'<td class="filter-cell" data-filter=\'{jdata({})}\' title="Click: todas las del año">{ytd_nuevas}</td></tr>')
+
+    # Bloqueantes
+    cells = [cell_filter(monthly[m]["bloq"] or 0, {"month": m, "bloq": "Sí"})
+             for m in range(1, num_months + 1)]
+    out.append('<tr><td class="lbl">Bloqueantes</td>' +
+               "".join(cells) +
+               f'<td class="filter-cell" data-filter=\'{jdata({"bloq":"Sí"})}\'>{ytd_bloq}</td></tr>')
+
+    # Parque (no clicable)
     parque_vals = [parque_for_chain(chain, ventas, m, year) for m in range(1, num_months + 1)]
-    tasa_vals = []
-    bloq_ano_vals = []
+    out.append('<tr class="zebra"><td class="lbl">Total parque</td>' +
+               "".join(f'<td>{v}</td>' for v in parque_vals) +
+               f'<td>{parque_ult}</td></tr>')
+
+    # Tasa (no clicable)
+    tasa_cells = []
     for m in range(1, num_months + 1):
         p_m = parque_vals[m - 1]
         b_m = monthly[m]["bloq"]
         t_m = (b_m / p_m) if p_m else 0
-        tasa_vals.append(f"{t_m*100:.2f}%" if t_m else "-")
-        bloq_ano_vals.append(f"{t_m*12:.2f}" if t_m else "-")
+        tasa_cells.append(f'<td>{t_m*100:.2f}%</td>' if t_m else '<td>-</td>')
+    out.append('<tr><td class="lbl">Tasa bloqueantes</td>' +
+               "".join(tasa_cells) +
+               f'<td>{tasa_ytd*100:.2f}%</td></tr>')
 
-    out.append(row("Nuevas incidencias", nu_vals, ytd_nuevas, "zebra"))
-    out.append(row("Bloqueantes", bl_vals, ytd_bloq))
-    out.append(row("Total parque", parque_vals, parque_ult, "zebra"))
-    out.append(row("Tasa bloqueantes", tasa_vals, f"{tasa_ytd*100:.2f}%"))
-    out.append(row("Bloq/año/equipo", bloq_ano_vals, f"{bloq_ano:.2f}", "zebra"))
-    out.append(row("Abiertas hoy", ["-"] * num_months, abiertas_hoy, "abiertas"))
+    # Bloq/año/eq (no clicable)
+    ba_cells = []
+    for m in range(1, num_months + 1):
+        p_m = parque_vals[m - 1]
+        b_m = monthly[m]["bloq"]
+        t_m = (b_m / p_m) if p_m else 0
+        ba_cells.append(f'<td>{t_m*12:.2f}</td>' if t_m else '<td>-</td>')
+    out.append('<tr class="zebra"><td class="lbl">Bloq/año/equipo</td>' +
+               "".join(ba_cells) +
+               f'<td>{bloq_ano:.2f}</td></tr>')
+
+    # Abiertas hoy (clicable, filtra isopen)
+    out.append('<tr class="abiertas"><td class="lbl">Abiertas hoy</td>' +
+               ('<td>-</td>' * num_months) +
+               f'<td class="filter-cell" data-filter=\'{jdata({"isopen":1})}\' title="Click: solo incidencias abiertas hoy">{abiertas_hoy}</td></tr>')
     out.append('</tbody></table>')
 
-    # === Tablas mensuales: motivo / compra / coste / sustitución ===
-    def breakdown_table(title, buckets, extract_dict, ytd_dict):
-        h = [f'<p class="chain-section-title">{title}</p>',
-             '<table class="breakdown-table"><thead><tr><th>',
-             buckets[0] if title == "Motivo avería" else title,
-             '</th>', headers, '<th class="ytd">YTD</th></tr></thead><tbody>']
-        # Replace generic header label
-        return None  # see below
-
-    def make_breakdown(title, buckets):
-        rows = []
-        ytd_totals = {b: 0 for b in buckets}
-        for b in buckets:
-            ytd_totals[b] = sum(monthly[m].get(key_for_bucket(title), {}).get(b, 0)
-                                for m in range(1, num_months + 1))
-        return rows, ytd_totals
-
-    def key_for_bucket(title):
-        return {"Motivo avería": "motivo", "Fecha de compra del equipo": "compra",
-                "Coste": "coste"}.get(title, "motivo")
-
-    for title, buckets in [
-        ("Motivo avería", MOTIVO_BUCKETS),
-        ("Fecha de compra del equipo", YEAR_BUCKETS),
-        ("Coste", COSTE_BUCKETS),
-    ]:
-        key = key_for_bucket(title)
+    # === Breakdown tables: motivo / compra / coste / susti ===
+    def breakdown(title, key_field, buckets, label_col):
         out.append(f'<p class="chain-section-title">{title}</p>')
-        out.append('<table class="breakdown-table"><thead><tr><th>')
-        out.append({"motivo": "Motivo", "compra": "Año compra", "coste": "Rango"}[key])
-        out.append('</th>')
+        out.append(f'<table class="breakdown-table"><thead><tr><th>{label_col}</th>')
         out.append(headers)
         out.append('<th class="ytd">YTD</th></tr></thead><tbody>')
-        for i, b in enumerate(buckets):
-            vals = [monthly[m][key].get(b, 0) for m in range(1, num_months + 1)]
-            ytd = sum(vals)
-            if ytd == 0:
+        idx = 0
+        for b in buckets:
+            month_vals = [monthly[m][key_field].get(b, 0) for m in range(1, num_months + 1)]
+            ytd_v = sum(month_vals)
+            if ytd_v == 0:
                 continue
-            vals_str = [v if v else "-" for v in vals]
-            cells = "".join(f'<td>{v}</td>' for v in vals_str)
-            klass = "zebra" if i % 2 else ""
-            out.append(f'<tr class="{klass}"><td class="lbl">{b}</td>{cells}<td>{ytd}</td></tr>')
+            cells = []
+            for i, v in enumerate(month_vals):
+                if v == 0:
+                    cells.append('<td>-</td>')
+                else:
+                    cells.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": i+1, key_field: b})}\'>{v}</td>')
+            klass = 'zebra' if idx % 2 else ''
+            out.append(f'<tr class="{klass}"><td class="lbl">{html_escape(b)}</td>' +
+                       "".join(cells) +
+                       f'<td class="filter-cell" data-filter=\'{jdata({key_field: b})}\'>{ytd_v}</td></tr>')
+            idx += 1
         out.append('</tbody></table>')
 
-    # Sustitución
+    breakdown("Motivo avería", "motivo", MOTIVO_BUCKETS, "Motivo")
+    breakdown("Fecha de compra del equipo", "yearcompra", YEAR_BUCKETS, "Año compra")
+    breakdown("Coste", "coste", COSTE_BUCKETS, "Rango")
+
+    # Sustitución (manual, con bloq Sí/No)
     out.append('<p class="chain-section-title">Sustitución entregada</p>')
     out.append('<table class="breakdown-table"><thead><tr><th>Sustitución</th>')
     out.append(headers)
     out.append('<th class="ytd">YTD</th></tr></thead><tbody>')
-    si_vals = [monthly[m]["susti_si"] or "-" for m in range(1, num_months + 1)]
-    no_vals = [monthly[m]["susti_no"] or "-" for m in range(1, num_months + 1)]
-    si_ytd = sum(monthly[m]["susti_si"] for m in range(1, num_months + 1))
-    no_ytd = sum(monthly[m]["susti_no"] for m in range(1, num_months + 1))
-    out.append('<tr><td class="lbl">Sí entregada</td>' + "".join(f'<td>{v}</td>' for v in si_vals) + f'<td>{si_ytd}</td></tr>')
-    out.append('<tr class="zebra"><td class="lbl">Sin sustitución</td>' + "".join(f'<td>{v}</td>' for v in no_vals) + f'<td>{no_ytd}</td></tr>')
+    si_cells, no_cells = [], []
+    si_ytd, no_ytd = 0, 0
+    for m in range(1, num_months + 1):
+        s = monthly[m]["susti_si"]
+        n = monthly[m]["susti_no"]
+        si_ytd += s
+        no_ytd += n
+        si_cells.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": m, "susti": "Sí"})}\'>{s}</td>' if s else '<td>-</td>')
+        no_cells.append(f'<td class="filter-cell" data-filter=\'{jdata({"month": m, "susti": "No"})}\'>{n}</td>' if n else '<td>-</td>')
+    out.append('<tr><td class="lbl">Sí entregada</td>' + "".join(si_cells) +
+               f'<td class="filter-cell" data-filter=\'{jdata({"susti":"Sí"})}\'>{si_ytd}</td></tr>')
+    out.append('<tr class="zebra"><td class="lbl">Sin sustitución</td>' + "".join(no_cells) +
+               f'<td class="filter-cell" data-filter=\'{jdata({"susti":"No"})}\'>{no_ytd}</td></tr>')
     out.append('</tbody></table>')
 
-    # Tabla simple de incidencias abiertas
-    open_rows = [t for t in tickets_chain if is_open(t.get("current_status"))]
-    open_rows.sort(key=lambda r: -(days_since(last_status_change_dt(r)) or 0))
+    # === Tabla detalle YTD (TODAS las incidencias del año) ===
+    enriched.sort(key=lambda x: (x[1]["month"] or 99, -(days_since(last_status_change_dt(x[0])) or 0)))
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
-    out.append(f'<p class="chain-section-title">Incidencias abiertas hoy ({len(open_rows)})</p>')
-    out.append('<div class="scroller"><table style="font-size:11px;min-width:1100px"><thead><tr>')
+    out.append(f'<p class="chain-section-title">Incidencias del año ({len(enriched)}) <span style="color:var(--grey);font-weight:400">— <span class="active-filter-info">sin filtro</span> · <button class="clear-chain-filter" type="button" style="font-size:11px;padding:2px 8px;margin-left:6px;border:1px solid var(--line);border-radius:4px;background:white;cursor:pointer;display:none">✕ Limpiar filtro</button></span></p>')
+    out.append('<div class="scroller"><table class="ticket-table" style="font-size:11px;min-width:1200px"><thead><tr>')
     for h in ["Ticket", "Cliente / Centro", "Estado", "Gestión", "Días", "Localización",
-              "Creada", "Tipo", "Bloq", "Susti", "Fecha venta", "Consola", "HP", "Garantía"]:
+              "Creada", "Tipo", "Bloq", "Susti", "Motivo", "Año compra", "Coste", "Fecha venta", "Consola", "HP", "Garantía"]:
         out.append(f'<th>{h}</th>')
     out.append('</tr></thead><tbody>')
-    for r in open_rows:
-        st = r.get("current_status", "")
+
+    for t, e in enriched:
+        st = t.get("current_status", "")
         ft = FUNNEL_TAG.get(st, "?")
         ft_color = FUNNEL_COLOR.get(ft, "#888")
-        days = days_since(last_status_change_dt(r))
+        opens = is_open(st)
+        days = days_since(last_status_change_dt(t)) if opens else None
         days_color = COLOR_GREEN if (days is not None and days < 5) else (
             COLOR_YELLOW if (days is not None and days <= 15) else COLOR_RED)
-        created_dt = parse_iso(r.get("created"))
+        days_html = f'<span style="color:{days_color};font-weight:500">{days}</span>' if days is not None else '<span style="color:var(--grey)">cerrada</span>'
+        created_dt = parse_iso(t.get("created"))
         created_s = created_dt.strftime("%d/%m/%Y") if created_dt else ""
-        fventa_dt = parse_iso(r.get("fventa") or "")
-        fventa_s = fventa_dt.strftime("%d/%m/%Y") if fventa_dt else (r.get("fventa") or "")
-        link = f'<a href="{JIRA_URL}{r["key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["key"]}</a>'
+        fventa_dt = parse_iso(t.get("fventa") or "")
+        fventa_s = fventa_dt.strftime("%d/%m/%Y") if fventa_dt else (t.get("fventa") or "")
+        link = f'<a href="{JIRA_URL}{t["key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{t["key"]}</a>'
         out.append(
-            '<tr>'
+            f'<tr class="ticket-row" '
+            f'data-month="{e["month"]}" '
+            f'data-bloq="{html_escape(e["bloq"])}" '
+            f'data-susti="{html_escape(e["susti"])}" '
+            f'data-motivo="{html_escape(e["motivo"])}" '
+            f'data-yearcompra="{html_escape(e["yearcompra"])}" '
+            f'data-coste="{html_escape(e["coste"])}" '
+            f'data-isopen="{e["isopen"]}">'
             f'<td style="text-align:left">{link}</td>'
-            f'<td class="d-trunc" style="text-align:left" title="{html_escape(r.get("cliente",""))}">{html_escape(r.get("cliente",""))}</td>'
+            f'<td class="d-trunc" style="text-align:left" title="{html_escape(t.get("cliente",""))}">{html_escape(t.get("cliente",""))}</td>'
             f'<td style="text-align:left">{html_escape(st)}</td>'
             f'<td style="color:{ft_color};font-weight:500">{ft}</td>'
-            f'<td style="color:{days_color};font-weight:500">{days if days is not None else ""}</td>'
-            f'<td class="d-trunc" style="text-align:left" title="{html_escape(r.get("loc",""))}">{html_escape(r.get("loc",""))}</td>'
+            f'<td>{days_html}</td>'
+            f'<td class="d-trunc" style="text-align:left" title="{html_escape(t.get("loc",""))}">{html_escape(t.get("loc",""))}</td>'
             f'<td>{created_s}</td>'
-            f'<td style="text-align:left">{html_escape(r.get("tipo",""))}</td>'
-            f'<td>{html_escape(r.get("bloq",""))}</td>'
-            f'<td>{html_escape(r.get("susti",""))}</td>'
+            f'<td style="text-align:left">{html_escape(t.get("tipo",""))}</td>'
+            f'<td>{html_escape(e["bloq"])}</td>'
+            f'<td>{html_escape(e["susti"])}</td>'
+            f'<td>{html_escape(e["motivo"])}</td>'
+            f'<td>{html_escape(e["yearcompra"])}</td>'
+            f'<td>{html_escape(e["coste"])}</td>'
             f'<td>{fventa_s}</td>'
-            f'<td>{html_escape(r.get("consola",""))}</td>'
-            f'<td>{html_escape(r.get("hp",""))}</td>'
-            f'<td>{html_escape(r.get("garantia",""))}</td>'
+            f'<td>{html_escape(t.get("consola",""))}</td>'
+            f'<td>{html_escape(t.get("hp",""))}</td>'
+            f'<td>{html_escape(t.get("garantia",""))}</td>'
             '</tr>'
         )
     out.append('</tbody></table></div>')
@@ -371,7 +404,6 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
 
 
 def build_resumen_pane(stats):
-    """Tabla resumen agregada (Resumen tab)."""
     out = ['<table class="breakdown-table" style="margin-top:8px"><thead><tr>',
            '<th>Cadena</th><th>Nuevas</th><th>Bloqueantes</th><th>Parque</th>',
            '<th>Tasa</th><th>Bloq/año/eq</th><th>Abiertas hoy</th>',
@@ -396,8 +428,6 @@ def build_resumen_pane(stats):
             f'<td>{nu}</td><td>{bl}</td><td>{p}</td>'
             f'<td>{ta*100:.2f}%</td><td>{ba:.2f}</td><td>{ab}</td></tr>'
         )
-    # Total
-    num_chains = max(1, sum(1 for ch in CHAIN_ORDER if stats.get(ch, {}).get("parque")))
     tasa_global = (totals["bloq"] / totals["parque"]) if totals["parque"] else 0
     out.append(
         f'<tr style="background:#fff4d6;font-weight:500"><td class="lbl">Total</td>'
@@ -409,13 +439,11 @@ def build_resumen_pane(stats):
 
 
 def build_chains_html(cache, airtable, serial_year):
-    """Devuelve el HTML completo para __CHAINS_HTML__."""
     today = date.today()
     year = today.year
     num_months = today.month
     max_known = compute_max_known_per_prefix(serial_year)
 
-    # Group tickets by chain
     tickets = cache.get("tickets", {})
     by_chain = {ch: [] for ch in CHAIN_ORDER}
     for k, t in tickets.items():
@@ -425,23 +453,19 @@ def build_chains_html(cache, airtable, serial_year):
         by_chain[ch].append(t)
 
     ventas = (airtable or {}).get("ventas_by_chain_month", {})
-
     chains_to_show = [ch for ch in CHAIN_ORDER if ch != "Otros"]
 
-    # Tabs2 navigation
     tabs = ['<div class="tabs2">']
     tabs.append('<button type="button" data-chain="resumen" class="active">Resumen</button>')
     for ch in chains_to_show:
         tabs.append(f'<button type="button" data-chain="{html_escape(ch)}">{html_escape(ch)}</button>')
     tabs.append('</div>')
 
-    # Build panes
     stats_per_chain = {}
     panes = []
     for ch in chains_to_show:
         pane_html, s = build_chain_pane(ch, by_chain.get(ch, []), ventas,
-                                        serial_year, max_known, year, num_months,
-                                        sum(1 for t in by_chain.get(ch, []) if is_open(t.get("current_status"))))
+                                        serial_year, max_known, year, num_months)
         stats_per_chain[ch] = s
         meta = (f'{s["nuevas"]} nuevas YTD · {s["bloq"]} bloqueantes · '
                 f'{s["abiertas"]} abiertas hoy')
@@ -452,7 +476,6 @@ def build_chains_html(cache, airtable, serial_year):
             f'{pane_html}</div>'
         )
 
-    # Resumen pane (first)
     resumen_html = (
         '<div class="chain-pane active" data-chain="resumen">'
         '<h3>Resumen por cadena</h3>'

@@ -87,6 +87,11 @@
   .evol-table tr.abiertas td { background: #eeedfe; font-weight: 500; }
   .evol-table tr.ytd td { background: #fff4d6; font-weight: 500; }
   .chain-section-title { margin: 18px 0 6px; font-weight: 500; font-size: 13px; color: var(--blue); }
+  td.filter-cell { cursor: pointer; transition: background 0.1s; }
+  td.filter-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
+  .active-filter-info { color: var(--blue); font-weight: 500; }
+  .clear-chain-filter:hover { background: var(--bg) !important; }
+  tr.ticket-row.filtered-out { display: none; }
 </style>
 </head>
 <body>
@@ -232,6 +237,56 @@ __CHAINS_HTML__
     const savedChain = localStorage.getItem('sat-chain');
     if (savedChain && document.querySelector('.chain-pane[data-chain="' + savedChain + '"]')) setChain(savedChain);
   } catch(e) {}
+
+  // Celdas clicables que filtran la tabla de incidencias de la cadena
+  const MONTH_LABELS = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  const FIELD_LABELS = {month:'Mes', bloq:'Bloqueante', susti:'Sustitución', motivo:'Motivo', yearcompra:'Año compra', coste:'Coste', isopen:'Solo abiertas'};
+  function describeFilter(f) {
+    if (!f || Object.keys(f).length === 0) return 'todas las del año';
+    const parts = [];
+    for (const k of Object.keys(f)) {
+      let v = f[k];
+      if (k === 'month') v = MONTH_LABELS[v-1] || v;
+      if (k === 'isopen') v = 'sí';
+      parts.push((FIELD_LABELS[k] || k) + ': ' + v);
+    }
+    return parts.join(' · ');
+  }
+  function applyChainFilter(pane, filter) {
+    const rows = pane.querySelectorAll('tr.ticket-row');
+    let visible = 0;
+    rows.forEach(r => {
+      let ok = true;
+      for (const k of Object.keys(filter)) {
+        const rv = r.dataset[k];
+        const fv = String(filter[k]);
+        if (rv !== fv) { ok = false; break; }
+      }
+      r.classList.toggle('filtered-out', !ok);
+      if (ok) visible++;
+    });
+    const info = pane.querySelector('.active-filter-info');
+    const clear = pane.querySelector('.clear-chain-filter');
+    if (info) info.textContent = describeFilter(filter) + ' · ' + visible + ' visibles';
+    if (clear) clear.style.display = Object.keys(filter).length === 0 ? 'none' : '';
+  }
+  document.addEventListener('click', (e) => {
+    const cell = e.target.closest && e.target.closest('td.filter-cell');
+    if (!cell) return;
+    let f;
+    try { f = JSON.parse(cell.dataset.filter || '{}'); } catch(err) { f = {}; }
+    const pane = cell.closest('.chain-pane');
+    if (!pane) return;
+    applyChainFilter(pane, f);
+    const tbl = pane.querySelector('.ticket-table');
+    if (tbl) tbl.scrollIntoView({behavior:'smooth', block:'start'});
+  });
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('.clear-chain-filter');
+    if (!btn) return;
+    const pane = btn.closest('.chain-pane');
+    if (pane) applyChainFilter(pane, {});
+  });
 
   const tbl = document.getElementById('detalle-table');
   if (!tbl) return;
