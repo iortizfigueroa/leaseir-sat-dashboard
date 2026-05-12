@@ -62,6 +62,31 @@
   .multi-pop label { display: flex; align-items: center; gap: 8px; padding: 4px 6px; font-size: 12px; cursor: pointer; border-radius: 3px; }
   .multi-pop label:hover { background: var(--bg); }
   .multi-pop label.all-row { border-bottom: 1px solid var(--line); margin-bottom: 4px; padding-bottom: 8px; font-weight: 500; }
+  /* Pestañas Nivel 1 (Total / Por cadena / Sustis) */
+  .tabs1 { display: flex; gap: 4px; padding: 4px; background: var(--bg); border-radius: 8px; margin: 14px 0; width: fit-content; }
+  .tabs1 button { padding: 7px 18px; font-size: 13px; border: none; background: transparent; color: var(--grey); cursor: pointer; border-radius: 6px; font-weight: 500; }
+  .tabs1 button.active { background: var(--blue2); color: white; }
+  .tabs1 button:disabled { color: #c0d0e0; cursor: not-allowed; }
+  /* Pestañas Nivel 2 (Por cadena) */
+  .tabs2 { display: flex; gap: 2px; border-bottom: 1px solid var(--line); margin: 4px 0 16px; flex-wrap: wrap; overflow-x: auto; }
+  .tabs2 button { padding: 8px 14px; font-size: 13px; border: none; background: transparent; color: var(--grey); cursor: pointer; border-bottom: 2px solid transparent; }
+  .tabs2 button.active { color: var(--blue); border-bottom-color: var(--blue2); font-weight: 500; background: #e7eefa; }
+  .view { display: none; }
+  .view.active { display: block; }
+  .chain-pane { display: none; }
+  .chain-pane.active { display: block; }
+  .chain-pane > h3 { margin: 6px 0 4px; color: var(--blue); font-size: 18px; }
+  .chain-pane .chain-meta { color: var(--grey); font-size: 13px; margin: 0 0 16px; }
+  .evol-table, .breakdown-table { width: 100%; margin-bottom: 18px; font-size: 12px; border-collapse: collapse; }
+  .evol-table th, .breakdown-table th { background: var(--blue); color: white; padding: 6px 10px; font-weight: 500; border: 1px solid var(--line); white-space: nowrap; text-align: right; }
+  .evol-table th:first-child, .breakdown-table th:first-child { text-align: left; }
+  .evol-table th.ytd, .breakdown-table th.ytd { background: var(--blue2); }
+  .evol-table td, .breakdown-table td { padding: 5px 10px; border: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; }
+  .evol-table td.lbl, .breakdown-table td.lbl { text-align: left; font-weight: 500; }
+  .evol-table tr.zebra td, .breakdown-table tr.zebra td { background: var(--zebra); }
+  .evol-table tr.abiertas td { background: #eeedfe; font-weight: 500; }
+  .evol-table tr.ytd td { background: #fff4d6; font-weight: 500; }
+  .chain-section-title { margin: 18px 0 6px; font-weight: 500; font-size: 13px; color: var(--blue); }
 </style>
 </head>
 <body>
@@ -69,6 +94,13 @@
 <div class="meta">Generado el __TODAY__. Datos de Jira (LEAS).</div>
 __DEMO_BANNER__
 
+<div class="tabs1">
+  <button type="button" data-view="total" class="active">Total</button>
+  <button type="button" data-view="chains">Por cadena</button>
+  <button type="button" data-view="sustis" disabled>Sustis <small>(Fase 3)</small></button>
+</div>
+
+<div id="view-total" class="view active">
 <div class="nav">
   <a href="#kpis">KPIs</a>
   <a href="#abiertas">Abiertas hoy</a>
@@ -160,10 +192,47 @@ __CHAIN_TOTAL__
 </table>
 </div>
 
+</div><!-- /view-total -->
+
+<div id="view-chains" class="view">
+__CHAINS_HTML__
+</div><!-- /view-chains -->
+
+<div id="view-sustis" class="view">
+  <p style="margin:40px 0;text-align:center;color:var(--grey)">Fase 3 — análisis de sustituciones (en desarrollo)</p>
+</div><!-- /view-sustis -->
+
 <div class="footer">Generado por <code>build_report.py</code> desde <code>cache/jira_status_timeline.json</code>. Refresh diario via GitHub Action.</div>
 
 <script>
 (function(){
+  // Pestañas Nivel 1: Total / Por cadena / Sustis
+  const tabs1 = document.querySelectorAll('.tabs1 button');
+  const views = document.querySelectorAll('.view');
+  function setView(name) {
+    tabs1.forEach(b => b.classList.toggle('active', b.dataset.view === name));
+    views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+    try { localStorage.setItem('sat-view', name); } catch(e) {}
+  }
+  tabs1.forEach(b => b.addEventListener('click', () => { if (!b.disabled) setView(b.dataset.view); }));
+  try {
+    const saved = localStorage.getItem('sat-view');
+    if (saved && document.getElementById('view-' + saved)) setView(saved);
+  } catch(e) {}
+  // Pestañas Nivel 2: Por cadena (Resumen + 7 cadenas)
+  const tabs2 = document.querySelectorAll('.tabs2 button');
+  const panes = document.querySelectorAll('.chain-pane');
+  function setChain(name) {
+    tabs2.forEach(b => b.classList.toggle('active', b.dataset.chain === name));
+    panes.forEach(p => p.classList.toggle('active', p.dataset.chain === name));
+    try { localStorage.setItem('sat-chain', name); } catch(e) {}
+  }
+  tabs2.forEach(b => b.addEventListener('click', () => setChain(b.dataset.chain)));
+  try {
+    const savedChain = localStorage.getItem('sat-chain');
+    if (savedChain && document.querySelector('.chain-pane[data-chain="' + savedChain + '"]')) setChain(savedChain);
+  } catch(e) {}
+
   const tbl = document.getElementById('detalle-table');
   if (!tbl) return;
   const tbody = tbl.tBodies[0];

@@ -52,6 +52,7 @@ FIELDS = [
     "customfield_10247",  # Técnico taller
     "customfield_10301",  # Importe presupuesto
     "customfield_10143",  # Nombre técnico externo
+    "customfield_10615",  # Resumen avería (multi-select)
     "comment",
 ]
 
@@ -183,6 +184,7 @@ def extract(issue):
         "tec_taller": (f.get("customfield_10247") or {}).get("displayName", "") if isinstance(f.get("customfield_10247"), dict) else (f.get("customfield_10247") or ""),
         "importe": importe if importe is not None else "",
         "tec_externo": opt(f.get("customfield_10143")) or "",
+        "motivo": [opt(x) for x in (f.get("customfield_10615") or []) if opt(x)],
         "ult_comentario": latest_comment(f),
         "transitions": transitions,
         "fetched_at": datetime.now(timezone.utc).isoformat(),

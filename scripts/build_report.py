@@ -555,6 +555,22 @@ def build_html(cache, out_path, template_path):
     ah_header, ah_rows = build_abiertas_hoy_section(cache)
     detalle_rows = build_detalle_section(cache)
 
+    # Fase 2: pestaña "Por cadena"
+    chains_html = ""
+    try:
+        from build_chains import build_chains_html
+        airtable = None
+        airtable_path = out_path.parent.parent / "cache" / "airtable_pedidos.json"
+        if airtable_path.exists():
+            airtable = json.loads(airtable_path.read_text(encoding="utf-8"))
+        serial_year = {}
+        sy_path = out_path.parent.parent / "data" / "serial_year.json"
+        if sy_path.exists():
+            serial_year = json.loads(sy_path.read_text(encoding="utf-8"))
+        chains_html = build_chains_html(cache, airtable, serial_year)
+    except Exception as e:
+        chains_html = f'<p style="color:#c0392b;padding:20px">Error generando Fase 2: {e}</p>'
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today.isoformat(),
@@ -578,6 +594,7 @@ def build_html(cache, out_path, template_path):
         "__CHAIN_HEADER__": chain_header,
         "__CHAIN_ROWS__": chain_rows,
         "__CHAIN_TOTAL__": chain_total,
+        "__CHAINS_HTML__": chains_html,
     }
     for k, v in repl.items():
         html = html.replace(k, v)

@@ -42,6 +42,13 @@ jobs:
             python scripts/fetch_jira.py --cache cache/jira_status_timeline.json --mode seed
           fi
 
+      - name: Refresh Airtable Pedidos (Fase 2)
+        continue-on-error: true
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        run: |
+          python scripts/fetch_airtable.py --cache cache/airtable_pedidos.json
+
       - name: Build report
         run: |
           mkdir -p output
