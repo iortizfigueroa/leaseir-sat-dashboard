@@ -1,10 +1,10 @@
 """
-Genera el HTML de la pestaña "Por cadena" (Fase 2 iter C).
-
-Cambios vs iter B:
-- Columnas detalle en mismo orden que tabla Detalle de Fase 1 + Motivo/Año compra/Coste al final
-- Barra de filtros por cadena (search, estado, gestión, bloq, susti, garantía, días bucket, limpiar todo)
-- data-days, data-estado, data-gestion, data-garantia en cada fila para que JS filtre
+Genera HTML de pestaña "Por cadena" (Fase 2 iter D).
+- Sort por click en cabeceras
+- Multi-select Estado con checkboxes
+- Columnas en mismo orden que Fase 1 + 3 nuevas al final
+- Barra de filtros propia por cadena
+- Celdas clicables en tablas mensuales
 """
 from __future__ import annotations
 
@@ -230,7 +230,6 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     headers = "".join(f'<th>{MONTH_LABELS_ES[m-1]}</th>' for m in range(1, num_months + 1))
     out = []
 
-    # Evolución mensual
     out.append('<p class="chain-section-title">Evolución mensual <span style="color:var(--grey);font-weight:400">— click en cualquier número para filtrar la tabla de incidencias abajo</span></p>')
     out.append('<table class="evol-table"><thead><tr><th>Métrica</th>' + headers + '<th class="ytd">YTD</th></tr></thead><tbody>')
 
@@ -274,7 +273,6 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
                f'<td class="filter-cell" data-filter=\'{jdata({"isopen":1})}\'>{abiertas_hoy}</td></tr>')
     out.append('</tbody></table>')
 
-    # Breakdowns
     def breakdown(title, key_field, buckets, label_col):
         out.append(f'<p class="chain-section-title">{title}</p>')
         out.append(f'<table class="breakdown-table"><thead><tr><th>{label_col}</th>' + headers + '<th class="ytd">YTD</th></tr></thead><tbody>')
@@ -300,7 +298,6 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     breakdown("Fecha de compra del equipo", "yearcompra", YEAR_BUCKETS, "Año compra")
     breakdown("Coste", "coste", COSTE_BUCKETS, "Rango")
 
-    # Sustitución
     out.append('<p class="chain-section-title">Sustitución entregada</p>')
     out.append('<table class="breakdown-table"><thead><tr><th>Sustitución</th>' + headers + '<th class="ytd">YTD</th></tr></thead><tbody>')
     si_cells, no_cells = [], []
@@ -318,17 +315,16 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
                f'<td class="filter-cell" data-filter=\'{jdata({"susti":"No"})}\'>{no_ytd}</td></tr>')
     out.append('</tbody></table>')
 
-    # === Tabla detalle YTD ===
     enriched.sort(key=lambda x: (x[1]["month"] or 99, -(days_since(last_status_change_dt(x[0])) or 0)))
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
     out.append(f'<p class="chain-section-title">Incidencias del año ({len(enriched)}) <span style="color:var(--grey);font-weight:400">— <span class="active-filter-info">sin filtro</span> · <button class="clear-chain-filter" type="button" style="font-size:11px;padding:2px 8px;margin-left:6px;border:1px solid var(--line);border-radius:4px;background:white;cursor:pointer;display:none">✕ Limpiar filtro</button></span></p>')
 
-    # Barra de filtros propia
     states_in_chain = sorted({t.get("current_status", "") for t, _ in enriched if t.get("current_status")})
-    state_opts = "".join(f'<option value="{html_escape(s)}">{html_escape(s)}</option>' for s in states_in_chain)
+    state_checkboxes = "".join(f'<label><input type="checkbox" class="cf-estado-cb" data-status="{html_escape(s)}"> {html_escape(s)}</label>' for s in states_in_chain)
     out.append('<div class="chain-toolbar">')
     out.append('<input class="cf-search" type="text" placeholder="Buscar texto...">')
-    out.append(f'<select class="cf-estado"><option value="">Estado: todos</option>{state_opts}</select>')
+    out.append('<div class="multi-wrap"><button type="button" class="multi-btn cf-estado-btn">Estado: todos &#9662;</button>')
+    out.append(f'<div class="multi-pop cf-estado-pop"><label class="all-row"><input type="checkbox" class="cf-estado-all" checked> Todos</label><div class="cf-estado-list">{state_checkboxes}</div></div></div>')
     out.append('<select class="cf-gestion"><option value="">Gestión: toda</option><option value="Inicio">Inicio</option><option value="Interna">Interna</option><option value="Online">Online</option><option value="Externa">Externa</option></select>')
     out.append('<select class="cf-bloq"><option value="">Bloq: todos</option><option value="Sí">Sí</option><option value="No">No</option></select>')
     out.append('<select class="cf-susti"><option value="">Susti: todas</option><option value="Sí">Sí</option><option value="No">No</option></select>')
@@ -337,12 +333,14 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     out.append('<button class="cf-clear" type="button">✕ Limpiar todo</button>')
     out.append('</div>')
 
-    # Headers en mismo orden que Fase 1 Detalle (sin "Cadena") + 3 extras al final
     out.append('<div class="scroller"><table class="ticket-table" style="font-size:11px;min-width:1300px"><thead><tr>')
-    for h in ["Ticket", "Cliente / Centro", "Estado", "Gestión", "Días", "Localización",
-              "Creada", "Tipo avería", "Bloq", "Susti", "Fecha venta", "Consola", "HP", "Garantía",
-              "Motivo", "Año compra", "Coste"]:
-        out.append(f'<th>{h}</th>')
+    hdrs = [("Ticket","text"),("Cliente / Centro","text"),("Estado","text"),("Gestión","text"),
+            ("Días","num"),("Localización","text"),("Creada","date"),("Tipo avería","text"),
+            ("Bloq","text"),("Susti","text"),("Fecha venta","date"),("Consola","text"),
+            ("HP","text"),("Garantía","text"),("Motivo","text"),("Año compra","yearcompra"),
+            ("Coste","coste")]
+    for i, (h, dtype) in enumerate(hdrs):
+        out.append(f'<th class="sortable" data-col="{i}" data-type="{dtype}">{h}</th>')
     out.append('</tr></thead><tbody>')
 
     for t, e in enriched:

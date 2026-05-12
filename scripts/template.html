@@ -264,7 +264,7 @@ __CHAINS_HTML__
     const extra = getPaneExtra(pane);
     const tb = pane.querySelector('.chain-toolbar');
     const search = tb ? tb.querySelector('.cf-search').value.toLowerCase().trim() : '';
-    const estado = tb ? tb.querySelector('.cf-estado').value : '';
+    const estadoSet = paneEstadoSel.get(pane) || new Set();
     const gestion = tb ? tb.querySelector('.cf-gestion').value : '';
     const bloq = tb ? tb.querySelector('.cf-bloq').value : '';
     const susti = tb ? tb.querySelector('.cf-susti').value : '';
@@ -278,7 +278,7 @@ __CHAINS_HTML__
         if (r.dataset[k] !== String(extra[k])) { ok = false; break; }
       }
       if (ok && search && !r.textContent.toLowerCase().includes(search)) ok = false;
-      if (ok && estado && r.dataset.estado !== estado) ok = false;
+      if (ok && estadoSet.size > 0 && !estadoSet.has(r.dataset.estado)) ok = false;
       if (ok && gestion && r.dataset.gestion !== gestion) ok = false;
       if (ok && bloq && r.dataset.bloq !== bloq) ok = false;
       if (ok && susti && r.dataset.susti !== susti) ok = false;
@@ -326,8 +326,14 @@ __CHAINS_HTML__
     });
     const clearAll = tb.querySelector('.cf-clear');
     if (clearAll) clearAll.addEventListener('click', () => {
-      tb.querySelectorAll('input').forEach(i => i.value = '');
+      tb.querySelectorAll('input[type=text]').forEach(i => i.value = '');
       tb.querySelectorAll('select').forEach(s => s.value = '');
+      tb.querySelectorAll('.cf-estado-cb').forEach(cb => cb.checked = false);
+      const allCb = tb.querySelector('.cf-estado-all');
+      if (allCb) allCb.checked = true;
+      const set = paneEstadoSel.get(pane);
+      if (set) set.clear();
+      updateEstadoBtn(pane);
       applyChainFilter(pane, {});
     });
   });
@@ -525,6 +531,111 @@ __CHAINS_HTML__
       applyFilters();
       document.getElementById('detalle').scrollIntoView({behavior: 'smooth'});
     });
+  });
+
+  // Estado multi-select por cadena: clic en btn abre popover
+  const paneEstadoSel = new WeakMap();
+  function getEstadoSet(pane) {
+    if (!paneEstadoSel.has(pane)) paneEstadoSel.set(pane, new Set());
+    return paneEstadoSel.get(pane);
+  }
+  function updateEstadoBtn(pane) {
+    const btn = pane.querySelector('.cf-estado-btn');
+    const set = getEstadoSet(pane);
+    btn.textContent = (set.size === 0 ? 'Estado: todos' : 'Estado: ' + set.size + ' sel.') + ' ▾';
+    btn.classList.toggle('active', set.size > 0);
+  }
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest && e.target.closest('.cf-estado-btn');
+    if (btn) {
+      e.stopPropagation();
+      const pop = btn.parentElement.querySelector('.cf-estado-pop');
+      // Cerrar otros pops
+      document.querySelectorAll('.cf-estado-pop.open').forEach(p => { if (p !== pop) p.classList.remove('open'); });
+      pop.classList.toggle('open');
+      return;
+    }
+    if (!e.target.closest('.cf-estado-pop')) {
+      document.querySelectorAll('.cf-estado-pop.open').forEach(p => p.classList.remove('open'));
+    }
+  });
+  document.addEventListener('change', (e) => {
+    if (e.target.classList && e.target.classList.contains('cf-estado-cb')) {
+      const pane = e.target.closest('.chain-pane');
+      const set = getEstadoSet(pane);
+      const st = e.target.dataset.status;
+      if (e.target.checked) set.add(st); else set.delete(st);
+      const all = pane.querySelector('.cf-estado-all');
+      if (all) all.checked = (set.size === 0);
+      updateEstadoBtn(pane);
+      applyChainFilter(pane);
+    } else if (e.target.classList && e.target.classList.contains('cf-estado-all')) {
+      const pane = e.target.closest('.chain-pane');
+      const set = getEstadoSet(pane);
+      if (e.target.checked) {
+        set.clear();
+        pane.querySelectorAll('.cf-estado-cb').forEach(cb => cb.checked = false);
+      }
+      updateEstadoBtn(pane);
+      applyChainFilter(pane);
+    }
+  });
+
+  // Sort por click en cabeceras .sortable de cada tabla ticket-table
+  function dateKeyStr(s) {
+    s = s.trim();
+    const m = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(s);
+    if (m) return m[3] + m[2] + m[1];
+    return s;
+  }
+  function yearcompraKey(s) {
+    s = s.trim();
+    if (s === 'Sin compra') return -1;
+    if (s.startsWith('<')) return parseInt(s.slice(1)) - 1;
+    const n = parseInt(s);
+    return isNaN(n) ? -2 : n;
+  }
+  function costeKey(s) {
+    s = s.trim();
+    if (s === 'Sin coste') return 0;
+    if (s.startsWith('<')) return 1;
+    if (s.startsWith('1.000')) return 2;
+    if (s.startsWith('>')) return 3;
+    return -1;
+  }
+  document.querySelectorAll('table.ticket-table').forEach(tbl => {
+    const tbody = tbl.tBodies[0];
+    const heads = tbl.tHead.rows[0].cells;
+    let lastSort = {col: -1, dir: 1};
+    for (let i = 0; i < heads.length; i++) {
+      const th = heads[i];
+      if (!th.classList.contains('sortable')) continue;
+      th.addEventListener('click', () => {
+        const col = parseInt(th.dataset.col);
+        const type = th.dataset.type || 'text';
+        const dir = (lastSort.col === col) ? -lastSort.dir : 1;
+        for (const h of heads) h.classList.remove('asc','desc');
+        th.classList.add(dir > 0 ? 'asc' : 'desc');
+        lastSort = {col, dir};
+        const rows = Array.from(tbody.rows);
+        rows.sort((a, b) => {
+          let av = a.cells[col].textContent.trim();
+          let bv = b.cells[col].textContent.trim();
+          if (type === 'num') {
+            av = parseFloat(av); bv = parseFloat(bv);
+            if (isNaN(av) && isNaN(bv)) return 0;
+            if (isNaN(av)) return 1 * dir;
+            if (isNaN(bv)) return -1 * dir;
+            return (av - bv) * dir;
+          }
+          if (type === 'date') return dateKeyStr(av).localeCompare(dateKeyStr(bv)) * dir;
+          if (type === 'yearcompra') return (yearcompraKey(av) - yearcompraKey(bv)) * dir;
+          if (type === 'coste') return (costeKey(av) - costeKey(bv)) * dir;
+          return av.localeCompare(bv, 'es') * dir;
+        });
+        for (const r of rows) tbody.appendChild(r);
+      });
+    }
   });
 
   applyFilters();
