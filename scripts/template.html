@@ -92,6 +92,8 @@
   .active-filter-info { color: var(--blue); font-weight: 500; }
   .clear-chain-filter:hover { background: var(--bg) !important; }
   tr.ticket-row.filtered-out { display: none; }
+  .sustis-pane { display: none; }
+  .sustis-pane.active { display: block; }
   .chain-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0 10px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; font-size: 12px; }
   .chain-toolbar input { flex: 1; min-width: 200px; font-size: 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; }
   .chain-toolbar select, .chain-toolbar button { font-size: 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: white; color: inherit; cursor: pointer; }
@@ -237,6 +239,14 @@ __SUSTIS_HTML__
     try { localStorage.setItem('sat-chain', name); } catch(e) {}
   }
   tabs2.forEach(b => b.addEventListener('click', () => setChain(b.dataset.chain)));
+  // Sub-pestañas dentro de view-sustis (Vista cadenas / Vista inmovilizado)
+  document.querySelectorAll('.sustis-tabs button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const name = btn.dataset.sustis;
+      document.querySelectorAll('.sustis-tabs button').forEach(b => b.classList.toggle('active', b.dataset.sustis === name));
+      document.querySelectorAll('.sustis-pane').forEach(p => p.classList.toggle('active', p.dataset.sustis === name));
+    });
+  });
   try {
     const savedChain = localStorage.getItem('sat-chain');
     if (savedChain && document.querySelector('.chain-pane[data-chain="' + savedChain + '"]')) setChain(savedChain);

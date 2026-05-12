@@ -480,6 +480,72 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
             out.append(f'<td>{html_escape(r["activity"])}</td>')
             out.append('</tr>')
 
+    # Sección Disponibles SAT: equipos Airtable con Activity=SAT que NO están en sub-tasks activas (verde)
+    disponibles = [i for i in inmov_chain
+                   if i.get("activity") == "SAT"
+                   and i.get("id_rec") not in matched_inmov_ids]
+    if disponibles:
+        # Agrupar consola+manípulo por número
+        def is_console(b):
+            ta = (b.get("type_asset", "") or "").lower()
+            return "console" in ta or "consola" in ta
+        def is_handpiece(b):
+            ta = (b.get("type_asset", "") or "").lower()
+            return "handpiece" in ta or "manípulo" in ta or "manipulo" in ta
+        def number_key(serial):
+            s = (serial or "").strip().upper()
+            m = re.search(r"(\d+)$", s)
+            return m.group(1).lstrip("0") if m else ""
+        groups_d = {}
+        loose_d = []
+        for b in disponibles:
+            n = number_key(b.get("serial", ""))
+            if not n:
+                loose_d.append(b); continue
+            g = groups_d.setdefault(n, {})
+            if is_console(b) and "consola" not in g: g["consola"] = b
+            elif is_handpiece(b) and "manipulo" not in g: g["manipulo"] = b
+            else: loose_d.append(b)
+        disp_rows = []
+        for n, g in groups_d.items():
+            c = g.get("consola"); m = g.get("manipulo")
+            modelo_c = (c or {}).get("console_model", "")
+            modelo_m = (m or {}).get("console_model", "")
+            spot = (m or {}).get("spot_size", "") or ""
+            parts = []
+            if modelo_c: parts.append(modelo_c)
+            elif modelo_m: parts.append(modelo_m)
+            if spot: parts.append(spot)
+            disp_rows.append({
+                "consola_serial": (c or {}).get("serial", ""),
+                "manipulo_serial": (m or {}).get("serial", ""),
+                "modelo": " / ".join(parts),
+                "customer": (c or m or {}).get("customer", "") or chain,
+                "activity": "SAT",
+                "sort_n": n,
+            })
+        for b in loose_d:
+            disp_rows.append({
+                "consola_serial": b.get("serial", "") if is_console(b) else "",
+                "manipulo_serial": b.get("serial", "") if is_handpiece(b) else "",
+                "modelo": " / ".join([x for x in [b.get("console_model", ""), b.get("spot_size", "")] if x]),
+                "customer": b.get("customer", "") or chain,
+                "activity": "SAT",
+                "sort_n": number_key(b.get("serial", "")) or "zzz",
+            })
+        disp_rows.sort(key=lambda r: r["sort_n"])
+        out.append(f'<tr><th colspan="{NCOLS}" style="background:#2E7D32;color:white;text-align:left;padding:6px 10px">Disponibles SAT ({len(disp_rows)})</th></tr>')
+        for r in disp_rows:
+            out.append(f'<tr style="background:{INMOV_GREEN}">')
+            out.append(f'<td style="text-align:left">{html_escape(r["customer"])}</td>')
+            out.append('<td>—</td>')
+            out.append(f'<td style="text-align:center">{html_escape(r["consola_serial"] or "—")}</td>')
+            out.append(f'<td style="text-align:center">{html_escape(r["manipulo_serial"] or "—")}</td>')
+            out.append(f'<td style="text-align:left">{html_escape(r["modelo"])}</td>')
+            out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+            out.append(f'<td>{html_escape(r["activity"])}</td>')
+            out.append('</tr>')
+
     out.append('</table></div>')
     return "".join(out)
 
@@ -764,21 +830,114 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
     return "".join(tabs) + resumen_html + "".join(panes)
 
 
+def build_inmovilizado_full_html(sustis_items, inmov_items):
+    """Vista inmovilizado completo: tabla por tipo (consolas / manípulos) con status."""
+    sustis_serials = {}
+    for s in sustis_items:
+        for serial in [s.get("consola_susti"), s.get("manipulo_susti")]:
+            ns = normalize_serial(serial)
+            if ns:
+                sustis_serials[ns] = s
+                for v in serial_variants_all(serial):
+                    sustis_serials.setdefault(v, s)
+
+    def is_console(it):
+        ta = (it.get("type_asset", "") or "").lower()
+        return "console" in ta or "consola" in ta
+    def is_handpiece(it):
+        ta = (it.get("type_asset", "") or "").lower()
+        return "handpiece" in ta or "manípulo" in ta or "manipulo" in ta
+
+    def status_of(it):
+        for a in get_serial_aliases(it):
+            if a in sustis_serials:
+                return ("Prestado en sustitución", sustis_serials[a], INMOV_YELLOW)
+        if it.get("activity") == "SAT":
+            return ("Disponible", None, INMOV_GREEN)
+        if it.get("activity") == "Backups for customers":
+            return ("Backup permanente", None, "")
+        return (it.get("activity", "") or "—", None, "")
+
+    consolas = sorted([i for i in inmov_items if is_console(i)], key=lambda x: x.get("serial", "") or "")
+    manipulos = sorted([i for i in inmov_items if is_handpiece(i)], key=lambda x: x.get("serial", "") or "")
+
+    out = []
+    out.append('<h3 style="margin:6px 0 4px;color:var(--blue);font-size:18px">Inmovilizado completo</h3>')
+    out.append(f'<p class="chain-meta">{len(inmov_items)} equipos · {len(consolas)} consolas · {len(manipulos)} manípulos</p>')
+    out.append('<p class="legend">'
+               f'<span class="pill" style="background:{INMOV_YELLOW};padding:2px 8px;border-radius:3px">Prestado en sustitución</span> · '
+               f'<span class="pill" style="background:{INMOV_GREEN};padding:2px 8px;border-radius:3px">Disponible (SAT)</span> · '
+               'normal: Backup permanente</p>')
+
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+    now_utc = datetime.now(timezone.utc)
+
+    def render_table(title, items):
+        if not items: return
+        out.append(f'<p class="chain-section-title">{title} ({len(items)})</p>')
+        out.append('<div class="scroller"><table style="font-size:11px;min-width:1200px">')
+        hdrs = ["Num. Serie", "Modelo", "Spot", "Activity", "Customer", "Status", "Sub-task Jira", "Días sustitución"]
+        out.append('<tr>')
+        for h in hdrs:
+            out.append(f'<th style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px">{h}</th>')
+        out.append('</tr>')
+        for it in items:
+            status, susti, bg = status_of(it)
+            style = f' style="background:{bg}"' if bg else ""
+            subtask_link = "—"
+            dias_v = "—"
+            if susti:
+                k = susti.get("key", "")
+                if k:
+                    subtask_link = f'<a href="{JIRA_URL}{k}" target="_blank" style="color:#2a59c4;text-decoration:none">{k}</a>'
+                fe_dt = parse_iso(susti.get("fecha_envio"))
+                if fe_dt:
+                    dias_v = (now_utc - fe_dt).days
+            out.append(f'<tr{style}>')
+            out.append(f'<td style="text-align:center"><b>{html_escape(it.get("serial",""))}</b></td>')
+            out.append(f'<td>{html_escape(it.get("console_model",""))}</td>')
+            out.append(f'<td>{html_escape(it.get("spot_size",""))}</td>')
+            out.append(f'<td>{html_escape(it.get("activity",""))}</td>')
+            out.append(f'<td style="text-align:left">{html_escape(it.get("customer",""))}</td>')
+            out.append(f'<td>{html_escape(status)}</td>')
+            out.append(f'<td style="text-align:center">{subtask_link}</td>')
+            out.append(f'<td style="text-align:center">{dias_v}</td>')
+            out.append('</tr>')
+        out.append('</table></div>')
+
+    render_table("Consolas", consolas)
+    render_table("Manípulos", manipulos)
+    return "".join(out)
+
+
 def build_sustis_global_html(sustis, inmov):
-    """HTML para la pestaña Sustis (Fase III): tabla Inmovilizado SAT por cada cadena."""
+    """HTML para la pestaña Sustis con 2 sub-vistas: Por cadena + Inmovilizado completo."""
     sustis_items = (sustis or {}).get("items", []) if sustis else []
     inmov_items = (inmov or {}).get("items", []) if inmov else []
     chains_to_show = [ch for ch in CHAIN_ORDER if ch != "Otros"] + ["Otros"]
-    out = []
-    out.append('<h3 style="margin:6px 0 4px;color:var(--blue);font-size:18px">Inmovilizado SAT — visión global</h3>')
+
+    cad_out = []
+    cad_out.append('<h3 style="margin:6px 0 4px;color:var(--blue);font-size:18px">Inmovilizado SAT — por cadena</h3>')
     backups_total = sum(1 for i in inmov_items if i.get("activity") == "Backups for customers")
-    out.append(f'<p class="chain-meta">Sustituciones activas y backups permanentes por cadena · {len(sustis_items)} sustituciones activas en total · {backups_total} backups permanentes</p>')
+    sat_total = sum(1 for i in inmov_items if i.get("activity") == "SAT")
+    cad_out.append(f'<p class="chain-meta">{len(sustis_items)} sustituciones activas · {sat_total} equipos SAT · {backups_total} backups permanentes</p>')
     any_content = False
     for ch in chains_to_show:
         section = build_inmovilizado_section(ch, sustis_items, inmov_items)
         if section:
-            out.append(section)
+            cad_out.append(section)
             any_content = True
     if not any_content:
-        out.append('<p style="color:var(--grey)">No hay sustituciones ni backups activos.</p>')
+        cad_out.append('<p style="color:var(--grey)">No hay sustituciones ni backups activos.</p>')
+    cadenas_html = "".join(cad_out)
+
+    inmov_html = build_inmovilizado_full_html(sustis_items, inmov_items)
+
+    out = []
+    out.append('<div class="tabs2 sustis-tabs">')
+    out.append('<button type="button" data-sustis="cadenas" class="active">Vista por cadena</button>')
+    out.append('<button type="button" data-sustis="inmovilizado">Vista inmovilizado completo</button>')
+    out.append('</div>')
+    out.append(f'<div class="sustis-pane active" data-sustis="cadenas">{cadenas_html}</div>')
+    out.append(f'<div class="sustis-pane" data-sustis="inmovilizado">{inmov_html}</div>')
     return "".join(out)
