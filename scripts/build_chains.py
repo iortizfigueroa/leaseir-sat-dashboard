@@ -762,3 +762,23 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
     )
 
     return "".join(tabs) + resumen_html + "".join(panes)
+
+
+def build_sustis_global_html(sustis, inmov):
+    """HTML para la pestaña Sustis (Fase III): tabla Inmovilizado SAT por cada cadena."""
+    sustis_items = (sustis or {}).get("items", []) if sustis else []
+    inmov_items = (inmov or {}).get("items", []) if inmov else []
+    chains_to_show = [ch for ch in CHAIN_ORDER if ch != "Otros"] + ["Otros"]
+    out = []
+    out.append('<h3 style="margin:6px 0 4px;color:var(--blue);font-size:18px">Inmovilizado SAT — visión global</h3>')
+    backups_total = sum(1 for i in inmov_items if i.get("activity") == "Backups for customers")
+    out.append(f'<p class="chain-meta">Sustituciones activas y backups permanentes por cadena · {len(sustis_items)} sustituciones activas en total · {backups_total} backups permanentes</p>')
+    any_content = False
+    for ch in chains_to_show:
+        section = build_inmovilizado_section(ch, sustis_items, inmov_items)
+        if section:
+            out.append(section)
+            any_content = True
+    if not any_content:
+        out.append('<p style="color:var(--grey)">No hay sustituciones ni backups activos.</p>')
+    return "".join(out)

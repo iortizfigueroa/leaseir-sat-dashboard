@@ -576,8 +576,11 @@ def build_html(cache, out_path, template_path):
         sustis = _find_cache("sustis_activas.json")
         inmov = _find_cache("airtable_inmovilizado.json")
         chains_html = build_chains_html(cache, airtable, serial_year, sustis, inmov)
+        from build_chains import build_sustis_global_html
+        sustis_html = build_sustis_global_html(sustis, inmov)
     except Exception as e:
         chains_html = f'<p style="color:#c0392b;padding:20px">Error generando Fase 2: {e}</p>'
+        sustis_html = chains_html
 
     html = template_path.read_text(encoding="utf-8")
     repl = {
@@ -603,6 +606,7 @@ def build_html(cache, out_path, template_path):
         "__CHAIN_ROWS__": chain_rows,
         "__CHAIN_TOTAL__": chain_total,
         "__CHAINS_HTML__": chains_html,
+        "__SUSTIS_HTML__": sustis_html,
     }
     for k, v in repl.items():
         html = html.replace(k, v)
