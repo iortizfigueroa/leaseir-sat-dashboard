@@ -92,6 +92,10 @@
   .active-filter-info { color: var(--blue); font-weight: 500; }
   .clear-chain-filter:hover { background: var(--bg) !important; }
   tr.ticket-row.filtered-out { display: none; }
+  .chain-toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin: 6px 0 10px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; font-size: 12px; }
+  .chain-toolbar input { flex: 1; min-width: 200px; font-size: 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; }
+  .chain-toolbar select, .chain-toolbar button { font-size: 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: white; color: inherit; cursor: pointer; }
+  .chain-toolbar button:hover { background: var(--bg); }
 </style>
 </head>
 <body>
@@ -252,23 +256,49 @@ __CHAINS_HTML__
     }
     return parts.join(' · ');
   }
-  function applyChainFilter(pane, filter) {
+  const paneExtraFilter = new WeakMap();
+  function getPaneExtra(pane) { return paneExtraFilter.get(pane) || {}; }
+  function setPaneExtra(pane, f) { paneExtraFilter.set(pane, f); }
+  function applyChainFilter(pane, extraFilter) {
+    if (extraFilter !== undefined) setPaneExtra(pane, extraFilter);
+    const extra = getPaneExtra(pane);
+    const tb = pane.querySelector('.chain-toolbar');
+    const search = tb ? tb.querySelector('.cf-search').value.toLowerCase().trim() : '';
+    const estado = tb ? tb.querySelector('.cf-estado').value : '';
+    const gestion = tb ? tb.querySelector('.cf-gestion').value : '';
+    const bloq = tb ? tb.querySelector('.cf-bloq').value : '';
+    const susti = tb ? tb.querySelector('.cf-susti').value : '';
+    const garantia = tb ? tb.querySelector('.cf-garantia').value : '';
+    const dias = tb ? tb.querySelector('.cf-dias').value : '';
     const rows = pane.querySelectorAll('tr.ticket-row');
     let visible = 0;
     rows.forEach(r => {
       let ok = true;
-      for (const k of Object.keys(filter)) {
-        const rv = r.dataset[k];
-        const fv = String(filter[k]);
-        if (rv !== fv) { ok = false; break; }
+      for (const k of Object.keys(extra)) {
+        if (r.dataset[k] !== String(extra[k])) { ok = false; break; }
+      }
+      if (ok && search && !r.textContent.toLowerCase().includes(search)) ok = false;
+      if (ok && estado && r.dataset.estado !== estado) ok = false;
+      if (ok && gestion && r.dataset.gestion !== gestion) ok = false;
+      if (ok && bloq && r.dataset.bloq !== bloq) ok = false;
+      if (ok && susti && r.dataset.susti !== susti) ok = false;
+      if (ok && garantia && r.dataset.garantia !== garantia) ok = false;
+      if (ok && dias) {
+        const d = parseInt(r.dataset.days);
+        if (dias === 'x') { if (!isNaN(d)) ok = false; }
+        else if (isNaN(d)) ok = false;
+        else if (dias === 'g' && d >= 5) ok = false;
+        else if (dias === 'y' && (d < 5 || d > 15)) ok = false;
+        else if (dias === 'r' && d <= 15) ok = false;
       }
       r.classList.toggle('filtered-out', !ok);
       if (ok) visible++;
     });
     const info = pane.querySelector('.active-filter-info');
     const clear = pane.querySelector('.clear-chain-filter');
-    if (info) info.textContent = describeFilter(filter) + ' · ' + visible + ' visibles';
-    if (clear) clear.style.display = Object.keys(filter).length === 0 ? 'none' : '';
+    const hasExtra = Object.keys(extra).length > 0;
+    if (info) info.textContent = (hasExtra ? describeFilter(extra) : 'sin filtro-celda') + ' · ' + visible + ' visibles';
+    if (clear) clear.style.display = hasExtra ? '' : 'none';
   }
   document.addEventListener('click', (e) => {
     const cell = e.target.closest && e.target.closest('td.filter-cell');
@@ -286,6 +316,20 @@ __CHAINS_HTML__
     if (!btn) return;
     const pane = btn.closest('.chain-pane');
     if (pane) applyChainFilter(pane, {});
+  });
+  document.querySelectorAll('.chain-pane').forEach(pane => {
+    const tb = pane.querySelector('.chain-toolbar');
+    if (!tb) return;
+    tb.querySelectorAll('input,select').forEach(el => {
+      el.addEventListener('input', () => applyChainFilter(pane));
+      el.addEventListener('change', () => applyChainFilter(pane));
+    });
+    const clearAll = tb.querySelector('.cf-clear');
+    if (clearAll) clearAll.addEventListener('click', () => {
+      tb.querySelectorAll('input').forEach(i => i.value = '');
+      tb.querySelectorAll('select').forEach(s => s.value = '');
+      applyChainFilter(pane, {});
+    });
   });
 
   const tbl = document.getElementById('detalle-table');
