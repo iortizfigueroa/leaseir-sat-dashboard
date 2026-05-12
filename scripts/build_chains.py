@@ -831,15 +831,29 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
 
 
 def build_inmovilizado_full_html(sustis_items, inmov_items):
-    """Vista inmovilizado completo: tabla por tipo (consolas / manípulos) con status."""
-    sustis_serials = {}
+    """Vista inmovilizado completo: tabla por tipo (consolas / manípulos) con status.
+    Colores: amarillo=duplicado, rojo=solo en Jira (sin registro en Airtable), blanco=resto."""
+    # Construir lookup serial→sustis con todas las variantes
+    sustis_serials = {}  # normalized variant → list of sustis items
     for s in sustis_items:
         for serial in [s.get("consola_susti"), s.get("manipulo_susti")]:
             ns = normalize_serial(serial)
             if ns:
-                sustis_serials[ns] = s
                 for v in serial_variants_all(serial):
-                    sustis_serials.setdefault(v, s)
+                    sustis_serials.setdefault(v, []).append(s)
+                sustis_serials.setdefault(ns, []).append(s)
+
+    # Detectar duplicados: mismo serial en múltiples sub-tasks (por número de equipo)
+    def number_key(s):
+        s = (s or "").strip().upper()
+        m = re.search(r"(\d+)$", s)
+        return m.group(1).lstrip("0") if m else ""
+    serial_to_sustis = {}
+    for s in sustis_items:
+        for serial in [s.get("consola_susti"), s.get("manipulo_susti")]:
+            ns = normalize_serial(serial)
+            if ns:
+                serial_to_sustis.setdefault(ns, []).append(s)
 
     def is_console(it):
         ta = (it.get("type_asset", "") or "").lower()
@@ -849,9 +863,23 @@ def build_inmovilizado_full_html(sustis_items, inmov_items):
         return "handpiece" in ta or "manípulo" in ta or "manipulo" in ta
 
     def status_of(it):
+        # Buscar si está prestado
+        matched_susti = None
         for a in get_serial_aliases(it):
             if a in sustis_serials:
-                return ("Prestado en sustitución", sustis_serials[a], INMOV_YELLOW)
+                matched_susti = sustis_serials[a][0]
+                break
+        if matched_susti:
+            # Verificar si es duplicado (mismo serial en múltiples sub-tasks)
+            ns = normalize_serial(matched_susti.get("consola_susti")) or normalize_serial(matched_susti.get("manipulo_susti"))
+            is_dup = False
+            for a in get_serial_aliases(it):
+                if len(sustis_serials.get(a, [])) > 1:
+                    is_dup = True
+                    break
+            bg = INMOV_YELLOW if is_dup else ""
+            label = "Prestado (duplicado antiguo)" if is_dup else "Prestado en sustitución"
+            return (label, matched_susti, bg)
         if it.get("activity") == "SAT":
             return ("Disponible", None, INMOV_GREEN)
         if it.get("activity") == "Backups for customers":
@@ -865,16 +893,41 @@ def build_inmovilizado_full_html(sustis_items, inmov_items):
     out.append('<h3 style="margin:6px 0 4px;color:var(--blue);font-size:18px">Inmovilizado completo</h3>')
     out.append(f'<p class="chain-meta">{len(inmov_items)} equipos · {len(consolas)} consolas · {len(manipulos)} manípulos</p>')
     out.append('<p class="legend">'
-               f'<span class="pill" style="background:{INMOV_YELLOW};padding:2px 8px;border-radius:3px">Prestado en sustitución</span> · '
+               f'<span class="pill" style="background:{INMOV_RED};padding:2px 8px;border-radius:3px">Solo en Jira (sin Airtable)</span> · '
+               f'<span class="pill" style="background:{INMOV_YELLOW};padding:2px 8px;border-radius:3px">Duplicado antiguo</span> · '
                f'<span class="pill" style="background:{INMOV_GREEN};padding:2px 8px;border-radius:3px">Disponible (SAT)</span> · '
-               'normal: Backup permanente</p>')
+               'blanco: prestado activo o backup permanente</p>')
+
+    # Construir lista de filas "Solo en Jira": sub-tasks cuyo serial NO tiene match en Airtable
+    alias_to_inmov = {}
+    for it in inmov_items:
+        for a in get_serial_aliases(it):
+            alias_to_inmov.setdefault(a, it)
+    solo_jira_rows = []  # (serial, susti_item, type_hint)
+    seen_serials_in_solo = set()
+    for s in sustis_items:
+        for serial, type_hint in [(s.get("consola_susti"), "console"),
+                                   (s.get("manipulo_susti"), "handpiece")]:
+            if not serial: continue
+            n_serial = normalize_serial(serial)
+            if n_serial in seen_serials_in_solo: continue
+            # ¿Hay match en Airtable?
+            match = None
+            for v in serial_variants_all(serial):
+                if v in alias_to_inmov:
+                    match = alias_to_inmov[v]; break
+            if not match:
+                solo_jira_rows.append((serial, s, type_hint))
+                seen_serials_in_solo.add(n_serial)
 
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
     now_utc = datetime.now(timezone.utc)
 
-    def render_table(title, items):
-        if not items: return
-        out.append(f'<p class="chain-section-title">{title} ({len(items)})</p>')
+    def render_table(title, items, solo_jira_for_type):
+        # solo_jira_for_type: lista de (serial, susti, type_hint) que añadir como filas rojas
+        if not items and not solo_jira_for_type:
+            return
+        out.append(f'<p class="chain-section-title">{title} ({len(items) + len(solo_jira_for_type)})</p>')
         out.append('<div class="scroller"><table style="font-size:11px;min-width:1200px">')
         hdrs = ["Num. Serie", "Modelo", "Spot", "Activity", "Customer", "Status", "Sub-task Jira", "Días sustitución"]
         out.append('<tr>')
@@ -903,10 +956,26 @@ def build_inmovilizado_full_html(sustis_items, inmov_items):
             out.append(f'<td style="text-align:center">{subtask_link}</td>')
             out.append(f'<td style="text-align:center">{dias_v}</td>')
             out.append('</tr>')
+        # Filas "Solo en Jira" en rojo
+        for serial, susti, type_hint in solo_jira_for_type:
+            k = susti.get("key", "")
+            subtask_link = f'<a href="{JIRA_URL}{k}" target="_blank" style="color:#2a59c4;text-decoration:none">{k}</a>' if k else "—"
+            fe_dt = parse_iso(susti.get("fecha_envio"))
+            dias_v = (now_utc - fe_dt).days if fe_dt else "—"
+            out.append(f'<tr style="background:{INMOV_RED}">')
+            out.append(f'<td style="text-align:center"><b>{html_escape(serial)}</b></td>')
+            out.append('<td>—</td><td>—</td><td>—</td>')
+            out.append(f'<td style="text-align:left">{html_escape(susti.get("cliente", ""))}</td>')
+            out.append('<td>Solo en Jira (sin Airtable)</td>')
+            out.append(f'<td style="text-align:center">{subtask_link}</td>')
+            out.append(f'<td style="text-align:center">{dias_v}</td>')
+            out.append('</tr>')
         out.append('</table></div>')
 
-    render_table("Consolas", consolas)
-    render_table("Manípulos", manipulos)
+    solo_console = [r for r in solo_jira_rows if r[2] == "console"]
+    solo_handpiece = [r for r in solo_jira_rows if r[2] == "handpiece"]
+    render_table("Consolas", consolas, solo_console)
+    render_table("Manípulos", manipulos, solo_handpiece)
     return "".join(out)
 
 
