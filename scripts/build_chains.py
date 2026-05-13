@@ -267,6 +267,16 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
         for a in get_serial_aliases(it):
             alias_to_inmov.setdefault(a, it)
 
+    # Set global de id_rec prestados en CUALQUIER sustitución activa (no solo de esta cadena).
+    # Esto evita que un equipo prestado a otra cadena aparezca como "Disponible" aquí.
+    globally_lent_ids = set()
+    for s in sustis_items:
+        for serial in (s.get("consola_susti"), s.get("manipulo_susti")):
+            if not serial: continue
+            match = find_inmov(serial, alias_to_inmov)
+            if match and match.get("id_rec"):
+                globally_lent_ids.add(match.get("id_rec"))
+
     # Detectar duplicados: mismo serial en múltiples sub-tasks
     serial_to_sustis = {}
     for s in sustis_chain:
@@ -340,7 +350,8 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
     # Backups permanentes: Airtable Backups for customers de la cadena que NO están en sub-tasks activas
     backups = [i for i in inmov_chain
                if i.get("activity") == "Backups for customers"
-               and i.get("id_rec") not in matched_inmov_ids]
+               and i.get("id_rec") not in matched_inmov_ids
+                   and i.get("id_rec") not in globally_lent_ids]
 
     if not rows_data and not backups:
         return ""
@@ -480,10 +491,11 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
             out.append(f'<td>{html_escape(r["activity"])}</td>')
             out.append('</tr>')
 
-    # Sección Disponibles SAT: equipos Airtable con Activity=SAT que NO están en sub-tasks activas (verde)
+    # Sección Disponibles SAT: equipos Airtable con Activity=SAT que NO están en NINGUNA sub-task activa (verde)
     disponibles = [i for i in inmov_chain
                    if i.get("activity") == "SAT"
-                   and i.get("id_rec") not in matched_inmov_ids]
+                   and i.get("id_rec") not in matched_inmov_ids
+                   and i.get("id_rec") not in globally_lent_ids]
     if disponibles:
         # Agrupar consola+manípulo por número
         def is_console(b):
