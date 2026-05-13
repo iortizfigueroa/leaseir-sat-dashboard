@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-12T23:44:11.526741+00:00",
+    "last_fetched_at": "2026-05-13T08:32:37.835947+00:00",
     "schema_version": 2
   },
   "tickets": {
@@ -41,7 +41,7 @@
           "Esperando respuesta cliente a presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:56.470274+00:00"
+      "fetched_at": "2026-05-13T08:32:19.281070+00:00"
     },
     "LEAS-6213": {
       "key": "LEAS-6213",
@@ -75,7 +75,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:57.087950+00:00"
+      "fetched_at": "2026-05-13T08:32:19.926922+00:00"
     },
     "LEAS-6210": {
       "key": "LEAS-6210",
@@ -109,7 +109,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:57.590221+00:00"
+      "fetched_at": "2026-05-13T08:32:20.503933+00:00"
     },
     "LEAS-6209": {
       "key": "LEAS-6209",
@@ -153,7 +153,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:58.227678+00:00"
+      "fetched_at": "2026-05-13T08:32:21.199929+00:00"
     },
     "LEAS-6207": {
       "key": "LEAS-6207",
@@ -197,7 +197,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:58.617537+00:00"
+      "fetched_at": "2026-05-13T08:32:21.617833+00:00"
     },
     "LEAS-6206": {
       "key": "LEAS-6206",
@@ -231,7 +231,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:58.914256+00:00"
+      "fetched_at": "2026-05-13T08:32:22.226461+00:00"
     },
     "LEAS-6205": {
       "key": "LEAS-6205",
@@ -254,7 +254,7 @@
       "motivo": [],
       "ult_comentario": "",
       "transitions": [],
-      "fetched_at": "2026-05-12T23:43:59.418654+00:00"
+      "fetched_at": "2026-05-13T08:32:22.609344+00:00"
     },
     "LEAS-6204": {
       "key": "LEAS-6204",
@@ -386,7 +386,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-05-12T23:43:59.924301+00:00"
+      "fetched_at": "2026-05-13T08:32:23.264391+00:00"
     },
     "LEAS-6198": {
       "key": "LEAS-6198",
@@ -541,7 +541,7 @@
       "cliente": "Sin Vello Algeciras",
       "loc": "Av. Virgen del Carmen, 32, 11204 Algeciras, Cádiz",
       "created": "2026-05-09T13:51:26.646+0200",
-      "current_status": "Enviado a técnico externo",
+      "current_status": "Cancelado",
       "tipo": "Pantalla",
       "bloq": "No",
       "susti": "No",
@@ -575,9 +575,19 @@
           "2026-05-09T13:55:18.517+0200",
           "Esperando respuesta cliente a presupuesto",
           "Enviado a técnico externo"
+        ],
+        [
+          "2026-05-13T09:55:52.380+0200",
+          "Enviado a técnico externo",
+          "Esperando respuesta cliente a presupuesto"
+        ],
+        [
+          "2026-05-13T09:56:31.455+0200",
+          "Esperando respuesta cliente a presupuesto",
+          "Cancelado"
         ]
       ],
-      "fetched_at": "2026-05-12T21:26:16.432002+00:00"
+      "fetched_at": "2026-05-13T08:32:23.649811+00:00"
     },
     "LEAS-6190": {
       "key": "LEAS-6190",
@@ -1287,7 +1297,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:00.481476+00:00"
+      "fetched_at": "2026-05-13T08:32:24.268303+00:00"
     },
     "LEAS-6158": {
       "key": "LEAS-6158",
@@ -1506,7 +1516,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:00.763263+00:00"
+      "fetched_at": "2026-05-13T08:32:24.584280+00:00"
     },
     "LEAS-6151": {
       "key": "LEAS-6151",
@@ -1514,7 +1524,7 @@
       "cliente": "Sin Vello Utrera",
       "loc": "Virgen de Consolación, 10, 41710 Utrera, Sevilla",
       "created": "2026-05-05T14:18:31.665+0200",
-      "current_status": "En preparación presupuesto",
+      "current_status": "Presupuesto preparado pendiente de enviar",
       "tipo": "Umbilical",
       "bloq": "No",
       "susti": "Sí",
@@ -1558,9 +1568,14 @@
           "2026-05-12T11:20:18.982+0200",
           "En cola taller",
           "En preparación presupuesto"
+        ],
+        [
+          "2026-05-13T10:21:37.603+0200",
+          "En preparación presupuesto",
+          "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:01.295801+00:00"
+      "fetched_at": "2026-05-13T08:32:24.996678+00:00"
     },
     "LEAS-6149": {
       "key": "LEAS-6149",
@@ -1741,7 +1756,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:01.854285+00:00"
+      "fetched_at": "2026-05-13T08:32:25.424916+00:00"
     },
     "LEAS-6141": {
       "key": "LEAS-6141",
@@ -1852,7 +1867,7 @@
       "cliente": "Leaseir tecnologies",
       "loc": "Gijon",
       "created": "2026-05-05T10:09:25.624+0200",
-      "current_status": "En preparación presupuesto",
+      "current_status": "Presupuesto preparado pendiente de enviar",
       "tipo": "Casquillo nuevo",
       "bloq": "Sí",
       "susti": "No",
@@ -1896,9 +1911,14 @@
           "2026-05-08T06:37:33.645+0200",
           "En cola taller",
           "En preparación presupuesto"
+        ],
+        [
+          "2026-05-13T10:09:50.757+0200",
+          "En preparación presupuesto",
+          "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:02.140315+00:00"
+      "fetched_at": "2026-05-13T08:32:25.794131+00:00"
     },
     "LEAS-6136": {
       "key": "LEAS-6136",
@@ -1982,7 +2002,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:02.457417+00:00"
+      "fetched_at": "2026-05-13T08:32:26.201708+00:00"
     },
     "LEAS-6133": {
       "key": "LEAS-6133",
@@ -2026,7 +2046,7 @@
           "Cancelado"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:02.961530+00:00"
+      "fetched_at": "2026-05-13T08:32:26.807066+00:00"
     },
     "LEAS-6132": {
       "key": "LEAS-6132",
@@ -2225,7 +2245,7 @@
       "cliente": "Epil Point Aprilia",
       "loc": "Via dei Lauri, 52d, 04011 Aprilia LT, Italia",
       "created": "2026-05-04T13:05:47.188+0200",
-      "current_status": "Pendiente asignar técnico",
+      "current_status": "Presupuesto preparado pendiente de enviar",
       "tipo": "Umbilical",
       "bloq": "Sí",
       "susti": "No",
@@ -2259,9 +2279,24 @@
           "2026-05-04T13:51:56.940+0200",
           "Gestionado transporte",
           "Pendiente asignar técnico"
+        ],
+        [
+          "2026-05-13T10:12:51.064+0200",
+          "Pendiente asignar técnico",
+          "En cola taller"
+        ],
+        [
+          "2026-05-13T10:12:55.244+0200",
+          "En cola taller",
+          "En preparación presupuesto"
+        ],
+        [
+          "2026-05-13T10:13:20.993+0200",
+          "En preparación presupuesto",
+          "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-05-12T21:26:30.779422+00:00"
+      "fetched_at": "2026-05-13T08:32:27.223206+00:00"
     },
     "LEAS-6127": {
       "key": "LEAS-6127",
@@ -2946,7 +2981,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:03.278820+00:00"
+      "fetched_at": "2026-05-13T08:32:27.598204+00:00"
     },
     "LEAS-6110": {
       "key": "LEAS-6110",
@@ -3484,7 +3519,7 @@
       "cliente": "Elha Logroño",
       "loc": "Logroño",
       "created": "2026-04-30T08:08:51.897+0200",
-      "current_status": "Pendiente confirmación presupuesto",
+      "current_status": "Esperando inicio reparación",
       "tipo": "Umbilical",
       "bloq": "Sí",
       "susti": "No",
@@ -3568,9 +3603,14 @@
           "2026-05-12T13:17:02.980+0200",
           "Esperando inicio reparación",
           "Pendiente confirmación presupuesto"
+        ],
+        [
+          "2026-05-13T10:08:04.355+0200",
+          "Pendiente confirmación presupuesto",
+          "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:03.843544+00:00"
+      "fetched_at": "2026-05-13T08:32:28.222612+00:00"
     },
     "LEAS-6098": {
       "key": "LEAS-6098",
@@ -4102,7 +4142,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:04.369005+00:00"
+      "fetched_at": "2026-05-13T08:32:28.949767+00:00"
     },
     "LEAS-6085": {
       "key": "LEAS-6085",
@@ -5202,7 +5242,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:04.877579+00:00"
+      "fetched_at": "2026-05-13T08:32:29.311859+00:00"
     },
     "LEAS-6060": {
       "key": "LEAS-6060",
@@ -5766,7 +5806,7 @@
       "cliente": "Daniel Jaramillo (Grupo Dos)",
       "loc": "Burgos",
       "created": "2026-04-27T08:55:53.655+0200",
-      "current_status": "En cola taller",
+      "current_status": "Presupuesto preparado pendiente de enviar",
       "tipo": "Caída",
       "bloq": "Sí",
       "susti": "No",
@@ -5805,9 +5845,19 @@
           "2026-05-12T14:17:18.255+0200",
           "Pendiente asignar técnico",
           "En cola taller"
+        ],
+        [
+          "2026-05-13T07:54:38.390+0200",
+          "En cola taller",
+          "En preparación presupuesto"
+        ],
+        [
+          "2026-05-13T07:55:11.541+0200",
+          "En preparación presupuesto",
+          "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:05.173866+00:00"
+      "fetched_at": "2026-05-13T08:32:29.893684+00:00"
     },
     "LEAS-6047": {
       "key": "LEAS-6047",
@@ -6159,7 +6209,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:05.467726+00:00"
+      "fetched_at": "2026-05-13T08:32:30.406206+00:00"
     },
     "LEAS-6040": {
       "key": "LEAS-6040",
@@ -6283,7 +6333,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:06.016796+00:00"
+      "fetched_at": "2026-05-13T08:32:30.811385+00:00"
     },
     "LEAS-6039": {
       "key": "LEAS-6039",
@@ -6347,7 +6397,7 @@
       "cliente": "Brull",
       "loc": "Begues",
       "created": "2026-04-24T15:57:30.898+0200",
-      "current_status": "Esperando inicio reparación",
+      "current_status": "Inspección de salida",
       "tipo": "Puntera - Zafiro",
       "bloq": "Sí",
       "susti": "No",
@@ -6356,7 +6406,7 @@
       "hp": "H00114",
       "garantia": "No",
       "descripcion": "Tiene una raja en la óptica",
-      "tec_taller": "",
+      "tec_taller": "Jonathan Zarauza",
       "importe": 1439.9,
       "tec_externo": "",
       "motivo": [],
@@ -6406,9 +6456,19 @@
           "2026-05-12T14:15:52.214+0200",
           "Pendiente confirmación presupuesto",
           "Esperando inicio reparación"
+        ],
+        [
+          "2026-05-13T07:50:35.592+0200",
+          "Esperando inicio reparación",
+          "En reparación"
+        ],
+        [
+          "2026-05-13T07:50:40.737+0200",
+          "En reparación",
+          "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:06.566679+00:00"
+      "fetched_at": "2026-05-13T08:32:31.463228+00:00"
     },
     "LEAS-6036": {
       "key": "LEAS-6036",
@@ -6521,7 +6581,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:06.879110+00:00"
+      "fetched_at": "2026-05-13T08:32:31.834600+00:00"
     },
     "LEAS-6030": {
       "key": "LEAS-6030",
@@ -6529,7 +6589,7 @@
       "cliente": "Elha Oloriz",
       "loc": "Granada",
       "created": "2026-04-24T12:54:59.977+0200",
-      "current_status": "Esperando inicio reparación",
+      "current_status": "En reparación",
       "tipo": "Temperatura",
       "bloq": "Sí",
       "susti": "Sí",
@@ -6538,7 +6598,7 @@
       "hp": "H00491",
       "garantia": "Sí",
       "descripcion": "Vuelven a decir que calienta mucho el TIP",
-      "tec_taller": "",
+      "tec_taller": "Jonathan Zarauza",
       "importe": 0.0,
       "tec_externo": "",
       "motivo": [],
@@ -6613,9 +6673,14 @@
           "2026-05-11T16:02:49.673+0200",
           "Pendiente confirmación presupuesto",
           "Esperando inicio reparación"
+        ],
+        [
+          "2026-05-13T07:52:54.015+0200",
+          "Esperando inicio reparación",
+          "En reparación"
         ]
       ],
-      "fetched_at": "2026-05-12T21:26:56.288038+00:00"
+      "fetched_at": "2026-05-13T08:32:32.447948+00:00"
     },
     "LEAS-6027": {
       "key": "LEAS-6027",
@@ -7062,7 +7127,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:07.151199+00:00"
+      "fetched_at": "2026-05-13T08:32:32.880721+00:00"
     },
     "LEAS-6016": {
       "key": "LEAS-6016",
@@ -7317,7 +7382,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:07.708824+00:00"
+      "fetched_at": "2026-05-13T08:32:33.290009+00:00"
     },
     "LEAS-6009": {
       "key": "LEAS-6009",
@@ -7766,7 +7831,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:08.315711+00:00"
+      "fetched_at": "2026-05-13T08:32:33.903272+00:00"
     },
     "LEAS-5997": {
       "key": "LEAS-5997",
@@ -8866,7 +8931,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:08.646837+00:00"
+      "fetched_at": "2026-05-13T08:32:34.516082+00:00"
     },
     "LEAS-5970": {
       "key": "LEAS-5970",
@@ -9165,7 +9230,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:09.209068+00:00"
+      "fetched_at": "2026-05-13T08:32:34.921347+00:00"
     },
     "LEAS-5963": {
       "key": "LEAS-5963",
@@ -9924,7 +9989,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:09.513912+00:00"
+      "fetched_at": "2026-05-13T08:32:35.517037+00:00"
     },
     "LEAS-5950": {
       "key": "LEAS-5950",
@@ -11142,7 +11207,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:10.118786+00:00"
+      "fetched_at": "2026-05-13T08:32:35.961985+00:00"
     },
     "LEAS-5917": {
       "key": "LEAS-5917",
@@ -11651,7 +11716,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:10.475698+00:00"
+      "fetched_at": "2026-05-13T08:32:36.430376+00:00"
     },
     "LEAS-5907": {
       "key": "LEAS-5907",
@@ -11927,7 +11992,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:10.769870+00:00"
+      "fetched_at": "2026-05-13T08:32:36.811212+00:00"
     },
     "LEAS-5900": {
       "key": "LEAS-5900",
@@ -14758,7 +14823,7 @@
       "cliente": "Centro del vello y Belleza Denia (Damaris)",
       "loc": "Denia",
       "created": "2026-04-10T11:47:52.676+0200",
-      "current_status": "Pendiente asignar técnico",
+      "current_status": "En cola taller",
       "tipo": "Revisión",
       "bloq": "No",
       "susti": "Sí",
@@ -14792,9 +14857,14 @@
           "2026-05-12T11:23:22.394+0200",
           "Gestionado transporte",
           "Pendiente asignar técnico"
+        ],
+        [
+          "2026-05-13T09:46:36.988+0200",
+          "Pendiente asignar técnico",
+          "En cola taller"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:11.164707+00:00"
+      "fetched_at": "2026-05-13T08:32:37.298261+00:00"
     },
     "LEAS-5836": {
       "key": "LEAS-5836",
@@ -27217,7 +27287,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-05-12T23:44:11.476547+00:00"
+      "fetched_at": "2026-05-13T08:32:37.785222+00:00"
     },
     "LEAS-5543": {
       "key": "LEAS-5543",
@@ -114771,6 +114841,29 @@
         ]
       ],
       "fetched_at": "2026-05-12T21:35:22.228531+00:00"
+    },
+    "LEAS-6219": {
+      "key": "LEAS-6219",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Sin Vello Alzira",
+      "loc": "Valencia",
+      "created": "2026-05-13T09:58:38.835+0200",
+      "current_status": "Abierto",
+      "tipo": "Temperatura",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "2025-08-05",
+      "consola": "C00903",
+      "hp": "H00903",
+      "garantia": "",
+      "descripcion": "temepratura del desposito a 12 grados",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "motivo": [],
+      "ult_comentario": "",
+      "transitions": [],
+      "fetched_at": "2026-05-13T08:32:18.588068+00:00"
     }
   }
 }
