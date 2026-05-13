@@ -101,8 +101,17 @@
 </style>
 </head>
 <body>
-<h1>Leaseir SAT — Dashboard de incidencias</h1>
-<div class="meta">Generado el __TODAY__. Datos de Jira (LEAS).</div>
+<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+  <div>
+    <h1>Leaseir SAT — Dashboard de incidencias</h1>
+    <div class="meta">Generado el __TODAY__. Datos de Jira (LEAS).</div>
+  </div>
+  <button id="btn-refresh" type="button" title="Lanza GitHub Actions para refrescar Jira + Airtable y redesplegar"
+    style="padding:8px 14px;font-size:13px;background:var(--blue2);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:500;white-space:nowrap">
+    Actualizar ahora
+  </button>
+</div>
+<div id="refresh-status" style="display:none;font-size:12px;padding:6px 10px;border-radius:4px;margin:4px 0 8px"></div>
 __DEMO_BANNER__
 
 <div class="tabs1">
@@ -649,6 +658,76 @@ __SUSTIS_HTML__
   });
 
   applyFilters();
+})();
+
+// === Botón "Actualizar ahora" — dispara workflow_dispatch via GitHub API ===
+(function() {
+  const REPO_OWNER = "iortizfigueroa";
+  const REPO_NAME = "leaseir-sat-dashboard";
+  const WORKFLOW_FILE = "refresh.yml";
+  const TOKEN_KEY = "leaseir_sat_pat";
+  const btn = document.getElementById("btn-refresh");
+  const status = document.getElementById("refresh-status");
+  if (!btn) return;
+  function showStatus(msg, type) {
+    const colors = {
+      info:  "background:#e7eefa;color:#0b3d91;border:1px solid #2a59c4",
+      ok:    "background:#dcfce7;color:#166534;border:1px solid #22c55e",
+      error: "background:#fee2e2;color:#991b1b;border:1px solid #ef4444"
+    };
+    status.style.cssText = "display:block;font-size:12px;padding:6px 10px;border-radius:4px;margin:4px 0 8px;" + (colors[type] || colors.info);
+    status.textContent = msg;
+  }
+  function getToken() {
+    let t = localStorage.getItem(TOKEN_KEY);
+    if (!t) {
+      t = prompt("Necesito un GitHub Personal Access Token (fine-grained, scope: Actions Read+Write) para lanzar el workflow.\n\nCrea uno aqui: https://github.com/settings/personal-access-tokens/new\n\nPega el token (se guarda solo en este navegador):");
+      if (t && t.trim()) {
+        t = t.trim();
+        localStorage.setItem(TOKEN_KEY, t);
+      } else {
+        return null;
+      }
+    }
+    return t;
+  }
+  btn.addEventListener("click", async () => {
+    const token = getToken();
+    if (!token) { showStatus("Cancelado (no hay token)", "error"); return; }
+    btn.disabled = true;
+    btn.style.opacity = "0.6";
+    showStatus("Lanzando workflow...", "info");
+    try {
+      const r = await fetch(
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/dispatches`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ref: "main" })
+        }
+      );
+      if (r.status === 204) {
+        showStatus("Workflow lanzado. Vuelve en 2 min y refresca la pagina (Ctrl+F5).", "ok");
+        setTimeout(() => { btn.disabled = false; btn.style.opacity = "1"; }, 90000);
+      } else if (r.status === 401 || r.status === 403) {
+        localStorage.removeItem(TOKEN_KEY);
+        showStatus("Token invalido o sin permisos. He borrado el guardado, pulsa de nuevo para introducir uno nuevo.", "error");
+        btn.disabled = false; btn.style.opacity = "1";
+      } else {
+        const txt = await r.text();
+        showStatus("Error " + r.status + ": " + txt.slice(0, 200), "error");
+        btn.disabled = false; btn.style.opacity = "1";
+      }
+    } catch (e) {
+      showStatus("Error de red: " + e.message, "error");
+      btn.disabled = false; btn.style.opacity = "1";
+    }
+  });
 })();
 </script>
 </body>
