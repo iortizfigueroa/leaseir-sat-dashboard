@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-13T09:45:43.776408+00:00",
+    "last_fetched_at": "2026-05-13T10:35:03.391377+00:00",
     "schema_version": 2
   },
   "tickets": {
@@ -306,7 +306,7 @@
       "cliente": "Elha Villaroel",
       "loc": "Barcelona",
       "created": "2026-05-11T15:33:09.053+0200",
-      "current_status": "Enviado a técnico externo",
+      "current_status": "Finalizado técnico externo",
       "tipo": "Energía",
       "bloq": "No",
       "susti": "No",
@@ -340,9 +340,14 @@
           "2026-05-11T15:34:24.834+0200",
           "Esperando respuesta cliente a presupuesto",
           "Enviado a técnico externo"
+        ],
+        [
+          "2026-05-13T12:11:42.131+0200",
+          "Enviado a técnico externo",
+          "Finalizado técnico externo"
         ]
       ],
-      "fetched_at": "2026-05-12T21:26:13.781555+00:00"
+      "fetched_at": "2026-05-13T10:34:50.422642+00:00"
     },
     "LEAS-6202": {
       "key": "LEAS-6202",
@@ -587,7 +592,7 @@
           "Cancelado"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:36.430165+00:00"
+      "fetched_at": "2026-05-13T10:34:51.281783+00:00"
     },
     "LEAS-6190": {
       "key": "LEAS-6190",
@@ -665,7 +670,7 @@
           "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:37.223855+00:00"
+      "fetched_at": "2026-05-13T10:34:52.284951+00:00"
     },
     "LEAS-6188": {
       "key": "LEAS-6188",
@@ -1529,7 +1534,7 @@
       "cliente": "Sin Vello Utrera",
       "loc": "Virgen de Consolación, 10, 41710 Utrera, Sevilla",
       "created": "2026-05-05T14:18:31.665+0200",
-      "current_status": "Presupuesto preparado pendiente de enviar",
+      "current_status": "Pendiente confirmación presupuesto",
       "tipo": "Umbilical",
       "bloq": "No",
       "susti": "Sí",
@@ -1539,7 +1544,7 @@
       "garantia": "Sí",
       "descripcion": "segun cliente el técnico que estuvo 3en Febrero dejo el umbilical en la siguientes condiciones, adjunto foto.",
       "tec_taller": "",
-      "importe": "",
+      "importe": 7762.15,
       "tec_externo": "",
       "motivo": [],
       "ult_comentario": "2026-05-12 Ernesto — Golpe en la carcasa , manipulo muy sucio",
@@ -1578,9 +1583,14 @@
           "2026-05-13T10:21:37.603+0200",
           "En preparación presupuesto",
           "Presupuesto preparado pendiente de enviar"
+        ],
+        [
+          "2026-05-13T12:03:18.714+0200",
+          "Presupuesto preparado pendiente de enviar",
+          "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:37.897704+00:00"
+      "fetched_at": "2026-05-13T10:34:52.758239+00:00"
     },
     "LEAS-6149": {
       "key": "LEAS-6149",
@@ -1715,7 +1725,7 @@
       "cliente": "Centro Unico Orio",
       "loc": "Via Portico, 71, 24050 Orio al Serio BG, Italia",
       "created": "2026-05-05T11:15:47.828+0200",
-      "current_status": "En preparación presupuesto",
+      "current_status": "Presupuesto preparado pendiente de enviar",
       "tipo": "Otros",
       "bloq": "Sí",
       "susti": "Sí",
@@ -1759,9 +1769,14 @@
           "2026-05-12T12:17:50.409+0200",
           "En cola taller",
           "En preparación presupuesto"
+        ],
+        [
+          "2026-05-13T12:30:08.109+0200",
+          "En preparación presupuesto",
+          "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:38.466171+00:00"
+      "fetched_at": "2026-05-13T10:34:53.284814+00:00"
     },
     "LEAS-6141": {
       "key": "LEAS-6141",
@@ -1872,7 +1887,7 @@
       "cliente": "Leaseir tecnologies",
       "loc": "Gijon",
       "created": "2026-05-05T10:09:25.624+0200",
-      "current_status": "Inspección de salida",
+      "current_status": "Finalizada",
       "tipo": "Casquillo nuevo",
       "bloq": "Sí",
       "susti": "No",
@@ -1884,7 +1899,10 @@
       "tec_taller": "Francisco Fernández Porrúa",
       "importe": 0.0,
       "tec_externo": "",
-      "motivo": [],
+      "motivo": [
+        "Reparación de umbilical",
+        "Revisión"
+      ],
       "ult_comentario": "2026-05-05 Ernesto — Casquillo de pistola suelto, equipo aparentemente volcado, refrigerante en espumas y funda , etiqueta saltada.",
       "transitions": [
         [
@@ -1941,9 +1959,24 @@
           "2026-05-13T11:03:33.513+0200",
           "En reparación",
           "Inspección de salida"
+        ],
+        [
+          "2026-05-13T12:23:37.019+0200",
+          "Inspección de salida",
+          "Devuelto a cliente"
+        ],
+        [
+          "2026-05-13T12:23:42.965+0200",
+          "Devuelto a cliente",
+          "Resuelto"
+        ],
+        [
+          "2026-05-13T12:24:06.395+0200",
+          "Resuelto",
+          "Finalizada"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:39.080885+00:00"
+      "fetched_at": "2026-05-13T10:34:54.109879+00:00"
     },
     "LEAS-6136": {
       "key": "LEAS-6136",
@@ -2027,7 +2060,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-05-13T08:32:26.201708+00:00"
+      "fetched_at": "2026-05-13T10:34:54.634082+00:00"
     },
     "LEAS-6133": {
       "key": "LEAS-6133",
@@ -2326,7 +2359,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:39.684552+00:00"
+      "fetched_at": "2026-05-13T10:34:55.436080+00:00"
     },
     "LEAS-6127": {
       "key": "LEAS-6127",
@@ -2797,7 +2830,7 @@
           "Cancelado"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:40.263544+00:00"
+      "fetched_at": "2026-05-13T10:34:56.343425+00:00"
     },
     "LEAS-6114": {
       "key": "LEAS-6114",
@@ -3640,7 +3673,7 @@
           "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:40.675699+00:00"
+      "fetched_at": "2026-05-13T10:34:56.875743+00:00"
     },
     "LEAS-6098": {
       "key": "LEAS-6098",
@@ -3804,7 +3837,7 @@
       "cliente": "Sin Vello Velez Malaga",
       "loc": "MALAGA",
       "created": "2026-04-29T10:48:45.658+0200",
-      "current_status": "Pendiente confirmación presupuesto",
+      "current_status": "Esperando inicio reparación",
       "tipo": "Stop",
       "bloq": "Sí",
       "susti": "Sí",
@@ -3918,9 +3951,14 @@
           "2026-05-11T11:18:01.309+0200",
           "Presupuesto preparado pendiente de enviar",
           "Pendiente confirmación presupuesto"
+        ],
+        [
+          "2026-05-13T12:30:20.168+0200",
+          "Pendiente confirmación presupuesto",
+          "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-05-12T21:26:39.738997+00:00"
+      "fetched_at": "2026-05-13T10:34:57.344956+00:00"
     },
     "LEAS-6090": {
       "key": "LEAS-6090",
@@ -5639,7 +5677,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:41.258210+00:00"
+      "fetched_at": "2026-05-13T10:34:58.104896+00:00"
     },
     "LEAS-6052": {
       "key": "LEAS-6052",
@@ -5836,7 +5874,7 @@
       "cliente": "Daniel Jaramillo (Grupo Dos)",
       "loc": "Burgos",
       "created": "2026-04-27T08:55:53.655+0200",
-      "current_status": "Pendiente confirmación presupuesto",
+      "current_status": "En reparación",
       "tipo": "Caída",
       "bloq": "Sí",
       "susti": "No",
@@ -5845,7 +5883,7 @@
       "hp": "",
       "garantia": "No",
       "descripcion": "El cliente trae la máquina para hacerle un upgrade a versión con códigos pero, durante la inspección de entrada, se detecta que la puntera tiene un golpe y las ópticas están rotas",
-      "tec_taller": "",
+      "tec_taller": "Iván Lozano Fernández",
       "importe": 2897.95,
       "tec_externo": "",
       "motivo": [],
@@ -5890,9 +5928,19 @@
           "2026-05-13T10:50:22.243+0200",
           "Presupuesto preparado pendiente de enviar",
           "Pendiente confirmación presupuesto"
+        ],
+        [
+          "2026-05-13T12:20:14.715+0200",
+          "Pendiente confirmación presupuesto",
+          "Esperando inicio reparación"
+        ],
+        [
+          "2026-05-13T12:27:29.619+0200",
+          "Esperando inicio reparación",
+          "En reparación"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:41.630053+00:00"
+      "fetched_at": "2026-05-13T10:34:58.516179+00:00"
     },
     "LEAS-6047": {
       "key": "LEAS-6047",
@@ -6503,7 +6551,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:42.317022+00:00"
+      "fetched_at": "2026-05-13T10:34:58.957277+00:00"
     },
     "LEAS-6036": {
       "key": "LEAS-6036",
@@ -6560,7 +6608,7 @@
       "cliente": "Sin Vello Illescas",
       "loc": "Toleda",
       "created": "2026-04-24T13:02:11.128+0200",
-      "current_status": "Pendiente confirmación presupuesto",
+      "current_status": "Esperando inicio reparación",
       "tipo": "Temperatura",
       "bloq": "Sí",
       "susti": "Sí",
@@ -6614,9 +6662,14 @@
           "2026-05-12T11:05:55.132+0200",
           "Presupuesto preparado pendiente de enviar",
           "Pendiente confirmación presupuesto"
+        ],
+        [
+          "2026-05-13T12:22:46.439+0200",
+          "Pendiente confirmación presupuesto",
+          "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-05-13T08:32:31.834600+00:00"
+      "fetched_at": "2026-05-13T10:34:59.765337+00:00"
     },
     "LEAS-6030": {
       "key": "LEAS-6030",
@@ -6720,7 +6773,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:42.920903+00:00"
+      "fetched_at": "2026-05-13T10:35:00.622507+00:00"
     },
     "LEAS-6027": {
       "key": "LEAS-6027",
@@ -9580,7 +9633,7 @@
           "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:43.320496+00:00"
+      "fetched_at": "2026-05-13T10:35:01.103095+00:00"
     },
     "LEAS-5957": {
       "key": "LEAS-5957",
@@ -11761,7 +11814,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-05-13T08:32:36.430376+00:00"
+      "fetched_at": "2026-05-13T10:35:01.984721+00:00"
     },
     "LEAS-5907": {
       "key": "LEAS-5907",
@@ -14909,7 +14962,7 @@
           "En cola taller"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:43.726262+00:00"
+      "fetched_at": "2026-05-13T10:35:02.480423+00:00"
     },
     "LEAS-5836": {
       "key": "LEAS-5836",
@@ -38836,8 +38889,8 @@
       "tipo": "Otros",
       "bloq": "No",
       "susti": "Sí",
-      "fventa": "",
-      "consola": "",
+      "fventa": "2018-09-11",
+      "consola": "369",
       "hp": "",
       "garantia": "No",
       "descripcion": "El equipo tiene el interruptor atascado en posición de encendido y se le para por temperatura AHR0369",
@@ -38908,7 +38961,7 @@
           "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-05-12T21:29:35.698556+00:00"
+      "fetched_at": "2026-05-13T10:35:03.341153+00:00"
     },
     "LEAS-5262": {
       "key": "LEAS-5262",
@@ -114908,7 +114961,7 @@
       "motivo": [],
       "ult_comentario": "",
       "transitions": [],
-      "fetched_at": "2026-05-13T09:45:35.989940+00:00"
+      "fetched_at": "2026-05-13T10:34:49.517967+00:00"
     },
     "LEAS-6221": {
       "key": "LEAS-6221",
@@ -114942,7 +114995,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:34.887558+00:00"
+      "fetched_at": "2026-05-13T10:34:48.283422+00:00"
     },
     "LEAS-6220": {
       "key": "LEAS-6220",
@@ -114986,7 +115039,30 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-05-13T09:45:35.359832+00:00"
+      "fetched_at": "2026-05-13T10:34:49.109923+00:00"
+    },
+    "LEAS-6224": {
+      "key": "LEAS-6224",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Ces Depilacion",
+      "loc": "A Coruña",
+      "created": "2026-05-13T11:47:09.804+0200",
+      "current_status": "Abierto",
+      "tipo": "Stop",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "2019-08-22",
+      "consola": "",
+      "hp": "40166",
+      "garantia": "",
+      "descripcion": "segun cliente duele mucho a lao scliente, se tendra que medir",
+      "tec_taller": "",
+      "importe": "",
+      "tec_externo": "",
+      "motivo": [],
+      "ult_comentario": "",
+      "transitions": [],
+      "fetched_at": "2026-05-13T10:34:47.449737+00:00"
     }
   }
 }
