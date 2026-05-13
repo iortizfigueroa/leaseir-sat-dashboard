@@ -382,15 +382,17 @@ def build_abiertas_hoy_section(cache):
         if d["total"] == 0:
             body = '<span style="color:#c0d0e0">·</span>'
         else:
+            inner = ""
+            if d["t"] > 0:
+                inner += f'<span style="color:{COLOR_TODAY};font-weight:500">{d["t"]}</span><span style="font-size:11px;color:#7d8590">/</span>'
+            inner += (f'<span style="color:{COLOR_GREEN};font-weight:500">{d["g"]}</span>'
+                      f'<span style="font-size:11px;color:#7d8590">/</span>'
+                      f'<span style="color:{COLOR_YELLOW};font-weight:500">{d["y"]}</span>'
+                      f'<span style="font-size:11px;color:#7d8590">/</span>'
+                      f'<span style="color:{COLOR_RED};font-weight:500">{d["r"]}</span>')
             body = (f'<span style="font-weight:500">{d["total"]}</span> '
                     f'<span style="font-size:11px;color:#7d8590">(</span>'
-                    f'<span style="color:{COLOR_TODAY};font-weight:500">{d["t"]}</span>'
-                    f'<span style="font-size:11px;color:#7d8590">/</span>'
-                    f'<span style="color:{COLOR_GREEN};font-weight:500">{d["g"]}</span>'
-                    f'<span style="font-size:11px;color:#7d8590">/</span>'
-                    f'<span style="color:{COLOR_YELLOW};font-weight:500">{d["y"]}</span>'
-                    f'<span style="font-size:11px;color:#7d8590">/</span>'
-                    f'<span style="color:{COLOR_RED};font-weight:500">{d["r"]}</span>'
+                    f'{inner}'
                     f'<span style="font-size:11px;color:#7d8590">)</span>')
         flow = []
         if ch_in > 0:
@@ -573,10 +575,24 @@ def build_html(cache, out_path, template_path):
     state_header = '<tr><th class="sticky-l1">Funnel</th><th class="sticky-l2">Estado</th>' + th_cells + '</tr>'
     chain_header = '<tr><th class="sticky-l1">Cadena</th>' + th_cells + '</tr>'
 
+    taller_set_local = set(TALLER_STATUSES_ORDER)
+    states_taller_idx = [i for i, s in enumerate(states) if s in taller_set_local]
+    taller_first_idx = states_taller_idx[0] if states_taller_idx else -1
+    taller_last_idx = states_taller_idx[-1] if states_taller_idx else -1
+
     def state_row(st):
         ft = FUNNEL_TAG.get(st, "?")
         color = FUNNEL_COLOR.get(ft, "#888")
-        parts = [f'<tr><td class="lbl-funnel" style="color:{color}">{ft}</td>',
+        row_classes = []
+        if st in taller_set_local:
+            row_classes.append("row-taller")
+            i = states.index(st)
+            if i == taller_first_idx:
+                row_classes.append("row-taller-first")
+            if i == taller_last_idx:
+                row_classes.append("row-taller-last")
+        cls_attr = f' class="{" ".join(row_classes)}"' if row_classes else ""
+        parts = [f'<tr{cls_attr}><td class="lbl-funnel" style="color:{color}">{ft}</td>',
                  f'<td class="lbl-name">{st}</td>']
         for l, _ in cutoffs:
             n = sum(1 for _, _, s in opens[l] if s == st)
@@ -607,11 +623,7 @@ def build_html(cache, out_path, template_path):
     dweek = today_total - week_ago_total
     arrow = "▲" if dweek > 0 else ("▼" if dweek < 0 else "→")
     dcolor = "#c0392b" if dweek > 0 else ("#1f8a4c" if dweek < 0 else "#7d8590")
-    TALLER_STATUSES = {
-        "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
-        "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
-        "Esperando inicio reparación", "En reparación", "Inspección de salida",
-    }
+    TALLER_STATUSES = set(TALLER_STATUSES_ORDER)
     en_taller = sum(
         1 for k, t in cache.get("tickets", {}).items()
         if t.get("current_status") in TALLER_STATUSES
@@ -623,15 +635,28 @@ def build_html(cache, out_path, template_path):
         and (days_since(last_status_change_dt(t)) or 0) > 15
     )
 
+    # Pico = max histórico en taller (en lugar de max histórico de abiertas)
     peak = 0
     peak_lbl = ""
     for lbl, _ in cutoffs:
-        n = len(opens[lbl])
+        n = sum(1 for _, _, s in opens[lbl] if s in TALLER_STATUSES)
         if n > peak:
             peak = n
             peak_lbl = lbl
-    peak_pct = round(today_total / peak * 100) if peak else 0
+    peak_pct = round(en_taller / peak * 100) if peak else 0
     peak_color = "#1f8a4c" if peak_pct <= 70 else ("#b8860b" if peak_pct <= 90 else "#c0392b")
+
+    # Flechas in/out totales para el bloque "En taller"
+    changes_today_kpi = compute_status_changes_today(cache)
+    taller_in = sum(v["in"] for (st, _ch), v in changes_today_kpi.items() if st in TALLER_STATUSES)
+    taller_out = sum(v["out"] for (st, _ch), v in changes_today_kpi.items() if st in TALLER_STATUSES)
+    en_taller_flow_parts = []
+    if taller_in > 0:
+        en_taller_flow_parts.append(f'<span style="color:#c0392b;font-weight:500" title="entran hoy a taller">&#9650;{taller_in}</span>')
+    if taller_out > 0:
+        en_taller_flow_parts.append(f'<span style="color:#1f8a4c;font-weight:500" title="salen hoy de taller">&#9660;{taller_out}</span>')
+    en_taller_flow = ('<div class="d" style="margin-top:2px;font-size:13px">'
+                      + ' '.join(en_taller_flow_parts) + '</div>') if en_taller_flow_parts else ''
 
     is_demo = "DEMO" in (cache.get("_meta", {}).get("note") or "")
     demo = ('<div class="banner">⚠ Vista previa con cache DEMO. El GitHub Action poblará el histórico completo.</div>'
@@ -681,6 +706,7 @@ def build_html(cache, out_path, template_path):
         "__PEAK_PCT__": str(peak_pct),
         "__PEAK_COLOR__": peak_color,
         "__EN_TALLER__": str(en_taller),
+        "__EN_TALLER_FLOW__": en_taller_flow,
         "__AH_HEADER__": ah_header,
         "__AH_ROWS__": ah_rows,
         "__DETALLE_ROWS__": detalle_rows,
