@@ -544,6 +544,12 @@ def build_detalle_section(cache):
 
 def build_html(cache, out_path, template_path):
     today = date.today()
+    try:
+        from zoneinfo import ZoneInfo
+        _now_mad = datetime.now(ZoneInfo("Europe/Madrid"))
+        today_label = _now_mad.strftime("%Y-%m-%d %H:%M") + " (Madrid)"
+    except Exception:
+        today_label = today.isoformat()
     cutoffs = compute_cutoffs(today)
     opens = replay_opens(cache, cutoffs)
 
@@ -694,7 +700,7 @@ def build_html(cache, out_path, template_path):
 
     html = template_path.read_text(encoding="utf-8")
     repl = {
-        "__TODAY__": today.isoformat(),
+        "__TODAY__": today_label,
         "__DEMO_BANNER__": demo,
         "__TODAY_TOTAL__": str(today_total),
         "__DELTA_COLOR__": dcolor,

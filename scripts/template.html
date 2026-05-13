@@ -109,18 +109,20 @@
 </style>
 </head>
 <body>
-<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-  <div style="display:flex;align-items:center;gap:16px">
-    <img src="logo.svg" alt="Leaseir" style="height:48px;width:auto;flex-shrink:0" />
-    <div>
-      <h1>Leaseir SAT — Dashboard de incidencias</h1>
-      <div class="meta">Generado el __TODAY__. Datos de Jira (LEAS).</div>
+<div style="background:#0b3d91;margin:-24px -20px 18px;padding:18px 20px;border-radius:0 0 8px 8px">
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;max-width:1500px;margin:0 auto">
+    <div style="display:flex;align-items:center;gap:16px">
+      <img src="logo-white.svg" alt="Leaseir" style="height:48px;width:auto;flex-shrink:0" />
+      <div>
+        <h1 style="color:white;margin:0">Leaseir SAT — Dashboard de incidencias</h1>
+        <div style="color:rgba(255,255,255,0.75);font-size:12px;margin-top:4px">Generado el __TODAY__. Datos de Jira (LEAS).</div>
+      </div>
     </div>
+    <button id="btn-refresh" type="button" title="Lanza GitHub Actions para refrescar Jira + Airtable y redesplegar"
+      style="padding:8px 14px;font-size:13px;background:white;color:#0b3d91;border:none;border-radius:6px;cursor:pointer;font-weight:500;white-space:nowrap">
+      Actualizar ahora
+    </button>
   </div>
-  <button id="btn-refresh" type="button" title="Lanza GitHub Actions para refrescar Jira + Airtable y redesplegar"
-    style="padding:8px 14px;font-size:13px;background:var(--blue2);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:500;white-space:nowrap">
-    Actualizar ahora
-  </button>
 </div>
 <div id="refresh-status" style="display:none;font-size:12px;padding:6px 10px;border-radius:4px;margin:4px 0 8px"></div>
 __DEMO_BANNER__
