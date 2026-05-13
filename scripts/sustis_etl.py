@@ -825,9 +825,8 @@ def render_inmovilizado_sat_html(data):
             elif (jira_serial, r['sub_key']) in old_dup_pairs:
                 bg = COLOR_YELLOW_BG
             elif r['kind'] == 'solo_at' and activity == 'SAT' and not has_active_elsewhere:
-                bg = COLOR_GREEN_BG
-            elif (r['kind'] == 'union' and r['sub_status'] in ('Equipo devuelto', 'Resuelto')
-                  and activity != 'Backups for customers' and not has_active_elsewhere):
+                # Verde solo cuando el equipo está físicamente de vuelta en SAT
+                # (sub-task ya cerrada, no aparece en cache) y no tiene otro ticket activo.
                 bg = COLOR_GREEN_BG
             out.append(render_inv_row_html(r, bg))
         out.append('</table>')
