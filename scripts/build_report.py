@@ -185,11 +185,43 @@ def days_since(dt):
 def days_bucket(d):
     if d is None:
         return "y"
-    if d < 5:
+    if d <= 5:
         return "g"
     if d <= 15:
         return "y"
     return "r"
+
+
+def is_created_today(ticket):
+    """True si el ticket fue creado hoy (UTC)."""
+    created = parse_iso(ticket.get("created"))
+    if not created:
+        return False
+    today = datetime.now(timezone.utc).date()
+    return created.date() == today
+
+
+def compute_status_changes_today(cache):
+    """Para cada (estado, cadena) cuenta tickets que ENTRARON hoy (>= 00:00 UTC hoy)
+    y SALIERON hoy. Considera tickets abiertos hoy o que estaban abiertos ayer.
+    Returns: dict {(estado, cadena): {'in': int, 'out': int}}
+    """
+    today = datetime.now(timezone.utc).date()
+    cutoff_ayer = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc) - timedelta(seconds=1)
+    changes = {}
+    for key, t in cache.get("tickets", {}).items():
+        chain = chain_of(t.get("cliente", ""), t.get("loc", ""))
+        status_ayer = status_at(t, cutoff_ayer)
+        status_hoy = t.get("current_status")
+        if status_ayer == status_hoy:
+            continue
+        if status_ayer and is_open(status_ayer):
+            k_out = (status_ayer, chain)
+            changes.setdefault(k_out, {"in": 0, "out": 0})["out"] += 1
+        if status_hoy and is_open(status_hoy):
+            k_in = (status_hoy, chain)
+            changes.setdefault(k_in, {"in": 0, "out": 0})["in"] += 1
+    return changes
 
 
 FONT_X = "Arial"
@@ -306,6 +338,13 @@ def html_escape(s):
             .replace(">", "&gt;").replace('"', "&quot;"))
 
 
+TALLER_STATUSES_ORDER = [
+    "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
+    "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
+    "Esperando inicio reparación", "En reparación", "Inspección de salida",
+]
+
+
 def build_abiertas_hoy_section(cache):
     rows_data = []
     for key, t in cache.get("tickets", {}).items():
@@ -313,31 +352,54 @@ def build_abiertas_hoy_section(cache):
             continue
         chain = chain_of(t.get("cliente", ""), t.get("loc", ""))
         days = days_since(last_status_change_dt(t))
-        rows_data.append((chain, t.get("current_status"), days))
+        created_today = is_created_today(t)
+        rows_data.append((chain, t.get("current_status"), days, created_today))
 
     grid = {}
-    for ch, st, d in rows_data:
+    for ch, st, d, ct in rows_data:
         k = (st, ch)
         if k not in grid:
-            grid[k] = {"g": 0, "y": 0, "r": 0, "total": 0}
-        grid[k][days_bucket(d)] += 1
+            grid[k] = {"t": 0, "g": 0, "y": 0, "r": 0, "total": 0}
+        # Azul (creado hoy) tiene prioridad sobre verde/amarillo/rojo
+        bucket = "t" if ct else days_bucket(d)
+        grid[k][bucket] += 1
         grid[k]["total"] += 1
+
+    changes_today = compute_status_changes_today(cache)
 
     present = sorted({k[0] for k in grid.keys()})
     states_order = [s for s in FUNNEL_ORDER if s in present]
     states_order += sorted(s for s in present if s not in FUNNEL_ORDER)
+    taller_set = set(TALLER_STATUSES_ORDER)
 
-    def cell_rich(d):
-        if d["total"] == 0:
+    COLOR_TODAY = "#1e6fdb"
+    ARROW_IN = "#c0392b"
+    ARROW_OUT = "#1f8a4c"
+
+    def cell_rich(d, ch_in=0, ch_out=0):
+        if d["total"] == 0 and ch_in == 0 and ch_out == 0:
             return '<span style="color:#c0d0e0">·</span>'
-        return (f'<span style="font-weight:500">{d["total"]}</span> '
-                f'<span style="font-size:11px;color:#7d8590">(</span>'
-                f'<span style="color:{COLOR_GREEN};font-weight:500">{d["g"]}</span>'
-                f'<span style="font-size:11px;color:#7d8590">/</span>'
-                f'<span style="color:{COLOR_YELLOW};font-weight:500">{d["y"]}</span>'
-                f'<span style="font-size:11px;color:#7d8590">/</span>'
-                f'<span style="color:{COLOR_RED};font-weight:500">{d["r"]}</span>'
-                f'<span style="font-size:11px;color:#7d8590">)</span>')
+        if d["total"] == 0:
+            body = '<span style="color:#c0d0e0">·</span>'
+        else:
+            body = (f'<span style="font-weight:500">{d["total"]}</span> '
+                    f'<span style="font-size:11px;color:#7d8590">(</span>'
+                    f'<span style="color:{COLOR_TODAY};font-weight:500">{d["t"]}</span>'
+                    f'<span style="font-size:11px;color:#7d8590">/</span>'
+                    f'<span style="color:{COLOR_GREEN};font-weight:500">{d["g"]}</span>'
+                    f'<span style="font-size:11px;color:#7d8590">/</span>'
+                    f'<span style="color:{COLOR_YELLOW};font-weight:500">{d["y"]}</span>'
+                    f'<span style="font-size:11px;color:#7d8590">/</span>'
+                    f'<span style="color:{COLOR_RED};font-weight:500">{d["r"]}</span>'
+                    f'<span style="font-size:11px;color:#7d8590">)</span>')
+        flow = []
+        if ch_in > 0:
+            flow.append(f'<span style="color:{ARROW_IN};font-weight:500;font-size:11px" title="entran hoy">&#9650;{ch_in}</span>')
+        if ch_out > 0:
+            flow.append(f'<span style="color:{ARROW_OUT};font-weight:500;font-size:11px" title="salen hoy">&#9660;{ch_out}</span>')
+        if flow:
+            body += ' <span style="font-size:11px;color:#7d8590">·</span> ' + ' '.join(flow)
+        return body
 
     parts = ['<tr><th class="sticky-l1">Funnel</th><th class="sticky-l2">Estado</th>']
     for ch in CHAIN_ORDER:
@@ -346,40 +408,63 @@ def build_abiertas_hoy_section(cache):
     header = "".join(parts)
 
     body_parts = []
-    chain_tot = {ch: {"g": 0, "y": 0, "r": 0, "total": 0} for ch in CHAIN_ORDER}
-    grand = {"g": 0, "y": 0, "r": 0, "total": 0}
+    chain_tot = {ch: {"t": 0, "g": 0, "y": 0, "r": 0, "total": 0} for ch in CHAIN_ORDER}
+    chain_flow = {ch: {"in": 0, "out": 0} for ch in CHAIN_ORDER}
+    grand = {"t": 0, "g": 0, "y": 0, "r": 0, "total": 0}
+    grand_flow = {"in": 0, "out": 0}
     for st in states_order:
         ft = FUNNEL_TAG.get(st, "?")
         color = FUNNEL_COLOR.get(ft, "#888")
-        row_tot = {"g": 0, "y": 0, "r": 0, "total": 0}
-        cells = [f'<tr><td class="lbl-funnel" style="color:{color}">{ft}</td>',
+        row_tot = {"t": 0, "g": 0, "y": 0, "r": 0, "total": 0}
+        row_flow = {"in": 0, "out": 0}
+        is_taller = st in taller_set
+        idx = states_order.index(st)
+        prev_taller = (idx > 0 and states_order[idx-1] in taller_set)
+        next_taller = (idx < len(states_order)-1 and states_order[idx+1] in taller_set)
+        row_classes = []
+        if is_taller:
+            row_classes.append("row-taller")
+            if not prev_taller:
+                row_classes.append("row-taller-first")
+            if not next_taller:
+                row_classes.append("row-taller-last")
+        row_cls_attr = f' class="{" ".join(row_classes)}"' if row_classes else ""
+        cells = [f'<tr{row_cls_attr}><td class="lbl-funnel" style="color:{color}">{ft}</td>',
                  f'<td class="lbl-name">{html_escape(st)}</td>']
         for ch in CHAIN_ORDER:
-            d = grid.get((st, ch), {"g": 0, "y": 0, "r": 0, "total": 0})
+            d = grid.get((st, ch), {"t": 0, "g": 0, "y": 0, "r": 0, "total": 0})
+            ch_changes = changes_today.get((st, ch), {"in": 0, "out": 0})
             clickable = (d["total"] > 0)
             cls = "num ah-cell" if clickable else "num"
             attrs = f' data-estado="{html_escape(st)}" data-cadena="{html_escape(ch)}"' if clickable else ""
-            cells.append(f'<td class="{cls}"{attrs}>{cell_rich(d)}</td>')
+            cells.append(f'<td class="{cls}"{attrs}>{cell_rich(d, ch_changes["in"], ch_changes["out"])}</td>')
             for k in row_tot:
                 row_tot[k] += d[k]
                 chain_tot[ch][k] += d[k]
                 grand[k] += d[k]
+            row_flow["in"] += ch_changes["in"]
+            row_flow["out"] += ch_changes["out"]
+            chain_flow[ch]["in"] += ch_changes["in"]
+            chain_flow[ch]["out"] += ch_changes["out"]
+            grand_flow["in"] += ch_changes["in"]
+            grand_flow["out"] += ch_changes["out"]
         cls_tot = "num ah-cell" if row_tot["total"] > 0 else "num"
         attrs_tot = f' data-estado="{html_escape(st)}" data-cadena=""' if row_tot["total"] > 0 else ""
-        cells.append(f'<td class="{cls_tot}"{attrs_tot}>{cell_rich(row_tot)}</td>')
+        cells.append(f'<td class="{cls_tot}"{attrs_tot}>{cell_rich(row_tot, row_flow["in"], row_flow["out"])}</td>')
         cells.append('</tr>')
         body_parts.append("".join(cells))
     tot_cells = ['<tr class="total"><td class="lbl-funnel"></td><td class="lbl-name">Total</td>']
     for ch in CHAIN_ORDER:
         d = chain_tot[ch]
+        cf = chain_flow[ch]
         clickable = (d["total"] > 0)
         cls = "num ah-cell" if clickable else "num"
         attrs = f' data-estado="" data-cadena="{html_escape(ch)}"' if clickable else ""
-        tot_cells.append(f'<td class="{cls}"{attrs}>{cell_rich(d)}</td>')
+        tot_cells.append(f'<td class="{cls}"{attrs}>{cell_rich(d, cf["in"], cf["out"])}</td>')
     g = grand
     cls_g = "num ah-cell" if g["total"] > 0 else "num"
     attrs_g = ' data-estado="" data-cadena=""' if g["total"] > 0 else ""
-    tot_cells.append(f'<td class="{cls_g}"{attrs_g}>{cell_rich(g)}</td>')
+    tot_cells.append(f'<td class="{cls_g}"{attrs_g}>{cell_rich(g, grand_flow["in"], grand_flow["out"])}</td>')
     tot_cells.append('</tr>')
     body_parts.append("".join(tot_cells))
 

@@ -98,6 +98,14 @@
   .chain-toolbar input { flex: 1; min-width: 200px; font-size: 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; }
   .chain-toolbar select, .chain-toolbar button { font-size: 12px; padding: 4px 8px; border: 1px solid var(--line); border-radius: 4px; background: white; color: inherit; cursor: pointer; }
   .chain-toolbar button:hover { background: var(--bg); }
+  /* Bloque "En taller" resaltado en tabla Abiertas hoy */
+  tr.row-taller td { background: #f0f4f9 !important; }
+  tr.row-taller td.lbl-funnel, tr.row-taller td.lbl-name { background: #e8eef6 !important; }
+  tr.row-taller-first td { border-top: 2px solid #2a59c4 !important; }
+  tr.row-taller-last td { border-bottom: 2px solid #2a59c4 !important; }
+  /* KPI clickable */
+  .kpi.clickable { cursor: pointer; transition: all 0.15s; }
+  .kpi.clickable:hover { background: #e7eefa; border-color: #2a59c4; box-shadow: 0 2px 8px rgba(42,89,196,0.15); }
 </style>
 </head>
 <body>
@@ -132,12 +140,12 @@ __DEMO_BANNER__
 <div id="kpis" class="kpis">
   <div class="kpi"><div class="k">Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
   <div class="kpi"><div class="k">Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
-  <div class="kpi"><div class="k">En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div></div>
+  <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k">En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div></div>
   <div class="kpi"><div class="k">% sobre el pico</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico: __PEAK__ el __PEAK_LBL__</div></div>
 </div>
 
 <h2 id="abiertas">Abiertas hoy por estado y cadena</h2>
-<div class="legend">Formato: Total <span class="pill" style="color:#1f8a4c">verde &lt;5d</span>/<span class="pill" style="color:#b8860b">amarillo 5-15d</span>/<span class="pill" style="color:#c0392b">rojo &gt;15d</span> (días en el estado actual)</div>
+<div class="legend">Formato: Total (<span class="pill" style="color:#1e6fdb">azul creada hoy</span>/<span class="pill" style="color:#1f8a4c">verde 0-5d</span>/<span class="pill" style="color:#b8860b">amarillo 6-15d</span>/<span class="pill" style="color:#c0392b">rojo &gt;15d</span>) · <span style="color:#c0392b">&#9650;N</span> entran hoy · <span style="color:#1f8a4c">&#9660;N</span> salen hoy · Bloque "En taller" resaltado en azul</div>
 <div class="scroller">
 <table>
 __AH_HEADER__
@@ -160,7 +168,7 @@ __AH_ROWS__
   <select id="filter-gestion"><option value="">Gestión: toda</option><option value="externo">Técnico externo</option><option value="interna">Gestión interna</option></select>
   <select id="filter-bloq"><option value="">Bloqueante: todos</option><option>Sí</option><option>No</option></select>
   <select id="filter-susti"><option value="">Sustitución: todas</option><option>Sí</option><option>No</option></select>
-  <select id="filter-bucket"><option value="">Días: todos</option><option value="g">🟢 &lt;5d</option><option value="y">🟡 5-15d</option><option value="r">🔴 &gt;15d</option></select>
+  <select id="filter-bucket"><option value="">Días: todos</option><option value="t">🔵 Creada hoy</option><option value="g">🟢 0-5d</option><option value="y">🟡 6-15d</option><option value="r">🔴 &gt;15d</option></select>
   <button type="button" id="clear-filters" class="multi-btn" title="Resetea todos los filtros">✕ Limpiar</button>
   <span class="count"><b id="detalle-count">0</b> de <span id="detalle-total">0</span> visibles</span>
 </div>
@@ -454,9 +462,18 @@ __SUSTIS_HTML__
       const matchGestion = !ge || (ge === 'externo' ? isExterno : !isExterno);
       const matchStatus = !useStatusFilter || selectedStatuses.has(rowStatus);
       let matchBucket = true;
-      if (bk === 'g') matchBucket = (rowDays < 5);
-      else if (bk === 'y') matchBucket = (rowDays >= 5 && rowDays <= 15);
-      else if (bk === 'r') matchBucket = (rowDays > 15);
+      // Bucket Hoy = creada hoy (basado en col 7 "Creada"). Tiene prioridad sobre verde.
+      const rowCreada = row.cells[7].textContent.trim();
+      const todayDate = new Date();
+      const dd = String(todayDate.getDate()).padStart(2,'0');
+      const mm = String(todayDate.getMonth()+1).padStart(2,'0');
+      const yyyy = todayDate.getFullYear();
+      const todayStr = dd + '/' + mm + '/' + yyyy;
+      const createdToday = (rowCreada === todayStr);
+      if (bk === 't') matchBucket = createdToday;
+      else if (bk === 'g') matchBucket = !createdToday && (rowDays <= 5);
+      else if (bk === 'y') matchBucket = !createdToday && (rowDays >= 6 && rowDays <= 15);
+      else if (bk === 'r') matchBucket = !createdToday && (rowDays > 15);
       const ok = (!q || text.includes(q))
               && (!ch || rowChain === ch)
               && matchStatus
@@ -658,6 +675,31 @@ __SUSTIS_HTML__
   });
 
   applyFilters();
+
+  // === KPI "En taller" clickable: filtra Detalle por los 8 estados taller ===
+  const kpiTaller = document.getElementById('kpi-en-taller');
+  if (kpiTaller) {
+    const TALLER_STATES = [
+      'Pendiente asignar técnico', 'En cola taller', 'En preparación presupuesto',
+      'Presupuesto preparado pendiente de enviar', 'Pendiente confirmación presupuesto',
+      'Esperando inicio reparación', 'En reparación', 'Inspección de salida'
+    ];
+    kpiTaller.addEventListener('click', () => {
+      resetAllFilters();
+      const cbs = statusList.querySelectorAll('input[type=checkbox]');
+      cbs.forEach(cb => {
+        if (TALLER_STATES.includes(cb.dataset.status)) {
+          cb.checked = true;
+          selectedStatuses.add(cb.dataset.status);
+        }
+      });
+      statusAll.checked = false;
+      updateStatusBtn();
+      applyFilters();
+      const target = document.getElementById('detalle');
+      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
 })();
 
 // === Botón "Actualizar ahora" — dispara workflow_dispatch via GitHub API ===
