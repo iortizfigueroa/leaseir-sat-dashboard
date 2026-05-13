@@ -1,40 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-13T12:14:37.260916+00:00",
+    "last_fetched_at": "2026-05-13T13:18:50.277078+00:00",
     "schema_version": 1,
     "count": 53
   },
   "items": [
-    {
-      "key": "LEAS-6230",
-      "subtask_status": "En préstamo",
-      "cliente": "MEL CLINICS Castellon",
-      "loc": "Castellon",
-      "consola_susti": "sustmh027",
-      "manipulo_susti": "sustquad043",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6229",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "MEL CLINICS Castellon",
-      "consola_averiada": "91119",
-      "manipulo_averiado": "40550",
-      "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-6226",
-      "subtask_status": "En préstamo",
-      "cliente": "Ces Depilacion",
-      "loc": "A Coruña",
-      "consola_susti": null,
-      "manipulo_susti": "40551",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6224",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Ces Depilacion",
-      "consola_averiada": "",
-      "manipulo_averiado": "40166",
-      "modelo": ""
-    },
     {
       "key": "LEAS-5829",
       "subtask_status": "En préstamo",
@@ -49,6 +19,36 @@
       "consola_averiada": "C00212",
       "manipulo_averiado": "H00212",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6230",
+      "subtask_status": "Equipo enviado",
+      "cliente": "MEL CLINICS Castellon",
+      "loc": "Castellon",
+      "consola_susti": "SUSTMHR027",
+      "manipulo_susti": "SUSTDUAL017",
+      "fecha_envio": "2026-05-13T15:01:00.000+0200",
+      "parent_key": "LEAS-6229",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "MEL CLINICS Castellon",
+      "consola_averiada": "91119",
+      "manipulo_averiado": "40550",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6226",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Ces Depilacion",
+      "loc": "A Coruña",
+      "consola_susti": null,
+      "manipulo_susti": "40551",
+      "fecha_envio": "2026-05-13T14:43:00.000+0200",
+      "parent_key": "LEAS-6224",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Ces Depilacion",
+      "consola_averiada": "",
+      "manipulo_averiado": "40166",
+      "modelo": ""
     },
     {
       "key": "LEAS-6211",
