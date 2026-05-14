@@ -723,7 +723,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
 
     out.append('<div class="scroller"><table class="ticket-table" style="font-size:11px;min-width:1300px"><thead><tr>')
     hdrs = [("Ticket","text"),("Cliente / Centro","text"),("Estado","text"),("Gestión","text"),
-            ("Días","num"),("Localización","text"),("Creada","date"),("Tipo avería","text"),
+            ("Días","num"),("Días taller","num"),("Localización","text"),("Creada","date"),("Tipo avería","text"),
             ("Bloq","text"),("Susti","text"),("Fecha venta","date"),("Consola","text"),
             ("HP","text"),("Garantía","text"),("Motivo","text"),("Año compra","yearcompra"),
             ("Coste","coste")]
@@ -740,6 +740,21 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
         days_color = COLOR_GREEN if (days is not None and days < 5) else (
             COLOR_YELLOW if (days is not None and days <= 15) else COLOR_RED)
         days_html = f'<span style="color:{days_color};font-weight:500">{days}</span>' if days is not None else '<span style="color:var(--grey)">cerrada</span>'
+        # Días en taller: desde primera entrada a "Pendiente asignar tecnico"
+        dias_taller = None
+        dt_taller = None
+        for tr in t.get("transitions", []):
+            if len(tr) >= 3 and tr[2] == "Pendiente asignar técnico":
+                _dt = parse_iso(tr[0])
+                if _dt:
+                    dt_taller = _dt
+                    dias_taller = days_since(_dt)
+                    break
+        dt_label = dt_taller.strftime("%d/%m/%Y") if dt_taller else "—"
+        dt_color = COLOR_GREEN if (dias_taller is not None and dias_taller < 5) else (
+            COLOR_YELLOW if (dias_taller is not None and dias_taller <= 15) else COLOR_RED)
+        dt_html = (f'<span style="color:{dt_color};font-weight:500" title="Entró en Pdte. asignar técnico el {dt_label}">{dias_taller}</span>'
+                   if dias_taller is not None else '<span style="color:var(--grey)">—</span>')
         created_dt = parse_iso(t.get("created"))
         created_s = created_dt.strftime("%d/%m/%Y") if created_dt else ""
         fventa_dt = parse_iso(t.get("fventa") or "")
@@ -763,6 +778,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
             f'<td style="text-align:left">{html_escape(st)}</td>'
             f'<td style="color:{ft_color};font-weight:500">{ft}</td>'
             f'<td>{days_html}</td>'
+            f'<td style="text-align:center">{dt_html}</td>'
             f'<td class="d-trunc" style="text-align:left" title="{html_escape(t.get("loc",""))}">{html_escape(t.get("loc",""))}</td>'
             f'<td>{created_s}</td>'
             f'<td style="text-align:left">{html_escape(t.get("tipo",""))}</td>'

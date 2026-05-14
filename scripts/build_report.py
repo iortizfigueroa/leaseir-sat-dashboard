@@ -768,6 +768,90 @@ def build_anual_averias_section(cache):
     return html
 
 
+def build_tiempo_taller_section(cache):
+    """Stacked bar de tiempo en taller para tickets 2026 cerrados."""
+    TALLER = {"Pendiente asignar técnico", "En cola taller",
+              "En preparación presupuesto", "Esperando inicio reparación",
+              "En reparación", "Inspección de salida"}
+    EXIT = {"Devuelto a cliente", "Resuelto", "Finalizada", "Cancelado",
+            "Finalizado técnico externo"}
+    BUCKETS = [
+        ("<4 días",   "#1f8a4c", lambda d: d < 4),
+        ("5-8 días",  "#65a30d", lambda d: 4 <= d <= 8),
+        ("9-15 días", "#b8860b", lambda d: 9 <= d <= 15),
+        ("16-30 días","#cb6f0a", lambda d: 16 <= d <= 30),
+        (">30 días",  "#c0392b", lambda d: d > 30),
+    ]
+    counts = [0] * len(BUCKETS)
+    dias_list = []
+    sample_max = []
+    for k, t in cache.get("tickets", {}).items():
+        if is_open(t.get("current_status")):
+            continue
+        if not (t.get("created") or "").startswith("2026"):
+            continue
+        entrada = None
+        salida = None
+        for tr in t.get("transitions", []):
+            if len(tr) < 3: continue
+            ts, fs, to = tr[0], tr[1], tr[2]
+            dt = parse_iso(ts)
+            if not dt: continue
+            if entrada is None and to == "Pendiente asignar técnico":
+                entrada = dt
+            if entrada and (to in EXIT) and (fs in TALLER):
+                salida = dt
+                break
+        if entrada and salida:
+            dias = (salida - entrada).days
+            if dias < 0: continue
+            dias_list.append(dias)
+            sample_max.append((dias, k))
+            for i, (_, _, pred) in enumerate(BUCKETS):
+                if pred(dias):
+                    counts[i] += 1
+                    break
+    total = sum(counts)
+    if not total:
+        return '<div style="color:#94a3b8;padding:14px;font-style:italic">Aún no hay tickets cerrados con tiempo en taller calculable.</div>'
+    media = sum(dias_list) / total
+    mediana = sorted(dias_list)[total // 2]
+    max_d = max(dias_list)
+    sample_max.sort(reverse=True)
+    top3 = sample_max[:3]
+    segments = []
+    for (lbl, color, _), n in zip(BUCKETS, counts):
+        pct = (n * 100.0 / total) if total else 0
+        if n > 0:
+            label_inline = "" if pct < 5 else str(n)
+            segments.append(
+                f'<div style="background:{color};height:100%;width:{pct:.2f}%;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:13px;min-width:0;overflow:hidden" title="{lbl}: {n} tickets ({pct:.0f}%)">{label_inline}</div>'
+            )
+    bar_html = '<div style="display:flex;height:36px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#f1f5f9">' + "".join(segments) + '</div>'
+    legend_items = []
+    for (lbl, color, _), n in zip(BUCKETS, counts):
+        pct = (n * 100.0 / total) if total else 0
+        legend_items.append(
+            f'<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">'
+            f'<span style="display:inline-block;width:12px;height:12px;background:{color};border-radius:3px"></span>'
+            f'<b>{lbl}</b>: {n} ({pct:.0f}%)</span>'
+        )
+    top_label = html_escape(top3[0][1]) if top3 else ""
+    kpis = (
+        '<div style="display:flex;gap:12px;margin:6px 0 12px;flex-wrap:wrap">'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Total tickets</div><div class="v">{total}</div><div class="d">cerrados 2026 con tiempo medible</div></div>'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Mediana</div><div class="v">{mediana:.0f}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">la mitad se cierran en este plazo</div></div>'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Media</div><div class="v">{media:.1f}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">sensible a outliers</div></div>'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Máximo</div><div class="v" style="color:#c0392b">{max_d}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">{top_label}</div></div>'
+        '</div>'
+    )
+    return (
+        kpis + bar_html +
+        '<div style="margin-top:12px">' + "".join(legend_items) + '</div>'
+        '<div class="legend" style="margin-top:8px">Tiempo = primera entrada a <b>Pdte. asignar técnico</b> hasta primera salida a estado terminal (Devuelto/Resuelto/Finalizada/Cancelado).</div>'
+    )
+
+
 FONT_X = "Arial"
 HDR_BLUE = "0B3D91"
 ZEBRA = "F5F7FB"
@@ -1034,12 +1118,27 @@ def build_detalle_section(cache):
         ft_color = FUNNEL_COLOR.get(ft, "#888")
         days_color = COLOR_GREEN if (days is not None and days < 5) else (
             COLOR_YELLOW if (days is not None and days <= 15) else COLOR_RED)
+        dias_taller = None
+        dt_taller = None
+        for tr in t.get("transitions", []):
+            if len(tr) >= 3 and tr[2] == "Pendiente asignar técnico":
+                _dt = parse_iso(tr[0])
+                if _dt:
+                    dt_taller = _dt
+                    dias_taller = days_since(_dt)
+                    break
+        dt_taller_label = dt_taller.strftime("%d/%m/%Y") if dt_taller else ""
+        dt_color = COLOR_GREEN if (dias_taller is not None and dias_taller < 5) else (
+            COLOR_YELLOW if (dias_taller is not None and dias_taller <= 15) else COLOR_RED)
         rows.append({
             "chain": chain, "key": key,
             "cliente": t.get("cliente", ""),
             "status": st, "ft": ft, "ft_color": ft_color,
             "days": days if days is not None else "",
             "days_color": days_color, "loc": t.get("loc", ""),
+            "dias_taller": dias_taller if dias_taller is not None else "",
+            "dt_taller_label": dt_taller_label,
+            "dt_color": dt_color if dias_taller is not None else "#cbd5e1",
             "created": created_s, "tipo": t.get("tipo", ""),
             "bloq": t.get("bloq", ""), "susti": t.get("susti", ""),
             "fventa": fventa_s, "consola": t.get("consola", ""),
@@ -1441,6 +1540,12 @@ def build_html(cache, out_path, template_path):
     except Exception as _e:
         anual_averias_html = f'<div style="color:#c0392b;padding:14px">Error tabla averias: {_e}</div>'
 
+    # Stacked bar tiempo en taller (2026 cerrados)
+    try:
+        tiempo_taller_html = build_tiempo_taller_section(cache)
+    except Exception as _e:
+        tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempo taller: {_e}</div>'
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -1482,6 +1587,7 @@ def build_html(cache, out_path, template_path):
         "__EQ_REPARADOS__": str(equipos_reparados_count),
         "__EVOLUCION_KPIS__": evolucion_kpis,
         "__ANUAL_AVERIAS__": anual_averias_html,
+        "__TIEMPO_TALLER__": tiempo_taller_html,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
     }
