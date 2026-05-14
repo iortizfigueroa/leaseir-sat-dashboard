@@ -224,39 +224,65 @@ def compute_status_changes_today(cache):
     return changes
 
 
+# Estados donde la "persona" relevante es el assignee (Persona Asignada de Jira).
+# Desde el siguiente estado en adelante, se usa "Técnico taller" (customfield_10247).
+ASIGNADO_STATES = {
+    "Abierto", "Recepcionado SAT", "Pendiente recogida", "Gestionado transporte",
+    "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
+    "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
+    "Esperando inicio reparación",
+}
+
+# Estados donde "de verdad estamos esperando al técnico" (suma destacada en la tabla).
+ESPERANDO_TECNICO_STATES = {
+    "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
+    "Esperando inicio reparación", "En reparación",
+}
+
+
+def person_for_status(ticket, status):
+    """Devuelve la persona relevante para un (ticket, estado).
+    Hasta 'Esperando inicio reparación' (incluido) → assignee (Persona Asignada).
+    Desde 'En reparación' en adelante → tec_taller."""
+    if status in ASIGNADO_STATES:
+        return (ticket.get("asignado") or "").strip() or "(Sin asignar)"
+    return (ticket.get("tec_taller") or "").strip() or "(Sin asignar)"
+
+
 def compute_changes_today_por_asignado(cache):
-    """Entradas/salidas hoy agrupadas por (estado, asignado actual del ticket)."""
+    """Entradas/salidas hoy agrupadas por (estado, persona) — usa person_for_status."""
     today = datetime.now(timezone.utc).date()
     cutoff_ayer = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc) - timedelta(seconds=1)
     changes = {}
     for key, t in cache.get("tickets", {}).items():
-        asignado = (t.get("asignado") or "").strip() or "(Sin asignar)"
         status_ayer = status_at(t, cutoff_ayer)
         status_hoy = t.get("current_status")
         if status_ayer == status_hoy:
             continue
         if status_ayer and is_open(status_ayer):
-            k_out = (status_ayer, asignado)
+            p_ayer = person_for_status(t, status_ayer)
+            k_out = (status_ayer, p_ayer)
             changes.setdefault(k_out, {"in": 0, "out": 0})["out"] += 1
         if status_hoy and is_open(status_hoy):
-            k_in = (status_hoy, asignado)
+            p_hoy = person_for_status(t, status_hoy)
+            k_in = (status_hoy, p_hoy)
             changes.setdefault(k_in, {"in": 0, "out": 0})["in"] += 1
     return changes
 
 
 def build_tecnicos_section(cache):
-    """Tabla estados x asignados con totales y flechas in/out."""
+    """Tabla estados x persona (assignee hasta Esperando inicio reparación, después tec_taller)."""
     grid = {}
     asignados_set = set()
     states_set = set()
     for key, t in cache.get("tickets", {}).items():
         if not is_open(t.get("current_status")):
             continue
-        asignado = (t.get("asignado") or "").strip() or "(Sin asignar)"
         st = t.get("current_status") or ""
-        asignados_set.add(asignado)
+        persona = person_for_status(t, st)
+        asignados_set.add(persona)
         states_set.add(st)
-        grid[(st, asignado)] = grid.get((st, asignado), 0) + 1
+        grid[(st, persona)] = grid.get((st, persona), 0) + 1
 
     changes = compute_changes_today_por_asignado(cache)
     asignados_sorted = sorted(asignados_set, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
@@ -288,18 +314,13 @@ def build_tecnicos_section(cache):
     grand_flow = {"in": sum(f["in"] for f in col_flow.values()),
                   "out": sum(f["out"] for f in col_flow.values())}
 
-    # Header
+    # Header (sin total grande — el total ya aparece en la fila Total inferior)
     parts = ['<tr><th class="sticky-l1 sticky-l2" style="text-align:left;left:0;min-width:240px">Estado</th>']
     for a in asignados_sorted:
-        tot = col_tot.get(a, 0)
         parts.append(
-            f'<th><div style="font-size:11px;line-height:1.1">{html_escape(a)}</div>'
-            f'<div style="font-size:16px;font-weight:500;margin-top:3px">{tot}</div></th>'
+            f'<th style="padding:8px 10px"><div style="font-size:11px;line-height:1.2">{html_escape(a)}</div></th>'
         )
-    parts.append(
-        f'<th class="hdr-dia"><div style="font-size:11px;line-height:1.1">Total</div>'
-        f'<div style="font-size:16px;font-weight:500;margin-top:3px">{grand_total}</div></th>'
-    )
+    parts.append('<th class="hdr-dia" style="padding:8px 10px">Total</th>')
     parts.append('</tr>')
     header = "".join(parts)
 
@@ -342,6 +363,35 @@ def build_tecnicos_section(cache):
             cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
         cells.append('</tr>')
         body_parts.append("".join(cells))
+
+    # Fila "Esperando técnico": suma de los 5 estados clave por persona
+    esp_tot = {a: 0 for a in asignados_sorted}
+    esp_flow = {a: {"in": 0, "out": 0} for a in asignados_sorted}
+    for (st, a), n in grid.items():
+        if st in ESPERANDO_TECNICO_STATES and a in esp_tot:
+            esp_tot[a] += n
+    for (st, a), f in changes.items():
+        if st in ESPERANDO_TECNICO_STATES and a in esp_flow:
+            esp_flow[a]["in"] += f["in"]
+            esp_flow[a]["out"] += f["out"]
+    esp_grand = sum(esp_tot.values())
+    esp_grand_flow = {"in": sum(f["in"] for f in esp_flow.values()),
+                      "out": sum(f["out"] for f in esp_flow.values())}
+    esp_estado_list = "|".join(sorted(ESPERANDO_TECNICO_STATES))
+    esp_cells = [f'<tr style="background:#fff4d6"><td class="lbl-name" style="left:0;min-width:240px;font-weight:500;background:#fff4d6" title="Suma de tickets en: {html_escape(esp_estado_list.replace("|", ", "))}">Esperando técnico</td>']
+    for a in asignados_sorted:
+        v = esp_tot.get(a, 0)
+        f = esp_flow.get(a, {"in": 0, "out": 0})
+        if v > 0 or f["in"] > 0 or f["out"] > 0:
+            content = f'<span style="font-weight:600">{v}</span>{flow_html(f["in"], f["out"])}'
+            attrs = f' data-estado-list="{html_escape(esp_estado_list)}" data-asignado="{html_escape(a)}"'
+            esp_cells.append(f'<td class="num tec-cell" style="background:#fff4d6"{attrs}>{content}</td>')
+        else:
+            esp_cells.append('<td class="num n0" style="background:#fff4d6"><span style="color:#c0d0e0">·</span></td>')
+    content = f'<span style="font-weight:600">{esp_grand}</span>{flow_html(esp_grand_flow["in"], esp_grand_flow["out"])}'
+    esp_cells.append(f'<td class="num tec-cell" style="background:#fff4d6;font-weight:600" data-estado-list="{html_escape(esp_estado_list)}" data-asignado="">{content}</td>')
+    esp_cells.append('</tr>')
+    body_parts.append("".join(esp_cells))
 
     # Fila Total
     tot_cells = ['<tr class="total"><td class="lbl-name" style="left:0;min-width:240px">Total</td>']

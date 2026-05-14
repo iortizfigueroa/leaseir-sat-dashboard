@@ -162,7 +162,7 @@ __AH_ROWS__
 </div>
 
 <h2 id="tecnicos">Detalle de técnicos taller</h2>
-<div class="legend">Clic en una celda con número filtra la tabla Detalle por ese estado + asignado. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado en azul.</div>
+<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = suma de los 5 estados donde estamos esperando al técnico (Pendiente asignar, En cola, En preparación presupuesto, Esperando inicio, En reparación).</div>
 <div class="scroller">
 <table>
 __TEC_HEADER__
@@ -614,6 +614,7 @@ __SUSTIS_HTML__
   document.querySelectorAll('td.tec-cell').forEach(cell => {
     cell.addEventListener('click', () => {
       const estado = cell.dataset.estado || '';
+      const estadoList = cell.dataset.estadoList || '';  // ej: "En cola taller|En reparación|..."
       const asignado = cell.dataset.asignado || '';
       search.value = '';
       filterChain.value = '';
@@ -629,14 +630,15 @@ __SUSTIS_HTML__
       } else {
         filterAsignado.value = '';
       }
-      // Multi-select Estado
+      // Multi-select Estado (soporta lista separada por "|")
       selectedStatuses.clear();
       statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
-      if (estado) {
-        const target = statusList.querySelector(`input[data-status="${estado}"]`);
+      const estados = estadoList ? estadoList.split('|') : (estado ? [estado] : []);
+      for (const est of estados) {
+        const target = statusList.querySelector(`input[data-status="${est}"]`);
         if (target) {
           target.checked = true;
-          selectedStatuses.add(estado);
+          selectedStatuses.add(est);
         }
       }
       statusAll.checked = (selectedStatuses.size === 0);
