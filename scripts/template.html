@@ -334,6 +334,7 @@ __DEMO_BANNER__
   <a href="#detalle"><i class="ti ti-table"></i>Detalle</a>
   <a href="#evol-estado"><i class="ti ti-trending-up"></i>Evol. estado</a>
   <a href="#evol-cadena"><i class="ti ti-chart-line"></i>Evol. cadena</a>
+  <a href="#evol-kpis"><i class="ti ti-history"></i>Evol. KPIs</a>
 </div>
 
 <div id="kpis" class="kpis">
@@ -344,6 +345,7 @@ __DEMO_BANNER__
   <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__</div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
   <div class="kpi clickable" id="kpi-sustis-solicitadas" title="Clic para ir a Estado sustituciones"><div class="k"><i class="ti ti-arrows-exchange"></i>Sustis solicitadas</div><div class="v">__SUSTIS_SOLICITADAS__</div><div class="d" style="color:var(--grey)">Pendientes de entregar</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que salen de Inspección de salida</div></div>
 </div>
 
 <h2 id="abiertas">Abiertas hoy por estado y cadena</h2>
@@ -356,12 +358,15 @@ __AH_ROWS__
 </div>
 
 <h2 id="tecnicos">Detalle de técnicos taller</h2>
-<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = suma de los 5 estados donde estamos esperando al técnico (Pendiente asignar, En cola, En preparación presupuesto, Esperando inicio, En reparación).</div>
+<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = suma de los 5 estados clave · Filas <b>verdes "Presupuesto hecho hoy" / "Equipo reparado hoy"</b> = tickets únicos avanzados hoy (clic muestra LEAS abajo).</div>
 <div class="scroller">
 <table>
 __TEC_HEADER__
 __TEC_ROWS__
 </table>
+</div>
+<div id="avances-detail" class="avances-detail">
+  <div class="avances-detail-empty">Clic en una celda verde "Presupuesto hecho" / "Equipo reparado" para ver los tickets avanzados</div>
 </div>
 
 <h2 id="detalle">Detalle de incidencias abiertas</h2>
@@ -430,8 +435,15 @@ __STATE_TOTAL__
 <table>
 __CHAIN_HEADER__
 __CHAIN_ROWS__
-__CHAIN_NUEVAS__
 __CHAIN_TOTAL__
+</table>
+</div>
+
+<h2 id="evol-kpis">Evolución diaria de KPIs</h2>
+<div class="legend">Snapshot diario de los KPIs principales. Se guarda automáticamente cada vez que el workflow refresca el dashboard. Se irá llenando día a día.</div>
+<div class="scroller">
+<table>
+__EVOLUCION_KPIS__
 </table>
 </div>
 
@@ -707,8 +719,10 @@ __SUSTIS_HTML__
       else if (bk === 'y') matchBucket = !createdToday && (rowDays >= 6 && rowDays <= 15);
       else if (bk === 'r') matchBucket = !createdToday && (rowDays > 15);
       let matchAsignado = true;
-      if (asg === '__none__') matchAsignado = (rowAsignado === '');
-      else if (asg) matchAsignado = (rowAsignado === asg);
+      // Permitir filtrar por persona (asignado O tec_taller, col 16)
+      const rowTecTaller = row.cells[16] ? row.cells[16].textContent.trim() : '';
+      if (asg === '__none__') matchAsignado = (rowAsignado === '' && rowTecTaller === '');
+      else if (asg) matchAsignado = (rowAsignado === asg || rowTecTaller === asg);
       const ok = (!q || text.includes(q))
               && (!ch || rowChain === ch)
               && matchStatus
@@ -1130,6 +1144,33 @@ __SUSTIS_HTML__
       window.scrollTo({top: 0, behavior: 'smooth'});
     });
   }
+
+
+  // === Avances del día: clic en celda muestra detalle ===
+  window._avancesDetail = __AVANCES_DETAIL_JSON__;
+  document.querySelectorAll('td.avance-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const key = cell.dataset.detailKey;
+      const tickets = (window._avancesDetail && window._avancesDetail[key]) || [];
+      const panel = document.getElementById('avances-detail');
+      if (!panel) return;
+      if (tickets.length === 0) {
+        panel.innerHTML = '<div class="avances-detail-empty">Sin tickets en este cruce</div>';
+        return;
+      }
+      const esc = (s) => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      let html = '<h4>' + esc(cell.dataset.estado) + ' &middot; ' + esc(cell.dataset.persona) + ' &mdash; ' + tickets.length + ' avance(s) hoy</h4>';
+      html += '<table><thead><tr><th>Ticket</th><th>Cliente</th><th>De &rarr; A</th><th>Hora</th></tr></thead><tbody>';
+      for (const t of tickets) {
+        html += '<tr><td class="tk"><a href="https://leaseir.atlassian.net/browse/' + esc(t.key) + '" target="_blank" rel="noopener">' + esc(t.key) + '</a></td>';
+        html += '<td>' + esc(t.cliente) + '</td>';
+        html += '<td>' + esc(t.from) + ' &rarr; ' + esc(t.to) + '</td>';
+        html += '<td>' + esc(t.ts) + '</td></tr>';
+      }
+      html += '</tbody></table>';
+      panel.innerHTML = html;
+    });
+  });
 })();
 
 // === Botón "Actualizar ahora" — dispara workflow_dispatch via GitHub API ===

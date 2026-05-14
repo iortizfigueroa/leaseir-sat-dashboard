@@ -270,7 +270,7 @@ def compute_changes_today_por_asignado(cache):
     return changes
 
 
-def build_tecnicos_section(cache):
+def build_tecnicos_section(cache, avances_extra=None):
     """Tabla estados x persona (assignee hasta Esperando inicio reparación, después tec_taller)."""
     grid = {}
     asignados_set = set()
@@ -409,7 +409,180 @@ def build_tecnicos_section(cache):
     tot_cells.append('</tr>')
     body_parts.append("".join(tot_cells))
 
+    # === Filas adicionales de Avances (Presupuesto hecho, Equipo reparado) ===
+    if avances_extra:
+        # avances_extra = {"grid": {(label, persona): count}, "details": {(label, persona): [tickets]}, "labels": [(state, label)]}
+        avg = avances_extra.get("grid", {})
+        adetails = avances_extra.get("details", {})
+        alabels = avances_extra.get("labels", [])
+        for state_origin, lbl in alabels:
+            row_cells = [f'<tr class="avances-row"><td class="lbl-name" style="left:0;min-width:240px;font-weight:500" title="Tickets unicos avanzados hoy desde {html_escape(state_origin)} hacia delante">{html_escape(lbl)} hoy</td>']
+            row_tot = 0
+            for a in asignados_sorted:
+                n = avg.get((lbl, a), 0)
+                row_tot += n
+                if n > 0:
+                    dkey = f"{lbl}__{a}".replace(" ", "_").replace("/", "_")
+                    attrs = f' data-detail-key="{html_escape(dkey)}" data-estado="{html_escape(lbl)}" data-persona="{html_escape(a)}"'
+                    row_cells.append(f'<td class="num avance-cell"{attrs}><span style="font-weight:500;color:#16a34a">{n}</span></td>')
+                else:
+                    row_cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+            # Total col
+            if row_tot > 0:
+                row_cells.append(f'<td class="num col-total"><span style="font-weight:600;color:#16a34a">{row_tot}</span></td>')
+            else:
+                row_cells.append('<td class="num col-total n0"><span style="color:#c0d0e0">·</span></td>')
+            row_cells.append('</tr>')
+            body_parts.append("".join(row_cells))
+
     return header, "\n".join(body_parts)
+
+
+def build_avances_section(cache):
+    """Matriz Estado x Tecnico con tickets UNICOS avanzados HACIA DELANTE hoy en fases taller.
+    
+    Cuenta solo transiciones forward (from_state antes que to_state en FUNNEL_ORDER).
+    Dedupe por ticket: si un ticket rebota varias veces, cuenta 1.
+    """
+    # Solo 2 conceptos productivos (resto son cambios de responsabilidad, no trabajo real)
+    AVANCES_LABELS = [
+        ("En preparación presupuesto", "Presupuesto hecho"),
+        ("En reparación", "Equipo reparado"),
+    ]
+    AVANCES_STATES_ORDER = [s for s, _ in AVANCES_LABELS]
+    AVANCES_LABEL_BY_STATE = dict(AVANCES_LABELS)
+    AVANCES_SET = set(AVANCES_STATES_ORDER)
+    FUNNEL_RANK = {s: i for i, s in enumerate(FUNNEL_ORDER)}
+    # Estados "cerrados" o finales (no estan en FUNNEL_ORDER pero son forward de cualquier fase abierta)
+    CLOSED_RANK = 9999  # cualquier estado fuera de funnel se considera forward
+    today = datetime.now(timezone.utc).date()
+    cutoff = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
+    try:
+        from zoneinfo import ZoneInfo
+        madrid = ZoneInfo("Europe/Madrid")
+    except Exception:
+        madrid = None
+
+    def fmt_hora(dt):
+        try:
+            return dt.astimezone(madrid).strftime("%H:%M") if madrid else dt.strftime("%H:%M")
+        except Exception:
+            return ""
+
+    # 1) Recoger todas las transiciones forward, hoy, desde fases taller
+    raw_movs = []  # [(from_s, to_s, dt, ticket_key, ticket)]
+    for k, t in cache.get("tickets", {}).items():
+        for tr in t.get("transitions", []):
+            if len(tr) < 3:
+                continue
+            ts_str, from_s, to_s = tr[0], tr[1], tr[2]
+            if from_s not in AVANCES_SET:
+                continue
+            dt = parse_iso(ts_str)
+            if not dt or dt < cutoff:
+                continue
+            r_from = FUNNEL_RANK.get(from_s, -1)
+            r_to = FUNNEL_RANK.get(to_s, CLOSED_RANK)
+            if r_to <= r_from:
+                continue  # retroceso o lateral, no es avance
+            raw_movs.append((from_s, to_s, dt, k, t))
+
+    # 2) Dedupe por (from_state, persona, ticket_key) - última forward transition gana en detalle
+    grid = {}
+    detail_map = {}  # (from_s, person, k) -> {key, cliente, from, to, ts_str, dt}
+    personas_set = set()
+    counted = set()  # (from_s, person, k) ya contado
+    for from_s, to_s, dt, k, t in raw_movs:
+        person = person_for_status(t, from_s)
+        personas_set.add(person)
+        cnt_key = (from_s, person, k)
+        if cnt_key not in counted:
+            counted.add(cnt_key)
+            grid[(from_s, person)] = grid.get((from_s, person), 0) + 1
+        # Mantener siempre la última transición forward del ticket
+        existing = detail_map.get(cnt_key)
+        if not existing or dt > existing["dt"]:
+            detail_map[cnt_key] = {
+                "key": k, "cliente": t.get("cliente", "") or "",
+                "from": from_s, "to": to_s,
+                "ts": fmt_hora(dt), "dt": dt,
+            }
+
+    # 3) Agrupar details por (from_s, person)
+    details = {}
+    for (from_s, person, k), info in detail_map.items():
+        details.setdefault((from_s, person), []).append({
+            "key": info["key"], "cliente": info["cliente"],
+            "from": info["from"], "to": info["to"], "ts": info["ts"],
+        })
+    # Ordenar por hora descendente
+    for key, lst in details.items():
+        lst.sort(key=lambda x: x["ts"], reverse=True)
+
+    if not personas_set:
+        header = ('<tr><th class="sticky-l1 sticky-l2" style="text-align:left;left:0;min-width:240px">Tarea</th>'
+                  '<th>(sin avances aún)</th><th class="col-total">Total</th></tr>')
+        rows = ('<tr><td class="lbl-name" style="left:0;min-width:240px" colspan="3">'
+                '<span style="color:#94a3b8;font-style:italic">Aún no hay avances forward hoy</span></td></tr>')
+        return header, rows, "{}", {"grid": {}, "details": {}, "labels": []}
+    personas_sorted = sorted(personas_set, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
+    parts = ['<tr><th class="sticky-l1 sticky-l2" style="text-align:left;left:0;min-width:240px">Tarea</th>']
+    for p in personas_sorted:
+        parts.append(f'<th>{html_escape(p)}</th>')
+    parts.append('<th class="hdr-dia col-total">Total</th></tr>')
+    header = "".join(parts)
+    body_parts = []
+    col_tot = {p: 0 for p in personas_sorted}
+    grand = 0
+    detail_dict = {}
+    for st in AVANCES_STATES_ORDER:
+        row_tot = 0
+        lbl = AVANCES_LABEL_BY_STATE.get(st, st)
+        cells = [f'<tr><td class="lbl-name" style="left:0;min-width:240px">{html_escape(lbl)}</td>']
+        for p in personas_sorted:
+            n = grid.get((st, p), 0)
+            row_tot += n
+            col_tot[p] += n
+            if n > 0:
+                dkey = f"{st}__{p}".replace(" ", "_").replace("/", "_")
+                detail_dict[dkey] = details.get((st, p), [])
+                attrs = f' data-detail-key="{html_escape(dkey)}" data-estado="{html_escape(st)}" data-persona="{html_escape(p)}"'
+                cells.append(f'<td class="num avance-cell"{attrs}><span style="font-weight:500">{n}</span></td>')
+            else:
+                cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+        grand += row_tot
+        if row_tot > 0:
+            cells.append(f'<td class="num col-total"><span style="font-weight:500">{row_tot}</span></td>')
+        else:
+            cells.append('<td class="num col-total n0"><span style="color:#c0d0e0">·</span></td>')
+        cells.append('</tr>')
+        body_parts.append("".join(cells))
+    tot_cells = ['<tr class="total"><td class="lbl-name" style="left:0;min-width:240px">Total</td>']
+    for p in personas_sorted:
+        v = col_tot.get(p, 0)
+        if v > 0:
+            tot_cells.append(f'<td class="num"><span style="font-weight:600">{v}</span></td>')
+        else:
+            tot_cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+    tot_cells.append(f'<td class="num col-total"><span style="font-weight:600">{grand}</span></td>')
+    tot_cells.append('</tr>')
+    body_parts.append("".join(tot_cells))
+    detail_json = json.dumps(detail_dict, ensure_ascii=False)
+    # Datos consumibles por build_tecnicos_section: usamos la label en lugar del estado origen
+    extra = {
+        "grid": {(AVANCES_LABEL_BY_STATE.get(st, st), p): n for (st, p), n in grid.items()},
+        "details": {(AVANCES_LABEL_BY_STATE.get(st, st), p): lst for (st, p), lst in details.items()},
+        "labels": list(AVANCES_LABELS),
+    }
+    # Generar detail_dict con keys usando la label (consistente con render en build_tecnicos)
+    detail_dict_extra = {}
+    for (st, p), lst in details.items():
+        lbl = AVANCES_LABEL_BY_STATE.get(st, st)
+        dkey = f"{lbl}__{p}".replace(" ", "_").replace("/", "_")
+        detail_dict_extra[dkey] = lst
+    detail_dict.update(detail_dict_extra)
+    detail_json = json.dumps(detail_dict, ensure_ascii=False)
+    return header, "\n".join(body_parts), detail_json, extra
 
 
 FONT_X = "Arial"
@@ -797,13 +970,33 @@ def build_html(cache, out_path, template_path):
         parts.append('</tr>')
         return "".join(parts)
 
+    # nuevas_por_chain_cutoff: {(ch, lbl): count_nuevas_esa_cadena_ese_corte}
+    nuevas_por_chain_cutoff = {}
+    for i, (lbl, d) in enumerate(cutoffs):
+        if i < monthly_count:
+            start_dt = datetime(d.year, d.month, 1, 0, 0, 0, tzinfo=timezone.utc)
+        else:
+            start_dt = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc)
+        end_dt = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc)
+        for key, t in cache.get("tickets", {}).items():
+            created = parse_iso(t.get("created"))
+            if not created or not (start_dt <= created <= end_dt):
+                continue
+            ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
+            nuevas_por_chain_cutoff[(ch, lbl)] = nuevas_por_chain_cutoff.get((ch, lbl), 0) + 1
+
     def chain_row(ch):
         cls_row = ' class="otros"' if ch == "Otros" else ''
         parts = [f'<tr{cls_row}><td class="lbl-name">{ch}</td>']
         for l, _ in cutoffs:
             n = sum(1 for _, x, _ in opens[l] if x == ch)
+            new = nuevas_por_chain_cutoff.get((ch, l), 0)
             cls = "num n0" if n == 0 else "num"
-            parts.append(f'<td class="{cls}">{n if n else "·"}</td>')
+            if new > 0:
+                nuevas_txt = f'<span style="color:#16a34a;font-size:9px;font-weight:500;margin-left:3px" title="Nuevas creadas">(+{new})</span>'
+                parts.append(f'<td class="{cls}">{n if n else chr(183)}{nuevas_txt}</td>')
+            else:
+                parts.append(f'<td class="{cls}">{n if n else chr(183)}</td>')
         parts.append('</tr>')
         return "".join(parts)
 
@@ -869,6 +1062,23 @@ def build_html(cache, out_path, template_path):
     )
 
     # KPI Sustis solicitadas (pendientes de entregar) - del cache de sustis
+    # KPI Salidas de taller hoy: transiciones hoy from=cualquier estado taller -> Devuelto/Resuelto/Finalizada
+    SALIDA_DESTINOS = {"Devuelto a cliente", "Resuelto", "Finalizada"}
+    salidas_taller = 0
+    salidas_taller_tickets = set()
+    _cutoff_hoy = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
+    for _kk, _t in cache.get("tickets", {}).items():
+        for _tr in _t.get("transitions", []):
+            if len(_tr) < 3: continue
+            _ts, _fs, _to = _tr[0], _tr[1], _tr[2]
+            if _fs not in TALLER_STATUSES: continue
+            if _to not in SALIDA_DESTINOS: continue
+            _dt = parse_iso(_ts)
+            if not _dt or _dt < _cutoff_hoy: continue
+            if _kk not in salidas_taller_tickets:
+                salidas_taller_tickets.add(_kk)
+                salidas_taller += 1
+
     sustis_solicitadas = 0
     try:
         from pathlib import Path as _P2
@@ -902,15 +1112,15 @@ def build_html(cache, out_path, template_path):
                     '<td class="lbl-name">Nuevas creadas</td>'
                     + "".join(f'<td class="num">{nuevas_total.get(l, 0) or chr(183)}</td>' for l, _ in cutoffs) + '</tr>')
 
-    chain_nuevas = ('<tr class="evol-nuevas"><td class="lbl-name">Nuevas creadas</td>'
-                    + "".join(f'<td class="num">{nuevas_total.get(l, 0) or chr(183)}</td>' for l, _ in cutoffs) + '</tr>')
+    chain_nuevas = ""  # ya no se usa (nuevas se muestran en cada celda chain_row)
 
     is_demo = "DEMO" in (cache.get("_meta", {}).get("note") or "")
     demo = ('<div class="banner">⚠ Vista previa con cache DEMO. El GitHub Action poblará el histórico completo.</div>'
             if is_demo else '')
 
     ah_header, ah_rows = build_abiertas_hoy_section(cache)
-    tec_header, tec_rows = build_tecnicos_section(cache)
+    avances_header, avances_rows, avances_detail_json, avances_extra = build_avances_section(cache)
+    tec_header, tec_rows = build_tecnicos_section(cache, avances_extra)
     detalle_rows = build_detalle_section(cache)
 
     # Fase 2: pestaña "Por cadena"
@@ -940,6 +1150,69 @@ def build_html(cache, out_path, template_path):
         chains_html = f'<p style="color:#c0392b;padding:20px">Error generando Fase 2: {e}</p>'
         sustis_html = chains_html
 
+    # Track record: guardar snapshot de KPIs hoy en cache/kpi_history.json (antes del render)
+    history = {}
+    try:
+        hist_path = None
+        for _cand in [Path("cache") / "kpi_history.json", out_path.parent.parent / "cache" / "kpi_history.json"]:
+            if _cand.parent.exists():
+                hist_path = _cand
+                break
+        if hist_path is not None:
+            if hist_path.exists():
+                try:
+                    history = json.loads(hist_path.read_text(encoding="utf-8"))
+                except Exception:
+                    history = {}
+            history[today.isoformat()] = {
+                "ts": today_label,
+                "abiertas_hoy": today_total,
+                "estancadas_15d": estancadas_15,
+                "en_taller": en_taller,
+                "peak_pct": peak_pct,
+                "pendientes_taller": pendientes_taller,
+                "gestion_externa": gestion_externa,
+                "sustis_solicitadas": sustis_solicitadas,
+                "salidas_taller_hoy": salidas_taller,
+            }
+            hist_path.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:
+        print(f"[kpi_history] no se pudo guardar: {e}")
+
+    # Generar tabla Evolución KPIs
+    EVOL_KPI_COLS = [
+        ("abiertas_hoy", "Abiertas", "#0b3d91"),
+        ("estancadas_15d", "Estancadas >15d", "#c0392b"),
+        ("en_taller", "En taller", "#1f6feb"),
+        ("peak_pct", "% pico taller", "#475569"),
+        ("pendientes_taller", "Pdtes. a taller", "#a23b72"),
+        ("gestion_externa", "Gest. externa", "#cb6f0a"),
+        ("sustis_solicitadas", "Sustis solic.", "#7c3aed"),
+        ("salidas_taller_hoy", "Salidas taller", "#16a34a"),
+    ]
+    dates_sorted = sorted(history.keys())
+    if dates_sorted:
+        ek_hdr = '<tr><th class="sticky-l1" style="text-align:left;left:0;min-width:120px">Fecha</th>'
+        for _kk, _lbl, _col in EVOL_KPI_COLS:
+            ek_hdr += f'<th style="color:#fff">{_lbl}</th>'
+        ek_hdr += '</tr>'
+        ek_rows_html = []
+        for _date in dates_sorted:
+            _row = history.get(_date, {})
+            cells = [f'<td class="lbl-name" style="left:0;min-width:120px"><b>{_date}</b></td>']
+            for _kk, _lbl, _col in EVOL_KPI_COLS:
+                _v = _row.get(_kk, "")
+                if _kk == "peak_pct" and _v != "":
+                    cells.append(f'<td class="num" style="color:{_col};font-weight:500">{_v}%</td>')
+                elif _v != "" and _v != 0:
+                    cells.append(f'<td class="num" style="color:{_col};font-weight:500">{_v}</td>')
+                else:
+                    cells.append('<td class="num n0">·</td>')
+            ek_rows_html.append('<tr>' + "".join(cells) + '</tr>')
+        evolucion_kpis = ek_hdr + "\n".join(ek_rows_html)
+    else:
+        evolucion_kpis = '<tr><th colspan="9" style="color:#94a3b8;font-style:italic">Aún no hay historial. Se irá llenando a partir de hoy.</th></tr>'
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -959,6 +1232,9 @@ def build_html(cache, out_path, template_path):
         "__AH_ROWS__": ah_rows,
         "__TEC_HEADER__": tec_header,
         "__TEC_ROWS__": tec_rows,
+        "__AVANCES_HEADER__": avances_header,
+        "__AVANCES_ROWS__": avances_rows,
+        "__AVANCES_DETAIL_JSON__": avances_detail_json,
         "__DETALLE_ROWS__": detalle_rows,
         "__STATE_HEADER__": state_header,
         "__STATE_ROWS__": state_rows,
@@ -971,6 +1247,8 @@ def build_html(cache, out_path, template_path):
         "__PENDIENTES_TALLER__": str(pendientes_taller),
         "__GESTION_EXTERNA__": str(gestion_externa),
         "__SUSTIS_SOLICITADAS__": str(sustis_solicitadas),
+        "__SALIDAS_TALLER__": str(salidas_taller),
+        "__EVOLUCION_KPIS__": evolucion_kpis,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
     }
@@ -979,6 +1257,8 @@ def build_html(cache, out_path, template_path):
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
+
+
 
 
 
