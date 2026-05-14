@@ -304,15 +304,14 @@
   .sidebar .sb-item:hover { background: #1e293b; color: #e2e8f0; }
   .sidebar .sb-item.active { background: #1e293b; color: white; font-weight: 500; box-shadow: inset 2px 0 0 #3b82f6; }
   .sidebar .sb-item .ti { font-size: 15px; }
-  /* Submenu lateral en hover (Por cadena) */
+  /* Submenu en hover (Por cadena) — position:fixed para escapar del overflow del sidebar */
   .sb-dropdown-wrap { position: relative; }
-  .sb-submenu { display: none; position: absolute; left: calc(100% + 4px); top: -4px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 0; min-width: 170px; z-index: 200; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
-  .sb-dropdown-wrap:hover .sb-submenu,
-  .sb-submenu:hover { display: block; }
+  .sb-submenu { display: none; position: fixed; left: 204px; top: 0; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 0; min-width: 170px; z-index: 300; box-shadow: 0 6px 20px rgba(0,0,0,0.45); }
+  .sb-submenu.open { display: block; }
   .sb-submenu .sb-subitem { display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: #cbd5e1; text-decoration: none; font-size: 12px; cursor: pointer; border-radius: 0; }
   .sb-submenu .sb-subitem:hover { background: #1e293b; color: white; }
   .sb-submenu .sb-subitem.is-resumen { color: #93c5fd; font-weight: 500; border-bottom: 1px solid #1e293b; margin-bottom: 4px; padding-bottom: 8px; }
-  .sb-submenu::before { content: ""; position: absolute; left: -8px; top: 0; width: 12px; height: 100%; }
+  @media (max-width: 1023px) { .sb-submenu { left: 184px; } }
   @media (max-width: 768px) { .sb-submenu { display: none !important; } }
   .sb-spacer { flex: 1; min-height: 12px; }
   .sb-btn-cta { margin: 4px 10px 8px; padding: 9px 12px; background: #1e40af; color: white; border: none; border-radius: 6px; font-weight: 500; font-size: 12.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; font-family: inherit; }
@@ -376,7 +375,6 @@
     <a href="#evol-estado" class="sb-item"><i class="ti ti-trending-up"></i>Evol. estado</a>
     <a href="#evol-cadena" class="sb-item"><i class="ti ti-chart-line"></i>Evol. cadena</a>
     <a href="#evol-kpis" class="sb-item"><i class="ti ti-history"></i>Evol. KPIs</a>
-    <a href="#anual-2026" class="sb-item"><i class="ti ti-medal"></i>Productividad 2026</a>
   </nav>
   <div class="sb-spacer"></div>
   <button id="btn-refresh" type="button" class="sb-btn-cta" title="Refresca el dashboard">
@@ -530,10 +528,6 @@ __CHAIN_TOTAL__
 __EVOLUCION_KPIS__
 </table>
 </div>
-
-<h2 id="anual-2026">Productividad anual 2026 por técnico</h2>
-<div class="legend">Todas las incidencias creadas en 2026. Cuenta cuántos <b style="color:#0891b2">presupuestos</b> y cuántas <b style="color:#059669">reparaciones</b> ha hecho cada técnico (cada ticket cuenta máx. 1 vez por concepto y persona).</div>
-__ANUAL_2026__
 </div><!-- /view-stats -->
 
 <div id="view-chains" class="view">
@@ -574,7 +568,7 @@ __SUSTIS_HTML__
   // Atajos sidebar: cambiar pestaña + scroll
   const SHORTCUT_VIEW = {
     'kpis':'total','abiertas':'total','tecnicos':'total','detalle':'total',
-    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats','anual-2026':'stats'
+    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats'
   };
   document.querySelectorAll('.sidebar a.sb-item[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
@@ -608,6 +602,8 @@ __SUSTIS_HTML__
   (function populateChainsSubmenu(){
     const submenu = document.getElementById('sb-chains-submenu');
     if (!submenu) return;
+    const wrap = submenu.closest('.sb-dropdown-wrap');
+    const trigger = wrap ? wrap.querySelector('button[data-view="chains"]') : null;
     const chainBtns = document.querySelectorAll('#view-chains .tabs2 button[data-chain]');
     if (!chainBtns.length) return;
     chainBtns.forEach(btn => {
@@ -620,6 +616,7 @@ __SUSTIS_HTML__
       link.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
+        submenu.classList.remove('open');
         setView('chains');
         setTimeout(() => {
           setChain(chain);
@@ -629,6 +626,25 @@ __SUSTIS_HTML__
       });
       submenu.appendChild(link);
     });
+    // Hover handlers — calcula top dinamicamente a partir del trigger
+    let hideTimer = null;
+    function showSubmenu() {
+      if (hideTimer) { clearTimeout(hideTimer); hideTimer = null; }
+      if (!trigger) return;
+      const r = trigger.getBoundingClientRect();
+      submenu.style.top = Math.max(8, r.top) + 'px';
+      submenu.classList.add('open');
+    }
+    function scheduleHide() {
+      if (hideTimer) clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => submenu.classList.remove('open'), 200);
+    }
+    if (wrap) {
+      wrap.addEventListener('mouseenter', showSubmenu);
+      wrap.addEventListener('mouseleave', scheduleHide);
+    }
+    submenu.addEventListener('mouseenter', showSubmenu);
+    submenu.addEventListener('mouseleave', scheduleHide);
   })();
 
   // Sub-pestañas dentro de view-sustis (Vista cadenas / Vista inmovilizado)

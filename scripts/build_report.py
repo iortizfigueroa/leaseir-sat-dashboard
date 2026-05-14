@@ -570,121 +570,6 @@ def build_avances_section(cache):
     return header, "\n".join(body_parts), detail_json, extra
 
 
-def build_anual_2026_section(cache):
-    """Productividad anual 2026 por tecnico taller.
-
-    Para cada ticket creado en 2026 (abierto o cerrado), recorre transitions:
-    - Presupuestos hechos: nº de tickets que pasaron por
-      "Presupuesto preparado pendiente de enviar" (dedupe ticket+persona)
-    - Reparaciones: nº de tickets que pasaron por
-      "Inspeccion de salida" (dedupe ticket+persona)
-    """
-    PRES_STATE = "Presupuesto preparado pendiente de enviar"
-    REP_STATE = "Inspeccion de salida"
-    REP_STATE_ES = "Inspección de salida"
-    pres = {}
-    rep = {}
-    for k, t in cache.get("tickets", {}).items():
-        created = t.get("created") or ""
-        if not created.startswith("2026"):
-            continue
-        for tr in t.get("transitions", []):
-            if len(tr) < 3:
-                continue
-            to_s = tr[2]
-            if to_s == PRES_STATE:
-                p = person_for_status(t, to_s)
-                pres.setdefault(p, set()).add(k)
-            elif to_s in (REP_STATE, REP_STATE_ES):
-                p = person_for_status(t, to_s)
-                rep.setdefault(p, set()).add(k)
-
-    if not pres and not rep:
-        return ('<div style="color:#94a3b8;padding:14px;font-style:italic">'
-                'Aun no hay actividad de presupuestos ni reparaciones en 2026.</div>')
-
-    todos = set(pres.keys()) | set(rep.keys())
-    rows_data = []
-    total_pres = 0
-    total_rep = 0
-    for p in todos:
-        np = len(pres.get(p, set()))
-        nr = len(rep.get(p, set()))
-        total_pres += np
-        total_rep += nr
-        rows_data.append((p, np, nr, np + nr))
-    rows_data.sort(key=lambda x: (1 if x[0] == "(Sin asignar)" else 0, -x[3], x[0].lower()))
-    max_total = max((r[3] for r in rows_data), default=1) or 1
-    top = next((r for r in rows_data if r[0] != "(Sin asignar)"),
-               rows_data[0] if rows_data else None)
-
-    PALETTE = ["#3b82f6", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6",
-               "#06b6d4", "#84cc16", "#ef4444", "#6366f1", "#0891b2"]
-
-    rows = []
-    for i, (p, np, nr, tot) in enumerate(rows_data, 1):
-        bar_max_w = max(220, 60 + (tot * 280 // max_total))
-        pres_w = (np * bar_max_w / tot) if tot else 0
-        rep_w = (nr * bar_max_w / tot) if tot else 0
-        parts = [x for x in p.split() if x]
-        if parts:
-            initials = (parts[0][0] + (parts[1][0] if len(parts) > 1 else "")).upper()
-        else:
-            initials = "?"
-        is_sa = (p == "(Sin asignar)")
-        avatar_color = "#94a3b8" if is_sa else PALETTE[abs(hash(p)) % len(PALETTE)]
-        row_bg = "#f9fafb" if i % 2 == 0 else "white"
-        name_style = "font-weight:500;color:#1f2328"
-        if is_sa:
-            name_style = "font-weight:500;font-style:italic;color:#94a3b8"
-        rows.append(
-            f'<tr style="background:{row_bg}">'
-            f'<td style="text-align:center;font-weight:600;color:#64748b;width:36px;padding:8px 6px">{i}</td>'
-            f'<td style="padding:8px 12px;white-space:nowrap">'
-            f'<span style="display:inline-flex;align-items:center;gap:9px">'
-            f'<span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:{avatar_color};color:white;font-size:10px;font-weight:600;flex-shrink:0">{initials}</span>'
-            f'<span style="{name_style}">{html_escape(p)}</span>'
-            f'</span></td>'
-            f'<td style="text-align:right;padding:8px 12px;font-variant-numeric:tabular-nums;color:#0891b2;font-weight:500">{np}</td>'
-            f'<td style="text-align:right;padding:8px 12px;font-variant-numeric:tabular-nums;color:#059669;font-weight:500">{nr}</td>'
-            f'<td style="text-align:right;padding:8px 14px;font-variant-numeric:tabular-nums"><span style="font-weight:600;color:#0b3d91;font-size:14px">{tot}</span></td>'
-            f'<td style="padding:8px 14px">'
-            f'<div style="display:inline-flex;height:16px;border-radius:8px;overflow:hidden;background:#e2e8f0;width:{bar_max_w}px">'
-            f'<div style="background:#0891b2;width:{pres_w:.1f}px;height:100%" title="{np} presupuestos"></div>'
-            f'<div style="background:#059669;width:{rep_w:.1f}px;height:100%" title="{nr} reparaciones"></div>'
-            f'</div></td></tr>'
-        )
-
-    grand_total = total_pres + total_rep
-    n_tecnicos = sum(1 for r in rows_data if r[0] != "(Sin asignar)")
-    top_str = f"{html_escape(top[0])} ({top[3]})" if top else "-"
-
-    html = (
-        '<div style="display:flex;gap:12px;margin:6px 0 14px;flex-wrap:wrap">'
-        f'<div class="kpi" style="flex:1 1 170px"><div class="k">Presupuestos 2026</div><div class="v" style="color:#0891b2">{total_pres}</div><div class="d">tickets pasados por preparado</div></div>'
-        f'<div class="kpi" style="flex:1 1 170px"><div class="k">Reparaciones 2026</div><div class="v" style="color:#059669">{total_rep}</div><div class="d">tickets pasados por inspeccion</div></div>'
-        f'<div class="kpi" style="flex:1 1 170px"><div class="k">Tecnicos activos</div><div class="v">{n_tecnicos}</div><div class="d">con al menos 1 accion</div></div>'
-        f'<div class="kpi" style="flex:1 1 200px"><div class="k">Top productivo</div><div class="v" style="font-size:15px;font-weight:600;padding-top:8px;line-height:1.2">{top_str}</div><div class="d">presupuestos + reparaciones</div></div>'
-        '</div>'
-        '<div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;background:white">'
-        '<table style="width:100%;border-collapse:collapse;font-size:13px">'
-        '<thead><tr>'
-        '<th style="background:var(--blue);color:white;font-weight:500;padding:8px 6px;text-align:center;width:36px">#</th>'
-        '<th style="background:var(--blue);color:white;font-weight:500;padding:8px 12px;text-align:left">Tecnico</th>'
-        '<th style="background:var(--blue);color:white;font-weight:500;padding:8px 12px;text-align:right">Presupuestos</th>'
-        '<th style="background:var(--blue);color:white;font-weight:500;padding:8px 12px;text-align:right">Reparaciones</th>'
-        '<th style="background:var(--blue);color:white;font-weight:500;padding:8px 14px;text-align:right">Total</th>'
-        '<th style="background:var(--blue);color:white;font-weight:500;padding:8px 14px;text-align:left">Mix</th>'
-        '</tr></thead>'
-        f'<tbody>{"".join(rows)}</tbody></table></div>'
-        '<div class="legend" style="margin-top:6px">'
-        '<span style="display:inline-block;width:10px;height:10px;background:#0891b2;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Presupuestos &middot; '
-        '<span style="display:inline-block;width:10px;height:10px;background:#059669;border-radius:2px;vertical-align:middle;margin-right:4px"></span>Reparaciones &middot; '
-        f'Total acumulado: {grand_total}</div>'
-    )
-    return html
-
-
 FONT_X = "Arial"
 HDR_BLUE = "0B3D91"
 ZEBRA = "F5F7FB"
@@ -1351,12 +1236,6 @@ def build_html(cache, out_path, template_path):
     else:
         evolucion_kpis = '<tr><th colspan="9" style="color:#94a3b8;font-style:italic">Aún no hay historial. Se irá llenando a partir de hoy.</th></tr>'
 
-    # Productividad anual 2026 por tecnico (presupuestos + reparaciones)
-    try:
-        anual_2026_html = build_anual_2026_section(cache)
-    except Exception as _e:
-        anual_2026_html = f'<div style="color:#c0392b;padding:14px">Error generando productividad 2026: {_e}</div>'
-
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -1397,7 +1276,6 @@ def build_html(cache, out_path, template_path):
         "__PRES_HECHOS__": str(presupuestos_hechos_count),
         "__EQ_REPARADOS__": str(equipos_reparados_count),
         "__EVOLUCION_KPIS__": evolucion_kpis,
-        "__ANUAL_2026__": anual_2026_html,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
     }
@@ -1406,8 +1284,6 @@ def build_html(cache, out_path, template_path):
 
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(html, encoding="utf-8")
-
-
 
 
 def main():
