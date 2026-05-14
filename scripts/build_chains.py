@@ -377,9 +377,11 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
 
     # Cabecera "CADENA — XXX"
     out.append(f'<tr><th colspan="{NCOLS}" style="background:{INMOV_HDR_DARK};color:white;text-align:left;padding:6px 10px">CADENA — {html_escape(chain.upper())}</th></tr>')
+    # Tipos por columna para sort
+    H_TYPES = ['text']*11 + ['date', 'num', 'text']
     out.append('<tr>')
-    for h in headers:
-        out.append(f'<th style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px">{html_escape(h)}</th>')
+    for i, h in enumerate(headers):
+        out.append(f'<th class="sortable" data-col="{i}" data-type="{H_TYPES[i]}" style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px;cursor:pointer">{html_escape(h)}</th>')
     out.append('</tr>')
 
     for r in rows_data:

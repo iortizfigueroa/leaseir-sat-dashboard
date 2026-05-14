@@ -861,8 +861,17 @@ __SUSTIS_HTML__
   // Sort en cualquier tabla con <th class="sortable"> fuera de #detalle-table
   document.querySelectorAll('table').forEach(tbl => {
     if (tbl.id === 'detalle-table') return;
-    if (!tbl.tHead || !tbl.tHead.rows.length) return;
-    const headers = tbl.tHead.rows[0].cells;
+    // Localizar la fila de cabecera: thead primero, si no, primer <tr> con th.sortable
+    let headerRow = null;
+    if (tbl.tHead && tbl.tHead.rows.length) headerRow = tbl.tHead.rows[0];
+    if (!headerRow) {
+      const allRows = tbl.querySelectorAll('tr');
+      for (const r of allRows) {
+        if (r.querySelector('th.sortable')) { headerRow = r; break; }
+      }
+    }
+    if (!headerRow) return;
+    const headers = headerRow.cells;
     let lastSort = {col: -1, dir: 1};
     for (let i = 0; i < headers.length; i++) {
       const th = headers[i];
@@ -877,8 +886,25 @@ __SUSTIS_HTML__
         lastSort = {col, dir};
         const tbody = tbl.tBodies[0];
         if (!tbody) return;
-        const rows = Array.from(tbody.rows);
-        rows.sort((a, b) => {
+        // Recoger solo data rows (TD en col 0, sin colspan, >=3 cells) y preservar slots
+        const dataRows = [];
+        const slots = [];
+        Array.from(tbody.rows).forEach(r => {
+          if (r.cells.length >= 3
+              && r.cells[0].tagName === 'TD'
+              && !r.cells[0].hasAttribute('colspan')) {
+            dataRows.push(r);
+          }
+        });
+        if (dataRows.length === 0) return;
+        // Sustituir cada data row por un placeholder para conservar su posición
+        dataRows.forEach(r => {
+          const ph = document.createComment('_sort_ph_');
+          r.parentNode.insertBefore(ph, r);
+          slots.push(ph);
+          r.remove();
+        });
+        dataRows.sort((a, b) => {
           const ac = a.cells[col]; const bc = b.cells[col];
           if (!ac || !bc) return 0;
           let av = ac.textContent.trim();
@@ -897,7 +923,11 @@ __SUSTIS_HTML__
           }
           return av.localeCompare(bv, 'es') * dir;
         });
-        for (const r of rows) tbody.appendChild(r);
+        // Re-insertar cada row donde estaba su slot
+        slots.forEach((ph, i) => {
+          ph.parentNode.insertBefore(dataRows[i], ph);
+          ph.remove();
+        });
       });
     }
   });
