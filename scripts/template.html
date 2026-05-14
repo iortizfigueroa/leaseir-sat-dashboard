@@ -376,6 +376,7 @@
     <a href="#evol-estado" class="sb-item"><i class="ti ti-trending-up"></i>Evol. estado</a>
     <a href="#evol-cadena" class="sb-item"><i class="ti ti-chart-line"></i>Evol. cadena</a>
     <a href="#evol-kpis" class="sb-item"><i class="ti ti-history"></i>Evol. KPIs</a>
+    <a href="#anual-2026" class="sb-item"><i class="ti ti-medal"></i>Productividad 2026</a>
   </nav>
   <div class="sb-spacer"></div>
   <button id="btn-refresh" type="button" class="sb-btn-cta" title="Refresca el dashboard">
@@ -529,6 +530,10 @@ __CHAIN_TOTAL__
 __EVOLUCION_KPIS__
 </table>
 </div>
+
+<h2 id="anual-2026">Productividad anual 2026 por técnico</h2>
+<div class="legend">Todas las incidencias creadas en 2026. Cuenta cuántos <b style="color:#0891b2">presupuestos</b> y cuántas <b style="color:#059669">reparaciones</b> ha hecho cada técnico (cada ticket cuenta máx. 1 vez por concepto y persona).</div>
+__ANUAL_2026__
 </div><!-- /view-stats -->
 
 <div id="view-chains" class="view">
@@ -569,7 +574,7 @@ __SUSTIS_HTML__
   // Atajos sidebar: cambiar pestaña + scroll
   const SHORTCUT_VIEW = {
     'kpis':'total','abiertas':'total','tecnicos':'total','detalle':'total',
-    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats'
+    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats','anual-2026':'stats'
   };
   document.querySelectorAll('.sidebar a.sb-item[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
