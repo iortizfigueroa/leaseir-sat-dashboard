@@ -1213,4 +1213,36 @@ __SUSTIS_HTML__
     showStatus("Lanzando workflow...", "info");
     try {
       const r = await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLO
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/dispatches`,
+        {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer " + token,
+            "Accept": "application/vnd.github+json",
+            "X-GitHub-Api-Version": "2022-11-28",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ref: "main" })
+        }
+      );
+      if (r.status === 204) {
+        showStatus("Workflow lanzado. Vuelve en 2 min y refresca la pagina (Ctrl+F5).", "ok");
+        setTimeout(() => { btn.disabled = false; btn.style.opacity = "1"; }, 90000);
+      } else if (r.status === 401 || r.status === 403) {
+        localStorage.removeItem(TOKEN_KEY);
+        showStatus("Token invalido o sin permisos. He borrado el guardado, pulsa de nuevo para introducir uno nuevo.", "error");
+        btn.disabled = false; btn.style.opacity = "1";
+      } else {
+        const txt = await r.text();
+        showStatus("Error " + r.status + ": " + txt.slice(0, 200), "error");
+        btn.disabled = false; btn.style.opacity = "1";
+      }
+    } catch (e) {
+      showStatus("Error de red: " + e.message, "error");
+      btn.disabled = false; btn.style.opacity = "1";
+    }
+  });
+})();
+</script>
+</body>
+</html>
