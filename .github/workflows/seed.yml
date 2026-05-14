@@ -1,0 +1,96 @@
+name: Seed SAT cache (full re-fetch)
+
+# Workflow manual: re-fetch completo de TODOS los tickets con los nuevos campos
+# (ej. cuando se anade un customfield al fetch_jira.py). Tarda 5-10 min.
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: refresh-sat
+  cancel-in-progress: false
+
+jobs:
+  seed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install deps
+        run: pip install -r requirements.txt
+
+      - name: Seed completo desde Jira
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER:     ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN:    ${{ secrets.JIRA_TOKEN }}
+        run: |
+          python scripts/fetch_jira.py --cache cache/jira_status_timeline.json --mode seed
+
+      - name: Refresh Airtable Pedidos
+        continue-on-error: true
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        run: |
+          python scripts/fetch_airtable.py --cache cache/airtable_pedidos.json
+
+      - name: Refresh Airtable Inmovilizado
+        continue-on-error: true
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+        run: |
+          python scripts/fetch_inmovilizado.py --cache cache/airtable_inmovilizado.json
+
+      - name: Refresh sustituciones activas
+        continue-on-error: true
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER:     ${{ secrets.JIRA_USER }}
+          JIRA_TOKEN:    ${{ secrets.JIRA_TOKEN }}
+        run: |
+          python scripts/fetch_sustis.py --cache cache/sustis_activas.json
+
+      - name: Build report
+        run: |
+          mkdir -p output
+          python scripts/build_report.py \
+            --cache cache/jira_status_timeline.json \
+            --output-xlsx output/Evolucion_SAT.xlsx \
+            --output-html output/index.html
+
+      - name: Commit cache + output back to repo
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add cache/ output/
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: SEED completo SAT cache + report ($(date -u +%Y-%m-%d))"
+            git push
+          fi
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: output
+
+  deploy:
+    needs: seed
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

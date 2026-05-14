@@ -620,7 +620,7 @@ def build_anual_averias_section(cache):
         if v <= 6000: return "mid"
         return "high"
 
-    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido"]
+    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido", "Abierta"]
     def year_row(y):
         if not y: return "Desconocido"
         try:
@@ -642,29 +642,29 @@ def build_anual_averias_section(cache):
             if len(tr) >= 3 and tr[2] in INSP_STATES:
                 passed = True
                 break
-        if not passed:
-            continue
         fv = (t.get("fventa") or "").strip()
         yr = None
         if fv and len(fv) >= 4 and fv[:4].isdigit():
             yr = int(fv[:4])
         buckets = set()
-        for v in (t.get("cambios") or []):
-            b = val2bucket.get(str(v).lower())
-            if b: buckets.add(b)
-        if not buckets:
-            for v in (t.get("motivo") or []):
-                vl = str(v).lower()
-                if "umbilical" in vl: buckets.add("Umbi")
-                elif "buffer" in vl: buckets.add("Buff")
-                elif "puntera" in vl or "zafiro" in vl: buckets.add("Punt")
-                elif "diodo" in vl: buckets.add("Diod")
-                elif "placa" in vl: buckets.add("Plac")
-                elif "gatillo" in vl: buckets.add("Gati")
-                elif "pantalla" in vl: buckets.add("Pant")
-                elif "otros" in vl: buckets.add("Otro")
+        if passed:
+            for v in (t.get("cambios") or []):
+                b = val2bucket.get(str(v).lower())
+                if b: buckets.add(b)
+            if not buckets:
+                for v in (t.get("motivo") or []):
+                    vl = str(v).lower()
+                    if "umbilical" in vl: buckets.add("Umbi")
+                    elif "buffer" in vl: buckets.add("Buff")
+                    elif "puntera" in vl or "zafiro" in vl: buckets.add("Punt")
+                    elif "diodo" in vl: buckets.add("Diod")
+                    elif "placa" in vl: buckets.add("Plac")
+                    elif "gatillo" in vl: buckets.add("Gati")
+                    elif "pantalla" in vl: buckets.add("Pant")
+                    elif "otros" in vl: buckets.add("Otro")
         ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
-        records.append({"k": k, "y": year_row(yr), "c": ch,
+        yrow = year_row(yr) if passed else "Abierta"
+        records.append({"k": k, "y": yrow, "c": ch,
                         "i": importe_bucket(t.get("importe")),
                         "b": sorted(buckets)})
 
@@ -1068,6 +1068,7 @@ def build_detalle_section(cache):
             f'<td>{html_escape(r["status"])}</td>'
             f'<td style="color:{r["ft_color"]};font-weight:500;text-align:center">{r["ft"]}</td>'
             f'<td style="color:{r["days_color"]};font-weight:500;text-align:center">{r["days"]}</td>'
+            f'<td style="color:{r["dt_color"]};font-weight:500;text-align:center" title="Entró en Pdte. asignar técnico el {r["dt_taller_label"] or "—"}">{r["dias_taller"] if r["dias_taller"] != "" else "—"}</td>'
             f'<td title="{html_escape(r["loc"])}" class="d-trunc">{html_escape(r["loc"])}</td>'
             f'<td>{r["created"]}</td>'
             f'<td>{html_escape(r["tipo"])}</td>'
