@@ -161,6 +161,8 @@
   tr.row-taller-first td { border-top: 1.5px solid #2563eb !important; }
   tr.row-taller-last td { border-bottom: 1.5px solid #2563eb !important; }
   tr.total td { background: #fef3c7 !important; font-weight: 500; color: #78350f !important; }
+  tr.evol-nuevas td { background: #e6f4ea !important; font-weight: 500; color: #166534 !important; font-style: italic; border-top: 1.5px solid #16a34a !important; }
+  tr.evol-nuevas td.lbl-name, tr.evol-nuevas td.lbl-funnel { background: #d1ecdb !important; }
   /* Columna Total destacada (última col de tablas matriciales) */
   th.col-total, td.col-total {
     background: #fef3c7 !important;
@@ -336,9 +338,12 @@ __DEMO_BANNER__
 
 <div id="kpis" class="kpis">
   <div class="kpi"><div class="k"><i class="ti ti-folder-open"></i>Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-clock-pause"></i>Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
+  <div class="kpi clickable" id="kpi-estancadas" title="Clic para filtrar Detalle por >15d"><div class="k"><i class="ti ti-clock-pause"></i>Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
   <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
+  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__</div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
+  <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
+  <div class="kpi clickable" id="kpi-sustis-solicitadas" title="Clic para ir a Estado sustituciones"><div class="k"><i class="ti ti-arrows-exchange"></i>Sustis solicitadas</div><div class="v">__SUSTIS_SOLICITADAS__</div><div class="d" style="color:var(--grey)">Pendientes de entregar</div></div>
 </div>
 
 <h2 id="abiertas">Abiertas hoy por estado y cadena</h2>
@@ -415,6 +420,7 @@ __DETALLE_ROWS__
 <table>
 __STATE_HEADER__
 __STATE_ROWS__
+__STATE_NUEVAS__
 __STATE_TOTAL__
 </table>
 </div>
@@ -424,6 +430,7 @@ __STATE_TOTAL__
 <table>
 __CHAIN_HEADER__
 __CHAIN_ROWS__
+__CHAIN_NUEVAS__
 __CHAIN_TOTAL__
 </table>
 </div>
@@ -1061,6 +1068,66 @@ __SUSTIS_HTML__
       applyFilters();
       const target = document.getElementById('detalle');
       if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  const kpiEst = document.getElementById('kpi-estancadas');
+  if (kpiEst) {
+    kpiEst.addEventListener('click', () => {
+      resetAllFilters();
+      filterBucket.value = 'r';
+      applyFilters();
+      const target = document.getElementById('detalle');
+      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  const kpiPdte = document.getElementById('kpi-pendientes-taller');
+  if (kpiPdte) {
+    const PRE_TALLER = ['Abierto', 'Recepcionado SAT', 'Pendiente recogida', 'Gestionado transporte'];
+    kpiPdte.addEventListener('click', () => {
+      resetAllFilters();
+      const cbs = statusList.querySelectorAll('input[type=checkbox]');
+      cbs.forEach(cb => {
+        if (PRE_TALLER.includes(cb.dataset.status)) {
+          cb.checked = true; selectedStatuses.add(cb.dataset.status);
+        }
+      });
+      statusAll.checked = false;
+      updateStatusBtn();
+      applyFilters();
+      const target = document.getElementById('detalle');
+      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  const kpiExt = document.getElementById('kpi-gestion-externa');
+  if (kpiExt) {
+    const EXTERNA = ['Enviado a técnico externo', 'Esperando respuesta cliente a presupuesto', 'Pendiente definir servicio externo'];
+    kpiExt.addEventListener('click', () => {
+      resetAllFilters();
+      const cbs = statusList.querySelectorAll('input[type=checkbox]');
+      cbs.forEach(cb => {
+        if (EXTERNA.includes(cb.dataset.status)) {
+          cb.checked = true; selectedStatuses.add(cb.dataset.status);
+        }
+      });
+      statusAll.checked = false;
+      updateStatusBtn();
+      applyFilters();
+      const target = document.getElementById('detalle');
+      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  const kpiSusti = document.getElementById('kpi-sustis-solicitadas');
+  if (kpiSusti) {
+    kpiSusti.addEventListener('click', () => {
+      const sBtn = document.querySelector('.tabs1 button[data-view="sustis"]');
+      if (sBtn) sBtn.click();
+      const sel = document.getElementById('tabs1-select');
+      if (sel) sel.value = 'sustis';
+      window.scrollTo({top: 0, behavior: 'smooth'});
     });
   }
 })();

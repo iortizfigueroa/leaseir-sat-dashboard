@@ -854,6 +854,57 @@ def build_html(cache, out_path, template_path):
     en_taller_flow = ('<div class="d" style="margin-top:2px;font-size:13px">'
                       + ' '.join(en_taller_flow_parts) + '</div>') if en_taller_flow_parts else ''
 
+    # KPI Pendientes a taller: estados antes del taller (no asignados aún a técnico)
+    PRE_TALLER_STATUSES = {"Abierto", "Recepcionado SAT", "Pendiente recogida", "Gestionado transporte"}
+    pendientes_taller = sum(
+        1 for k, t in cache.get("tickets", {}).items()
+        if t.get("current_status") in PRE_TALLER_STATUSES
+    )
+
+    # KPI Gestión externa
+    EXTERNA_STATUSES = {"Enviado a técnico externo", "Esperando respuesta cliente a presupuesto", "Pendiente definir servicio externo"}
+    gestion_externa = sum(
+        1 for k, t in cache.get("tickets", {}).items()
+        if t.get("current_status") in EXTERNA_STATUSES
+    )
+
+    # KPI Sustis solicitadas (pendientes de entregar) - del cache de sustis
+    sustis_solicitadas = 0
+    try:
+        from pathlib import Path as _P2
+        for cand in [_P2("cache") / "sustis_activas.json", out_path.parent.parent / "cache" / "sustis_activas.json"]:
+            if cand.exists():
+                _s = json.loads(cand.read_text(encoding="utf-8"))
+                sustis_solicitadas = sum(1 for it in (_s.get("items") or [])
+                                          if (it.get("subtask_status") or "").lower() in ("solicitado",))
+                break
+    except Exception:
+        pass
+
+    # Nuevas creadas por corte (mensuales = todo el mes; diarios = ese dia)
+    nuevas_total = {}
+    for i, (lbl, d) in enumerate(cutoffs):
+        if i < monthly_count:
+            start_dt = datetime(d.year, d.month, 1, 0, 0, 0, tzinfo=timezone.utc)
+        else:
+            start_dt = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc)
+        end_dt = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc)
+        cnt = 0
+        for key, t in cache.get("tickets", {}).items():
+            created = parse_iso(t.get("created"))
+            if not created:
+                continue
+            if start_dt <= created <= end_dt:
+                cnt += 1
+        nuevas_total[lbl] = cnt
+
+    state_nuevas = ('<tr class="evol-nuevas"><td class="lbl-funnel"></td>'
+                    '<td class="lbl-name">Nuevas creadas</td>'
+                    + "".join(f'<td class="num">{nuevas_total.get(l, 0) or chr(183)}</td>' for l, _ in cutoffs) + '</tr>')
+
+    chain_nuevas = ('<tr class="evol-nuevas"><td class="lbl-name">Nuevas creadas</td>'
+                    + "".join(f'<td class="num">{nuevas_total.get(l, 0) or chr(183)}</td>' for l, _ in cutoffs) + '</tr>')
+
     is_demo = "DEMO" in (cache.get("_meta", {}).get("note") or "")
     demo = ('<div class="banner">⚠ Vista previa con cache DEMO. El GitHub Action poblará el histórico completo.</div>'
             if is_demo else '')
@@ -912,9 +963,14 @@ def build_html(cache, out_path, template_path):
         "__STATE_HEADER__": state_header,
         "__STATE_ROWS__": state_rows,
         "__STATE_TOTAL__": state_total,
+        "__STATE_NUEVAS__": state_nuevas,
         "__CHAIN_HEADER__": chain_header,
         "__CHAIN_ROWS__": chain_rows,
         "__CHAIN_TOTAL__": chain_total,
+        "__CHAIN_NUEVAS__": chain_nuevas,
+        "__PENDIENTES_TALLER__": str(pendientes_taller),
+        "__GESTION_EXTERNA__": str(gestion_externa),
+        "__SUSTIS_SOLICITADAS__": str(sustis_solicitadas),
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
     }
