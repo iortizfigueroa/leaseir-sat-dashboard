@@ -53,7 +53,6 @@ def session_from_env():
 
 JQL_SUSTIS = (
     'type = "Sub-task (máquina sustitución)" '
-    'AND (customfield_10199 is not EMPTY OR customfield_10200 is not EMPTY) '
     'AND status NOT IN (Closed, Finalizada, Cancelado) '
     'ORDER BY cf[10549] DESC'
 )

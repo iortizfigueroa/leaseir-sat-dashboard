@@ -320,7 +320,7 @@ def build_tecnicos_section(cache):
         parts.append(
             f'<th style="padding:8px 10px"><div style="font-size:11px;line-height:1.2">{html_escape(a)}</div></th>'
         )
-    parts.append('<th class="hdr-dia" style="padding:8px 10px">Total</th>')
+    parts.append('<th class="hdr-dia col-total" style="padding:8px 10px">Total</th>')
     parts.append('</tr>')
     header = "".join(parts)
 
@@ -358,9 +358,9 @@ def build_tecnicos_section(cache):
         if row_tot > 0 or row_flow["in"] > 0 or row_flow["out"] > 0:
             content = f'<span style="font-weight:500">{row_tot}</span>{flow_html(row_flow["in"], row_flow["out"])}'
             attrs = f' data-estado="{html_escape(st)}" data-asignado=""'
-            cells.append(f'<td class="num tec-cell"{attrs}>{content}</td>')
+            cells.append(f'<td class="num col-total tec-cell"{attrs}>{content}</td>')
         else:
-            cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+            cells.append('<td class="num col-total n0"><span style="color:#c0d0e0">·</span></td>')
         cells.append('</tr>')
         body_parts.append("".join(cells))
 
@@ -389,7 +389,7 @@ def build_tecnicos_section(cache):
         else:
             esp_cells.append('<td class="num n0" style="background:#fff4d6"><span style="color:#c0d0e0">·</span></td>')
     content = f'<span style="font-weight:600">{esp_grand}</span>{flow_html(esp_grand_flow["in"], esp_grand_flow["out"])}'
-    esp_cells.append(f'<td class="num tec-cell" style="background:#fff4d6;font-weight:600" data-estado-list="{html_escape(esp_estado_list)}" data-asignado="">{content}</td>')
+    esp_cells.append(f'<td class="num col-total tec-cell" style="background:#fff4d6;font-weight:600" data-estado-list="{html_escape(esp_estado_list)}" data-asignado="">{content}</td>')
     esp_cells.append('</tr>')
     body_parts.append("".join(esp_cells))
 
@@ -405,7 +405,7 @@ def build_tecnicos_section(cache):
         else:
             tot_cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
     content = f'<span style="font-weight:500">{grand_total}</span>{flow_html(grand_flow["in"], grand_flow["out"])}'
-    tot_cells.append(f'<td class="num tec-cell" data-estado="" data-asignado="">{content}</td>')
+    tot_cells.append(f'<td class="num col-total tec-cell" data-estado="" data-asignado="">{content}</td>')
     tot_cells.append('</tr>')
     body_parts.append("".join(tot_cells))
 
@@ -594,7 +594,7 @@ def build_abiertas_hoy_section(cache):
     parts = ['<tr><th class="sticky-l1">Funnel</th><th class="sticky-l2">Estado</th>']
     for ch in CHAIN_ORDER:
         parts.append(f'<th>{ch}</th>')
-    parts.append('<th>Total</th></tr>')
+    parts.append('<th class="col-total">Total</th></tr>')
     header = "".join(parts)
 
     body_parts = []
@@ -638,7 +638,7 @@ def build_abiertas_hoy_section(cache):
             chain_flow[ch]["out"] += ch_changes["out"]
             grand_flow["in"] += ch_changes["in"]
             grand_flow["out"] += ch_changes["out"]
-        cls_tot = "num ah-cell" if row_tot["total"] > 0 else "num"
+        cls_tot = "num col-total ah-cell" if row_tot["total"] > 0 else "num col-total"
         attrs_tot = f' data-estado="{html_escape(st)}" data-cadena=""' if row_tot["total"] > 0 else ""
         cells.append(f'<td class="{cls_tot}"{attrs_tot}>{cell_rich(row_tot, row_flow["in"], row_flow["out"])}</td>')
         cells.append('</tr>')
@@ -652,7 +652,7 @@ def build_abiertas_hoy_section(cache):
         attrs = f' data-estado="" data-cadena="{html_escape(ch)}"' if clickable else ""
         tot_cells.append(f'<td class="{cls}"{attrs}>{cell_rich(d, cf["in"], cf["out"])}</td>')
     g = grand
-    cls_g = "num ah-cell" if g["total"] > 0 else "num"
+    cls_g = "num col-total ah-cell" if g["total"] > 0 else "num col-total"
     attrs_g = ' data-estado="" data-cadena=""' if g["total"] > 0 else ""
     tot_cells.append(f'<td class="{cls_g}"{attrs_g}>{cell_rich(g, grand_flow["in"], grand_flow["out"])}</td>')
     tot_cells.append('</tr>')

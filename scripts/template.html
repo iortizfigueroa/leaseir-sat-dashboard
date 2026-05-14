@@ -108,7 +108,191 @@
   /* KPI clickable */
   .kpi.clickable { cursor: pointer; transition: all 0.15s; }
   .kpi.clickable:hover { background: #e7eefa; border-color: #2a59c4; box-shadow: 0 2px 8px rgba(42,89,196,0.15); }
+
+  /* ============================================================
+   * QUICK WINS + RESPONSIVE — Leaseir SAT
+   * ============================================================ */
+  body {
+    font-family: 'Inter', -apple-system, "Segoe UI", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    color: #0f172a;
+    background: #fafbfc;
+    letter-spacing: -0.005em;
+  }
+  :root {
+    --blue: #0b3d91; --blue2: #2a59c4;
+    --grey: #64748b; --bg: #f8fafc; --line: #e2e8f0; --zebra: #f8fafc;
+  }
+  h1 { font-size: 22px; font-weight: 600; letter-spacing: -0.02em; }
+  h2 {
+    font-size: 16px; font-weight: 600; letter-spacing: -0.01em;
+    color: #0f172a; border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px; margin: 32px 0 14px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .nav a {
+    font-size: 11px; padding: 5px 10px;
+    border: 1px solid #e2e8f0; border-radius: 6px;
+    color: #475569; background: white;
+    display: inline-flex; align-items: center; gap: 5px;
+    text-decoration: none;
+  }
+  .nav a:hover { background: #eff6ff; border-color: #bfdbfe; color: #0b3d91; }
+  .nav a .ti { font-size: 12px; color: #94a3b8; }
+  .kpi {
+    background: white; border: 1px solid #e2e8f0; border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .kpi .k {
+    font-size: 10px; font-weight: 600; color: #64748b;
+    letter-spacing: 0.04em; display: flex; align-items: center; gap: 5px;
+  }
+  .kpi .k .ti { color: #94a3b8; }
+  .kpi .v { font-size: 26px; font-weight: 600; color: #0f172a; letter-spacing: -0.03em; margin-top: 4px; }
+  .kpi .d { font-size: 11px; color: #64748b; margin-top: 4px; }
+  .scroller { border: 1px solid #e2e8f0; border-radius: 10px; }
+  table th { background: #f1f5f9 !important; color: #475569 !important; font-weight: 500; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; }
+  table td { border-bottom: 1px solid #cbd5e1; border-right: 1px solid #e2e8f0; }
+  table th { border-bottom: 1px solid #cbd5e1; border-right: 1px solid #e2e8f0; }
+  table tbody tr:hover td { background: #f8fafc !important; }
+  table tbody tr:hover td.lbl-funnel, table tbody tr:hover td.lbl-name { background: #f1f5f9 !important; }
+  tr.row-taller td { background: #eff6ff !important; border-bottom-color: #bfdbfe !important; border-right-color: #bfdbfe !important; }
+  tr.row-taller td.lbl-funnel, tr.row-taller td.lbl-name { background: #dbeafe !important; }
+  tr.row-taller-first td { border-top: 1.5px solid #2563eb !important; }
+  tr.row-taller-last td { border-bottom: 1.5px solid #2563eb !important; }
+  tr.total td { background: #fef3c7 !important; font-weight: 500; color: #78350f !important; }
+  /* Columna Total destacada (última col de tablas matriciales) */
+  th.col-total, td.col-total {
+    background: #fef3c7 !important;
+    font-weight: 600 !important;
+    color: #78350f !important;
+    border-left: 2px solid #0b3d91 !important;
+  }
+  th.col-total { background: #fde68a !important; }
+  /* Celda intersección fila Total × col Total */
+  tr.total td.col-total { background: #fde68a !important; }
+  .toolbar { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; }
+  .toolbar input, .toolbar select { font-size: 12px; padding: 6px 10px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; }
+  .toolbar input:focus, .toolbar select:focus { outline: 2px solid #bfdbfe; border-color: #2563eb; }
+  .multi-btn { border: 1px solid #e2e8f0; border-radius: 6px; background: white; color: #475569; padding: 6px 10px; font-size: 12px; }
+  .multi-btn:hover { background: #f1f5f9; border-color: #cbd5e1; }
+  .multi-btn.active { background: #eff6ff; border-color: #2563eb; color: #1e40af; }
+  .tabs1 { background: #f1f5f9; padding: 4px; border-radius: 10px; gap: 2px; }
+  .tabs1 button { padding: 7px 14px; font-size: 13px; color: #64748b; display: inline-flex; align-items: center; gap: 6px; border-radius: 8px; font-weight: 500; }
+  .tabs1 button.active { background: white; color: #0b3d91; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .tabs1 button .ti { font-size: 14px; }
+  .tabs2 { border-bottom: 1px solid #e2e8f0; gap: 4px; }
+  .tabs2 button { padding: 8px 12px; font-size: 12px; color: #64748b; border-radius: 0; border-bottom: 2px solid transparent; }
+  .tabs2 button.active { background: transparent; color: #0b3d91; border-bottom-color: #0b3d91; font-weight: 500; }
+  td.ah-cell:hover, td.tec-cell:hover { background: #eff6ff !important; outline: 2px solid #2563eb !important; outline-offset: -2px; }
+  .legend { font-size: 11px; color: #94a3b8; }
+  .footer { color: #94a3b8; font-size: 11px; border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 40px; }
+
+  /* Selector tabs nivel 1 (móvil): paralelo al row de buttons */
+  .tabs1-select {
+    display: none;
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    color: #0f172a;
+    margin: 12px 0;
+  }
+
+  /* Avatar para asignada */
+  .avatar {
+    width: 22px; height: 22px;
+    background: #e0e7ff; color: #3730a3;
+    border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 600;
+    margin-right: 5px; vertical-align: middle;
+  }
+
+  /* ============================================================
+   * RESPONSIVE — iPad (≤1023px) y móvil (≤640px)
+   * ============================================================ */
+  @media (max-width: 1023px) {
+    body { padding: 0 12px; }
+    h2 { margin: 24px 0 12px; }
+    .kpi { padding: 10px 12px; }
+    .kpi .v { font-size: 22px; }
+    .toolbar { padding: 8px 10px; gap: 6px; }
+    .toolbar input { min-width: 140px; }
+    table { font-size: 11px; }
+    th, td { padding: 5px 7px; }
+    .tabs1 button { padding: 6px 10px; font-size: 12px; }
+  }
+  @media (max-width: 640px) {
+    body { padding: 0 8px; max-width: 100%; margin: 12px auto; }
+    /* Header banda azul — compacto */
+    body > div[style*="background:#0b3d91"] {
+      margin: -12px -8px 12px !important;
+      padding: 12px 12px !important;
+      border-radius: 0 0 8px 8px !important;
+    }
+    body > div[style*="background:#0b3d91"] h1 { font-size: 15px !important; }
+    body > div[style*="background:#0b3d91"] img { height: 32px !important; }
+    body > div[style*="background:#0b3d91"] > div > div > div > div:last-child { font-size: 10px !important; }
+    /* Botón Actualizar → solo icono en móvil */
+    #btn-refresh { font-size: 0 !important; width: 36px; padding: 0 !important; height: 36px; display: inline-flex !important; align-items: center; justify-content: center; }
+    #btn-refresh::before { content: "\eb13"; font-family: "tabler-icons"; font-size: 18px; }
+    /* Tabs nivel 1 → ocultar buttons, mostrar select */
+    .tabs1 { display: none; }
+    .tabs1-select { display: block; }
+    /* KPIs 2x2 */
+    .kpis { display: grid !important; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .kpi { flex: none !important; padding: 10px 12px; }
+    .kpi .v { font-size: 20px; }
+    .kpi .k { font-size: 9px; }
+    /* Quick nav scrolleable horizontal */
+    .nav { flex-wrap: nowrap !important; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+    .nav::-webkit-scrollbar { height: 4px; }
+    .nav a { white-space: nowrap; flex-shrink: 0; font-size: 11px; }
+    /* Toolbar filtros: wrap natural */
+    .toolbar { padding: 8px 10px; gap: 5px; }
+    .toolbar input { width: 100%; min-width: 0; }
+    .toolbar .count { width: 100%; text-align: right; margin-left: 0; }
+    .toolbar select, .multi-btn { font-size: 11px; padding: 5px 8px; flex: 1 1 auto; min-width: 120px; }
+    /* Tabla Detalle: ocultar columnas secundarias en móvil */
+    #detalle-table th:nth-child(5),  /* Gestión */
+    #detalle-table td:nth-child(5),
+    #detalle-table th:nth-child(8),  /* Creada */
+    #detalle-table td:nth-child(8),
+    #detalle-table th:nth-child(9),  /* Tipo avería */
+    #detalle-table td:nth-child(9),
+    #detalle-table th:nth-child(12), /* Fecha venta */
+    #detalle-table td:nth-child(12),
+    #detalle-table th:nth-child(13), /* Consola */
+    #detalle-table td:nth-child(13),
+    #detalle-table th:nth-child(14), /* HP */
+    #detalle-table td:nth-child(14),
+    #detalle-table th:nth-child(15), /* Garantía */
+    #detalle-table td:nth-child(15),
+    #detalle-table th:nth-child(16), /* Descripción */
+    #detalle-table td:nth-child(16),
+    #detalle-table th:nth-child(17), /* Téc. taller */
+    #detalle-table td:nth-child(17),
+    #detalle-table th:nth-child(18), /* Importe */
+    #detalle-table td:nth-child(18),
+    #detalle-table th:nth-child(19), /* Téc. externo */
+    #detalle-table td:nth-child(19),
+    #detalle-table th:nth-child(20)  /* Último comentario */,
+    #detalle-table td:nth-child(20)
+    { display: none !important; }
+    /* En tablas matriciales: forzar scroll-x con primera columna sticky */
+    .scroller { max-height: none; }
+    /* h1 + meta más compactos */
+    .meta { font-size: 11px; }
+  }
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.0/dist/tabler-icons.min.css">
 </head>
 <body>
 <div style="background:#0b3d91;margin:-24px -20px 18px;padding:18px 20px;border-radius:0 0 8px 8px">
@@ -130,26 +314,31 @@
 __DEMO_BANNER__
 
 <div class="tabs1">
-  <button type="button" data-view="total" class="active">Incidencias Abiertas</button>
-  <button type="button" data-view="chains">Por cadena</button>
-  <button type="button" data-view="sustis">Sustis</button>
+  <button type="button" data-view="total" class="active"><i class="ti ti-list-details"></i>Incidencias abiertas</button>
+  <button type="button" data-view="chains"><i class="ti ti-building"></i>Estadísticas por cadena</button>
+  <button type="button" data-view="sustis"><i class="ti ti-arrows-exchange"></i>Estado sustituciones</button>
 </div>
+<select class="tabs1-select" id="tabs1-select" onchange="(function(v){document.querySelectorAll('.tabs1 button').forEach(b=>{if(b.dataset.view===v){b.click();}})}).call(null, this.value)">
+  <option value="total">Incidencias abiertas</option>
+  <option value="chains">Estadísticas por cadena</option>
+  <option value="sustis">Estado sustituciones</option>
+</select>
 
 <div id="view-total" class="view active">
 <div class="nav">
-  <a href="#kpis">KPIs</a>
-  <a href="#abiertas">Abiertas hoy</a>
-  <a href="#tecnicos">Técnicos taller</a>
-  <a href="#detalle">Detalle</a>
-  <a href="#evol-estado">Evol. por estado</a>
-  <a href="#evol-cadena">Evol. por cadena</a>
+  <a href="#kpis"><i class="ti ti-chart-pie"></i>KPIs</a>
+  <a href="#abiertas"><i class="ti ti-calendar-event"></i>Abiertas hoy</a>
+  <a href="#tecnicos"><i class="ti ti-tools"></i>Técnicos taller</a>
+  <a href="#detalle"><i class="ti ti-table"></i>Detalle</a>
+  <a href="#evol-estado"><i class="ti ti-trending-up"></i>Evol. estado</a>
+  <a href="#evol-cadena"><i class="ti ti-chart-line"></i>Evol. cadena</a>
 </div>
 
 <div id="kpis" class="kpis">
-  <div class="kpi"><div class="k">Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
-  <div class="kpi"><div class="k">Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
-  <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k">En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
-  <div class="kpi"><div class="k">% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-folder-open"></i>Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-clock-pause"></i>Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
+  <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
+  <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
 </div>
 
 <h2 id="abiertas">Abiertas hoy por estado y cadena</h2>
@@ -646,6 +835,71 @@ __SUSTIS_HTML__
       applyFilters();
       document.getElementById('detalle').scrollIntoView({behavior: 'smooth'});
     });
+  });
+
+  // Click en celda Cadena (col 0) de tabla Detalle -> ir a pestaña Estadísticas por cadena
+  document.querySelectorAll('#detalle-table tbody tr').forEach(row => {
+    const cell = row.cells[0];
+    if (!cell) return;
+    cell.style.cursor = 'pointer';
+    cell.title = 'Ir a Estadísticas por cadena';
+    cell.addEventListener('click', () => {
+      const chain = cell.textContent.trim();
+      const chainsBtn = document.querySelector('.tabs1 button[data-view="chains"]');
+      if (chainsBtn) chainsBtn.click();
+      setTimeout(() => {
+        const subBtn = Array.from(document.querySelectorAll('#view-chains .tabs2 button'))
+          .find(b => b.textContent.trim().toLowerCase() === chain.toLowerCase());
+        if (subBtn) {
+          subBtn.click();
+          subBtn.scrollIntoView({behavior: 'smooth', block: 'center'});
+        }
+      }, 80);
+    });
+  });
+
+  // Sort en cualquier tabla con <th class="sortable"> fuera de #detalle-table
+  document.querySelectorAll('table').forEach(tbl => {
+    if (tbl.id === 'detalle-table') return;
+    if (!tbl.tHead || !tbl.tHead.rows.length) return;
+    const headers = tbl.tHead.rows[0].cells;
+    let lastSort = {col: -1, dir: 1};
+    for (let i = 0; i < headers.length; i++) {
+      const th = headers[i];
+      if (!th.classList.contains('sortable')) continue;
+      th.style.cursor = 'pointer';
+      th.addEventListener('click', () => {
+        const col = parseInt(th.dataset.col || i);
+        const type = th.dataset.type || 'text';
+        const dir = (lastSort.col === col) ? -lastSort.dir : 1;
+        for (const h of headers) h.classList.remove('asc','desc');
+        th.classList.add(dir > 0 ? 'asc' : 'desc');
+        lastSort = {col, dir};
+        const tbody = tbl.tBodies[0];
+        if (!tbody) return;
+        const rows = Array.from(tbody.rows);
+        rows.sort((a, b) => {
+          const ac = a.cells[col]; const bc = b.cells[col];
+          if (!ac || !bc) return 0;
+          let av = ac.textContent.trim();
+          let bv = bc.textContent.trim();
+          if (type === 'num') {
+            av = parseFloat(av.replace(/\./g,'').replace(',','.')) || 0;
+            bv = parseFloat(bv.replace(/\./g,'').replace(',','.')) || 0;
+            return (av - bv) * dir;
+          }
+          if (type === 'date') {
+            const m1 = /(\d{4})-(\d{2})-(\d{2})/.exec(av) || /(\d{2})\/(\d{2})\/(\d{4})/.exec(av);
+            const m2 = /(\d{4})-(\d{2})-(\d{2})/.exec(bv) || /(\d{2})\/(\d{2})\/(\d{4})/.exec(bv);
+            const k1 = m1 ? (m1[0].length===10 && m1[0].includes('-') ? m1[0] : m1[3]+m1[2]+m1[1]) : '';
+            const k2 = m2 ? (m2[0].length===10 && m2[0].includes('-') ? m2[0] : m2[3]+m2[2]+m2[1]) : '';
+            return k1.localeCompare(k2) * dir;
+          }
+          return av.localeCompare(bv, 'es') * dir;
+        });
+        for (const r of rows) tbody.appendChild(r);
+      });
+    }
   });
 
   // Estado multi-select por cadena: clic en btn abre popover

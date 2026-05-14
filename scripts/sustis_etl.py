@@ -378,6 +378,10 @@ COLOR_SUBSEC_HEADER = "#6c7d94"
 COLOR_COL_HEADER = "#2e54a3"
 
 
+TYPES_14 = ['text']*11 + ['date', 'num', 'text']
+TYPES_INV = ['text']*10 + ['date', 'num', 'text']
+TYPES_DISP = ['text']*6
+
 HEADERS_14 = ['Cliente', 'Localización', 'Num Serie consola susti',
               'Num Serie manípulo susti', 'Modelo',
               'LEAS Incidencia principal', 'Estado principal',
@@ -564,7 +568,7 @@ def render_resumen_html(data):
         out.append(f'<div style="{block_hdr_style}">CADENA — {chain.upper()}</div>')
         out.append('<div class="scroller" style="margin:0 0 4px;max-height:none">')
         out.append(f'<table style="{table_style}">')
-        out.append('<tr>' + ''.join(f'<th style="{th_style}">{h}</th>' for h in HEADERS_14) + '</tr>')
+        out.append('<tr>' + ''.join(f'<th class="sortable" data-col="{i}" data-type="{TYPES_14[i]}" style="{th_style}">{h}</th>' for i, h in enumerate(HEADERS_14)) + '</tr>')
         if chain_rows:
             for sr in chain_rows:
                 out.append(render_subtask_row_html(sr))
@@ -595,7 +599,7 @@ def render_resumen_html(data):
     out.append(f'<div style="{section_hdr_style}">BACKUPS PERMANENTES — resto de clientes</div>')
     out.append('<div class="scroller" style="margin:0 0 4px;max-height:none">')
     out.append(f'<table style="{table_style}">')
-    out.append('<tr>' + ''.join(f'<th style="{th_style}">{h}</th>' for h in HEADERS_14) + '</tr>')
+    out.append('<tr>' + ''.join(f'<th class="sortable" data-col="{i}" data-type="{TYPES_14[i]}" style="{th_style}">{h}</th>' for i, h in enumerate(HEADERS_14)) + '</tr>')
     by_cust = defaultdict(list)
     for r in backups_others:
         by_cust[r.get('customer') or '(sin cliente)'].append(r)
@@ -614,7 +618,7 @@ def render_resumen_html(data):
     out.append('<div class="scroller" style="margin:0 0 4px;max-height:none">')
     out.append(f'<table style="{table_style}">')
     disp_hdrs = ['Num Serie', 'Tipo', 'Console', 'Spot', 'Cliente', 'Activity']
-    out.append('<tr>' + ''.join(f'<th style="{th_style}">{h}</th>' for h in disp_hdrs) + '</tr>')
+    out.append('<tr>' + ''.join(f'<th class="sortable" data-col="{i}" data-type="{TYPES_DISP[i]}" style="{th_style}">{h}</th>' for i, h in enumerate(disp_hdrs)) + '</tr>')
     total_disp = 0
     ordered_main = (sorted(mhr_console, key=lambda x: x['serial'] or '')
                     + sorted([r for r in hps_main if r.get('spot') == 'Single'], key=lambda x: x['serial'] or '')
@@ -806,7 +810,7 @@ def render_inmovilizado_sat_html(data):
         out.append(f'<div style="{section_hdr_style}">{SECTION_TITLES[sec]} ({len(sec_rows)})</div>')
         out.append('<div class="scroller" style="margin:0 0 4px;max-height:none">')
         out.append(f'<table style="{table_style}">')
-        out.append('<tr>' + ''.join(f'<th style="{th_style}">{h}</th>' for h in INV_HEADERS) + '</tr>')
+        out.append('<tr>' + ''.join(f'<th class="sortable" data-col="{i}" data-type="{TYPES_INV[i]}" style="{th_style}">{h}</th>' for i, h in enumerate(INV_HEADERS)) + '</tr>')
 
         def sort_key(r):
             is_avail = (r['kind'] == 'solo_at' and r.get('activity') == 'SAT')
