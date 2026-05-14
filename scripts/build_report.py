@@ -620,7 +620,7 @@ def build_anual_averias_section(cache):
         if v <= 6000: return "mid"
         return "high"
 
-    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido", "Abierta"]
+    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido", "Abierta", "Canc. s/rep"]
     def year_row(y):
         if not y: return "Desconocido"
         try:
@@ -642,6 +642,7 @@ def build_anual_averias_section(cache):
             if len(tr) >= 3 and tr[2] in INSP_STATES:
                 passed = True
                 break
+        is_currently_open = is_open(t.get("current_status"))
         fv = (t.get("fventa") or "").strip()
         yr = None
         if fv and len(fv) >= 4 and fv[:4].isdigit():
@@ -663,7 +664,12 @@ def build_anual_averias_section(cache):
                     elif "pantalla" in vl: buckets.add("Pant")
                     elif "otros" in vl: buckets.add("Otro")
         ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
-        yrow = year_row(yr) if passed else "Abierta"
+        if passed:
+            yrow = year_row(yr)
+        elif is_currently_open:
+            yrow = "Abierta"
+        else:
+            yrow = "Canc. s/rep"
         records.append({"k": k, "y": yrow, "c": ch,
                         "i": importe_bucket(t.get("importe")),
                         "b": sorted(buckets)})
