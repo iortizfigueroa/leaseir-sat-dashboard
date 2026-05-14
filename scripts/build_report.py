@@ -570,6 +570,204 @@ def build_avances_section(cache):
     return header, "\n".join(body_parts), detail_json, extra
 
 
+def build_anual_averias_section(cache):
+    """Tabla cruzada Año venta x Tipo averia para tickets 2026 que pasaron por
+    Inspeccion de salida. Usa customfield_10815 (Cambios obs y mejoras),
+    agrupado en 10 buckets clinicos. Genera datos embebidos en JS para que el
+    filtro (cadena + importe) se aplique client-side sin recargar la pagina.
+    """
+    INSP_STATES = {"Inspeccion de salida", "Inspección de salida"}
+
+    BUCKETS = [
+        ("Umbi", "Umbilical",
+         ["Cambio de umbilical", "Reparación umbilical", "Reparacion umbilical"]),
+        ("Punt", "Puntera/Óptica",
+         ["Cambio de puntera", "Cambio de zafiro", "Cambio de lente trasera", "Cambio de prisma"]),
+        ("Buff", "Buffer", ["Cambio de buffer"]),
+        ("Diod", "Diodo", ["Diodo nuevo", "Diodo antirretorno"]),
+        ("Plac", "Placa/Electr.",
+         ["Cambio de placa de carga", "MOSFET de disparo 1º", "MOSFET de disparo 2º",
+          "MOSFET de carga", "Integrado LT1054", "Cambio de driver", "Pila BIOS",
+          "Unidad SSD", "RAM"]),
+        ("Gati", "Gatillo/Pistola",
+         ["Cambio switch de gatillo", "Cambio de carcasa de pistola"]),
+        ("Pant", "Pantalla/Control",
+         ["Cambio de táctil + controlador", "Cambio de tactil + controlador",
+          "Cambio de control", "Switch de pedal"]),
+        ("Refr", "Refrigeración",
+         ["Cambio de nevera", "Cambio de termostato", "Ventilador de 12V",
+          "Mejora de hidráulica", "Mejora de hidraulica"]),
+        ("Mant", "Mantenimiento",
+         ["Limpieza interior y exterior", "Llenado de depósito", "Llenado de deposito",
+          "Calibrado y medición de energías", "Calibrado y medicion de energias",
+          "Mejora de masas", "Actualizar software", "Casquillo nuevo", "Lanyard", "Buzzer"]),
+        ("Otro", "Otros", ["Otros"]),
+    ]
+    BUCKET_KEYS = [b[0] for b in BUCKETS]
+    BUCKET_LABELS = {b[0]: b[1] for b in BUCKETS}
+    val2bucket = {}
+    for short, lbl, vals in BUCKETS:
+        for v in vals:
+            val2bucket[v.lower()] = short
+
+    def importe_bucket(imp):
+        try:
+            v = float(imp) if imp not in ("", None) else 0
+        except (TypeError, ValueError):
+            v = 0
+        if v == 0: return "free"
+        if v < 1000: return "low"
+        if v <= 6000: return "mid"
+        return "high"
+
+    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido"]
+    def year_row(y):
+        if not y: return "Desconocido"
+        try:
+            yi = int(y)
+        except (TypeError, ValueError):
+            return "Desconocido"
+        if yi <= 1999: return "Desconocido"
+        if yi <= 2018: return "<=2018"
+        if yi >= 2025: return "2025+"
+        return str(yi)
+
+    records = []
+    for k, t in cache.get("tickets", {}).items():
+        created = t.get("created") or ""
+        if not created.startswith("2026"):
+            continue
+        passed = False
+        for tr in t.get("transitions", []):
+            if len(tr) >= 3 and tr[2] in INSP_STATES:
+                passed = True
+                break
+        if not passed:
+            continue
+        fv = (t.get("fventa") or "").strip()
+        yr = None
+        if fv and len(fv) >= 4 and fv[:4].isdigit():
+            yr = int(fv[:4])
+        buckets = set()
+        for v in (t.get("cambios") or []):
+            b = val2bucket.get(str(v).lower())
+            if b: buckets.add(b)
+        if not buckets:
+            for v in (t.get("motivo") or []):
+                vl = str(v).lower()
+                if "umbilical" in vl: buckets.add("Umbi")
+                elif "buffer" in vl: buckets.add("Buff")
+                elif "puntera" in vl or "zafiro" in vl: buckets.add("Punt")
+                elif "diodo" in vl: buckets.add("Diod")
+                elif "placa" in vl: buckets.add("Plac")
+                elif "gatillo" in vl: buckets.add("Gati")
+                elif "pantalla" in vl: buckets.add("Pant")
+                elif "otros" in vl: buckets.add("Otro")
+        ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
+        records.append({"k": k, "y": year_row(yr), "c": ch,
+                        "i": importe_bucket(t.get("importe")),
+                        "b": sorted(buckets)})
+
+    if not records:
+        return ('<div style="color:#94a3b8;padding:14px;font-style:italic">'
+                'Aun no hay reparaciones 2026 con datos suficientes.</div>')
+
+    chains_present = set(r["c"] for r in records)
+    cadenas = [c for c in CHAIN_ORDER if c in chains_present]
+    n_total = len(records)
+
+    data_json = json.dumps(records, ensure_ascii=False)
+    cad_options = ''.join(f'<option value="{html_escape(c)}">{html_escape(c)}</option>' for c in cadenas)
+    bucket_headers = ''.join(
+        f'<th style="background:var(--blue);color:white;font-weight:500;padding:6px 8px;text-align:right" title="{html_escape(BUCKET_LABELS[k])}">{k}</th>'
+        for k in BUCKET_KEYS)
+    year_rows_html = ''.join(
+        f'<tr data-year="{y}"><td style="padding:6px 10px;font-weight:500">{y}</td>'
+        f'<td class="num tickets-cell">0</td>'
+        + ''.join(f'<td class="num bucket-cell" data-bucket="{k}">0</td>' for k in BUCKET_KEYS)
+        + '</tr>'
+        for y in YEAR_ROWS)
+
+    html = (
+        '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0 10px;padding:9px 12px;background:#f1f5f9;border:1px solid var(--line);border-radius:7px;font-size:12px">'
+        '<label style="display:inline-flex;align-items:center;gap:6px"><span style="color:#475569">Cadena:</span>'
+        '<select id="av-filter-chain" style="padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:12px;background:white">'
+        '<option value="">Todas</option>'
+        f'{cad_options}'
+        '</select></label>'
+        '<label style="display:inline-flex;align-items:center;gap:6px"><span style="color:#475569">Importe:</span>'
+        '<select id="av-filter-importe" style="padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:12px;background:white">'
+        '<option value="">Todos</option>'
+        '<option value="free">Sin coste</option>'
+        '<option value="low">&lt; 1.000 €</option>'
+        '<option value="mid">1.000 - 6.000 €</option>'
+        '<option value="high">&gt; 6.000 €</option>'
+        '</select></label>'
+        '<span style="margin-left:auto;color:#475569">Tickets visibles: <b id="av-count" style="color:var(--blue)">'
+        f'{n_total}</b> / {n_total}</span>'
+        '</div>'
+        '<div style="border:1px solid var(--line);border-radius:8px;overflow:hidden;background:white">'
+        '<table id="av-table" style="width:100%;border-collapse:collapse;font-size:12.5px">'
+        '<thead><tr>'
+        '<th style="background:var(--blue);color:white;font-weight:500;padding:6px 10px;text-align:left">Año venta</th>'
+        '<th style="background:var(--blue);color:white;font-weight:500;padding:6px 8px;text-align:right">Tickets</th>'
+        f'{bucket_headers}'
+        '</tr></thead>'
+        f'<tbody>{year_rows_html}</tbody>'
+        '<tfoot><tr class="total"><td style="padding:6px 10px;font-weight:600">TOTAL</td>'
+        '<td class="num tickets-cell" style="font-weight:600">0</td>'
+        + ''.join(f'<td class="num bucket-cell" data-bucket="{k}" style="font-weight:600">0</td>' for k in BUCKET_KEYS)
+        + '</tr></tfoot>'
+        '</table></div>'
+        '<div class="legend" style="margin-top:6px">'
+        + ' &middot; '.join(f'<b>{k}</b>={html_escape(BUCKET_LABELS[k])}' for k in BUCKET_KEYS) +
+        '</div>'
+        '<script id="av-data" type="application/json">' + data_json + '</script>'
+        '<script>'
+        '(function(){'
+        'var DATA = JSON.parse(document.getElementById("av-data").textContent);'
+        'var YEARS = ' + json.dumps(YEAR_ROWS) + ';'
+        'var BUCKETS = ' + json.dumps(BUCKET_KEYS) + ';'
+        'var tbl = document.getElementById("av-table");'
+        'var selC = document.getElementById("av-filter-chain");'
+        'var selI = document.getElementById("av-filter-importe");'
+        'var cnt = document.getElementById("av-count");'
+        'function recompute(){'
+        '  var ch = selC.value, im = selI.value;'
+        '  var grid = {}; YEARS.forEach(function(y){grid[y]={"_t":0}; BUCKETS.forEach(function(b){grid[y][b]=0;});});'
+        '  var totals = {"_t":0}; BUCKETS.forEach(function(b){totals[b]=0;});'
+        '  var visible = 0;'
+        '  DATA.forEach(function(r){'
+        '    if(ch && r.c!==ch) return;'
+        '    if(im && r.i!==im) return;'
+        '    visible++; grid[r.y]._t++; totals._t++;'
+        '    r.b.forEach(function(b){ if(grid[r.y][b]!==undefined){grid[r.y][b]++; totals[b]++;} });'
+        '  });'
+        '  cnt.textContent = visible;'
+        '  tbl.querySelectorAll("tbody tr").forEach(function(tr){'
+        '    var y = tr.getAttribute("data-year"); var t = grid[y]._t;'
+        '    var tc = tr.querySelector(".tickets-cell");'
+        '    tc.textContent = t || "·"; tc.style.color = t ? "" : "#c0d0e0";'
+        '    tr.querySelectorAll(".bucket-cell").forEach(function(td){'
+        '      var v = grid[y][td.getAttribute("data-bucket")];'
+        '      td.textContent = v || "·"; td.style.color = v ? "" : "#c0d0e0";'
+        '    });'
+        '  });'
+        '  var tf = tbl.querySelector("tfoot tr");'
+        '  tf.querySelector(".tickets-cell").textContent = totals._t;'
+        '  tf.querySelectorAll(".bucket-cell").forEach(function(td){'
+        '    td.textContent = totals[td.getAttribute("data-bucket")] || "·";'
+        '  });'
+        '}'
+        'selC.addEventListener("change", recompute);'
+        'selI.addEventListener("change", recompute);'
+        'recompute();'
+        '})();'
+        '</script>'
+    )
+    return html
+
+
 FONT_X = "Arial"
 HDR_BLUE = "0B3D91"
 ZEBRA = "F5F7FB"
@@ -1236,6 +1434,12 @@ def build_html(cache, out_path, template_path):
     else:
         evolucion_kpis = '<tr><th colspan="9" style="color:#94a3b8;font-style:italic">Aún no hay historial. Se irá llenando a partir de hoy.</th></tr>'
 
+    # Año venta x tipo averia (tabla con filtros cadena+importe)
+    try:
+        anual_averias_html = build_anual_averias_section(cache)
+    except Exception as _e:
+        anual_averias_html = f'<div style="color:#c0392b;padding:14px">Error tabla averias: {_e}</div>'
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -1276,6 +1480,7 @@ def build_html(cache, out_path, template_path):
         "__PRES_HECHOS__": str(presupuestos_hechos_count),
         "__EQ_REPARADOS__": str(equipos_reparados_count),
         "__EVOLUCION_KPIS__": evolucion_kpis,
+        "__ANUAL_AVERIAS__": anual_averias_html,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
     }

@@ -375,6 +375,7 @@
     <a href="#evol-estado" class="sb-item"><i class="ti ti-trending-up"></i>Evol. estado</a>
     <a href="#evol-cadena" class="sb-item"><i class="ti ti-chart-line"></i>Evol. cadena</a>
     <a href="#evol-kpis" class="sb-item"><i class="ti ti-history"></i>Evol. KPIs</a>
+    <a href="#averias-2026" class="sb-item"><i class="ti ti-tools"></i>Averías por año</a>
   </nav>
   <div class="sb-spacer"></div>
   <button id="btn-refresh" type="button" class="sb-btn-cta" title="Refresca el dashboard">
@@ -528,6 +529,10 @@ __CHAIN_TOTAL__
 __EVOLUCION_KPIS__
 </table>
 </div>
+
+<h2 id="averias-2026">Tipos de avería por año de venta (2026)</h2>
+<div class="legend">Reparaciones 2026 (tickets que pasaron por Inspección de salida) cruzadas: filas = año de venta del equipo, columnas = tipo de avería. Un ticket puede tocar varios cubos. Filtros por cadena e importe se aplican al instante.</div>
+__ANUAL_AVERIAS__
 </div><!-- /view-stats -->
 
 <div id="view-chains" class="view">
@@ -568,7 +573,7 @@ __SUSTIS_HTML__
   // Atajos sidebar: cambiar pestaña + scroll
   const SHORTCUT_VIEW = {
     'kpis':'total','abiertas':'total','tecnicos':'total','detalle':'total',
-    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats'
+    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats','averias-2026':'stats'
   };
   document.querySelectorAll('.sidebar a.sb-item[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
