@@ -318,11 +318,13 @@ __DEMO_BANNER__
 <div class="tabs1">
   <button type="button" data-view="total" class="active"><i class="ti ti-list-details"></i>Incidencias abiertas</button>
   <button type="button" data-view="chains"><i class="ti ti-building"></i>Estadísticas por cadena</button>
+  <button type="button" data-view="stats"><i class="ti ti-chart-line"></i>Estadísticas de gestión</button>
   <button type="button" data-view="sustis"><i class="ti ti-arrows-exchange"></i>Estado sustituciones</button>
 </div>
 <select class="tabs1-select" id="tabs1-select" onchange="(function(v){document.querySelectorAll('.tabs1 button').forEach(b=>{if(b.dataset.view===v){b.click();}})}).call(null, this.value)">
   <option value="total">Incidencias abiertas</option>
   <option value="chains">Estadísticas por cadena</option>
+  <option value="stats">Estadísticas de gestión</option>
   <option value="sustis">Estado sustituciones</option>
 </select>
 
@@ -339,14 +341,16 @@ __DEMO_BANNER__
 
 <div id="kpis" class="kpis">
   <div class="kpi"><div class="k"><i class="ti ti-folder-open"></i>Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
-  <div class="kpi clickable" id="kpi-estancadas" title="Clic para filtrar Detalle por >15d"><div class="k"><i class="ti ti-clock-pause"></i>Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-plus"></i>Nuevas hoy</div><div class="v" style="color:#3b82f6">__NUEVAS_HOY__</div><div class="d" style="color:var(--grey)">Tickets creados hoy y abiertos</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-file-text"></i>Presupuestos hechos hoy</div><div class="v" style="color:#0891b2">__PRES_HECHOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por preparado hoy</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-wrench"></i>Equipos reparados hoy</div><div class="v" style="color:#059669">__EQ_REPARADOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por inspección hoy</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
+  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__</div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
   <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
-  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__</div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
   <div class="kpi clickable" id="kpi-sustis-solicitadas" title="Clic para ir a Estado sustituciones"><div class="k"><i class="ti ti-arrows-exchange"></i>Sustis solicitadas</div><div class="v">__SUSTIS_SOLICITADAS__</div><div class="d" style="color:var(--grey)">Pendientes de entregar</div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-plus"></i>Nuevas hoy</div><div class="v" style="color:#3b82f6">__NUEVAS_HOY__</div><div class="d" style="color:var(--grey)">Tickets creados hoy</div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que salen de Inspección de salida</div></div>
+  <div class="kpi clickable" id="kpi-estancadas" title="Clic para filtrar Detalle por >15d"><div class="k"><i class="ti ti-clock-pause"></i>Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
 </div>
 
 <h2 id="abiertas">Abiertas hoy por estado y cadena</h2>
@@ -421,6 +425,9 @@ __DETALLE_ROWS__
 </table>
 </div>
 
+</div><!-- /view-total -->
+
+<div id="view-stats" class="view">
 <h2 id="evol-estado">Evolución por estado (23:59h en cada corte)</h2>
 <div class="scroller">
 <table>
@@ -447,8 +454,7 @@ __CHAIN_TOTAL__
 __EVOLUCION_KPIS__
 </table>
 </div>
-
-</div><!-- /view-total -->
+</div><!-- /view-stats -->
 
 <div id="view-chains" class="view">
 __CHAINS_HTML__

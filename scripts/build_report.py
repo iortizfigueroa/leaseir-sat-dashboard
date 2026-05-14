@@ -987,8 +987,30 @@ def build_html(cache, out_path, template_path):
 
     state_rows = "\n".join(state_row(s) for s in states)
     chain_rows = "\n".join(chain_row(ch) for ch in CHAIN_ORDER)
+    nuevas_total = {}
+    for i, (lbl, d) in enumerate(cutoffs):
+        if i < monthly_count:
+            start_dt = datetime(d.year, d.month, 1, 0, 0, 0, tzinfo=timezone.utc)
+        else:
+            start_dt = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc)
+        end_dt = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc)
+        cnt = 0
+        for key, t in cache.get("tickets", {}).items():
+            created = parse_iso(t.get("created"))
+            if not created:
+                continue
+            if start_dt <= created <= end_dt:
+                cnt += 1
+        nuevas_total[lbl] = cnt
+
+    def _state_total_cell(l):
+        n = len(opens[l])
+        nv = nuevas_total.get(l, 0)
+        if nv > 0:
+            return f'<td class="num">{n} <span style="color:#16a34a;font-size:10px;font-weight:500" title="Nuevas creadas">(+{nv})</span></td>'
+        return f'<td class="num">{n}</td>'
     state_total = ('<tr class="total"><td class="lbl-funnel"></td><td class="lbl-name">Total</td>'
-                   + "".join(f'<td class="num">{len(opens[l])}</td>' for l, _ in cutoffs) + '</tr>')
+                   + "".join(_state_total_cell(l) for l, _ in cutoffs) + '</tr>')
     chain_total = ('<tr class="total"><td class="lbl-name">Total</td>'
                    + "".join(f'<td class="num">{len(opens[l])}</td>' for l, _ in cutoffs) + '</tr>')
 
@@ -1077,31 +1099,30 @@ def build_html(cache, out_path, template_path):
         pass
 
     # Nuevas creadas por corte (mensuales = todo el mes; diarios = ese dia)
-    # KPI Nuevas hoy: tickets creados hoy
+    # KPI Nuevas hoy: tickets creados hoy Y abiertos (cuadra con bucket azul de la tabla Abiertas hoy)
     nuevas_hoy_count = sum(
         1 for k, t in cache.get("tickets", {}).items()
-        if is_created_today(t)
+        if is_created_today(t) and is_open(t.get("current_status"))
     )
 
-    nuevas_total = {}
-    for i, (lbl, d) in enumerate(cutoffs):
-        if i < monthly_count:
-            start_dt = datetime(d.year, d.month, 1, 0, 0, 0, tzinfo=timezone.utc)
-        else:
-            start_dt = datetime(d.year, d.month, d.day, 0, 0, 0, tzinfo=timezone.utc)
-        end_dt = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc)
-        cnt = 0
-        for key, t in cache.get("tickets", {}).items():
-            created = parse_iso(t.get("created"))
-            if not created:
-                continue
-            if start_dt <= created <= end_dt:
-                cnt += 1
-        nuevas_total[lbl] = cnt
+    # KPIs: Presupuestos hechos hoy y Equipos reparados hoy (= tickets únicos con to_status hoy)
+    _cutoff_hoy_kpi = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
+    pres_hechos_hoy = set()
+    eq_reparados_hoy = set()
+    for _k, _t in cache.get("tickets", {}).items():
+        for _tr in _t.get("transitions", []):
+            if len(_tr) < 3: continue
+            _ts, _fs, _to = _tr[0], _tr[1], _tr[2]
+            _dt = parse_iso(_ts)
+            if not _dt or _dt < _cutoff_hoy_kpi: continue
+            if _to == "Presupuesto preparado pendiente de enviar":
+                pres_hechos_hoy.add(_k)
+            elif _to == "Inspección de salida":
+                eq_reparados_hoy.add(_k)
+    presupuestos_hechos_count = len(pres_hechos_hoy)
+    equipos_reparados_count = len(eq_reparados_hoy)
 
-    state_nuevas = ('<tr class="evol-nuevas"><td class="lbl-funnel"></td>'
-                    '<td class="lbl-name">Nuevas creadas</td>'
-                    + "".join(f'<td class="num">{nuevas_total.get(l, 0) or chr(183)}</td>' for l, _ in cutoffs) + '</tr>')
+    state_nuevas = ""  # Las nuevas se muestran en la fila Total entre paréntesis en verde
 
     chain_nuevas = ""  # ya no se usa (nuevas se muestran en cada celda chain_row)
 
@@ -1159,6 +1180,8 @@ def build_html(cache, out_path, template_path):
                 "ts": today_label,
                 "abiertas_hoy": today_total,
                 "nuevas_hoy": nuevas_hoy_count,
+                "presupuestos_hechos": presupuestos_hechos_count,
+                "equipos_reparados": equipos_reparados_count,
                 "salidas_taller_hoy": salidas_taller,
                 "pendientes_taller": pendientes_taller,
                 "en_taller": en_taller,
@@ -1175,6 +1198,8 @@ def build_html(cache, out_path, template_path):
     EVOL_KPI_COLS = [
         ("abiertas_hoy", "Abiertas", "#0b3d91"),
         ("nuevas_hoy", "Nuevas hoy", "#3b82f6"),
+        ("presupuestos_hechos", "Presupuestos hechos", "#0891b2"),
+        ("equipos_reparados", "Equipos reparados", "#059669"),
         ("salidas_taller_hoy", "Salidas taller", "#16a34a"),
         ("pendientes_taller", "Pdtes. taller", "#a23b72"),
         ("en_taller", "En taller", "#1f6feb"),
@@ -1242,6 +1267,8 @@ def build_html(cache, out_path, template_path):
         "__SUSTIS_SOLICITADAS__": str(sustis_solicitadas),
         "__SALIDAS_TALLER__": str(salidas_taller),
         "__NUEVAS_HOY__": str(nuevas_hoy_count),
+        "__PRES_HECHOS__": str(presupuestos_hechos_count),
+        "__EQ_REPARADOS__": str(equipos_reparados_count),
         "__EVOLUCION_KPIS__": evolucion_kpis,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
