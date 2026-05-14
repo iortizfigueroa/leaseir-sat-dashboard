@@ -224,6 +224,144 @@ def compute_status_changes_today(cache):
     return changes
 
 
+def compute_changes_today_por_asignado(cache):
+    """Entradas/salidas hoy agrupadas por (estado, asignado actual del ticket)."""
+    today = datetime.now(timezone.utc).date()
+    cutoff_ayer = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc) - timedelta(seconds=1)
+    changes = {}
+    for key, t in cache.get("tickets", {}).items():
+        asignado = (t.get("asignado") or "").strip() or "(Sin asignar)"
+        status_ayer = status_at(t, cutoff_ayer)
+        status_hoy = t.get("current_status")
+        if status_ayer == status_hoy:
+            continue
+        if status_ayer and is_open(status_ayer):
+            k_out = (status_ayer, asignado)
+            changes.setdefault(k_out, {"in": 0, "out": 0})["out"] += 1
+        if status_hoy and is_open(status_hoy):
+            k_in = (status_hoy, asignado)
+            changes.setdefault(k_in, {"in": 0, "out": 0})["in"] += 1
+    return changes
+
+
+def build_tecnicos_section(cache):
+    """Tabla estados x asignados con totales y flechas in/out."""
+    grid = {}
+    asignados_set = set()
+    states_set = set()
+    for key, t in cache.get("tickets", {}).items():
+        if not is_open(t.get("current_status")):
+            continue
+        asignado = (t.get("asignado") or "").strip() or "(Sin asignar)"
+        st = t.get("current_status") or ""
+        asignados_set.add(asignado)
+        states_set.add(st)
+        grid[(st, asignado)] = grid.get((st, asignado), 0) + 1
+
+    changes = compute_changes_today_por_asignado(cache)
+    asignados_sorted = sorted(asignados_set, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
+    states_order = [s for s in FUNNEL_ORDER if s in states_set] + sorted(s for s in states_set if s not in FUNNEL_ORDER)
+    taller_set = set(TALLER_STATUSES_ORDER)
+
+    ARROW_IN = "#c0392b"
+    ARROW_OUT = "#1f8a4c"
+
+    def flow_html(f_in, f_out):
+        parts = []
+        if f_in > 0:
+            parts.append(f'<span style="color:{ARROW_IN};font-size:10px;font-weight:500" title="entran hoy">&#9650;{f_in}</span>')
+        if f_out > 0:
+            parts.append(f'<span style="color:{ARROW_OUT};font-size:10px;font-weight:500" title="salen hoy">&#9660;{f_out}</span>')
+        return (' ' + ' '.join(parts)) if parts else ''
+
+    # Totales por persona
+    col_tot = {a: 0 for a in asignados_sorted}
+    col_flow = {a: {"in": 0, "out": 0} for a in asignados_sorted}
+    for (st, a), n in grid.items():
+        if a in col_tot:
+            col_tot[a] += n
+    for (st, a), f in changes.items():
+        if a in col_flow:
+            col_flow[a]["in"] += f["in"]
+            col_flow[a]["out"] += f["out"]
+    grand_total = sum(col_tot.values())
+    grand_flow = {"in": sum(f["in"] for f in col_flow.values()),
+                  "out": sum(f["out"] for f in col_flow.values())}
+
+    # Header
+    parts = ['<tr><th class="sticky-l1 sticky-l2" style="text-align:left;left:0;min-width:240px">Estado</th>']
+    for a in asignados_sorted:
+        tot = col_tot.get(a, 0)
+        parts.append(
+            f'<th><div style="font-size:11px;line-height:1.1">{html_escape(a)}</div>'
+            f'<div style="font-size:16px;font-weight:500;margin-top:3px">{tot}</div></th>'
+        )
+    parts.append(
+        f'<th class="hdr-dia"><div style="font-size:11px;line-height:1.1">Total</div>'
+        f'<div style="font-size:16px;font-weight:500;margin-top:3px">{grand_total}</div></th>'
+    )
+    parts.append('</tr>')
+    header = "".join(parts)
+
+    # Body
+    body_parts = []
+    for st in states_order:
+        is_taller = st in taller_set
+        idx = states_order.index(st)
+        prev_taller = (idx > 0 and states_order[idx - 1] in taller_set)
+        next_taller = (idx < len(states_order) - 1 and states_order[idx + 1] in taller_set)
+        cls_list = []
+        if is_taller:
+            cls_list.append("row-taller")
+            if not prev_taller:
+                cls_list.append("row-taller-first")
+            if not next_taller:
+                cls_list.append("row-taller-last")
+        cls_attr = f' class="{" ".join(cls_list)}"' if cls_list else ''
+        row_tot = 0
+        row_flow = {"in": 0, "out": 0}
+        cells = [f'<tr{cls_attr}><td class="lbl-name" style="left:0;min-width:240px">{html_escape(st)}</td>']
+        for a in asignados_sorted:
+            n = grid.get((st, a), 0)
+            f = changes.get((st, a), {"in": 0, "out": 0})
+            row_tot += n
+            row_flow["in"] += f["in"]
+            row_flow["out"] += f["out"]
+            if n > 0 or f["in"] > 0 or f["out"] > 0:
+                content = f'<span style="font-weight:500">{n if n else "·"}</span>{flow_html(f["in"], f["out"])}'
+                attrs = f' data-estado="{html_escape(st)}" data-asignado="{html_escape(a)}"'
+                cells.append(f'<td class="num tec-cell"{attrs}>{content}</td>')
+            else:
+                cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+        # Total fila
+        if row_tot > 0 or row_flow["in"] > 0 or row_flow["out"] > 0:
+            content = f'<span style="font-weight:500">{row_tot}</span>{flow_html(row_flow["in"], row_flow["out"])}'
+            attrs = f' data-estado="{html_escape(st)}" data-asignado=""'
+            cells.append(f'<td class="num tec-cell"{attrs}>{content}</td>')
+        else:
+            cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+        cells.append('</tr>')
+        body_parts.append("".join(cells))
+
+    # Fila Total
+    tot_cells = ['<tr class="total"><td class="lbl-name" style="left:0;min-width:240px">Total</td>']
+    for a in asignados_sorted:
+        v = col_tot.get(a, 0)
+        f = col_flow.get(a, {"in": 0, "out": 0})
+        if v > 0 or f["in"] > 0 or f["out"] > 0:
+            content = f'<span style="font-weight:500">{v}</span>{flow_html(f["in"], f["out"])}'
+            attrs = f' data-estado="" data-asignado="{html_escape(a)}"'
+            tot_cells.append(f'<td class="num tec-cell"{attrs}>{content}</td>')
+        else:
+            tot_cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
+    content = f'<span style="font-weight:500">{grand_total}</span>{flow_html(grand_flow["in"], grand_flow["out"])}'
+    tot_cells.append(f'<td class="num tec-cell" data-estado="" data-asignado="">{content}</td>')
+    tot_cells.append('</tr>')
+    body_parts.append("".join(tot_cells))
+
+    return header, "\n".join(body_parts)
+
+
 FONT_X = "Arial"
 HDR_BLUE = "0B3D91"
 ZEBRA = "F5F7FB"
@@ -671,6 +809,7 @@ def build_html(cache, out_path, template_path):
             if is_demo else '')
 
     ah_header, ah_rows = build_abiertas_hoy_section(cache)
+    tec_header, tec_rows = build_tecnicos_section(cache)
     detalle_rows = build_detalle_section(cache)
 
     # Fase 2: pestaña "Por cadena"
@@ -717,6 +856,8 @@ def build_html(cache, out_path, template_path):
         "__EN_TALLER_FLOW__": en_taller_flow,
         "__AH_HEADER__": ah_header,
         "__AH_ROWS__": ah_rows,
+        "__TEC_HEADER__": tec_header,
+        "__TEC_ROWS__": tec_rows,
         "__DETALLE_ROWS__": detalle_rows,
         "__STATE_HEADER__": state_header,
         "__STATE_ROWS__": state_rows,

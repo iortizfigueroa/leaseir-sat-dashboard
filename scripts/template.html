@@ -53,6 +53,8 @@
   th.sortable.desc::after { content: " ▼"; opacity: 1; }
   td.ah-cell { cursor: pointer; transition: background 0.1s; }
   td.ah-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
+  td.tec-cell { cursor: pointer; transition: background 0.1s; text-align: center; }
+  td.tec-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
   .multi-wrap { position: relative; display: inline-block; }
   .multi-btn { font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 4px; background: white; cursor: pointer; color: inherit; }
   .multi-btn:hover { background: var(--bg); }
@@ -137,6 +139,7 @@ __DEMO_BANNER__
 <div class="nav">
   <a href="#kpis">KPIs</a>
   <a href="#abiertas">Abiertas hoy</a>
+  <a href="#tecnicos">Técnicos taller</a>
   <a href="#detalle">Detalle</a>
   <a href="#evol-estado">Evol. por estado</a>
   <a href="#evol-cadena">Evol. por cadena</a>
@@ -155,6 +158,15 @@ __DEMO_BANNER__
 <table>
 __AH_HEADER__
 __AH_ROWS__
+</table>
+</div>
+
+<h2 id="tecnicos">Detalle de técnicos taller</h2>
+<div class="legend">Clic en una celda con número filtra la tabla Detalle por ese estado + asignado. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado en azul.</div>
+<div class="scroller">
+<table>
+__TEC_HEADER__
+__TEC_ROWS__
 </table>
 </div>
 
@@ -582,6 +594,42 @@ __SUSTIS_HTML__
       filterBucket.value = '';
       filterChain.value = cadena;
       // Reset status checkboxes, then check just this one if specified
+      selectedStatuses.clear();
+      statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
+      if (estado) {
+        const target = statusList.querySelector(`input[data-status="${estado}"]`);
+        if (target) {
+          target.checked = true;
+          selectedStatuses.add(estado);
+        }
+      }
+      statusAll.checked = (selectedStatuses.size === 0);
+      updateStatusBtn();
+      applyFilters();
+      document.getElementById('detalle').scrollIntoView({behavior: 'smooth'});
+    });
+  });
+
+  // Click handler para celdas de "Detalle de técnicos taller" -> filtra por estado + asignado
+  document.querySelectorAll('td.tec-cell').forEach(cell => {
+    cell.addEventListener('click', () => {
+      const estado = cell.dataset.estado || '';
+      const asignado = cell.dataset.asignado || '';
+      search.value = '';
+      filterChain.value = '';
+      filterGestion.value = '';
+      filterBloq.value = '';
+      filterSusti.value = '';
+      filterBucket.value = '';
+      // Filtro de asignado
+      if (asignado === '(Sin asignar)') {
+        filterAsignado.value = '__none__';
+      } else if (asignado) {
+        filterAsignado.value = asignado;
+      } else {
+        filterAsignado.value = '';
+      }
+      // Multi-select Estado
       selectedStatuses.clear();
       statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
       if (estado) {
