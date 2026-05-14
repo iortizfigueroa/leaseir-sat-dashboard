@@ -166,10 +166,33 @@ def parque_for_chain(chain, ventas, month_idx, year):
     return base + extra
 
 
+def year_from_fventa(t):
+    """Extrae el año de la fventa de Jira (campo Fecha de venta).
+    Devuelve None si está vacía o malformada.
+    """
+    fventa = (t.get("fventa") or "").strip()
+    if not fventa:
+        return None
+    m = re.match(r'^(\d{4})', fventa)
+    if not m:
+        return None
+    try:
+        y = int(m.group(1))
+        if 2000 <= y <= 2030:
+            return y
+    except ValueError:
+        pass
+    return None
+
+
 def enrich(t, serial_year, max_known, year):
     created = parse_iso(t.get("created"))
     month = created.month if created and created.year == year else None
-    y = lookup_year(serial_year, t, max_known)
+    # Prioridad 1: año que el técnico puso en Jira (fventa). Si está vacío
+    # o malformado, fallback al lookup por serial.
+    y = year_from_fventa(t)
+    if y is None:
+        y = lookup_year(serial_year, t, max_known)
     yb = bucket_year(y)
     return {
         "month": month,

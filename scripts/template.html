@@ -304,6 +304,16 @@
   .sidebar .sb-item:hover { background: #1e293b; color: #e2e8f0; }
   .sidebar .sb-item.active { background: #1e293b; color: white; font-weight: 500; box-shadow: inset 2px 0 0 #3b82f6; }
   .sidebar .sb-item .ti { font-size: 15px; }
+  /* Submenu lateral en hover (Por cadena) */
+  .sb-dropdown-wrap { position: relative; }
+  .sb-submenu { display: none; position: absolute; left: calc(100% + 4px); top: -4px; background: #0f172a; border: 1px solid #1e293b; border-radius: 6px; padding: 6px 0; min-width: 170px; z-index: 200; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+  .sb-dropdown-wrap:hover .sb-submenu,
+  .sb-submenu:hover { display: block; }
+  .sb-submenu .sb-subitem { display: flex; align-items: center; gap: 8px; padding: 7px 14px; color: #cbd5e1; text-decoration: none; font-size: 12px; cursor: pointer; border-radius: 0; }
+  .sb-submenu .sb-subitem:hover { background: #1e293b; color: white; }
+  .sb-submenu .sb-subitem.is-resumen { color: #93c5fd; font-weight: 500; border-bottom: 1px solid #1e293b; margin-bottom: 4px; padding-bottom: 8px; }
+  .sb-submenu::before { content: ""; position: absolute; left: -8px; top: 0; width: 12px; height: 100%; }
+  @media (max-width: 768px) { .sb-submenu { display: none !important; } }
   .sb-spacer { flex: 1; min-height: 12px; }
   .sb-btn-cta { margin: 4px 10px 8px; padding: 9px 12px; background: #1e40af; color: white; border: none; border-radius: 6px; font-weight: 500; font-size: 12.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; font-family: inherit; }
   .sb-btn-cta:hover { background: #2563eb; }
@@ -348,7 +358,10 @@
   <nav class="sb-nav tabs1">
     <button type="button" data-view="total" class="active sb-item"><i class="ti ti-list-details"></i>Incidencias abiertas</button>
     <button type="button" data-view="stats" class="sb-item"><i class="ti ti-chart-line"></i>Estadísticas gestión</button>
-    <button type="button" data-view="chains" class="sb-item"><i class="ti ti-building"></i>Por cadena</button>
+    <div class="sb-dropdown-wrap">
+      <button type="button" data-view="chains" class="sb-item"><i class="ti ti-building"></i>Por cadena<span style="margin-left:auto;font-size:10px;opacity:0.6">▸</span></button>
+      <div class="sb-submenu" id="sb-chains-submenu"></div>
+    </div>
     <button type="button" data-view="sustis" class="sb-item"><i class="ti ti-arrows-exchange"></i>Sustituciones</button>
   </nav>
   <div class="sb-section">Atajos Incidencias</div>
@@ -407,7 +420,7 @@ __DEMO_BANNER__
   <div class="kpi"><div class="k"><i class="ti ti-file-text"></i>Presupuestos hechos hoy</div><div class="v" style="color:#0891b2">__PRES_HECHOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por preparado hoy</div></div>
   <div class="kpi"><div class="k"><i class="ti ti-wrench"></i>Equipos reparados hoy</div><div class="v" style="color:#059669">__EQ_REPARADOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por inspección hoy</div></div>
   <div class="kpi"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
-  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__</div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
+  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:14px;color:#c0392b;font-weight:500;margin-left:8px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
   <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
@@ -583,6 +596,36 @@ __SUSTIS_HTML__
     try { localStorage.setItem('sat-chain', name); } catch(e) {}
   }
   tabs2.forEach(b => b.addEventListener('click', () => setChain(b.dataset.chain)));
+
+  // Submenu de "Por cadena" en sidebar: poblar dinámicamente con las cadenas
+  // detectadas en las tabs2 del view-chains. Hover muestra el submenu; click en
+  // una entrada cambia a la vista chains y selecciona la sub-pestaña.
+  (function populateChainsSubmenu(){
+    const submenu = document.getElementById('sb-chains-submenu');
+    if (!submenu) return;
+    const chainBtns = document.querySelectorAll('#view-chains .tabs2 button[data-chain]');
+    if (!chainBtns.length) return;
+    chainBtns.forEach(btn => {
+      const chain = btn.dataset.chain;
+      const label = btn.textContent.trim();
+      const link = document.createElement('a');
+      link.className = 'sb-subitem' + (chain === 'resumen' ? ' is-resumen' : '');
+      link.href = '#';
+      link.textContent = label;
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setView('chains');
+        setTimeout(() => {
+          setChain(chain);
+          const pane = document.querySelector('.chain-pane[data-chain="' + chain + '"]');
+          if (pane) pane.scrollIntoView({behavior:'smooth', block:'start'});
+        }, 60);
+      });
+      submenu.appendChild(link);
+    });
+  })();
+
   // Sub-pestañas dentro de view-sustis (Vista cadenas / Vista inmovilizado)
   document.querySelectorAll('.sustis-tabs button').forEach(btn => {
     btn.addEventListener('click', () => {

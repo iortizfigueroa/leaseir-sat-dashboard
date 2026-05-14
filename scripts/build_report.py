@@ -1056,10 +1056,15 @@ def build_html(cache, out_path, template_path):
 
     # KPI Pendientes a taller: estados antes del taller (no asignados aún a técnico)
     PRE_TALLER_STATUSES = {"Abierto", "Recepcionado SAT", "Pendiente recogida", "Gestionado transporte"}
-    pendientes_taller = sum(
-        1 for k, t in cache.get("tickets", {}).items()
-        if t.get("current_status") in PRE_TALLER_STATUSES
-    )
+    BLOQ_TRUE = {"sí", "si", "yes", "true", "1"}
+    pendientes_taller = 0
+    pendientes_taller_bloq = 0
+    for k, t in cache.get("tickets", {}).items():
+        if t.get("current_status") not in PRE_TALLER_STATUSES:
+            continue
+        pendientes_taller += 1
+        if (t.get("bloq") or "").strip().lower() in BLOQ_TRUE:
+            pendientes_taller_bloq += 1
 
     # KPI Gestión externa
     EXTERNA_STATUSES = {"Enviado a técnico externo", "Esperando respuesta cliente a presupuesto", "Pendiente definir servicio externo"}
@@ -1263,6 +1268,7 @@ def build_html(cache, out_path, template_path):
         "__CHAIN_TOTAL__": chain_total,
         "__CHAIN_NUEVAS__": chain_nuevas,
         "__PENDIENTES_TALLER__": str(pendientes_taller),
+        "__PENDIENTES_TALLER_BLOQ__": str(pendientes_taller_bloq),
         "__GESTION_EXTERNA__": str(gestion_externa),
         "__SUSTIS_SOLICITADAS__": str(sustis_solicitadas),
         "__SALIDAS_TALLER__": str(salidas_taller),
@@ -1282,8 +1288,6 @@ def build_html(cache, out_path, template_path):
 
 
 
-
-
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", required=True)
@@ -1295,6 +1299,17 @@ def main():
     cache = json.loads(Path(args.cache).read_text(encoding="utf-8"))
     if args.output_xlsx:
         build_excel(cache, Path(args.output_xlsx))
+        print(f"Wrote {args.output_xlsx}")
+    if args.output_html:
+        build_html(cache, Path(args.output_html), Path(args.template))
+        print(f"Wrote {args.output_html}")
+    return 0
+
+
+if __name__ == "__main__":
+    import sys
+    sys.exit(main())
+el(cache, Path(args.output_xlsx))
         print(f"Wrote {args.output_xlsx}")
     if args.output_html:
         build_html(cache, Path(args.output_html), Path(args.template))
