@@ -439,22 +439,21 @@ def build_tecnicos_section(cache, avances_extra=None):
 
 
 def build_avances_section(cache):
-    """Matriz Estado x Tecnico con tickets UNICOS avanzados HACIA DELANTE hoy en fases taller.
-    
-    Cuenta solo transiciones forward (from_state antes que to_state en FUNNEL_ORDER).
-    Dedupe por ticket: si un ticket rebota varias veces, cuenta 1.
+    """Métrica de productividad real:
+    - "Presupuesto hecho" = transiciones hoy con to_status = "Presupuesto preparado pendiente de enviar"
+    - "Equipo reparado" = transiciones hoy con to_status = "Inspección de salida"
+    Dedupe por (ticket, persona): si un ticket toca el to_status 2 veces, cuenta 1 para esa persona.
     """
-    # Solo 2 conceptos productivos (resto son cambios de responsabilidad, no trabajo real)
+    # to_status objetivo -> label visible
     AVANCES_LABELS = [
-        ("En preparación presupuesto", "Presupuesto hecho"),
-        ("En reparación", "Equipo reparado"),
+        ("Presupuesto preparado pendiente de enviar", "Presupuesto hecho"),
+        ("Inspección de salida", "Equipo reparado"),
     ]
-    AVANCES_STATES_ORDER = [s for s, _ in AVANCES_LABELS]
+    TO_STATES = {to for to, _ in AVANCES_LABELS}
     AVANCES_LABEL_BY_STATE = dict(AVANCES_LABELS)
+    AVANCES_STATES_ORDER = [to for to, _ in AVANCES_LABELS]
     AVANCES_SET = set(AVANCES_STATES_ORDER)
-    FUNNEL_RANK = {s: i for i, s in enumerate(FUNNEL_ORDER)}
-    # Estados "cerrados" o finales (no estan en FUNNEL_ORDER pero son forward de cualquier fase abierta)
-    CLOSED_RANK = 9999  # cualquier estado fuera de funnel se considera forward
+
     today = datetime.now(timezone.utc).date()
     cutoff = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
     try:
@@ -469,62 +468,50 @@ def build_avances_section(cache):
         except Exception:
             return ""
 
-    # 1) Recoger todas las transiciones forward, hoy, desde fases taller
-    raw_movs = []  # [(from_s, to_s, dt, ticket_key, ticket)]
+    grid = {}
+    detail_map = {}  # (to_state, person, ticket_key) -> {key, cliente, from, to, ts, dt}
+    personas_set = set()
+
     for k, t in cache.get("tickets", {}).items():
         for tr in t.get("transitions", []):
             if len(tr) < 3:
                 continue
             ts_str, from_s, to_s = tr[0], tr[1], tr[2]
-            if from_s not in AVANCES_SET:
+            if to_s not in TO_STATES:
                 continue
             dt = parse_iso(ts_str)
             if not dt or dt < cutoff:
                 continue
-            r_from = FUNNEL_RANK.get(from_s, -1)
-            r_to = FUNNEL_RANK.get(to_s, CLOSED_RANK)
-            if r_to <= r_from:
-                continue  # retroceso o lateral, no es avance
-            raw_movs.append((from_s, to_s, dt, k, t))
+            person = person_for_status(t, to_s)
+            personas_set.add(person)
+            cnt_key = (to_s, person, k)
+            if cnt_key not in detail_map:
+                grid[(to_s, person)] = grid.get((to_s, person), 0) + 1
+            # Mantener la última transición a este to_state
+            existing = detail_map.get(cnt_key)
+            if not existing or dt > existing["dt"]:
+                detail_map[cnt_key] = {
+                    "key": k, "cliente": t.get("cliente", "") or "",
+                    "from": from_s, "to": to_s,
+                    "ts": fmt_hora(dt), "dt": dt,
+                }
 
-    # 2) Dedupe por (from_state, persona, ticket_key) - última forward transition gana en detalle
-    grid = {}
-    detail_map = {}  # (from_s, person, k) -> {key, cliente, from, to, ts_str, dt}
-    personas_set = set()
-    counted = set()  # (from_s, person, k) ya contado
-    for from_s, to_s, dt, k, t in raw_movs:
-        person = person_for_status(t, from_s)
-        personas_set.add(person)
-        cnt_key = (from_s, person, k)
-        if cnt_key not in counted:
-            counted.add(cnt_key)
-            grid[(from_s, person)] = grid.get((from_s, person), 0) + 1
-        # Mantener siempre la última transición forward del ticket
-        existing = detail_map.get(cnt_key)
-        if not existing or dt > existing["dt"]:
-            detail_map[cnt_key] = {
-                "key": k, "cliente": t.get("cliente", "") or "",
-                "from": from_s, "to": to_s,
-                "ts": fmt_hora(dt), "dt": dt,
-            }
-
-    # 3) Agrupar details por (from_s, person)
     details = {}
-    for (from_s, person, k), info in detail_map.items():
-        details.setdefault((from_s, person), []).append({
+    for (to_s, person, k), info in detail_map.items():
+        details.setdefault((to_s, person), []).append({
             "key": info["key"], "cliente": info["cliente"],
             "from": info["from"], "to": info["to"], "ts": info["ts"],
         })
-    # Ordenar por hora descendente
-    for key, lst in details.items():
+    for lst in details.values():
         lst.sort(key=lambda x: x["ts"], reverse=True)
 
     if not personas_set:
         header = ('<tr><th class="sticky-l1 sticky-l2" style="text-align:left;left:0;min-width:240px">Tarea</th>'
                   '<th>(sin avances aún)</th><th class="col-total">Total</th></tr>')
         rows = ('<tr><td class="lbl-name" style="left:0;min-width:240px" colspan="3">'
-                '<span style="color:#94a3b8;font-style:italic">Aún no hay avances forward hoy</span></td></tr>')
+                '<span style="color:#94a3b8;font-style:italic">Aún no hay tareas completadas hoy</span></td></tr>')
         return header, rows, "{}", {"grid": {}, "details": {}, "labels": []}
+
     personas_sorted = sorted(personas_set, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
     parts = ['<tr><th class="sticky-l1 sticky-l2" style="text-align:left;left:0;min-width:240px">Tarea</th>']
     for p in personas_sorted:
@@ -535,18 +522,18 @@ def build_avances_section(cache):
     col_tot = {p: 0 for p in personas_sorted}
     grand = 0
     detail_dict = {}
-    for st in AVANCES_STATES_ORDER:
+    for to_s in AVANCES_STATES_ORDER:
+        lbl = AVANCES_LABEL_BY_STATE.get(to_s, to_s)
         row_tot = 0
-        lbl = AVANCES_LABEL_BY_STATE.get(st, st)
         cells = [f'<tr><td class="lbl-name" style="left:0;min-width:240px">{html_escape(lbl)}</td>']
         for p in personas_sorted:
-            n = grid.get((st, p), 0)
+            n = grid.get((to_s, p), 0)
             row_tot += n
             col_tot[p] += n
             if n > 0:
-                dkey = f"{st}__{p}".replace(" ", "_").replace("/", "_")
-                detail_dict[dkey] = details.get((st, p), [])
-                attrs = f' data-detail-key="{html_escape(dkey)}" data-estado="{html_escape(st)}" data-persona="{html_escape(p)}"'
+                dkey = f"{lbl}__{p}".replace(" ", "_").replace("/", "_")
+                detail_dict[dkey] = details.get((to_s, p), [])
+                attrs = f' data-detail-key="{html_escape(dkey)}" data-estado="{html_escape(lbl)}" data-persona="{html_escape(p)}"'
                 cells.append(f'<td class="num avance-cell"{attrs}><span style="font-weight:500">{n}</span></td>')
             else:
                 cells.append('<td class="num n0"><span style="color:#c0d0e0">·</span></td>')
@@ -567,17 +554,15 @@ def build_avances_section(cache):
     tot_cells.append(f'<td class="num col-total"><span style="font-weight:600">{grand}</span></td>')
     tot_cells.append('</tr>')
     body_parts.append("".join(tot_cells))
-    detail_json = json.dumps(detail_dict, ensure_ascii=False)
-    # Datos consumibles por build_tecnicos_section: usamos la label en lugar del estado origen
+
     extra = {
-        "grid": {(AVANCES_LABEL_BY_STATE.get(st, st), p): n for (st, p), n in grid.items()},
-        "details": {(AVANCES_LABEL_BY_STATE.get(st, st), p): lst for (st, p), lst in details.items()},
+        "grid": {(AVANCES_LABEL_BY_STATE.get(to, to), p): n for (to, p), n in grid.items()},
+        "details": {(AVANCES_LABEL_BY_STATE.get(to, to), p): lst for (to, p), lst in details.items()},
         "labels": list(AVANCES_LABELS),
     }
-    # Generar detail_dict con keys usando la label (consistente con render en build_tecnicos)
     detail_dict_extra = {}
-    for (st, p), lst in details.items():
-        lbl = AVANCES_LABEL_BY_STATE.get(st, st)
+    for (to_s, p), lst in details.items():
+        lbl = AVANCES_LABEL_BY_STATE.get(to_s, to_s)
         dkey = f"{lbl}__{p}".replace(" ", "_").replace("/", "_")
         detail_dict_extra[dkey] = lst
     detail_dict.update(detail_dict_extra)
@@ -1092,6 +1077,12 @@ def build_html(cache, out_path, template_path):
         pass
 
     # Nuevas creadas por corte (mensuales = todo el mes; diarios = ese dia)
+    # KPI Nuevas hoy: tickets creados hoy
+    nuevas_hoy_count = sum(
+        1 for k, t in cache.get("tickets", {}).items()
+        if is_created_today(t)
+    )
+
     nuevas_total = {}
     for i, (lbl, d) in enumerate(cutoffs):
         if i < monthly_count:
@@ -1167,13 +1158,14 @@ def build_html(cache, out_path, template_path):
             history[today.isoformat()] = {
                 "ts": today_label,
                 "abiertas_hoy": today_total,
-                "estancadas_15d": estancadas_15,
+                "nuevas_hoy": nuevas_hoy_count,
+                "salidas_taller_hoy": salidas_taller,
+                "pendientes_taller": pendientes_taller,
                 "en_taller": en_taller,
                 "peak_pct": peak_pct,
-                "pendientes_taller": pendientes_taller,
                 "gestion_externa": gestion_externa,
                 "sustis_solicitadas": sustis_solicitadas,
-                "salidas_taller_hoy": salidas_taller,
+                "estancadas_15d": estancadas_15,
             }
             hist_path.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception as e:
@@ -1182,13 +1174,14 @@ def build_html(cache, out_path, template_path):
     # Generar tabla Evolución KPIs
     EVOL_KPI_COLS = [
         ("abiertas_hoy", "Abiertas", "#0b3d91"),
-        ("estancadas_15d", "Estancadas >15d", "#c0392b"),
+        ("nuevas_hoy", "Nuevas hoy", "#3b82f6"),
+        ("salidas_taller_hoy", "Salidas taller", "#16a34a"),
+        ("pendientes_taller", "Pdtes. taller", "#a23b72"),
         ("en_taller", "En taller", "#1f6feb"),
         ("peak_pct", "% pico taller", "#475569"),
-        ("pendientes_taller", "Pdtes. a taller", "#a23b72"),
         ("gestion_externa", "Gest. externa", "#cb6f0a"),
         ("sustis_solicitadas", "Sustis solic.", "#7c3aed"),
-        ("salidas_taller_hoy", "Salidas taller", "#16a34a"),
+        ("estancadas_15d", "Estancadas >15d", "#c0392b"),
     ]
     dates_sorted = sorted(history.keys())
     if dates_sorted:
@@ -1248,6 +1241,7 @@ def build_html(cache, out_path, template_path):
         "__GESTION_EXTERNA__": str(gestion_externa),
         "__SUSTIS_SOLICITADAS__": str(sustis_solicitadas),
         "__SALIDAS_TALLER__": str(salidas_taller),
+        "__NUEVAS_HOY__": str(nuevas_hoy_count),
         "__EVOLUCION_KPIS__": evolucion_kpis,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,

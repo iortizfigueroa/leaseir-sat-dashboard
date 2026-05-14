@@ -345,6 +345,7 @@ __DEMO_BANNER__
   <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__</div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
   <div class="kpi clickable" id="kpi-sustis-solicitadas" title="Clic para ir a Estado sustituciones"><div class="k"><i class="ti ti-arrows-exchange"></i>Sustis solicitadas</div><div class="v">__SUSTIS_SOLICITADAS__</div><div class="d" style="color:var(--grey)">Pendientes de entregar</div></div>
+  <div class="kpi"><div class="k"><i class="ti ti-plus"></i>Nuevas hoy</div><div class="v" style="color:#3b82f6">__NUEVAS_HOY__</div><div class="d" style="color:var(--grey)">Tickets creados hoy</div></div>
   <div class="kpi"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que salen de Inspección de salida</div></div>
 </div>
 
@@ -1212,36 +1213,4 @@ __SUSTIS_HTML__
     showStatus("Lanzando workflow...", "info");
     try {
       const r = await fetch(
-        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLOW_FILE}/dispatches`,
-        {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer " + token,
-            "Accept": "application/vnd.github+json",
-            "X-GitHub-Api-Version": "2022-11-28",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ ref: "main" })
-        }
-      );
-      if (r.status === 204) {
-        showStatus("Workflow lanzado. Vuelve en 2 min y refresca la pagina (Ctrl+F5).", "ok");
-        setTimeout(() => { btn.disabled = false; btn.style.opacity = "1"; }, 90000);
-      } else if (r.status === 401 || r.status === 403) {
-        localStorage.removeItem(TOKEN_KEY);
-        showStatus("Token invalido o sin permisos. He borrado el guardado, pulsa de nuevo para introducir uno nuevo.", "error");
-        btn.disabled = false; btn.style.opacity = "1";
-      } else {
-        const txt = await r.text();
-        showStatus("Error " + r.status + ": " + txt.slice(0, 200), "error");
-        btn.disabled = false; btn.style.opacity = "1";
-      }
-    } catch (e) {
-      showStatus("Error de red: " + e.message, "error");
-      btn.disabled = false; btn.style.opacity = "1";
-    }
-  });
-})();
-</script>
-</body>
-</html>
+        `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/actions/workflows/${WORKFLO
