@@ -316,7 +316,7 @@
   .topbar-hamb { display: none; background: transparent; border: 0.5px solid #e2e8f0; padding: 4px 9px; border-radius: 5px; cursor: pointer; font-size: 14px; color: #475569; }
   .topbar-title { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.01em; }
   .topbar-actions { display: flex; align-items: center; gap: 10px; }
-  .main-content { padding: 18px 24px 32px; max-width: 1400px; }
+  .main-content { padding: 18px 28px 32px; max-width: none; width: 100%; }
   .sidebar nav.tabs1 { display: flex; flex-direction: column; padding: 0 8px; gap: 1px; background: transparent; border-radius: 0; margin: 0; width: 100%; }
   .tabs1-select { display: none !important; }
   @media (max-width: 1023px) { .sidebar { width: 180px; } .main { margin-left: 180px; } .main-content { padding: 16px 18px 28px; } }
@@ -351,12 +351,18 @@
     <button type="button" data-view="chains" class="sb-item"><i class="ti ti-building"></i>Por cadena</button>
     <button type="button" data-view="sustis" class="sb-item"><i class="ti ti-arrows-exchange"></i>Sustituciones</button>
   </nav>
-  <div class="sb-section">Atajos</div>
+  <div class="sb-section">Atajos Incidencias</div>
   <nav class="sb-nav">
     <a href="#kpis" class="sb-item"><i class="ti ti-chart-pie"></i>KPIs</a>
     <a href="#abiertas" class="sb-item"><i class="ti ti-calendar-event"></i>Abiertas hoy</a>
     <a href="#tecnicos" class="sb-item"><i class="ti ti-tools"></i>Técnicos taller</a>
     <a href="#detalle" class="sb-item"><i class="ti ti-table"></i>Detalle</a>
+  </nav>
+  <div class="sb-section">Atajos Estadísticas</div>
+  <nav class="sb-nav">
+    <a href="#evol-estado" class="sb-item"><i class="ti ti-trending-up"></i>Evol. estado</a>
+    <a href="#evol-cadena" class="sb-item"><i class="ti ti-chart-line"></i>Evol. cadena</a>
+    <a href="#evol-kpis" class="sb-item"><i class="ti ti-history"></i>Evol. KPIs</a>
   </nav>
   <div class="sb-spacer"></div>
   <button id="btn-refresh" type="button" class="sb-btn-cta" title="Refresca el dashboard">
@@ -393,9 +399,6 @@ __DEMO_BANNER__
   <a href="#abiertas"><i class="ti ti-calendar-event"></i>Abiertas hoy</a>
   <a href="#tecnicos"><i class="ti ti-tools"></i>Técnicos taller</a>
   <a href="#detalle"><i class="ti ti-table"></i>Detalle</a>
-  <a href="#evol-estado"><i class="ti ti-trending-up"></i>Evol. estado</a>
-  <a href="#evol-cadena"><i class="ti ti-chart-line"></i>Evol. cadena</a>
-  <a href="#evol-kpis"><i class="ti ti-history"></i>Evol. KPIs</a>
 </div>
 
 <div id="kpis" class="kpis">
@@ -533,9 +536,40 @@ __SUSTIS_HTML__
   function setView(name) {
     tabs1.forEach(b => b.classList.toggle('active', b.dataset.view === name));
     views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
+    const TITLES = {total:'Incidencias abiertas', stats:'Estadísticas de gestión', chains:'Estadísticas por cadena', sustis:'Estado sustituciones'};
+    const t = document.getElementById('topbar-title');
+    if (t && TITLES[name]) t.textContent = TITLES[name];
+    const sel = document.getElementById('tabs1-select');
+    if (sel && sel.value !== name) sel.value = name;
+    const sb = document.getElementById('sidebar');
+    sb && sb.classList.remove('open');
+    document.body.classList.remove('sb-open');
     try { localStorage.setItem('sat-view', name); } catch(e) {}
   }
   tabs1.forEach(b => b.addEventListener('click', () => { if (!b.disabled) setView(b.dataset.view); }));
+  // Hamburguesa móvil
+  document.getElementById('hamb') && document.getElementById('hamb').addEventListener('click', () => {
+    const sb = document.getElementById('sidebar');
+    sb && sb.classList.toggle('open');
+    document.body.classList.toggle('sb-open');
+  });
+  // Atajos sidebar: cambiar pestaña + scroll
+  const SHORTCUT_VIEW = {
+    'kpis':'total','abiertas':'total','tecnicos':'total','detalle':'total',
+    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats'
+  };
+  document.querySelectorAll('.sidebar a.sb-item[href^="#"]').forEach(a => {
+    a.addEventListener('click', (e) => {
+      e.preventDefault();
+      const id = a.getAttribute('href').slice(1);
+      const targetView = SHORTCUT_VIEW[id];
+      if (targetView) setView(targetView);
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+      }, 80);
+    });
+  });
   try {
     const saved = localStorage.getItem('sat-view');
     if (saved && document.getElementById('view-' + saved)) setView(saved);
