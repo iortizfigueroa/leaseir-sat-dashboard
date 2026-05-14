@@ -174,6 +174,7 @@ __AH_ROWS__
   <select id="filter-bloq"><option value="">Bloqueante: todos</option><option>Sí</option><option>No</option></select>
   <select id="filter-susti"><option value="">Sustitución: todas</option><option>Sí</option><option>No</option></select>
   <select id="filter-bucket"><option value="">Días: todos</option><option value="t">🔵 Creada hoy</option><option value="g">🟢 0-5d</option><option value="y">🟡 6-15d</option><option value="r">🔴 &gt;15d</option></select>
+  <select id="filter-asignado"><option value="">Asignada: todas</option></select>
   <button type="button" id="clear-filters" class="multi-btn" title="Resetea todos los filtros">✕ Limpiar</button>
   <span class="count"><b id="detalle-count">0</b> de <span id="detalle-total">0</span> visibles</span>
 </div>
@@ -200,6 +201,7 @@ __AH_ROWS__
   <th class="sortable" data-col="17" data-type="num">Importe</th>
   <th class="sortable" data-col="18" data-type="text">Téc. externo</th>
   <th class="sortable" data-col="19" data-type="text">Último comentario</th>
+  <th class="sortable" data-col="20" data-type="text">Persona asignada</th>
 </tr></thead>
 <tbody>
 __DETALLE_ROWS__
@@ -379,22 +381,37 @@ __SUSTIS_HTML__
   const filterGestion = document.getElementById('filter-gestion');
   const filterBloq = document.getElementById('filter-bloq');
   const filterSusti = document.getElementById('filter-susti');
+  const filterAsignado = document.getElementById('filter-asignado');
   const cnt = document.getElementById('detalle-count');
   const tot = document.getElementById('detalle-total');
   tot.textContent = allRows.length;
 
-  // Populate cadena dropdown
+  // Populate cadena, statuses y asignado dropdown
   const chains = new Set();
   const statuses = new Set();
+  const asignados = new Set();
   allRows.forEach(r => {
     chains.add(r.cells[0].textContent.trim());
     statuses.add(r.cells[3].textContent.trim());
+    if (r.cells[20]) asignados.add(r.cells[20].textContent.trim());
   });
   Array.from(chains).sort().forEach(c => {
     const o = document.createElement('option');
     o.value = c; o.textContent = c;
     filterChain.appendChild(o);
   });
+  Array.from(asignados).sort().forEach(a => {
+    if (!a) return;
+    const o = document.createElement('option');
+    o.value = a; o.textContent = a;
+    filterAsignado.appendChild(o);
+  });
+  // Opción explícita para sin asignar
+  if (asignados.has('')) {
+    const o = document.createElement('option');
+    o.value = '__none__'; o.textContent = '(sin asignar)';
+    filterAsignado.appendChild(o);
+  }
 
   // Populate status multi-select
   const statusList = document.getElementById('status-list');
@@ -453,6 +470,7 @@ __SUSTIS_HTML__
     const bl = filterBloq.value;
     const su = filterSusti.value;
     const bk = filterBucket.value;
+    const asg = filterAsignado.value;
     const useStatusFilter = selectedStatuses.size > 0;
     let visible = 0;
     for (const row of allRows) {
@@ -463,6 +481,7 @@ __SUSTIS_HTML__
       const rowDays = parseInt(row.cells[5].textContent.trim());
       const rowBloq = row.cells[9].textContent.trim();
       const rowSusti = row.cells[10].textContent.trim();
+      const rowAsignado = row.cells[20] ? row.cells[20].textContent.trim() : '';
       const isExterno = (rowGestion === 'Externa');
       const matchGestion = !ge || (ge === 'externo' ? isExterno : !isExterno);
       const matchStatus = !useStatusFilter || selectedStatuses.has(rowStatus);
@@ -479,13 +498,17 @@ __SUSTIS_HTML__
       else if (bk === 'g') matchBucket = !createdToday && (rowDays <= 5);
       else if (bk === 'y') matchBucket = !createdToday && (rowDays >= 6 && rowDays <= 15);
       else if (bk === 'r') matchBucket = !createdToday && (rowDays > 15);
+      let matchAsignado = true;
+      if (asg === '__none__') matchAsignado = (rowAsignado === '');
+      else if (asg) matchAsignado = (rowAsignado === asg);
       const ok = (!q || text.includes(q))
               && (!ch || rowChain === ch)
               && matchStatus
               && matchGestion
               && (!bl || rowBloq === bl)
               && (!su || rowSusti === su)
-              && matchBucket;
+              && matchBucket
+              && matchAsignado;
       row.style.display = ok ? '' : 'none';
       if (ok) visible++;
     }
@@ -523,7 +546,7 @@ __SUSTIS_HTML__
   }
 
   const filterBucket = document.getElementById('filter-bucket');
-  [search, filterChain, filterGestion, filterBloq, filterSusti, filterBucket].forEach(el => {
+  [search, filterChain, filterGestion, filterBloq, filterSusti, filterBucket, filterAsignado].forEach(el => {
     el.addEventListener('input', applyFilters);
     el.addEventListener('change', applyFilters);
   });
@@ -537,6 +560,7 @@ __SUSTIS_HTML__
     filterBloq.value = '';
     filterSusti.value = '';
     filterBucket.value = '';
+    filterAsignado.value = '';
     selectedStatuses.clear();
     statusList.querySelectorAll('input[type=checkbox]').forEach(cb => cb.checked = false);
     statusAll.checked = true;

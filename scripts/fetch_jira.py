@@ -38,7 +38,7 @@ OPEN_STATUSES = [
 
 # Custom field IDs for LEAS project (see jira_field_mapping.md memory)
 FIELDS = [
-    "summary", "created", "status",
+    "summary", "created", "status", "assignee",
     "customfield_10211",  # Cliente
     "customfield_10138",  # Localización averiado
     "customfield_10140",  # Tipo de avería
@@ -182,6 +182,7 @@ def extract(issue):
         "garantia": opt(f.get("customfield_10182")) or "",
         "descripcion": (f.get("customfield_10210") or "").strip(),
         "tec_taller": (f.get("customfield_10247") or {}).get("displayName", "") if isinstance(f.get("customfield_10247"), dict) else (f.get("customfield_10247") or ""),
+        "asignado": (f.get("assignee") or {}).get("displayName", "") if isinstance(f.get("assignee"), dict) else "",
         "importe": importe if importe is not None else "",
         "tec_externo": opt(f.get("customfield_10143")) or "",
         "motivo": [opt(x) for x in (f.get("customfield_10615") or []) if opt(x)],
@@ -232,6 +233,15 @@ def main():
             jql = jql_updated_since(since_date)
             print(f"[update] {jql}")
             keys = search_keys(base, sess, jql)
+            # Además, refresca todos los tickets que en cache están con estado abierto.
+            # Esto garantiza assignee y otros campos siempre frescos para los tickets abiertos
+            # aunque Jira no los haya marcado como "updated" recientemente.
+            open_set = set(OPEN_STATUSES)
+            open_in_cache = [k for k, t in (cache.get("tickets") or {}).items()
+                             if t.get("current_status") in open_set]
+            extra = [k for k in open_in_cache if k not in set(keys)]
+            print(f"[update] {len(extra)} tickets abiertos extra a refrescar (assignee+campos)")
+            keys = list(keys) + extra
 
     print(f"Fetching {len(keys)} tickets...")
     for i, k in enumerate(keys, 1):

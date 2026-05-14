@@ -502,6 +502,7 @@ def build_detalle_section(cache):
             "hp": t.get("hp", ""), "garantia": t.get("garantia", ""),
             "desc": (t.get("descripcion", "") or "")[:200],
             "tec_taller": t.get("tec_taller", ""),
+            "asignado": t.get("asignado", ""),
             "importe": t.get("importe", ""),
             "tec_externo": t.get("tec_externo", ""),
             "ult_com": (t.get("ult_comentario", "") or "")[:300],
@@ -537,6 +538,7 @@ def build_detalle_section(cache):
             f'<td style="text-align:right">{html_escape(r["importe"])}</td>'
             f'<td>{html_escape(r["tec_externo"])}</td>'
             f'<td title="{html_escape(r["ult_com"])}" class="d-trunc">{html_escape(r["ult_com"])}</td>'
+            f'<td>{html_escape(r["asignado"])}</td>'
             '</tr>'
         )
     return "\n".join(body)
