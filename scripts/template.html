@@ -290,6 +290,45 @@
     /* h1 + meta más compactos */
     .meta { font-size: 11px; }
   }
+
+  /* Layout sidebar */
+  body { margin: 0 !important; max-width: none !important; padding: 0 !important; display: block; }
+  .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 200px; background: #0f172a; color: #cbd5e1; padding: 14px 0 12px; display: flex; flex-direction: column; z-index: 100; overflow-y: auto; transition: transform 0.18s ease; }
+  .sb-brand { display: flex; align-items: center; gap: 9px; padding: 0 16px 16px; border-bottom: 1px solid #1e293b; margin-bottom: 6px; }
+  .sb-logo-img { width: 30px; height: 30px; flex-shrink: 0; }
+  .sb-brand-txt { font-size: 13px; font-weight: 600; color: white; letter-spacing: -0.01em; line-height: 1.2; }
+  .sb-brand-sub { font-size: 10px; color: #64748b; line-height: 1; margin-top: 2px; }
+  .sb-section { padding: 12px 12px 4px 16px; font-size: 9px; color: #64748b; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
+  .sb-nav { display: flex; flex-direction: column; gap: 1px; padding: 0 8px; }
+  .sidebar .sb-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; font-size: 12.5px; color: #94a3b8; border-radius: 6px; background: transparent; border: none; cursor: pointer; text-decoration: none; width: 100%; text-align: left; font-family: inherit; }
+  .sidebar .sb-item:hover { background: #1e293b; color: #e2e8f0; }
+  .sidebar .sb-item.active { background: #1e293b; color: white; font-weight: 500; box-shadow: inset 2px 0 0 #3b82f6; }
+  .sidebar .sb-item .ti { font-size: 15px; }
+  .sb-spacer { flex: 1; min-height: 12px; }
+  .sb-btn-cta { margin: 4px 10px 8px; padding: 9px 12px; background: #1e40af; color: white; border: none; border-radius: 6px; font-weight: 500; font-size: 12.5px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; font-family: inherit; }
+  .sb-btn-cta:hover { background: #2563eb; }
+  .sb-btn-cta .ti { font-size: 15px; }
+  .sb-footer { padding: 8px 16px; font-size: 9px; color: #475569; border-top: 1px solid #1e293b; line-height: 1.4; }
+  .sb-meta-time { color: #64748b; margin-top: 2px; }
+  .main { margin-left: 200px; min-height: 100vh; background: #f8fafc; }
+  .topbar { background: white; border-bottom: 0.5px solid #e2e8f0; padding: 11px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
+  .topbar-hamb { display: none; background: transparent; border: 0.5px solid #e2e8f0; padding: 4px 9px; border-radius: 5px; cursor: pointer; font-size: 14px; color: #475569; }
+  .topbar-title { font-size: 16px; font-weight: 600; color: #0f172a; letter-spacing: -0.01em; }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+  .main-content { padding: 18px 24px 32px; max-width: 1400px; }
+  .sidebar nav.tabs1 { display: flex; flex-direction: column; padding: 0 8px; gap: 1px; background: transparent; border-radius: 0; margin: 0; width: 100%; }
+  .tabs1-select { display: none !important; }
+  @media (max-width: 1023px) { .sidebar { width: 180px; } .main { margin-left: 180px; } .main-content { padding: 16px 18px 28px; } }
+  @media (max-width: 768px) {
+    .sidebar { transform: translateX(-100%); width: 220px; box-shadow: 4px 0 12px rgba(0,0,0,0.2); }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .topbar-hamb { display: inline-flex; align-items: center; }
+    .main-content { padding: 14px 12px 24px; }
+    .tabs1-select { display: block !important; width: 100%; margin-bottom: 10px; padding: 9px 12px; font-size: 13px; border: 1px solid #e2e8f0; border-radius: 7px; background: white; }
+    body.sb-open::before { content: ""; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.4); z-index: 90; }
+  }
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -297,35 +336,55 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.0/dist/tabler-icons.min.css">
 </head>
 <body>
-<div style="background:#0b3d91;margin:-24px -20px 18px;padding:18px 20px;border-radius:0 0 8px 8px">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;max-width:1500px;margin:0 auto">
-    <div style="display:flex;align-items:center;gap:16px">
-      <img src="logo-white.svg" alt="Leaseir" style="height:48px;width:auto;flex-shrink:0" />
-      <div>
-        <h1 style="color:white;margin:0">Leaseir SAT — Dashboard de incidencias</h1>
-        <div style="color:rgba(255,255,255,0.75);font-size:12px;margin-top:4px">Generado el __TODAY__. Datos de Jira (LEAS).</div>
-      </div>
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <img src="logo-white.svg" alt="Leaseir" class="sb-logo-img" />
+    <div>
+      <div class="sb-brand-txt">Leaseir SAT</div>
+      <div class="sb-brand-sub">Dashboard</div>
     </div>
-    <button id="btn-refresh" type="button" title="Lanza GitHub Actions para refrescar Jira + Airtable y redesplegar"
-      style="padding:8px 14px;font-size:13px;background:white;color:#0b3d91;border:none;border-radius:6px;cursor:pointer;font-weight:500;white-space:nowrap">
-      Actualizar ahora
-    </button>
   </div>
-</div>
-<div id="refresh-status" style="display:none;font-size:12px;padding:6px 10px;border-radius:4px;margin:4px 0 8px"></div>
-__DEMO_BANNER__
+  <div class="sb-section">Vista</div>
+  <nav class="sb-nav tabs1">
+    <button type="button" data-view="total" class="active sb-item"><i class="ti ti-list-details"></i>Incidencias abiertas</button>
+    <button type="button" data-view="stats" class="sb-item"><i class="ti ti-chart-line"></i>Estadísticas gestión</button>
+    <button type="button" data-view="chains" class="sb-item"><i class="ti ti-building"></i>Por cadena</button>
+    <button type="button" data-view="sustis" class="sb-item"><i class="ti ti-arrows-exchange"></i>Sustituciones</button>
+  </nav>
+  <div class="sb-section">Atajos</div>
+  <nav class="sb-nav">
+    <a href="#kpis" class="sb-item"><i class="ti ti-chart-pie"></i>KPIs</a>
+    <a href="#abiertas" class="sb-item"><i class="ti ti-calendar-event"></i>Abiertas hoy</a>
+    <a href="#tecnicos" class="sb-item"><i class="ti ti-tools"></i>Técnicos taller</a>
+    <a href="#detalle" class="sb-item"><i class="ti ti-table"></i>Detalle</a>
+  </nav>
+  <div class="sb-spacer"></div>
+  <button id="btn-refresh" type="button" class="sb-btn-cta" title="Refresca el dashboard">
+    <i class="ti ti-refresh"></i>Actualizar
+  </button>
+  <div class="sb-footer">
+    <div>Actualizado</div>
+    <div class="sb-meta-time">__TODAY__</div>
+  </div>
+</aside>
 
-<div class="tabs1">
-  <button type="button" data-view="total" class="active"><i class="ti ti-list-details"></i>Incidencias abiertas</button>
-  <button type="button" data-view="chains"><i class="ti ti-building"></i>Estadísticas por cadena</button>
-  <button type="button" data-view="stats"><i class="ti ti-chart-line"></i>Estadísticas de gestión</button>
-  <button type="button" data-view="sustis"><i class="ti ti-arrows-exchange"></i>Estado sustituciones</button>
-</div>
+<div class="main">
+  <div class="topbar">
+    <div class="topbar-left">
+      <button class="topbar-hamb" id="hamb" type="button" aria-label="Menú">☰</button>
+      <div class="topbar-title" id="topbar-title">Incidencias abiertas</div>
+    </div>
+    <div class="topbar-actions">
+      <div id="refresh-status" style="display:none;font-size:12px;padding:5px 10px;border-radius:4px"></div>
+    </div>
+  </div>
+  <div class="main-content">
+__DEMO_BANNER__
 <select class="tabs1-select" id="tabs1-select" onchange="(function(v){document.querySelectorAll('.tabs1 button').forEach(b=>{if(b.dataset.view===v){b.click();}})}).call(null, this.value)">
   <option value="total">Incidencias abiertas</option>
-  <option value="chains">Estadísticas por cadena</option>
   <option value="stats">Estadísticas de gestión</option>
-  <option value="sustis">Estado sustituciones</option>
+  <option value="chains">Por cadena</option>
+  <option value="sustis">Sustituciones</option>
 </select>
 
 <div id="view-total" class="view active">
@@ -1250,5 +1309,7 @@ __SUSTIS_HTML__
   });
 })();
 </script>
+</div><!-- /main-content -->
+</div><!-- /main -->
 </body>
 </html>
