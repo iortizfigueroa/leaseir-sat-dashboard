@@ -416,12 +416,13 @@ __DEMO_BANNER__
 </div>
 
 <div id="kpis" class="kpis">
-  <div class="kpi"><div class="k"><i class="ti ti-folder-open"></i>Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-plus"></i>Nuevas hoy</div><div class="v" style="color:#3b82f6">__NUEVAS_HOY__</div><div class="d" style="color:var(--grey)">Tickets creados hoy y abiertos</div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-file-text"></i>Presupuestos hechos hoy</div><div class="v" style="color:#0891b2">__PRES_HECHOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por preparado hoy</div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-wrench"></i>Equipos reparados hoy</div><div class="v" style="color:#059669">__EQ_REPARADOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por inspección hoy</div></div>
-  <div class="kpi"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
-  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:14px;color:#c0392b;font-weight:500;margin-left:8px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
+  <div class="kpi clickable" id="kpi-abiertas-hoy" title="Clic para ver todas las abiertas en Detalle"><div class="k"><i class="ti ti-folder-open"></i>Abiertas hoy</div><div class="v">__TODAY_TOTAL__</div><div class="d"><span style="color:__DELTA_COLOR__">__DELTA_ARROW__ __DELTA_ABS__ vs semana</span></div></div>
+  <div class="kpi clickable" id="kpi-nuevas-hoy" title="Clic para filtrar Detalle por creadas hoy"><div class="k"><i class="ti ti-plus"></i>Nuevas hoy</div><div class="v" style="color:#3b82f6">__NUEVAS_HOY__</div><div class="d" style="color:var(--grey)">Tickets creados hoy y abiertos</div></div>
+  <div class="kpi clickable" id="kpi-pres-hechos" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-file-text"></i>Presupuestos hechos hoy</div><div class="v" style="color:#0891b2">__PRES_HECHOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por preparado hoy</div></div>
+  <div class="kpi clickable" id="kpi-eq-reparados" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-wrench"></i>Equipos reparados hoy</div><div class="v" style="color:#059669">__EQ_REPARADOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por inspección hoy</div></div>
+  <div class="kpi clickable" id="kpi-entradas-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-login-2"></i>Entradas a taller hoy</div><div class="v" style="color:#1f6feb">__ENTRADAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que llegaron al taller hoy</div></div>
+  <div class="kpi clickable" id="kpi-salidas-taller" title="Clic para filtrar Detalle (los que siguen abiertos)"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
+  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:13px;color:#c0392b;font-weight:500;margin-left:6px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span><span style="font-size:13px;color:#a23b72;font-weight:500;margin-left:6px" title="Pendientes con sustitución requerida (casos críticos)">· __PENDIENTES_TALLER_SUSTI__ susti</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
   <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
@@ -452,6 +453,10 @@ __TEC_ROWS__
 
 <h2 id="detalle">Detalle de incidencias abiertas</h2>
 <div class="legend">Clic en el ticket abre el issue en Jira. Clic en columna ordena. Días en estado coloreados por bucket.</div>
+<div id="kpi-filter-banner" style="display:none;background:#e7eefa;border:1px solid #2a59c4;border-radius:6px;padding:6px 12px;margin:6px 0;font-size:13px;color:#1f3a5f">
+  <i class="ti ti-filter"></i> Filtro KPI activo: <b class="kfb-label">—</b> · <span class="kfb-count">0</span> tickets
+  <button type="button" onclick="window._kpiFilterKeys=null;window.updateKpiFilterBanner();document.querySelector('#clear-filters').click();" style="margin-left:10px;border:1px solid #2a59c4;background:white;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Quitar</button>
+</div>
 <div class="toolbar">
   <input type="text" id="detalle-search" placeholder="Buscar texto en cualquier columna...">
   <select id="filter-chain"><option value="">Cadena: todas</option></select>
@@ -901,6 +906,12 @@ __SUSTIS_HTML__
       const rowTecTaller = row.cells[18] ? row.cells[18].textContent.trim() : '';
       if (asg === '__none__') matchAsignado = (rowAsignado === '' && rowTecTaller === '');
       else if (asg) matchAsignado = (rowAsignado === asg || rowTecTaller === asg);
+      // Filtro especial por lista de keys (KPIs clickeables)
+      let matchKeys = true;
+      if (window._kpiFilterKeys && window._kpiFilterKeys.size > 0) {
+        const rowKey = row.cells[1] ? row.cells[1].textContent.trim() : '';
+        matchKeys = window._kpiFilterKeys.has(rowKey);
+      }
       const ok = (!q || text.includes(q))
               && (!ch || rowChain === ch)
               && matchStatus
@@ -908,7 +919,8 @@ __SUSTIS_HTML__
               && (!bl || rowBloq === bl)
               && (!su || rowSusti === su)
               && matchBucket
-              && matchAsignado;
+              && matchAsignado
+              && matchKeys;
       row.style.display = ok ? '' : 'none';
       if (ok) visible++;
     }
@@ -966,8 +978,23 @@ __SUSTIS_HTML__
     statusAll.checked = true;
     updateStatusBtn();
     statusPop.classList.remove('open');
+    window._kpiFilterKeys = null;
+    updateKpiFilterBanner();
     applyFilters();
   }
+  // Banner para indicar filtro activo por lista de KPIs (visible solo si _kpiFilterKeys está set)
+  function updateKpiFilterBanner() {
+    const el = document.getElementById('kpi-filter-banner');
+    if (!el) return;
+    if (window._kpiFilterKeys && window._kpiFilterKeys.size > 0) {
+      el.style.display = '';
+      el.querySelector('.kfb-label').textContent = window._kpiFilterLabel || 'filtro KPI';
+      el.querySelector('.kfb-count').textContent = window._kpiFilterKeys.size;
+    } else {
+      el.style.display = 'none';
+    }
+  }
+  window.updateKpiFilterBanner = updateKpiFilterBanner;
   clearBtn.addEventListener('click', resetAllFilters);
 
   // Click handler for "Abiertas hoy" cells - pre-filter Detalle and scroll
@@ -1324,6 +1351,58 @@ __SUSTIS_HTML__
     });
   }
 
+  // === KPIs por lista de LEAS ===
+  const KPI_PRES_HECHOS = __KPI_PRES_HECHOS_KEYS__;
+  const KPI_EQ_REPARADOS = __KPI_EQ_REPARADOS_KEYS__;
+  const KPI_ENTRADAS_TALLER = __KPI_ENTRADAS_TALLER_KEYS__;
+  const KPI_SALIDAS_TALLER = __KPI_SALIDAS_TALLER_KEYS__;
+
+  function applyKpiKeyFilter(keys, label) {
+    resetAllFilters();
+    window._kpiFilterKeys = new Set(keys);
+    window._kpiFilterLabel = label;
+    updateKpiFilterBanner();
+    applyFilters();
+    const target = document.getElementById('detalle');
+    if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+
+  const kpiAbiertasHoy = document.getElementById('kpi-abiertas-hoy');
+  if (kpiAbiertasHoy) {
+    kpiAbiertasHoy.addEventListener('click', () => {
+      resetAllFilters();
+      const target = document.getElementById('detalle');
+      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  const kpiNuevasHoy = document.getElementById('kpi-nuevas-hoy');
+  if (kpiNuevasHoy) {
+    kpiNuevasHoy.addEventListener('click', () => {
+      resetAllFilters();
+      filterBucket.value = 't';
+      applyFilters();
+      const target = document.getElementById('detalle');
+      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    });
+  }
+
+  const kpiPres = document.getElementById('kpi-pres-hechos');
+  if (kpiPres) {
+    kpiPres.addEventListener('click', () => applyKpiKeyFilter(KPI_PRES_HECHOS, 'Presupuestos hechos hoy'));
+  }
+  const kpiEqRep = document.getElementById('kpi-eq-reparados');
+  if (kpiEqRep) {
+    kpiEqRep.addEventListener('click', () => applyKpiKeyFilter(KPI_EQ_REPARADOS, 'Equipos reparados hoy'));
+  }
+  const kpiEntradasTaller = document.getElementById('kpi-entradas-taller');
+  if (kpiEntradasTaller) {
+    kpiEntradasTaller.addEventListener('click', () => applyKpiKeyFilter(KPI_ENTRADAS_TALLER, 'Entradas a taller hoy'));
+  }
+  const kpiSalidasTaller = document.getElementById('kpi-salidas-taller');
+  if (kpiSalidasTaller) {
+    kpiSalidasTaller.addEventListener('click', () => applyKpiKeyFilter(KPI_SALIDAS_TALLER, 'Salidas de taller hoy (los que siguen abiertos)'));
+  }
 
   // === Avances del día: clic en celda muestra detalle ===
   window._avancesDetail = __AVANCES_DETAIL_JSON__;

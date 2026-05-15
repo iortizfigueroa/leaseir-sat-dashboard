@@ -1363,14 +1363,20 @@ def build_html(cache, out_path, template_path):
     # KPI Pendientes a taller: estados antes del taller (no asignados aún a técnico)
     PRE_TALLER_STATUSES = {"Abierto", "Recepcionado SAT", "Pendiente recogida", "Gestionado transporte"}
     BLOQ_TRUE = {"sí", "si", "yes", "true", "1"}
+    SUSTI_TRUE = {"sí", "si", "yes", "true", "1"}
     pendientes_taller = 0
     pendientes_taller_bloq = 0
+    pendientes_taller_susti = 0
+    pendientes_taller_keys = []
     for k, t in cache.get("tickets", {}).items():
         if t.get("current_status") not in PRE_TALLER_STATUSES:
             continue
         pendientes_taller += 1
+        pendientes_taller_keys.append(k)
         if (t.get("bloq") or "").strip().lower() in BLOQ_TRUE:
             pendientes_taller_bloq += 1
+        if (t.get("susti") or "").strip().lower() in SUSTI_TRUE:
+            pendientes_taller_susti += 1
 
     # KPI Gestión externa
     EXTERNA_STATUSES = {"Enviado a técnico externo", "Esperando respuesta cliente a presupuesto", "Pendiente definir servicio externo"}
@@ -1396,6 +1402,23 @@ def build_html(cache, out_path, template_path):
             if _kk not in salidas_taller_tickets:
                 salidas_taller_tickets.add(_kk)
                 salidas_taller += 1
+
+    # KPI Entradas a taller hoy: tickets que han cambiado HOY a uno de los 8 estados de taller
+    # y siguen abiertos. Set para clic-filtrar.
+    entradas_taller_keys = set()
+    for _kk, _t in cache.get("tickets", {}).items():
+        if not is_open(_t.get("current_status")):
+            continue
+        for _tr in _t.get("transitions", []):
+            if len(_tr) < 3: continue
+            _ts, _fs, _to = _tr[0], _tr[1], _tr[2]
+            if _to not in TALLER_STATUSES: continue
+            if _fs in TALLER_STATUSES: continue  # transición interna al taller no cuenta
+            _dt = parse_iso(_ts)
+            if not _dt or _dt < _cutoff_hoy: continue
+            entradas_taller_keys.add(_kk)
+            break
+    entradas_taller_count = len(entradas_taller_keys)
 
     sustis_solicitadas = 0
     try:
@@ -1598,6 +1621,13 @@ def build_html(cache, out_path, template_path):
         "__TIEMPO_TALLER__": tiempo_taller_html,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
+        "__PENDIENTES_TALLER_SUSTI__": str(pendientes_taller_susti),
+        "__ENTRADAS_TALLER__": str(entradas_taller_count),
+        "__KPI_PENDIENTES_TALLER_KEYS__": json.dumps(sorted(pendientes_taller_keys)),
+        "__KPI_PRES_HECHOS_KEYS__": json.dumps(sorted(pres_hechos_hoy)),
+        "__KPI_EQ_REPARADOS_KEYS__": json.dumps(sorted(eq_reparados_hoy)),
+        "__KPI_ENTRADAS_TALLER_KEYS__": json.dumps(sorted(entradas_taller_keys)),
+        "__KPI_SALIDAS_TALLER_KEYS__": json.dumps(sorted(salidas_taller_tickets)),
     }
     for k, v in repl.items():
         html = html.replace(k, v)
