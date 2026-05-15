@@ -28,6 +28,20 @@ COSTE_BUCKETS = ["Sin coste", "< 1.000 €", "1.000 - 6.000 €", "> 6.000 €"]
 YEAR_BUCKETS = ["2026", "2025", "2024", "2023", "2022", "<2022", "Sin compra"]
 
 # Colores del brief
+def format_int_dot(n):
+    """Formatea con puntos de miles. '' si vacío."""
+    if n == '' or n is None:
+        return ''
+    try:
+        v = int(n)
+    except (TypeError, ValueError):
+        try:
+            v = int(float(n))
+        except Exception:
+            return str(n)
+    return f"{v:,}".replace(",", ".")
+
+
 INMOV_RED = "#FFD1D1"     # solo en Jira
 INMOV_YELLOW = "#FFF2A8"  # duplicado
 INMOV_GREEN = "#D9F2D6"   # disponible (solo en AT con SAT)
@@ -758,7 +772,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     hdrs = [("Ticket","text"),("Cliente / Centro","text"),("Estado","text"),("Gestión","text"),
             ("Días","num"),("Días taller","num"),("Localización","text"),("Creada","date"),("Tipo avería","text"),
             ("Bloq","text"),("Susti","text"),("Fecha venta","date"),("Consola","text"),
-            ("HP","text"),("Garantía","text"),("Motivo","text"),("Año compra","yearcompra"),
+            ("HP","text"),("Disparos","num"),("Garantía","text"),("Motivo","text"),("Año compra","yearcompra"),
             ("Coste","coste")]
     for i, (h, dtype) in enumerate(hdrs):
         out.append(f'<th class="sortable" data-col="{i}" data-type="{dtype}">{h}</th>')
@@ -820,6 +834,7 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
             f'<td>{fventa_s}</td>'
             f'<td>{html_escape(t.get("consola",""))}</td>'
             f'<td>{html_escape(t.get("hp",""))}</td>'
+            f'<td style="text-align:right;font-variant-numeric:tabular-nums">{html_escape(format_int_dot(t.get("disparos","")))}</td>'
             f'<td>{html_escape(t.get("garantia","") or "No")}</td>'
             f'<td>{html_escape(e["motivo"])}</td>'
             f'<td>{html_escape(e["yearcompra"])}</td>'

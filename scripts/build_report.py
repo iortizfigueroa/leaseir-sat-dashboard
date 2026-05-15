@@ -58,6 +58,20 @@ COLOR_YELLOW = "#b8860b"
 COLOR_RED = "#c0392b"
 
 
+def format_int_dot(n):
+    """Formatea un número con separador de miles (1.234.567). '' si vacío."""
+    if n == '' or n is None:
+        return ''
+    try:
+        v = int(n)
+    except (TypeError, ValueError):
+        try:
+            v = int(float(n))
+        except Exception:
+            return str(n)
+    return f"{v:,}".replace(",", ".")
+
+
 def chain_of(cliente, loc):
     c = (cliente or "").lower()
     l = (loc or "").lower()
@@ -570,6 +584,285 @@ def build_avances_section(cache):
     return header, "\n".join(body_parts), detail_json, extra
 
 
+
+_TT_JS = """<script>(function(){
+  var tbl=document.getElementById('tt-table');if(!tbl)return;
+  var rows=Array.from(tbl.tBodies[0].rows);
+  var cnt=document.getElementById('tt-count');var tot=document.getElementById('tt-total');tot.textContent=rows.length;
+  var fSearch=document.getElementById('tt-search');var fChain=document.getElementById('tt-chain');
+  var fStatus=document.getElementById('tt-status');var fTipo=document.getElementById('tt-tipo');
+  var fBloq=document.getElementById('tt-bloq');var fSusti=document.getElementById('tt-susti');
+  var fBucket=document.getElementById('tt-bucket');
+  function apply(){
+    var q=(fSearch.value||'').toLowerCase().trim();
+    var ch=fChain.value,st=fStatus.value,ti=fTipo.value,bl=fBloq.value,su=fSusti.value,bk=fBucket.value;
+    var n=0;
+    for(var i=0;i<rows.length;i++){var r=rows[i];
+      var txt=r.textContent.toLowerCase();
+      var days=parseInt(r.cells[10].textContent.trim())||0;
+      var mb=true;
+      if(bk==='g')mb=days<4;
+      else if(bk==='g2')mb=days>=4&&days<=8;
+      else if(bk==='y')mb=days>=9&&days<=15;
+      else if(bk==='o')mb=days>=16&&days<=30;
+      else if(bk==='r')mb=days>30;
+      var ok=(!q||txt.indexOf(q)>=0)
+        &&(!ch||r.cells[0].textContent.trim()===ch)
+        &&(!st||r.cells[3].textContent.trim()===st)
+        &&(!ti||r.cells[4].textContent.trim()===ti)
+        &&(!bl||r.cells[7].textContent.trim()===bl)
+        &&(!su||r.cells[8].textContent.trim()===su)
+        &&mb;
+      r.style.display=ok?'':'none';if(ok)n++;
+    }cnt.textContent=n;
+  }
+  [fSearch,fChain,fStatus,fTipo,fBloq,fSusti,fBucket].forEach(function(e){e.addEventListener('input',apply);e.addEventListener('change',apply);});
+  document.getElementById('tt-clear').addEventListener('click',function(){fSearch.value='';fChain.value='';fStatus.value='';fTipo.value='';fBloq.value='';fSusti.value='';fBucket.value='';apply();});
+  var heads=tbl.tHead.rows[0].cells;var lastSort={col:-1,dir:1};
+  for(var hi=0;hi<heads.length;hi++){(function(th){th.style.cursor='pointer';th.addEventListener('click',function(){
+    var col=parseInt(th.dataset.col);var type=th.dataset.type||'text';var dir=(lastSort.col===col)?-lastSort.dir:1;lastSort={col:col,dir:dir};
+    var rs=Array.from(tbl.tBodies[0].rows);
+    rs.sort(function(a,b){var av=a.cells[col].textContent.trim();var bv=b.cells[col].textContent.trim();
+      if(type==='num'){av=parseFloat(av.replace(/\\./g,''))||0;bv=parseFloat(bv.replace(/\\./g,''))||0;return(av-bv)*dir;}
+      return av.localeCompare(bv,'es')*dir;});
+    for(var k=0;k<rs.length;k++)tbl.tBodies[0].appendChild(rs[k]);
+  });})(heads[hi]);}
+  apply();
+  var kpiTotal=document.getElementById('kpi-tiempo-taller-total');
+  if(kpiTotal){kpiTotal.addEventListener('click',function(){
+    fSearch.value='';fChain.value='';fStatus.value='';fTipo.value='';fBloq.value='';fSusti.value='';fBucket.value='';apply();
+    document.getElementById('tt-table').scrollIntoView({behavior:'smooth',block:'start'});
+  });}
+})();</script>"""
+
+
+def build_taller_detail_section(cache, sustis_by_parent=None):
+    """Tabla detalle filtrable de tickets 2026 cerrados con tiempo en taller medible."""
+    sustis_by_parent = sustis_by_parent or {}
+    TALLER = {"Pendiente asignar técnico", "En cola taller",
+              "En preparación presupuesto", "Esperando inicio reparación",
+              "En reparación", "Inspección de salida"}
+    EXIT = {"Devuelto a cliente", "Resuelto", "Finalizada", "Cancelado",
+            "Finalizado técnico externo"}
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+    rows = []
+    for k, t in cache.get("tickets", {}).items():
+        if is_open(t.get("current_status")):
+            continue
+        if not (t.get("created") or "").startswith("2026"):
+            continue
+        entrada = None
+        salida = None
+        for tr in t.get("transitions", []):
+            if len(tr) < 3:
+                continue
+            ts, fs, to = tr[0], tr[1], tr[2]
+            dt = parse_iso(ts)
+            if not dt:
+                continue
+            if entrada is None and to == "Pendiente asignar técnico":
+                entrada = dt
+            if entrada and (to in EXIT) and (fs in TALLER):
+                salida = dt
+                break
+        if not (entrada and salida):
+            continue
+        dias = (salida - entrada).days
+        if dias < 0:
+            continue
+        chain = chain_of(t.get("cliente", ""), t.get("loc", ""))
+        created_dt = parse_iso(t.get("created"))
+        created_s = created_dt.strftime("%d/%m/%Y") if created_dt else ""
+        salida_s = salida.strftime("%d/%m/%Y")
+        resumen_av = ", ".join(t.get("motivo") or [])
+        cambios_av = ", ".join(t.get("cambios") or [])
+        rows.append({
+            "chain": chain, "key": k,
+            "cliente": t.get("cliente", ""),
+            "status_final": t.get("current_status", ""),
+            "tipo": t.get("tipo", ""),
+            "resumen_av": resumen_av,
+            "cambios_av": cambios_av,
+            "bloq": t.get("bloq", ""),
+            "susti": t.get("susti", ""),
+            "susti_status": sustis_by_parent.get(k, ""),
+            "dias_taller": dias,
+            "consola": t.get("consola", ""),
+            "hp": t.get("hp", ""),
+            "garantia": t.get("garantia", ""),
+            "fventa": t.get("fventa") or "",
+            "disparos": t.get("disparos", ""),
+            "importe": t.get("importe", ""),
+            "created": created_s,
+            "salida": salida_s,
+            "asignado": t.get("asignado", ""),
+        })
+    if not rows:
+        return '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin tickets cerrados 2026 con tiempo medible.</div>'
+    rows.sort(key=lambda r: -r["dias_taller"])
+
+    def _dc(d):
+        if d < 4:
+            return "#1f8a4c"
+        if d <= 8:
+            return "#65a30d"
+        if d <= 15:
+            return "#b8860b"
+        if d <= 30:
+            return "#cb6f0a"
+        return "#c0392b"
+
+    chains_set = sorted({r["chain"] for r in rows})
+    statuses_set = sorted({r["status_final"] for r in rows})
+    tipos_set = sorted({r["tipo"] for r in rows if r["tipo"]})
+    chain_opts = ''.join(f'<option value="{html_escape(c)}">{html_escape(c)}</option>' for c in chains_set)
+    status_opts = ''.join(f'<option value="{html_escape(s)}">{html_escape(s)}</option>' for s in statuses_set)
+    tipo_opts = ''.join(f'<option value="{html_escape(tp)}">{html_escape(tp)}</option>' for tp in tipos_set)
+    out = []
+    out.append(f'<div style="margin:8px 0 4px;color:var(--grey);font-size:13px"><b>{len(rows)}</b> tickets cerrados 2026 con tiempo en taller medible</div>')
+    out.append('<div class="toolbar">')
+    out.append('<input type="text" id="tt-search" placeholder="Buscar texto en cualquier columna...">')
+    out.append(f'<select id="tt-chain"><option value="">Cadena: todas</option>{chain_opts}</select>')
+    out.append(f'<select id="tt-status"><option value="">Estado: todos</option>{status_opts}</select>')
+    out.append(f'<select id="tt-tipo"><option value="">Tipo avería: todos</option>{tipo_opts}</select>')
+    out.append('<select id="tt-bloq"><option value="">Bloq: todos</option><option>Sí</option><option>No</option></select>')
+    out.append('<select id="tt-susti"><option value="">Susti: todas</option><option>Sí</option><option>No</option></select>')
+    out.append('<select id="tt-bucket"><option value="">Días: todos</option><option value="g">&lt;4d</option><option value="g2">5-8d</option><option value="y">9-15d</option><option value="o">16-30d</option><option value="r">&gt;30d</option></select>')
+    out.append('<button type="button" id="tt-clear" class="multi-btn">✕ Limpiar</button>')
+    out.append('<span class="count"><b id="tt-count">0</b> de <span id="tt-total">0</span> visibles</span>')
+    out.append('</div>')
+    out.append('<div class="scroller"><table id="tt-table" style="font-size:11px;min-width:1700px"><thead><tr>')
+    hdrs = [
+        ("Cadena", "text"), ("Ticket", "text"), ("Cliente", "text"),
+        ("Estado final", "text"), ("Tipo avería", "text"),
+        ("Resumen avería", "text"), ("Cambios/Mejoras", "text"),
+        ("Bloq", "text"), ("Susti", "text"), ("Estado susti", "text"),
+        ("Días en taller", "num"),
+        ("Consola", "text"), ("HP", "text"), ("Garantía", "text"),
+        ("Disparos", "num"), ("Importe", "num"),
+        ("Creada", "date"), ("Salida", "date"), ("Persona", "text"),
+    ]
+    for i, (h, dtype) in enumerate(hdrs):
+        out.append(f'<th class="sortable" data-col="{i}" data-type="{dtype}">{html_escape(h)}</th>')
+    out.append('</tr></thead><tbody>')
+    for r in rows:
+        link = f'<a href="{JIRA_URL}{r["key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["key"]}</a>'
+        dcolor = _dc(r["dias_taller"])
+        out.append('<tr>')
+        out.append(f'<td>{html_escape(r["chain"])}</td>')
+        out.append(f'<td>{link}</td>')
+        out.append(f'<td class="d-trunc" title="{html_escape(r["cliente"])}">{html_escape(r["cliente"])}</td>')
+        out.append(f'<td>{html_escape(r["status_final"])}</td>')
+        out.append(f'<td>{html_escape(r["tipo"])}</td>')
+        out.append(f'<td class="d-trunc" title="{html_escape(r["resumen_av"])}">{html_escape(r["resumen_av"])}</td>')
+        out.append(f'<td class="d-trunc" title="{html_escape(r["cambios_av"])}">{html_escape(r["cambios_av"])}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["bloq"])}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["susti"])}</td>')
+        out.append(f'<td style="text-align:center;font-size:11px">{html_escape(r["susti_status"]) if r["susti_status"] else "—"}</td>')
+        out.append(f'<td style="text-align:center;color:{dcolor};font-weight:600">{r["dias_taller"]}</td>')
+        out.append(f'<td>{html_escape(r["consola"])}</td>')
+        out.append(f'<td>{html_escape(r["hp"])}</td>')
+        out.append(f'<td style="text-align:center">{html_escape(r["garantia"])}</td>')
+        out.append(f'<td style="text-align:right;font-variant-numeric:tabular-nums">{html_escape(format_int_dot(r["disparos"]))}</td>')
+        out.append(f'<td style="text-align:right">{html_escape(str(r["importe"]))}</td>')
+        out.append(f'<td>{r["created"]}</td>')
+        out.append(f'<td>{r["salida"]}</td>')
+        out.append(f'<td>{html_escape(r["asignado"])}</td>')
+        out.append('</tr>')
+    out.append('</tbody></table></div>')
+    out.append(_TT_JS)
+    return "".join(out)
+
+
+
+
+def build_tiempo_sustis_section(out_path):
+    """Stacked bar de tiempo de sustituciones ACTIVAS (días desde fecha_envio).
+    Aprovecha sustis_activas.json. Las sustis cerradas no están aquí, así que
+    medimos el tiempo CURRENT de cada sustitución activa."""
+    BUCKETS = [
+        ("0-7 días",   "#1f8a4c", lambda d: d <= 7),
+        ("8-15 días",  "#65a30d", lambda d: 8 <= d <= 15),
+        ("16-25 días", "#b8860b", lambda d: 16 <= d <= 25),
+        ("26-35 días", "#cb6f0a", lambda d: 26 <= d <= 35),
+        (">35 días",   "#c0392b", lambda d: d > 35),
+    ]
+    sustis_path = None
+    try:
+        from pathlib import Path as _P
+        for _cand in [_P("cache") / "sustis_activas.json", out_path.parent.parent / "cache" / "sustis_activas.json"]:
+            if _cand.exists():
+                sustis_path = _cand
+                break
+    except Exception:
+        pass
+    if not sustis_path:
+        return '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin datos de sustituciones disponibles.</div>'
+    try:
+        data = json.loads(sustis_path.read_text(encoding="utf-8"))
+    except Exception as e:
+        return f'<div style="color:#c0392b;padding:14px">Error leyendo sustis: {e}</div>'
+
+    now = datetime.now(timezone.utc)
+    counts = [0] * len(BUCKETS)
+    dias_list = []
+    sample_max = []
+    for it in (data.get("items") or []):
+        fe = it.get("fecha_envio")
+        if not fe: continue
+        fe_dt = parse_iso(fe)
+        if not fe_dt: continue
+        if not fe_dt.tzinfo:
+            fe_dt = fe_dt.replace(tzinfo=timezone.utc)
+        dias = (now - fe_dt).days
+        if dias < 0: continue
+        dias_list.append(dias)
+        sample_max.append((dias, it.get("parent_key") or it.get("key") or ""))
+        for i, (_, _, pred) in enumerate(BUCKETS):
+            if pred(dias):
+                counts[i] += 1
+                break
+    total = sum(counts)
+    if not total:
+        return '<div style="color:#94a3b8;padding:14px;font-style:italic">No hay sustituciones activas con fecha de envío.</div>'
+    media = sum(dias_list) / total
+    mediana = sorted(dias_list)[total // 2]
+    max_d = max(dias_list)
+    sample_max.sort(reverse=True)
+    top3 = sample_max[:3]
+    segments = []
+    for (lbl, color, _), n in zip(BUCKETS, counts):
+        pct = (n * 100.0 / total) if total else 0
+        if n > 0:
+            label_inline = "" if pct < 5 else str(n)
+            segments.append(
+                f'<div style="background:{color};height:100%;width:{pct:.2f}%;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:13px;min-width:0;overflow:hidden" title="{lbl}: {n} sustis ({pct:.0f}%)">{label_inline}</div>'
+            )
+    bar_html = '<div style="display:flex;height:36px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#f1f5f9">' + "".join(segments) + '</div>'
+    legend_items = []
+    for (lbl, color, _), n in zip(BUCKETS, counts):
+        pct = (n * 100.0 / total) if total else 0
+        legend_items.append(
+            f'<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">'
+            f'<span style="display:inline-block;width:12px;height:12px;background:{color};border-radius:3px"></span>'
+            f'<b>{lbl}</b>: {n} ({pct:.0f}%)</span>'
+        )
+    top_label = html_escape(top3[0][1]) if top3 else ""
+    kpis = (
+        '<div style="display:flex;gap:12px;margin:6px 0 12px;flex-wrap:wrap">'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Total sustis activas</div><div class="v">{total}</div><div class="d">con fecha de envío</div></div>'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Mediana</div><div class="v">{mediana:.0f}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">tiempo actual de préstamo</div></div>'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Media</div><div class="v">{media:.1f}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">sensible a outliers</div></div>'
+        f'<div class="kpi" style="flex:1 1 150px"><div class="k">Máximo</div><div class="v" style="color:#c0392b">{max_d}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">{top_label}</div></div>'
+        '</div>'
+    )
+    return (
+        kpis + bar_html +
+        '<div style="margin-top:12px">' + "".join(legend_items) + '</div>'
+        '<div class="legend" style="margin-top:8px">Tiempo desde <b>fecha y hora de envío</b> de la sub-tarea de sustitución hasta hoy. Solo sustis activas (cuando se devuelven dejan de aparecer en el cache).</div>'
+    )
+
+
 def build_anual_averias_section(cache):
     """Tabla cruzada Año venta x Tipo averia para tickets 2026 que pasaron por
     Inspeccion de salida. Usa customfield_10815 (Cambios obs y mejoras),
@@ -652,6 +945,13 @@ def build_anual_averias_section(cache):
             for v in (t.get("cambios") or []):
                 b = val2bucket.get(str(v).lower())
                 if b: buckets.add(b)
+            # Complementar SIEMPRE con resumen avería para Diodo/Umbilical
+            # (a veces no se rellenan bien en cambios pero sí en motivo)
+            for v in (t.get("motivo") or []):
+                vl = str(v).lower()
+                if "umbilical" in vl: buckets.add("Umbi")
+                elif "diodo" in vl: buckets.add("Diod")
+            # Fallback completo si todavía no hay buckets
             if not buckets:
                 for v in (t.get("motivo") or []):
                     vl = str(v).lower()
@@ -1107,7 +1407,8 @@ def build_abiertas_hoy_section(cache):
     return header, "\n".join(body_parts)
 
 
-def build_detalle_section(cache):
+def build_detalle_section(cache, sustis_by_parent=None):
+    sustis_by_parent = sustis_by_parent or {}
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
     rows = []
     for key, t in cache.get("tickets", {}).items():
@@ -1147,6 +1448,7 @@ def build_detalle_section(cache):
             "dt_color": dt_color if dias_taller is not None else "#cbd5e1",
             "created": created_s, "tipo": t.get("tipo", ""),
             "bloq": t.get("bloq", ""), "susti": t.get("susti", ""),
+            "susti_status": sustis_by_parent.get(key, ""),
             "fventa": fventa_s, "consola": t.get("consola", ""),
             "hp": t.get("hp", ""), "garantia": t.get("garantia", ""),
             "disparos": t.get("disparos", ""),
@@ -1180,10 +1482,11 @@ def build_detalle_section(cache):
             f'<td>{html_escape(r["tipo"])}</td>'
             f'<td style="text-align:center">{html_escape(r["bloq"])}</td>'
             f'<td style="text-align:center">{html_escape(r["susti"])}</td>'
+            f'<td style="text-align:center;font-size:11px">{html_escape(r["susti_status"]) if r["susti_status"] else "—"}</td>'
             f'<td>{r["fventa"]}</td>'
             f'<td style="text-align:center">{html_escape(r["consola"])}</td>'
             f'<td style="text-align:center">{html_escape(r["hp"])}</td>'
-            f'<td style="text-align:right">{html_escape(str(r["disparos"]) if r["disparos"] != "" else "")}</td>'
+            f'<td style="text-align:right;font-variant-numeric:tabular-nums">{html_escape(format_int_dot(r["disparos"]))}</td>'
             f'<td style="text-align:center">{html_escape(r["garantia"])}</td>'
             f'<td title="{html_escape(r["desc"])}" class="d-trunc">{html_escape(r["desc"])}</td>'
             f'<td>{html_escape(r["tec_taller"])}</td>'
@@ -1360,6 +1663,22 @@ def build_html(cache, out_path, template_path):
     en_taller_flow = ('<div class="d" style="margin-top:2px;font-size:13px">'
                       + ' '.join(en_taller_flow_parts) + '</div>') if en_taller_flow_parts else ''
 
+    # Cargar sustis cache para enriquecer Detalle y calcular pendientes críticos
+    sustis_by_parent = {}
+    try:
+        from pathlib import Path as _PSusti
+        for _cand in [_PSusti("cache") / "sustis_activas.json", out_path.parent.parent / "cache" / "sustis_activas.json"]:
+            if _cand.exists():
+                _su = json.loads(_cand.read_text(encoding="utf-8"))
+                for _it in _su.get("items", []) or []:
+                    _pk = _it.get("parent_key")
+                    _ss = (_it.get("subtask_status") or "").strip()
+                    if _pk and _ss:
+                        sustis_by_parent[_pk] = _ss
+                break
+    except Exception:
+        pass
+
     # KPI Pendientes a taller: estados antes del taller (no asignados aún a técnico)
     PRE_TALLER_STATUSES = {"Abierto", "Recepcionado SAT", "Pendiente recogida", "Gestionado transporte"}
     BLOQ_TRUE = {"sí", "si", "yes", "true", "1"}
@@ -1367,16 +1686,22 @@ def build_html(cache, out_path, template_path):
     pendientes_taller = 0
     pendientes_taller_bloq = 0
     pendientes_taller_susti = 0
+    pendientes_taller_critic = 0   # NUEVO: bloq=Sí AND susti en estado Solicitado
     pendientes_taller_keys = []
     for k, t in cache.get("tickets", {}).items():
         if t.get("current_status") not in PRE_TALLER_STATUSES:
             continue
         pendientes_taller += 1
         pendientes_taller_keys.append(k)
-        if (t.get("bloq") or "").strip().lower() in BLOQ_TRUE:
+        is_bloq = (t.get("bloq") or "").strip().lower() in BLOQ_TRUE
+        is_susti = (t.get("susti") or "").strip().lower() in SUSTI_TRUE
+        if is_bloq:
             pendientes_taller_bloq += 1
-        if (t.get("susti") or "").strip().lower() in SUSTI_TRUE:
+        if is_susti:
             pendientes_taller_susti += 1
+        ss = sustis_by_parent.get(k, "")
+        if is_bloq and ss.lower() == "solicitado":
+            pendientes_taller_critic += 1
 
     # KPI Gestión externa
     EXTERNA_STATUSES = {"Enviado a técnico externo", "Esperando respuesta cliente a presupuesto", "Pendiente definir servicio externo"}
@@ -1434,10 +1759,11 @@ def build_html(cache, out_path, template_path):
 
     # Nuevas creadas por corte (mensuales = todo el mes; diarios = ese dia)
     # KPI Nuevas hoy: tickets creados hoy Y abiertos (cuadra con bucket azul de la tabla Abiertas hoy)
-    nuevas_hoy_count = sum(
-        1 for k, t in cache.get("tickets", {}).items()
-        if is_created_today(t) and is_open(t.get("current_status"))
-    )
+    nuevas_hoy_keys_set = set()
+    for _kk, _t in cache.get("tickets", {}).items():
+        if is_created_today(_t) and is_open(_t.get("current_status")):
+            nuevas_hoy_keys_set.add(_kk)
+    nuevas_hoy_count = len(nuevas_hoy_keys_set)
 
     # KPIs: Presupuestos hechos hoy y Equipos reparados hoy (= tickets únicos con to_status hoy)
     _cutoff_hoy_kpi = datetime(today.year, today.month, today.day, 0, 0, 0, tzinfo=timezone.utc)
@@ -1467,7 +1793,7 @@ def build_html(cache, out_path, template_path):
     ah_header, ah_rows = build_abiertas_hoy_section(cache)
     avances_header, avances_rows, avances_detail_json, avances_extra = build_avances_section(cache)
     tec_header, tec_rows = build_tecnicos_section(cache, avances_extra)
-    detalle_rows = build_detalle_section(cache)
+    detalle_rows = build_detalle_section(cache, sustis_by_parent=sustis_by_parent)
 
     # Fase 2: pestaña "Por cadena"
     chains_html = ""
@@ -1516,8 +1842,10 @@ def build_html(cache, out_path, template_path):
                 "nuevas_hoy": nuevas_hoy_count,
                 "presupuestos_hechos": presupuestos_hechos_count,
                 "equipos_reparados": equipos_reparados_count,
+                "entradas_taller_hoy": entradas_taller_count,
                 "salidas_taller_hoy": salidas_taller,
                 "pendientes_taller": pendientes_taller,
+                "pendientes_taller_critic": pendientes_taller_critic,
                 "en_taller": en_taller,
                 "peak_pct": peak_pct,
                 "gestion_externa": gestion_externa,
@@ -1534,6 +1862,7 @@ def build_html(cache, out_path, template_path):
         ("nuevas_hoy", "Nuevas hoy", "#3b82f6"),
         ("presupuestos_hechos", "Presupuestos hechos", "#0891b2"),
         ("equipos_reparados", "Equipos reparados", "#059669"),
+        ("entradas_taller_hoy", "Entradas taller", "#1f6feb"),
         ("salidas_taller_hoy", "Salidas taller", "#16a34a"),
         ("pendientes_taller", "Pdtes. taller", "#a23b72"),
         ("en_taller", "En taller", "#1f6feb"),
@@ -1577,6 +1906,18 @@ def build_html(cache, out_path, template_path):
     except Exception as _e:
         tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempo taller: {_e}</div>'
 
+    # Stacked bar tiempo de sustituciones activas
+    try:
+        tiempo_sustis_html = build_tiempo_sustis_section(out_path)
+    except Exception as _e:
+        tiempo_sustis_html = f'<div style="color:#c0392b;padding:14px">Error tiempo sustis: {_e}</div>'
+
+    # Tabla detalle filtrable de tickets cerrados con tiempo en taller medible
+    try:
+        taller_detail_html = build_taller_detail_section(cache, sustis_by_parent=sustis_by_parent)
+    except Exception as _e:
+        taller_detail_html = f'<div style="color:#c0392b;padding:14px">Error detalle taller: {_e}</div>'
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -1619,6 +1960,8 @@ def build_html(cache, out_path, template_path):
         "__EVOLUCION_KPIS__": evolucion_kpis,
         "__ANUAL_AVERIAS__": anual_averias_html,
         "__TIEMPO_TALLER__": tiempo_taller_html,
+        "__TIEMPO_SUSTIS__": tiempo_sustis_html,
+        "__TALLER_DETAIL__": taller_detail_html,
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
         "__PENDIENTES_TALLER_SUSTI__": str(pendientes_taller_susti),
@@ -1628,6 +1971,8 @@ def build_html(cache, out_path, template_path):
         "__KPI_EQ_REPARADOS_KEYS__": json.dumps(sorted(eq_reparados_hoy)),
         "__KPI_ENTRADAS_TALLER_KEYS__": json.dumps(sorted(entradas_taller_keys)),
         "__KPI_SALIDAS_TALLER_KEYS__": json.dumps(sorted(salidas_taller_tickets)),
+        "__KPI_NUEVAS_HOY_KEYS__": json.dumps(sorted(nuevas_hoy_keys_set)),
+        "__PENDIENTES_TALLER_CRITIC__": str(pendientes_taller_critic),
     }
     for k, v in repl.items():
         html = html.replace(k, v)

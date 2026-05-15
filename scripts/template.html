@@ -376,6 +376,7 @@
     <a href="#evol-cadena" class="sb-item"><i class="ti ti-chart-line"></i>Evol. cadena</a>
     <a href="#evol-kpis" class="sb-item"><i class="ti ti-history"></i>Evol. KPIs</a>
     <a href="#tiempo-taller" class="sb-item"><i class="ti ti-clock"></i>Tiempo taller</a>
+    <a href="#tiempo-sustis" class="sb-item"><i class="ti ti-arrows-exchange"></i>Tiempo sustis</a>
     <a href="#averias-2026" class="sb-item"><i class="ti ti-tools"></i>Averías por año</a>
   </nav>
   <div class="sb-spacer"></div>
@@ -422,7 +423,7 @@ __DEMO_BANNER__
   <div class="kpi clickable" id="kpi-eq-reparados" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-wrench"></i>Equipos reparados hoy</div><div class="v" style="color:#059669">__EQ_REPARADOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por inspección hoy</div></div>
   <div class="kpi clickable" id="kpi-entradas-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-login-2"></i>Entradas a taller hoy</div><div class="v" style="color:#1f6feb">__ENTRADAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que llegaron al taller hoy</div></div>
   <div class="kpi clickable" id="kpi-salidas-taller" title="Clic para filtrar Detalle (los que siguen abiertos)"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
-  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:13px;color:#c0392b;font-weight:500;margin-left:6px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span><span style="font-size:13px;color:#a23b72;font-weight:500;margin-left:6px" title="Pendientes con sustitución requerida (casos críticos)">· __PENDIENTES_TALLER_SUSTI__ susti</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte</div></div>
+  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:13px;color:#c0392b;font-weight:500;margin-left:6px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span><span style="font-size:13px;color:#a23b72;font-weight:500;margin-left:6px" title="Bloqueantes con sustitución en estado Solicitado (casos más críticos)">· __PENDIENTES_TALLER_CRITIC__ críticos</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte · críticos = bloq + susti solicitada</div></div>
   <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
@@ -490,17 +491,18 @@ __TEC_ROWS__
   <th class="sortable" data-col="9" data-type="text">Tipo avería</th>
   <th class="sortable" data-col="10" data-type="text">Bloq</th>
   <th class="sortable" data-col="11" data-type="text">Susti</th>
-  <th class="sortable" data-col="12" data-type="date">Fecha venta</th>
-  <th class="sortable" data-col="13" data-type="text">Consola</th>
-  <th class="sortable" data-col="14" data-type="text">HP</th>
-  <th class="sortable" data-col="15" data-type="num" title="Número de disparos entrada">Disparos</th>
-  <th class="sortable" data-col="16" data-type="text">Garantía</th>
-  <th class="sortable" data-col="17" data-type="text">Descripción</th>
-  <th class="sortable" data-col="18" data-type="text">Téc. taller</th>
-  <th class="sortable" data-col="19" data-type="num">Importe</th>
-  <th class="sortable" data-col="20" data-type="text">Téc. externo</th>
-  <th class="sortable" data-col="21" data-type="text">Último comentario</th>
-  <th class="sortable" data-col="22" data-type="text">Persona asignada</th>
+  <th class="sortable" data-col="12" data-type="text" title="Estado de la sustitución asociada (sub-tarea)">Estado susti</th>
+  <th class="sortable" data-col="13" data-type="date">Fecha venta</th>
+  <th class="sortable" data-col="14" data-type="text">Consola</th>
+  <th class="sortable" data-col="15" data-type="text">HP</th>
+  <th class="sortable" data-col="16" data-type="num" title="Número de disparos entrada">Disparos</th>
+  <th class="sortable" data-col="17" data-type="text">Garantía</th>
+  <th class="sortable" data-col="18" data-type="text">Descripción</th>
+  <th class="sortable" data-col="19" data-type="text">Téc. taller</th>
+  <th class="sortable" data-col="20" data-type="num">Importe</th>
+  <th class="sortable" data-col="21" data-type="text">Téc. externo</th>
+  <th class="sortable" data-col="22" data-type="text">Último comentario</th>
+  <th class="sortable" data-col="23" data-type="text">Persona asignada</th>
 </tr></thead>
 <tbody>
 __DETALLE_ROWS__
@@ -541,6 +543,14 @@ __EVOLUCION_KPIS__
 <h2 id="tiempo-taller">Tiempo en taller (tickets 2026 cerrados)</h2>
 <div class="legend">Distribución de los días que tarda una incidencia desde que entra por primera vez a <b>Pdte. asignar técnico</b> hasta que sale a un estado terminal.</div>
 __TIEMPO_TALLER__
+
+<h3 id="tiempo-taller-detalle" style="margin:18px 0 4px;color:var(--blue);font-size:16px">Detalle de tickets con tiempo en taller medible</h3>
+<div class="legend">Tabla filtrable de los mismos tickets del KPI <b>Total tickets</b>. Incluye <b>Resumen avería</b> y <b>Días en taller</b>. Clic en el KPI lleva aquí.</div>
+__TALLER_DETAIL__
+
+<h2 id="tiempo-sustis">Tiempo de sustituciones (activas)</h2>
+<div class="legend">Distribución de días que las sustituciones activas llevan entregadas. Tiempo desde la <b>fecha de envío</b> de la sub-tarea hasta hoy. Cuando se devuelve, deja de aparecer en el cache.</div>
+__TIEMPO_SUSTIS__
 
 <h2 id="averias-2026">Tipos de avería por año de venta (2026)</h2>
 <div class="legend">Reparaciones 2026 (tickets que pasaron por Inspección de salida) cruzadas: filas = año de venta del equipo, columnas = tipo de avería. Un ticket puede tocar varios cubos. Filtros por cadena e importe se aplican al instante.</div>
@@ -585,7 +595,7 @@ __SUSTIS_HTML__
   // Atajos sidebar: cambiar pestaña + scroll
   const SHORTCUT_VIEW = {
     'kpis':'total','abiertas':'total','tecnicos':'total','detalle':'total',
-    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats','tiempo-taller':'stats','averias-2026':'stats'
+    'evol-estado':'stats','evol-cadena':'stats','evol-kpis':'stats','tiempo-taller':'stats','tiempo-sustis':'stats','averias-2026':'stats'
   };
   document.querySelectorAll('.sidebar a.sb-item[href^="#"]').forEach(a => {
     a.addEventListener('click', (e) => {
@@ -795,8 +805,9 @@ __SUSTIS_HTML__
     chains.add(r.cells[0].textContent.trim());
     statuses.add(r.cells[3].textContent.trim());
     // col 22 = Persona asignada · col 18 = Téc. taller (ambas pueden filtrar persona)
-    if (r.cells[22]) asignados.add(r.cells[22].textContent.trim());
-    if (r.cells[18]) asignados.add(r.cells[18].textContent.trim());
+    // col 23 = Persona asignada · col 19 = Téc. taller (filtran por persona)
+    if (r.cells[23]) asignados.add(r.cells[23].textContent.trim());
+    if (r.cells[19]) asignados.add(r.cells[19].textContent.trim());
   });
   Array.from(chains).sort().forEach(c => {
     const o = document.createElement('option');
@@ -884,7 +895,7 @@ __SUSTIS_HTML__
       const rowDays = parseInt(row.cells[5].textContent.trim());
       const rowBloq = row.cells[10].textContent.trim();
       const rowSusti = row.cells[11].textContent.trim();
-      const rowAsignado = row.cells[22] ? row.cells[22].textContent.trim() : '';
+      const rowAsignado = row.cells[23] ? row.cells[23].textContent.trim() : '';
       const isExterno = (rowGestion === 'Externa');
       const matchGestion = !ge || (ge === 'externo' ? isExterno : !isExterno);
       const matchStatus = !useStatusFilter || selectedStatuses.has(rowStatus);
@@ -902,8 +913,8 @@ __SUSTIS_HTML__
       else if (bk === 'y') matchBucket = !createdToday && (rowDays >= 6 && rowDays <= 15);
       else if (bk === 'r') matchBucket = !createdToday && (rowDays > 15);
       let matchAsignado = true;
-      // Permitir filtrar por persona (asignado col 22 O tec_taller col 18)
-      const rowTecTaller = row.cells[18] ? row.cells[18].textContent.trim() : '';
+      // Permitir filtrar por persona (asignado col 23 O tec_taller col 19)
+      const rowTecTaller = row.cells[19] ? row.cells[19].textContent.trim() : '';
       if (asg === '__none__') matchAsignado = (rowAsignado === '' && rowTecTaller === '');
       else if (asg) matchAsignado = (rowAsignado === asg || rowTecTaller === asg);
       // Filtro especial por lista de keys (KPIs clickeables)
@@ -1356,6 +1367,7 @@ __SUSTIS_HTML__
   const KPI_EQ_REPARADOS = __KPI_EQ_REPARADOS_KEYS__;
   const KPI_ENTRADAS_TALLER = __KPI_ENTRADAS_TALLER_KEYS__;
   const KPI_SALIDAS_TALLER = __KPI_SALIDAS_TALLER_KEYS__;
+  const KPI_NUEVAS_HOY = __KPI_NUEVAS_HOY_KEYS__;
 
   function applyKpiKeyFilter(keys, label) {
     resetAllFilters();
@@ -1378,13 +1390,7 @@ __SUSTIS_HTML__
 
   const kpiNuevasHoy = document.getElementById('kpi-nuevas-hoy');
   if (kpiNuevasHoy) {
-    kpiNuevasHoy.addEventListener('click', () => {
-      resetAllFilters();
-      filterBucket.value = 't';
-      applyFilters();
-      const target = document.getElementById('detalle');
-      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
-    });
+    kpiNuevasHoy.addEventListener('click', () => applyKpiKeyFilter(KPI_NUEVAS_HOY, 'Nuevas hoy (creadas y abiertas)'));
   }
 
   const kpiPres = document.getElementById('kpi-pres-hechos');
