@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-15T07:55:55.858039+00:00",
+    "last_fetched_at": "2026-05-15T08:37:44.216177+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 59
   },
   "items": [
     {
@@ -179,7 +179,7 @@
       "manipulo_susti": "SUSTDUAL017",
       "fecha_envio": "2026-05-13T15:01:00.000+0200",
       "parent_key": "LEAS-6229",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "MEL CLINICS Castellon",
       "consola_averiada": "91119",
       "manipulo_averiado": "40550",
@@ -299,7 +299,7 @@
       "manipulo_susti": "sustquad018",
       "fecha_envio": "2026-05-06T12:27:00.000+0200",
       "parent_key": "LEAS-5958",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Avanti Clinics La Palma",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -562,7 +562,7 @@
     },
     {
       "key": "LEAS-5928",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Sin Vello Murcia",
       "loc": "Murcia",
       "consola_susti": "sustmhr015",
@@ -847,7 +847,7 @@
     },
     {
       "key": "LEAS-5344",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Joan Guell",
       "loc": "Barcelona",
       "consola_susti": "SUSTMHR031",
@@ -888,21 +888,6 @@
       "parent_cliente": "Brull",
       "consola_averiada": "",
       "manipulo_averiado": "H00141",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-5201",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Dermasana - Albufera",
-      "loc": "Madrid",
-      "consola_susti": null,
-      "manipulo_susti": "H00341",
-      "fecha_envio": "2025-06-03T13:31:00.000+0200",
-      "parent_key": "LEAS-2351",
-      "parent_status": "Cancelado",
-      "parent_cliente": "Dermasana - Albufera",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00440",
       "modelo": "XCell HR"
     }
   ]
