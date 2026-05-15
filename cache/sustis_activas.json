@@ -1,24 +1,24 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-15T12:35:35.786776+00:00",
+    "last_fetched_at": "2026-05-15T13:58:26.538905+00:00",
     "schema_version": 1,
-    "count": 59
+    "count": 56
   },
   "items": [
     {
       "key": "LEAS-6259",
-      "subtask_status": "Solicitado",
+      "subtask_status": "En préstamo",
       "cliente": "Ces Depilación SADA (DS0125)",
       "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
-      "consola_susti": null,
-      "manipulo_susti": null,
+      "consola_susti": "SUSTMHR015",
+      "manipulo_susti": "40518",
       "fecha_envio": null,
       "parent_key": "LEAS-6258",
       "parent_status": "Pendiente recogida",
       "parent_cliente": "Ces Depilación SADA (DS0125)",
       "consola_averiada": "No aparece",
       "manipulo_averiado": "40367",
-      "modelo": ""
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-6249",
@@ -37,18 +37,18 @@
     },
     {
       "key": "LEAS-6248",
-      "subtask_status": "Solicitado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Ibiza",
       "loc": "Ibiza",
       "consola_susti": null,
-      "manipulo_susti": null,
+      "manipulo_susti": "H01069",
       "fecha_envio": null,
       "parent_key": "LEAS-6246",
       "parent_status": "Pendiente recogida",
       "parent_cliente": "Sin Vello Ibiza",
       "consola_averiada": "",
       "manipulo_averiado": "H03051",
-      "modelo": ""
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6244",
@@ -96,36 +96,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6197",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro Unico Astermas Lugo",
-      "loc": "Lugo",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6196",
-      "parent_status": "Devuelto a fábrica",
-      "parent_cliente": "Centro Unico Astermas Lugo",
-      "consola_averiada": "91128",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6144",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro Unico Orio",
-      "loc": "Via Portico, 71, 24050 Orio al Serio BG, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6142",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Centro Unico Orio",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00212",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6069",
       "subtask_status": "Solicitado",
       "cliente": "SinVello! Sant Cugat del Valles",
@@ -141,17 +111,17 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-5829",
-      "subtask_status": "En préstamo",
+      "key": "LEAS-6144",
+      "subtask_status": "Equipo enviado",
       "cliente": "Centro Unico Orio",
       "loc": "Via Portico, 71, 24050 Orio al Serio BG, Italia",
       "consola_susti": null,
       "manipulo_susti": "H00677",
-      "fecha_envio": null,
-      "parent_key": "LEAS-5827",
-      "parent_status": "Finalizada",
+      "fecha_envio": "2026-05-15T15:51:00.000+0200",
+      "parent_key": "LEAS-6142",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centro Unico Orio",
-      "consola_averiada": "C00212",
+      "consola_averiada": "",
       "manipulo_averiado": "H00212",
       "modelo": "XCell HR"
     },
@@ -209,7 +179,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-05-13T14:43:00.000+0200",
       "parent_key": "LEAS-6224",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Ces Depilacion Tapia 31",
       "consola_averiada": "",
       "manipulo_averiado": "40166",
@@ -329,7 +299,7 @@
       "manipulo_susti": "SUSTDUAL40",
       "fecha_envio": "2026-05-06T10:33:00.000+0200",
       "parent_key": "LEAS-6151",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sin Vello Utrera",
       "consola_averiada": "",
       "manipulo_averiado": "30576",
@@ -464,7 +434,7 @@
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-04-24T09:02:00.000+0200",
       "parent_key": "LEAS-6033",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sin Vello Illescas",
       "consola_averiada": "C00226",
       "manipulo_averiado": "",
@@ -749,7 +719,7 @@
       "manipulo_susti": "SUSTDUAL042",
       "fecha_envio": "2026-03-31T16:24:00.000+0200",
       "parent_key": "LEAS-5736",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Depil&Bell - 30751  91107",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -844,21 +814,6 @@
       "consola_averiada": "No aparece",
       "manipulo_averiado": "",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-5344",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Joan Guell",
-      "loc": "Barcelona",
-      "consola_susti": "SUSTMHR031",
-      "manipulo_susti": "40518",
-      "fecha_envio": "2026-02-27T12:45:00.000+0100",
-      "parent_key": "LEAS-5343",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Joan Guell",
-      "consola_averiada": "C00488",
-      "manipulo_averiado": "H00488",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-5031",
