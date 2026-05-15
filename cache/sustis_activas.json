@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-15T08:37:44.216177+00:00",
+    "last_fetched_at": "2026-05-15T10:38:42.577570+00:00",
     "schema_version": 1,
     "count": 59
   },
   "items": [
+    {
+      "key": "LEAS-6259",
+      "subtask_status": "Solicitado",
+      "cliente": "Ces Depilación SADA (DS0125)",
+      "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6258",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Ces Depilación SADA (DS0125)",
+      "consola_averiada": "No aparece",
+      "manipulo_averiado": "40367",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6249",
       "subtask_status": "Solicitado",
@@ -104,7 +119,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6142",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centro Unico Orio",
       "consola_averiada": "",
       "manipulo_averiado": "H00212",
@@ -344,7 +359,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-04-30T16:53:00.000+0200",
       "parent_key": "LEAS-6091",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sin Vello Velez Malaga",
       "consola_averiada": "C00564",
       "manipulo_averiado": "H00564",
@@ -494,7 +509,7 @@
       "manipulo_susti": "H01025",
       "fecha_envio": "2026-04-22T15:39:00.000+0200",
       "parent_key": "LEAS-5998",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centri Unico Ostia",
       "consola_averiada": "",
       "manipulo_averiado": "H00240",
@@ -559,21 +574,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-5928",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Murcia",
-      "loc": "Murcia",
-      "consola_susti": "sustmhr015",
-      "manipulo_susti": "sustdual003",
-      "fecha_envio": "2026-04-17T14:32:00.000+0200",
-      "parent_key": "LEAS-5927",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Sin Vello Murcia",
-      "consola_averiada": "C00626",
-      "manipulo_averiado": "H00626",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-5939",
