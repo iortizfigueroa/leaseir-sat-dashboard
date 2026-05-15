@@ -49,6 +49,7 @@ FIELDS = [
     "customfield_10150",  # Handpiece serial
     "customfield_10182",  # Máquina en garantía
     "customfield_10210",  # Descripción avería
+    "customfield_10133",  # Número de disparos entrada
     "customfield_10247",  # Técnico taller
     "customfield_10301",  # Importe presupuesto
     "customfield_10143",  # Nombre técnico externo
@@ -182,6 +183,7 @@ def extract(issue):
         "hp": (f.get("customfield_10150") or "").strip(),
         "garantia": opt(f.get("customfield_10182")) or "",
         "descripcion": (f.get("customfield_10210") or "").strip(),
+        "disparos": f.get("customfield_10133") if f.get("customfield_10133") is not None else "",
         "tec_taller": (f.get("customfield_10247") or {}).get("displayName", "") if isinstance(f.get("customfield_10247"), dict) else (f.get("customfield_10247") or ""),
         "asignado": (f.get("assignee") or {}).get("displayName", "") if isinstance(f.get("assignee"), dict) else "",
         "importe": importe if importe is not None else "",

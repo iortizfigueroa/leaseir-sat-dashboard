@@ -372,34 +372,66 @@ JIRA_URL = "https://leaseir.atlassian.net/browse/"
 COLOR_RED_BG = "#fed4d4"
 COLOR_YELLOW_BG = "#fff2a8"
 COLOR_GREEN_BG = "#d6f0d7"
+COLOR_ORANGE_BG = "#ffd9b3"
 COLOR_BLOCK_HEADER = "#365e7d"
 COLOR_SECTION_HEADER = "#1f3a5f"
 COLOR_SUBSEC_HEADER = "#6c7d94"
 COLOR_COL_HEADER = "#2e54a3"
 
 
-TYPES_14 = ['text']*11 + ['date', 'num', 'text']
-TYPES_INV = ['text']*10 + ['date', 'num', 'text']
+def days_bg(dias):
+    """Color de fondo para celda 'Días con sustitución':
+    0-15 verde, 16-25 amarillo, 26-35 naranja, >35 rojo.
+    Devuelve None si dias es vacío o no numérico."""
+    if dias == '' or dias is None:
+        return None
+    try:
+        d = int(dias)
+    except Exception:
+        return None
+    if d <= 15:
+        return COLOR_GREEN_BG
+    if d <= 25:
+        return COLOR_YELLOW_BG
+    if d <= 35:
+        return COLOR_ORANGE_BG
+    return COLOR_RED_BG
+
+
+def days_cell_html(dias):
+    """Renderiza <td> de Días con bg color según rangos. Cell vacía si no hay dato."""
+    if dias == '' or dias is None:
+        return '<td></td>'
+    bg = days_bg(dias)
+    style = f' style="background:{bg};text-align:center;font-weight:600"' if bg else ' style="text-align:center"'
+    return f'<td{style}>{dias}</td>'
+
+
+# Tabla resumen por cadena (14 cols): Cliente, Localización, Días, Fecha envío,
+# Serial consola, Serial manípulo, Modelo, LEAS principal, Estado principal,
+# Subtarea, Estado subtarea, Consola av, Manípulo av, Activity
+TYPES_14 = ['text', 'text', 'num', 'date'] + ['text']*10
+TYPES_INV = ['text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'num', 'date', 'text']
 TYPES_DISP = ['text']*6
 
-HEADERS_14 = ['Cliente', 'Localización', 'Num Serie consola susti',
-              'Num Serie manípulo susti', 'Modelo',
+HEADERS_14 = ['Cliente', 'Localización', 'Días con sustitución', 'Fecha y hora de envío',
+              'Num Serie consola susti', 'Num Serie manípulo susti', 'Modelo',
               'LEAS Incidencia principal', 'Estado principal',
               'Incidencia subtarea', 'Estado subtarea',
               'Consola averiada', 'Manípulo averiado',
-              'Fecha y hora de envío', 'Días con sustitución',
               'Current Activity (Airtable)']
 
 INV_HEADERS = ['Num. Serie', 'Modelo', 'Cliente', 'Incidencia (sub-task)',
                'Incidencia principal', 'Estado principal',
                'Consola principal (avería)', 'HP principal (avería)',
                'Estado Jira (sub-task)', 'Localización equipo averiado',
-               'Fecha y hora de envío', 'Días con sustitución',
+               'Días con sustitución', 'Fecha y hora de envío',
                'Current Activity (Airtable)']
 
 
 def render_subtask_row_html(sr):
-    """Renderiza una fila <tr> para la tabla de cadena (14 cols)."""
+    """Renderiza una fila <tr> para la tabla de cadena (14 cols).
+    Orden: Cliente, Localización, Días, Fecha envío, ..."""
     bg = ""
     if sr['is_solojira']:
         bg = f' style="background:{COLOR_RED_BG}"'
@@ -411,9 +443,14 @@ def render_subtask_row_html(sr):
     leas_link = (f'<a href="{JIRA_URL}{sr["leas_principal"]}" target="_blank" '
                  f'style="color:#2a59c4;text-decoration:none">{sr["leas_principal"]}</a>'
                  if sr['leas_principal'] else '')
-    cells = [
-        html_escape(sr['cliente']),
-        html_escape(sr['localizacion']),
+    # Celdas en orden nuevo (Días justo después de Localización, con coloreado)
+    front = [
+        f'<td>{html_escape(sr["cliente"])}</td>',
+        f'<td>{html_escape(sr["localizacion"])}</td>',
+        days_cell_html(sr['dias']),
+        f'<td>{html_escape(sr["fecha_envio"])}</td>',
+    ]
+    rest = [
         html_escape(sr['consola_id']),
         html_escape(sr['handpiece_id']),
         html_escape(sr['modelo']),
@@ -423,11 +460,9 @@ def render_subtask_row_html(sr):
         html_escape(sr['sub_status']),
         html_escape(sr['consola_av']),
         html_escape(sr['handpiece_av']),
-        html_escape(sr['fecha_envio']),
-        str(sr['dias']) if sr['dias'] != '' else '',
         html_escape(sr['activity']),
     ]
-    return f'<tr{bg}>' + ''.join(f'<td>{c}</td>' for c in cells) + '</tr>'
+    return f'<tr{bg}>' + ''.join(front) + ''.join(f'<td>{c}</td>' for c in rest) + '</tr>'
 
 
 def render_paired_backups(by_cust):
@@ -472,14 +507,18 @@ def render_paired_backups(by_cust):
 
 
 def render_backup_row_html(b):
-    """Fila de backup permanente (subset de 14 cols, en blanco las que no aplican)."""
+    """Fila de backup permanente (subset de 14 cols, en blanco las que no aplican).
+    Orden nuevo: Cliente, Localización, Días, Fecha envío, Cons, HP, Modelo,
+    LEAS, EstadoP, Sub, EstadoSub, ConsAv, HPav, Activity."""
     cells = [
         html_escape(b['cliente']),
         html_escape(b['localizacion']),
+        '',  # Días
+        '',  # Fecha envío
         html_escape(b['consola_id']),
         html_escape(b['handpiece_id']),
         html_escape(b['modelo']),
-        '', '', '', '', '', '', '', '',
+        '', '', '', '', '', '',
         html_escape(b['activity']),
     ]
     return '<tr>' + ''.join(f'<td>{c}</td>' for c in cells) + '</tr>'
@@ -516,6 +555,15 @@ def render_resumen_html(data):
     chain_to_rows = defaultdict(list)
     for sr in all_rows:
         chain_to_rows[chain_for(sr['cliente'])].append(sr)
+    # Orden por días con sustitución desc (los más antiguos arriba)
+    def _dias_sort_key(sr):
+        d = sr.get('dias', '')
+        try:
+            return -int(d)
+        except Exception:
+            return 1  # filas sin días al final
+    for ch in chain_to_rows:
+        chain_to_rows[ch].sort(key=_dias_sort_key)
 
     # Backups por cadena vs others
     backups_per_chain = defaultdict(list)
@@ -664,6 +712,8 @@ def section_for(r):
 
 
 def render_inv_row_html(r, color_bg=None):
+    """Fila vista Inmovilizado SAT (13 cols).
+    Orden nuevo: ..., Localización, Días, Fecha envío, Activity (días con bg color)."""
     style = f' style="background:{color_bg}"' if color_bg else ''
     sub_link = (f'<a href="{JIRA_URL}{r["sub_key"]}" target="_blank" '
                 f'style="color:#2a59c4;text-decoration:none">{r["sub_key"]}</a>'
@@ -671,7 +721,7 @@ def render_inv_row_html(r, color_bg=None):
     leas_link = (f'<a href="{JIRA_URL}{r["leas_principal"]}" target="_blank" '
                  f'style="color:#2a59c4;text-decoration:none">{r["leas_principal"]}</a>'
                  if r.get('leas_principal') else '')
-    cells = [
+    pre = [
         html_escape(r['num_serie']),
         html_escape(r['modelo']),
         html_escape(r['cliente']),
@@ -682,11 +732,16 @@ def render_inv_row_html(r, color_bg=None):
         html_escape(r['handpiece_av']),
         html_escape(r['sub_status']),
         html_escape(r['localizacion']),
+    ]
+    tail = [
         html_escape(r['fecha_envio']),
-        str(r['dias']) if r['dias'] != '' else '',
         html_escape(r['activity']),
     ]
-    return f'<tr{style}>' + ''.join(f'<td>{c}</td>' for c in cells) + '</tr>'
+    return (f'<tr{style}>'
+            + ''.join(f'<td>{c}</td>' for c in pre)
+            + days_cell_html(r['dias'])
+            + ''.join(f'<td>{c}</td>' for c in tail)
+            + '</tr>')
 
 
 def render_inmovilizado_sat_html(data):

@@ -31,8 +31,37 @@ YEAR_BUCKETS = ["2026", "2025", "2024", "2023", "2022", "<2022", "Sin compra"]
 INMOV_RED = "#FFD1D1"     # solo en Jira
 INMOV_YELLOW = "#FFF2A8"  # duplicado
 INMOV_GREEN = "#D9F2D6"   # disponible (solo en AT con SAT)
+INMOV_ORANGE = "#FFD9B3"  # 26-35 días con sustitución
 INMOV_HDR_DARK = "#1F3B5E"
 INMOV_HDR_BLUE = "#2E5496"
+
+
+def days_bg_chain(dias):
+    """Color de fondo para celda 'Días con sustitución'.
+    0-15 verde, 16-25 amarillo, 26-35 naranja, >35 rojo."""
+    if dias is None or dias == '' or dias == '—':
+        return None
+    try:
+        d = int(dias)
+    except Exception:
+        return None
+    if d <= 15:
+        return INMOV_GREEN
+    if d <= 25:
+        return INMOV_YELLOW
+    if d <= 35:
+        return INMOV_ORANGE
+    return INMOV_RED
+
+
+def days_cell_chain(dias):
+    """Renderiza <td> de Días con bg color según rangos. — si no hay dato."""
+    if dias is None or dias == '' or dias == '—':
+        return '<td style="text-align:center">—</td>'
+    bg = days_bg_chain(dias)
+    if bg:
+        return f'<td style="background:{bg};text-align:center;font-weight:600">{dias}</td>'
+    return f'<td style="text-align:center">{dias}</td>'
 
 
 def html_escape(s):
@@ -390,18 +419,18 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
                'normal: ticket activo</p>')
     out.append('<div class="scroller"><table style="font-size:11px;min-width:1700px">')
 
-    headers = ["Cliente", "Localización", "Num Serie consola susti", "Num Serie manípulo susti",
+    headers = ["Cliente", "Localización", "Días con sustitución", "Fecha y hora con sustitución",
+               "Num Serie consola susti", "Num Serie manípulo susti",
                "Modelo", "LEAS Incidencia principal", "Estado principal",
                "Incidencia subtarea", "Estado subtarea",
                "Consola averiada", "Manípulo averiado",
-               "Fecha y hora con sustitución", "Días con sustitución",
                "Current Activity (Airtable)"]
     NCOLS = len(headers)
 
     # Cabecera "CADENA — XXX"
     out.append(f'<tr><th colspan="{NCOLS}" style="background:{INMOV_HDR_DARK};color:white;text-align:left;padding:6px 10px">CADENA — {html_escape(chain.upper())}</th></tr>')
-    # Tipos por columna para sort
-    H_TYPES = ['text']*11 + ['date', 'num', 'text']
+    # Tipos: Cliente, Localización, Días(num), Fecha(date), resto text
+    H_TYPES = ['text', 'text', 'num', 'date'] + ['text']*10
     out.append('<tr>')
     for i, h in enumerate(headers):
         out.append(f'<th class="sortable" data-col="{i}" data-type="{H_TYPES[i]}" style="background:{INMOV_HDR_BLUE};color:white;padding:6px 10px;cursor:pointer">{html_escape(h)}</th>')
@@ -416,6 +445,8 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
         out.append(f'<tr{style}>')
         out.append(f'<td style="text-align:left">{html_escape(r["cliente"])}</td>')
         out.append(f'<td class="d-trunc" style="text-align:left" title="{html_escape(r["loc"])}">{html_escape(r["loc"])}</td>')
+        out.append(days_cell_chain(dias_v))
+        out.append(f'<td>{html_escape(r["fecha_envio_fmt"])}</td>')
         out.append(f'<td style="text-align:center">{html_escape(r["consola_susti"] or "—")}</td>')
         out.append(f'<td style="text-align:center">{html_escape(r["manipulo_susti"] or "—")}</td>')
         out.append(f'<td style="text-align:left">{html_escape(r["modelo"])}</td>')
@@ -425,8 +456,6 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
         out.append(f'<td>{html_escape(r["subtask_status"])}</td>')
         out.append(f'<td style="text-align:center">{html_escape(r["consola_avr"] or "—")}</td>')
         out.append(f'<td style="text-align:center">{html_escape(r["manipulo_avr"] or "—")}</td>')
-        out.append(f'<td>{html_escape(r["fecha_envio_fmt"])}</td>')
-        out.append(f'<td style="text-align:center">{dias_v}</td>')
         out.append(f'<td>{html_escape(r["activity"])}</td>')
         out.append('</tr>')
 
@@ -508,11 +537,13 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
         for r in merged_rows:
             out.append('<tr>')
             out.append(f'<td style="text-align:left">{html_escape(r["customer"])}</td>')
-            out.append('<td>—</td>')
+            out.append('<td>—</td>')                              # Localización
+            out.append('<td style="text-align:center">—</td>')    # Días (NEW)
+            out.append('<td>—</td>')                              # Fecha envío (NEW)
             out.append(f'<td style="text-align:center">{html_escape(r["consola_serial"] or "—")}</td>')
             out.append(f'<td style="text-align:center">{html_escape(r["manipulo_serial"] or "—")}</td>')
             out.append(f'<td style="text-align:left">{html_escape(r["modelo"])}</td>')
-            out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+            out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
             out.append(f'<td>{html_escape(r["activity"])}</td>')
             out.append('</tr>')
 
@@ -575,11 +606,13 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
         for r in disp_rows:
             out.append(f'<tr style="background:{INMOV_GREEN}">')
             out.append(f'<td style="text-align:left">{html_escape(r["customer"])}</td>')
-            out.append('<td>—</td>')
+            out.append('<td>—</td>')                              # Localización
+            out.append('<td style="text-align:center">—</td>')    # Días (NEW)
+            out.append('<td>—</td>')                              # Fecha envío (NEW)
             out.append(f'<td style="text-align:center">{html_escape(r["consola_serial"] or "—")}</td>')
             out.append(f'<td style="text-align:center">{html_escape(r["manipulo_serial"] or "—")}</td>')
             out.append(f'<td style="text-align:left">{html_escape(r["modelo"])}</td>')
-            out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
+            out.append('<td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>')
             out.append(f'<td>{html_escape(r["activity"])}</td>')
             out.append('</tr>')
 

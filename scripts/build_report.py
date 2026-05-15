@@ -1149,6 +1149,7 @@ def build_detalle_section(cache):
             "bloq": t.get("bloq", ""), "susti": t.get("susti", ""),
             "fventa": fventa_s, "consola": t.get("consola", ""),
             "hp": t.get("hp", ""), "garantia": t.get("garantia", ""),
+            "disparos": t.get("disparos", ""),
             "desc": (t.get("descripcion", "") or "")[:200],
             "tec_taller": t.get("tec_taller", ""),
             "asignado": t.get("asignado", ""),
@@ -1182,6 +1183,7 @@ def build_detalle_section(cache):
             f'<td>{r["fventa"]}</td>'
             f'<td style="text-align:center">{html_escape(r["consola"])}</td>'
             f'<td style="text-align:center">{html_escape(r["hp"])}</td>'
+            f'<td style="text-align:right">{html_escape(str(r["disparos"]) if r["disparos"] != "" else "")}</td>'
             f'<td style="text-align:center">{html_escape(r["garantia"])}</td>'
             f'<td title="{html_escape(r["desc"])}" class="d-trunc">{html_escape(r["desc"])}</td>'
             f'<td>{html_escape(r["tec_taller"])}</td>'

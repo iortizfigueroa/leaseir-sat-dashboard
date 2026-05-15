@@ -488,13 +488,14 @@ __TEC_ROWS__
   <th class="sortable" data-col="12" data-type="date">Fecha venta</th>
   <th class="sortable" data-col="13" data-type="text">Consola</th>
   <th class="sortable" data-col="14" data-type="text">HP</th>
-  <th class="sortable" data-col="15" data-type="text">Garantía</th>
-  <th class="sortable" data-col="16" data-type="text">Descripción</th>
-  <th class="sortable" data-col="17" data-type="text">Téc. taller</th>
-  <th class="sortable" data-col="18" data-type="num">Importe</th>
-  <th class="sortable" data-col="19" data-type="text">Téc. externo</th>
-  <th class="sortable" data-col="20" data-type="text">Último comentario</th>
-  <th class="sortable" data-col="21" data-type="text">Persona asignada</th>
+  <th class="sortable" data-col="15" data-type="num" title="Número de disparos entrada">Disparos</th>
+  <th class="sortable" data-col="16" data-type="text">Garantía</th>
+  <th class="sortable" data-col="17" data-type="text">Descripción</th>
+  <th class="sortable" data-col="18" data-type="text">Téc. taller</th>
+  <th class="sortable" data-col="19" data-type="num">Importe</th>
+  <th class="sortable" data-col="20" data-type="text">Téc. externo</th>
+  <th class="sortable" data-col="21" data-type="text">Último comentario</th>
+  <th class="sortable" data-col="22" data-type="text">Persona asignada</th>
 </tr></thead>
 <tbody>
 __DETALLE_ROWS__
@@ -788,7 +789,9 @@ __SUSTIS_HTML__
   allRows.forEach(r => {
     chains.add(r.cells[0].textContent.trim());
     statuses.add(r.cells[3].textContent.trim());
-    if (r.cells[20]) asignados.add(r.cells[20].textContent.trim());
+    // col 22 = Persona asignada · col 18 = Téc. taller (ambas pueden filtrar persona)
+    if (r.cells[22]) asignados.add(r.cells[22].textContent.trim());
+    if (r.cells[18]) asignados.add(r.cells[18].textContent.trim());
   });
   Array.from(chains).sort().forEach(c => {
     const o = document.createElement('option');
@@ -874,15 +877,15 @@ __SUSTIS_HTML__
       const rowStatus = row.cells[3].textContent.trim();
       const rowGestion = row.cells[4].textContent.trim();
       const rowDays = parseInt(row.cells[5].textContent.trim());
-      const rowBloq = row.cells[9].textContent.trim();
-      const rowSusti = row.cells[10].textContent.trim();
-      const rowAsignado = row.cells[20] ? row.cells[20].textContent.trim() : '';
+      const rowBloq = row.cells[10].textContent.trim();
+      const rowSusti = row.cells[11].textContent.trim();
+      const rowAsignado = row.cells[22] ? row.cells[22].textContent.trim() : '';
       const isExterno = (rowGestion === 'Externa');
       const matchGestion = !ge || (ge === 'externo' ? isExterno : !isExterno);
       const matchStatus = !useStatusFilter || selectedStatuses.has(rowStatus);
       let matchBucket = true;
-      // Bucket Hoy = creada hoy (basado en col 7 "Creada"). Tiene prioridad sobre verde.
-      const rowCreada = row.cells[7].textContent.trim();
+      // Bucket Hoy = creada hoy (basado en col 8 "Creada"). Tiene prioridad sobre verde.
+      const rowCreada = row.cells[8].textContent.trim();
       const todayDate = new Date();
       const dd = String(todayDate.getDate()).padStart(2,'0');
       const mm = String(todayDate.getMonth()+1).padStart(2,'0');
@@ -894,8 +897,8 @@ __SUSTIS_HTML__
       else if (bk === 'y') matchBucket = !createdToday && (rowDays >= 6 && rowDays <= 15);
       else if (bk === 'r') matchBucket = !createdToday && (rowDays > 15);
       let matchAsignado = true;
-      // Permitir filtrar por persona (asignado O tec_taller, col 16)
-      const rowTecTaller = row.cells[16] ? row.cells[16].textContent.trim() : '';
+      // Permitir filtrar por persona (asignado col 22 O tec_taller col 18)
+      const rowTecTaller = row.cells[18] ? row.cells[18].textContent.trim() : '';
       if (asg === '__none__') matchAsignado = (rowAsignado === '' && rowTecTaller === '');
       else if (asg) matchAsignado = (rowAsignado === asg || rowTecTaller === asg);
       const ok = (!q || text.includes(q))
@@ -977,6 +980,7 @@ __SUSTIS_HTML__
       filterBloq.value = '';
       filterSusti.value = '';
       filterBucket.value = '';
+      filterAsignado.value = '';
       filterChain.value = cadena;
       // Reset status checkboxes, then check just this one if specified
       selectedStatuses.clear();
