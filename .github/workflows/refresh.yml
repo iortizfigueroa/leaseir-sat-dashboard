@@ -1,20 +1,17 @@
 name: Refresh SAT dashboard
 
 on:
-  # Manual trigger from the Actions tab
   workflow_dispatch: {}
-  # 4 crons al dia en horas valle (minutos no-en-punto para reducir saltos de GitHub)
-  # Hora Madrid: verano CEST=UTC+2 / invierno CET=UTC+1
   schedule:
-    - cron: "17 4 * * *"   # 06:17 verano / 05:17 invierno (madrugada)
-    - cron: "23 9 * * *"   # 11:23 verano / 10:23 invierno (media manana)
-    - cron: "47 13 * * *"  # 15:47 verano / 14:47 invierno (tarde)
-    - cron: "33 18 * * *"  # 20:33 verano / 19:33 invierno (noche)
+    - cron: "17 4 * * *"
+    - cron: "23 9 * * *"
+    - cron: "47 13 * * *"
+    - cron: "33 18 * * *"
 
 permissions:
-  contents: write   # to commit cache + output back
-  pages: write      # to publish to GitHub Pages
-  id-token: write   # for the deploy-pages action
+  contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: refresh-sat
@@ -46,21 +43,21 @@ jobs:
             python scripts/fetch_jira.py --cache cache/jira_status_timeline.json --mode seed
           fi
 
-      - name: Refresh Airtable Pedidos (Fase 2)
+      - name: Refresh Airtable Pedidos
         continue-on-error: true
         env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
         run: |
           python scripts/fetch_airtable.py --cache cache/airtable_pedidos.json
 
-      - name: Refresh Airtable Inmovilizado (Fase 2)
+      - name: Refresh Airtable Inmovilizado
         continue-on-error: true
         env:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
         run: |
           python scripts/fetch_inmovilizado.py --cache cache/airtable_inmovilizado.json
 
-      - name: Refresh Jira sustituciones activas (Fase 2)
+      - name: Refresh Jira sustituciones activas
         continue-on-error: true
         env:
           JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
@@ -104,4 +101,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.dep
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
