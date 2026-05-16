@@ -48,8 +48,14 @@ from requests.auth import HTTPBasicAuth
 # Estados que indican que la sustitución sigue activa (no devuelta)
 ACTIVE_STATES = {"Solicitado", "Equipo enviado", "En préstamo", "En prestamo"}
 
-# Estados terminales (devolución/cierre)
-TERMINAL_STATES = {"Devuelto", "Devuelta", "Cerrado", "Finalizada", "Cancelado", "Closed"}
+# Estados terminales (devolución/cierre). Importante incluir variantes EXACTAS de Jira:
+# - "Equipo devuelto" es el nombre real cuando la máquina vuelve al SAT.
+# - "Finalizada"/"Cancelado"/"Closed" son los terminales globales.
+TERMINAL_STATES = {
+    "Equipo devuelto", "Devuelto",
+    "Cerrado", "Finalizada", "Cancelado", "Closed",
+    "Finalizado técnico externo", "Resuelto",
+}
 
 
 def session_from_env():

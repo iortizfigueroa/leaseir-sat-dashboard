@@ -1403,7 +1403,7 @@ def build_tiempos_section(cache, sustis_by_parent):
     t_max = max(taller_dias) if taller_dias else 0
     n_live = sum(1 for r in rows if r["taller_live"])
     taller_kpis = _kpis_html("t", t_total, t_mediana, t_media, t_max, "taller",
-                             f"{n_live} aún en taller (live)")
+                             f"tickets cerrados (excluidos {n_live} aún en taller)")
     taller_ranges = [(0,3),(4,8),(9,15),(16,30),(31,9999)]
     taller_bar = _bar_html(taller_buckets, counts_taller, t_total, "taller", "taller", taller_ranges)
     taller_legend = ""
@@ -1441,7 +1441,7 @@ def build_tiempos_section(cache, sustis_by_parent):
     else:
         s_mediana = s_media = s_max = 0
     sustis_kpis = _kpis_html("s", s_total, s_mediana, s_media, s_max, "sustis",
-                             "sustituciones con fecha de envío conocida")
+                             "sustituciones DEVUELTAS (excluidas las activas)")
     sustis_ranges = [(0,7),(8,15),(16,25),(26,35),(36,9999)]
     sustis_bar = _bar_html(susti_buckets, counts_susti, s_total, "sustis", "sustis", sustis_ranges)
     sustis_legend = ""
@@ -1547,7 +1547,7 @@ def build_tiempos_section(cache, sustis_by_parent):
             hide = "" if default_on else 'style="display:none"'
             cell_vals.append(f'<td class="tm-col" data-col="{COLS.index((key, label, dtype, default_on))}" {hide}>{v}</td>')
         row_open = "open" if r["is_open"] else "closed"
-        out.append(f'<tr data-open="{row_open}" data-chain="{html_escape(r["chain"])}" data-status="{html_escape(r["status"])}" data-tipo="{html_escape(r["tipo"])}" data-bloq="{html_escape(r["bloq"])}" data-susti="{html_escape(r["susti"])}" data-dt="{r["dias_taller"] if r["dias_taller"] is not None else -1}" data-ds="{r["dias_susti"] if r["dias_susti"] is not None else -1}">' + ''.join(cell_vals) + '</tr>')
+        out.append(f'<tr data-open="{row_open}" data-chain="{html_escape(r["chain"])}" data-status="{html_escape(r["status"])}" data-tipo="{html_escape(r["tipo"])}" data-bloq="{html_escape(r["bloq"])}" data-susti="{html_escape(r["susti"])}" data-dt="{r["dias_taller"] if r["dias_taller"] is not None else -1}" data-ds="{r["dias_susti"] if r["dias_susti"] is not None else -1}" data-tlive="{1 if r.get("taller_live") else 0}" data-sactive="{1 if r.get("susti_active", True) else 0}">' + ''.join(cell_vals) + '</tr>')
     out.append('</tbody></table></div>')
 
     # JS para tabla
@@ -1562,21 +1562,29 @@ def build_tiempos_section(cache, sustis_by_parent):
       function apply(){
         var q=(els.search.value||'').toLowerCase().trim();
         var n=0;
-        // Para top10, calcular threshold del campo correcto
+        // Para top10, calcular threshold del campo correcto excluyendo live/active
         var fieldKey = kpiFilter && kpiFilter.kpi === 'sustis' ? 'ds' : 'dt';
+        var liveKey = kpiFilter && kpiFilter.kpi === 'sustis' ? 'sactive' : 'tlive';
         var sortedVs=[];
-        rows.forEach(function(r){ var d=parseInt(r.dataset[fieldKey])||0; if(d>=0)sortedVs.push(d); });
+        rows.forEach(function(r){
+          var d=parseInt(r.dataset[fieldKey])||0;
+          var isExcluded = r.dataset[liveKey] === '1';
+          if(d>=0 && !isExcluded) sortedVs.push(d);
+        });
         sortedVs.sort(function(a,b){return b-a;});
         var threshold = (kpiFilter && kpiFilter.mode==='top10') ? sortedVs[Math.max(0,Math.floor(sortedVs.length*0.1)-1)] : -1;
         for(var i=0;i<rows.length;i++){var r=rows[i];
           var dt = parseInt(r.dataset.dt); var ds = parseInt(r.dataset.ds);
+          var tlive = r.dataset.tlive === '1';
+          var sactive = r.dataset.sactive === '1';
           var v = (kpiFilter && kpiFilter.kpi === 'sustis') ? ds : dt;
           var kpiOk = true;
           if (kpiFilter) {
-            // 'all': solo filas con tiempo medido (>=0)
-            if (kpiFilter.mode === 'all') kpiOk = (v >= 0);
-            else if (kpiFilter.mode === 'top10') kpiOk = (v >= 0 && v >= threshold);
-            else if (kpiFilter.mode === 'bucket') kpiOk = (v >= kpiFilter.bucket[0] && v <= kpiFilter.bucket[1]);
+            // Excluir live/active del cómputo: misma regla que los stacked bars
+            var excludedByLive = (kpiFilter.kpi === 'sustis') ? sactive : tlive;
+            if (kpiFilter.mode === 'all') kpiOk = (v >= 0 && !excludedByLive);
+            else if (kpiFilter.mode === 'top10') kpiOk = (v >= 0 && !excludedByLive && v >= threshold);
+            else if (kpiFilter.mode === 'bucket') kpiOk = (v >= kpiFilter.bucket[0] && v <= kpiFilter.bucket[1] && !excludedByLive);
           }
           var ok=(!q||r.textContent.toLowerCase().indexOf(q)>=0)
             && (!els.chain.value||r.dataset.chain===els.chain.value)
