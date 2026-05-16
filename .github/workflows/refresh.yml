@@ -97,7 +97,23 @@ jobs:
             echo "No changes to commit."
           else
             git commit -m "chore: refresh SAT cache + report ($(date -u +%Y-%m-%d))"
-            git push
+            # Reintenta el push hasta 5 veces con pull --rebase intermedio
+            # (evita race condition con commits manuales).
+            for i in 1 2 3 4 5; do
+              if git push; then
+                echo "Push OK en intento $i"
+                exit 0
+              fi
+              echo "Push falló (intento $i). Rebase y reintentar..."
+              # Si hay conflicto en output/index.html o caches, prevalecer la versión nueva del bot
+              git pull --rebase -X theirs --autostash || {
+                # Si rebase falla, abortar y salir
+                git rebase --abort 2>/dev/null
+                exit 1
+              }
+            done
+            echo "Falló el push tras 5 reintentos."
+            exit 1
           fi
 
       - name: Upload Pages artifact
