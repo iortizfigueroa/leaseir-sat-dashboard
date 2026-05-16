@@ -343,6 +343,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.34.0/dist/tabler-icons.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
 <aside class="sidebar" id="sidebar">
@@ -362,6 +364,7 @@
       <div class="sb-submenu" id="sb-chains-submenu"></div>
     </div>
     <button type="button" data-view="sustis" class="sb-item"><i class="ti ti-arrows-exchange"></i>Sustituciones</button>
+    <button type="button" data-view="mapa" class="sb-item"><i class="ti ti-map-2"></i>Mapa</button>
   </nav>
   <div class="sb-section">Atajos Incidencias</div>
   <nav class="sb-nav">
@@ -406,6 +409,7 @@ __DEMO_BANNER__
   <option value="stats">Estadísticas de gestión</option>
   <option value="chains">Por cadena</option>
   <option value="sustis">Sustituciones</option>
+  <option value="mapa">Mapa</option>
 </select>
 
 <div id="view-total" class="view active">
@@ -565,6 +569,19 @@ __CHAINS_HTML__
 __SUSTIS_HTML__
 </div><!-- /view-sustis -->
 
+<div id="view-mapa" class="view">
+  <div style="margin:8px 0 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+    <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+      <input type="checkbox" id="map-layer-inc" checked> <span style="display:inline-block;width:12px;height:12px;background:#c0392b;border-radius:50%"></span> Incidencias abiertas (<span id="map-cnt-inc">0</span>)
+    </label>
+    <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+      <input type="checkbox" id="map-layer-sus" checked> <span style="display:inline-block;width:12px;height:12px;background:#a23b72;border-radius:50%"></span> Sustituciones activas (<span id="map-cnt-sus">0</span>)
+    </label>
+    <span style="color:var(--grey);font-size:12px;margin-left:auto">Clic en un marcador para ver detalle. Zoom con la rueda del ratón.</span>
+  </div>
+  <div id="map" style="height:calc(100vh - 180px);min-height:520px;border:1px solid var(--line);border-radius:8px"></div>
+</div><!-- /view-mapa -->
+
 <div class="footer">Generado por <code>build_report.py</code> desde <code>cache/jira_status_timeline.json</code>. Refresh diario via GitHub Action.</div>
 
 <script>
@@ -575,7 +592,7 @@ __SUSTIS_HTML__
   function setView(name) {
     tabs1.forEach(b => b.classList.toggle('active', b.dataset.view === name));
     views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
-    const TITLES = {total:'Incidencias abiertas', stats:'Estadísticas de gestión', chains:'Estadísticas por cadena', sustis:'Estado sustituciones'};
+    const TITLES = {total:'Incidencias abiertas', stats:'Estadísticas de gestión', chains:'Estadísticas por cadena', sustis:'Estado sustituciones', mapa:'Mapa'};
     const t = document.getElementById('topbar-title');
     if (t && TITLES[name]) t.textContent = TITLES[name];
     const sel = document.getElementById('tabs1-select');
@@ -1506,6 +1523,124 @@ __SUSTIS_HTML__
     }
   });
 })();
+
+// ========================= MAPA =========================
+window._MAP_DATA = { incidencias: __MAP_INCIDENCIAS__, sustis: __MAP_SUSTIS__ };
+(function(){
+  var mapInitialized = false;
+  var map = null;
+  var layerInc = null;
+  var layerSus = null;
+
+  function chainColor(ch) {
+    var m = {
+      'Elha':'#1f6feb','Sin Vello':'#cb6f0a','Dermasana':'#0891b2',
+      'Smart Duck':'#7c3aed','Epil Point':'#c0392b','Laser Factory':'#059669',
+      'Unico Italia':'#a23b72','Otros':'#64748b'
+    };
+    return m[ch] || '#64748b';
+  }
+  function daysColor(d) {
+    if (d == null || d === '') return '#64748b';
+    var n = +d;
+    if (n <= 15) return '#1f8a4c';
+    if (n <= 25) return '#b8860b';
+    if (n <= 35) return '#cb6f0a';
+    return '#c0392b';
+  }
+
+  function buildIncLayer() {
+    var L = window.L;
+    var arr = window._MAP_DATA.incidencias || [];
+    document.getElementById('map-cnt-inc').textContent = arr.length;
+    var layer = L.layerGroup();
+    arr.forEach(function(m){
+      var color = m.bloq === 'Si' || m.bloq === 'Sí' ? '#c0392b' : chainColor(m.chain);
+      var marker = L.circleMarker([m.lat, m.lon], {
+        radius: 7, color: 'white', weight: 2,
+        fillColor: color, fillOpacity: 0.9
+      });
+      var url = 'https://leaseir.atlassian.net/browse/' + m.key;
+      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
+        '<div style="font-weight:600;margin-bottom:4px"><a href="'+url+'" target="_blank" style="color:#2a59c4">'+m.key+'</a> &middot; '+m.chain+'</div>' +
+        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
+        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
+        '<div style="font-size:11px"><b>Estado:</b> '+m.status+'</div>' +
+        '<div style="font-size:11px"><b>Dias:</b> '+m.days+' &middot; <b>Bloq:</b> '+(m.bloq||'-')+' &middot; <b>Susti:</b> '+(m.susti||'-')+
+        (m.susti_status ? ' ('+m.susti_status+')' : '')+'</div>' +
+        '</div>';
+      marker.bindPopup(html);
+      layer.addLayer(marker);
+    });
+    return layer;
+  }
+  function buildSusLayer() {
+    var L = window.L;
+    var arr = window._MAP_DATA.sustis || [];
+    document.getElementById('map-cnt-sus').textContent = arr.length;
+    var layer = L.layerGroup();
+    arr.forEach(function(m){
+      var color = daysColor(m.dias);
+      var marker = L.circleMarker([m.lat, m.lon], {
+        radius: 8, color: 'white', weight: 2,
+        fillColor: color, fillOpacity: 0.9
+      });
+      var purl = m.parent_key ? 'https://leaseir.atlassian.net/browse/'+m.parent_key : '';
+      var curl = m.key ? 'https://leaseir.atlassian.net/browse/'+m.key : '';
+      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
+        '<div style="font-weight:600;margin-bottom:4px">Sustitucion '+ (curl ? '<a href="'+curl+'" target="_blank" style="color:#2a59c4">'+m.key+'</a>' : '')+
+        (purl ? ' &middot; padre <a href="'+purl+'" target="_blank" style="color:#2a59c4">'+m.parent_key+'</a>' : '')+'</div>' +
+        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
+        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
+        '<div style="font-size:11px"><b>Estado:</b> '+m.subtask_status+'</div>' +
+        '<div style="font-size:11px"><b>Dias con sustitucion:</b> '+m.dias+'</div>' +
+        '<div style="font-size:11px"><b>Consola:</b> '+(m.consola||'-')+' &middot; <b>Manipulo:</b> '+(m.manipulo||'-')+'</div>' +
+        '</div>';
+      marker.bindPopup(html);
+      layer.addLayer(marker);
+    });
+    return layer;
+  }
+
+  function initMap() {
+    if (mapInitialized) return;
+    var el = document.getElementById('map');
+    if (!el || !window.L) return;
+    mapInitialized = true;
+    var all = [].concat(window._MAP_DATA.incidencias||[], window._MAP_DATA.sustis||[]);
+    map = L.map('map').setView([40.4, -3.7], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+    layerInc = buildIncLayer();
+    layerSus = buildSusLayer();
+    if (document.getElementById('map-layer-inc').checked) layerInc.addTo(map);
+    if (document.getElementById('map-layer-sus').checked) layerSus.addTo(map);
+    if (all.length) {
+      var b = L.latLngBounds(all.map(function(p){return [p.lat, p.lon];}));
+      try { map.fitBounds(b, {padding:[30,30]}); } catch(e) {}
+    }
+    document.getElementById('map-layer-inc').addEventListener('change', function(e){
+      if (e.target.checked) layerInc.addTo(map); else map.removeLayer(layerInc);
+    });
+    document.getElementById('map-layer-sus').addEventListener('change', function(e){
+      if (e.target.checked) layerSus.addTo(map); else map.removeLayer(layerSus);
+    });
+  }
+
+  document.querySelectorAll('.tabs1 button').forEach(function(b){
+    if (b.dataset.view === 'mapa') {
+      b.addEventListener('click', function(){
+        setTimeout(initMap, 50);
+        setTimeout(function(){ map && map.invalidateSize(); }, 200);
+      });
+    }
+  });
+  if (window.location.hash === '#mapa' || (function(){try{return localStorage.getItem('sat-view')==='mapa';}catch(e){return false;}})()) {
+    setTimeout(initMap, 100);
+  }
+})();
+
 </script>
 </div><!-- /main-content -->
 </div><!-- /main -->

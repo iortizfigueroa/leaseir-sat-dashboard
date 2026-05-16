@@ -69,6 +69,11 @@ jobs:
         run: |
           python scripts/fetch_sustis.py --cache cache/sustis_activas.json
 
+      - name: Geocode addresses (Nominatim) for mapa
+        continue-on-error: true
+        run: |
+          python scripts/geocode.py
+
       - name: Build report
         run: |
           mkdir -p output
@@ -99,8 +104,4 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      url: ${{ steps.dep

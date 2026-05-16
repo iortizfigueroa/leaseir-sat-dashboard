@@ -1918,6 +1918,82 @@ def build_html(cache, out_path, template_path):
     except Exception as _e:
         taller_detail_html = f'<div style="color:#c0392b;padding:14px">Error detalle taller: {_e}</div>'
 
+    # Mapa: cargar geocodes + construir markers de incidencias abiertas y sustis activas
+    geo_entries = {}
+    try:
+        from pathlib import Path as _PG
+        for _cand in [_PG("cache") / "geocodes.json", out_path.parent.parent / "cache" / "geocodes.json"]:
+            if _cand.exists():
+                geo_entries = json.loads(_cand.read_text(encoding="utf-8")).get("entries", {})
+                break
+    except Exception:
+        pass
+
+    def _addr_key_local(cliente, loc):
+        import re as _re
+        loc_c = _re.sub(r"\s+", " ", str(loc or "")).strip()
+        cli_c = _re.sub(r"\s+", " ", str(cliente or "")).strip()
+        if loc_c and len(loc_c) > 8:
+            return loc_c.lower()
+        if cli_c:
+            return cli_c.lower()
+        return ""
+
+    map_markers_incidencias = []
+    for _k, _t in cache.get("tickets", {}).items():
+        if not is_open(_t.get("current_status")): continue
+        _key = _addr_key_local(_t.get("cliente",""), _t.get("loc",""))
+        _g = geo_entries.get(_key)
+        if not _g or _g.get("lat") is None: continue
+        _days = days_since(last_status_change_dt(_t))
+        map_markers_incidencias.append({
+            "lat": _g["lat"], "lon": _g["lon"],
+            "key": _k,
+            "cliente": (_t.get("cliente") or "")[:80],
+            "loc": (_t.get("loc") or "")[:80],
+            "status": _t.get("current_status", ""),
+            "chain": chain_of(_t.get("cliente",""), _t.get("loc","")),
+            "bloq": _t.get("bloq", ""),
+            "susti": _t.get("susti", ""),
+            "days": _days if _days is not None else 0,
+            "susti_status": sustis_by_parent.get(_k, ""),
+        })
+
+    map_markers_sustis = []
+    try:
+        _sus_path = None
+        from pathlib import Path as _PS
+        for _cand in [_PS("cache") / "sustis_activas.json", out_path.parent.parent / "cache" / "sustis_activas.json"]:
+            if _cand.exists():
+                _sus_path = _cand; break
+        if _sus_path:
+            _sd = json.loads(_sus_path.read_text(encoding="utf-8"))
+            _now = datetime.now(timezone.utc)
+            for _it in _sd.get("items", []) or []:
+                _key = _addr_key_local(_it.get("cliente","") or _it.get("parent_cliente",""), _it.get("loc",""))
+                _g = geo_entries.get(_key)
+                if not _g or _g.get("lat") is None: continue
+                _fe = _it.get("fecha_envio")
+                _dias = ""
+                if _fe:
+                    _fdt = parse_iso(_fe)
+                    if _fdt:
+                        if not _fdt.tzinfo: _fdt = _fdt.replace(tzinfo=timezone.utc)
+                        _dias = (_now - _fdt).days
+                map_markers_sustis.append({
+                    "lat": _g["lat"], "lon": _g["lon"],
+                    "key": _it.get("key",""),
+                    "parent_key": _it.get("parent_key",""),
+                    "cliente": (_it.get("cliente") or "")[:80],
+                    "loc": (_it.get("loc") or "")[:80],
+                    "subtask_status": _it.get("subtask_status",""),
+                    "consola": _it.get("consola_susti",""),
+                    "manipulo": _it.get("manipulo_susti",""),
+                    "dias": _dias if _dias != "" else 0,
+                })
+    except Exception:
+        pass
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -1962,6 +2038,8 @@ def build_html(cache, out_path, template_path):
         "__TIEMPO_TALLER__": tiempo_taller_html,
         "__TIEMPO_SUSTIS__": tiempo_sustis_html,
         "__TALLER_DETAIL__": taller_detail_html,
+        "__MAP_INCIDENCIAS__": json.dumps(map_markers_incidencias),
+        "__MAP_SUSTIS__": json.dumps(map_markers_sustis),
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
         "__PENDIENTES_TALLER_SUSTI__": str(pendientes_taller_susti),
