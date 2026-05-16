@@ -1002,17 +1002,16 @@ def build_anual_averias_section(cache):
                     elif "pantalla" in vl: buckets.add("Pant")
                     elif "otros" in vl: buckets.add("Otro")
         ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
-        if passed:
-            yrow = year_row(yr)
-        elif is_currently_open:
+        # PRIORIDAD: si sigue abierto hoy, es "Abierta" (aunque haya pasado por Inspección).
+        if is_currently_open:
             yrow = "Abierta"
+        elif passed:
+            yrow = year_row(yr)
         elif st_now == "Cancelado":
             yrow = "Cancelado"
         elif st_now == "Finalizado técnico externo":
             yrow = "Externa (técnico ext.)"
         else:
-            # Finalizada/Resuelta sin haber pasado por Inspección de salida:
-            # generalmente cierres internos sin diagnóstico/reparación.
             yrow = "Cerrado s/insp"
         records.append({"k": k, "y": yrow, "c": ch,
                         "i": importe_bucket(t.get("importe")),
@@ -1509,28 +1508,19 @@ def build_tiempos_section(cache, sustis_by_parent):
 
 
 def build_tecnicos_dia_section(cache):
-    """Tabla técnicos x día con #presupuestos + #reparaciones desde 1-ene-2026.
-    Selector de mes (dropdown). Para cada (técnico, día) cuenta cuántos tickets
-    pasaron a 'Presupuesto preparado pendiente de enviar' (P) y a 'Inspección
-    de salida' (R) ese día con ese técnico."""
+    """Tabla agregada técnicos x mes con #presupuestos + #reparaciones desde 1-ene-2026.
+    NOTA: la atribución es heurística (tec_taller ACTUAL del ticket), porque no
+    tenemos changelog del campo. Funciona razonablemente al agregar por mes."""
     PRES_STATE = "Presupuesto preparado pendiente de enviar"
     REP_STATE = "Inspección de salida"
-
     cutoff = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
-    now_utc = datetime.now(timezone.utc)
+    MONTH_LABELS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
 
-    # grid[(tec, fecha)] = {"p": N, "r": N}
+    # grid[(tec, month_num)] = {"p": N, "r": N}
     grid = {}
     tecs = set()
-    months = set()
-
+    months_seen = set()
     for k, t in cache.get("tickets", {}).items():
-        # Para conocer "qué técnico hizo la transición" no es trivial — no tenemos
-        # changelog del assignee/tec_taller. Heurística: usar el técnico ACTUAL
-        # cuando la transición ocurrió cerca del último estado, o usar la
-        # función person_for_status sobre el estado al que avanzó.
-        # Por simplicidad: para cada transición que entra en PRES o REP,
-        # atribuir al tec_taller actual del ticket (si está) o al asignado.
         tec = (t.get("tec_taller") or "").strip() or (t.get("asignado") or "").strip() or "(Sin asignar)"
         for tr in t.get("transitions", []):
             if len(tr) < 3: continue
@@ -1538,86 +1528,64 @@ def build_tecnicos_dia_section(cache):
             if to not in (PRES_STATE, REP_STATE): continue
             dt = parse_iso(ts)
             if not dt or dt < cutoff: continue
-            day_key = dt.strftime("%Y-%m-%d")
-            month_key = dt.strftime("%Y-%m")
-            months.add(month_key)
+            m = dt.month
+            months_seen.add(m)
             tecs.add(tec)
-            cell = grid.setdefault((tec, day_key), {"p": 0, "r": 0})
+            cell = grid.setdefault((tec, m), {"p": 0, "r": 0})
             if to == PRES_STATE: cell["p"] += 1
             else: cell["r"] += 1
 
     if not grid:
-        return '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin datos suficientes desde 1-ene-2026.</div>'
+        return '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin datos desde 1-ene-2026.</div>'
 
-    months_sorted = sorted(months, reverse=True)
-    current_month = months_sorted[0]
-
-    # Por defecto rendering del mes más reciente; el resto se incluye como JSON para JS
-    # Generar tabla por mes — todos en el HTML, solo uno visible
-    out = []
-    out.append('<div style="margin:6px 0 10px;display:flex;gap:8px;align-items:center">')
-    out.append('<label style="font-size:13px;color:var(--grey)">Mes:</label>')
-    out.append('<select id="tec-dia-month" style="font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:4px">')
-    for mk in months_sorted:
-        out.append(f'<option value="{mk}">{mk}</option>')
-    out.append('</select>')
-    out.append('<span style="color:var(--grey);font-size:12px;margin-left:auto" id="tec-dia-info"></span>')
-    out.append('</div>')
-
+    months_sorted = sorted(months_seen)
     tecs_sorted = sorted(tecs, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
 
-    for mk in months_sorted:
-        # Días del mes presentes
-        year, month = int(mk[:4]), int(mk[5:7])
-        from calendar import monthrange
-        ndays = monthrange(year, month)[1]
-        days_present = [f"{mk}-{d:02d}" for d in range(1, ndays + 1)]
+    out = []
+    out.append('<div class="legend">Vista agregada: filas = técnicos, columnas = meses 2026. Cada celda muestra <b style="color:#0891b2">P presupuestos</b> + <b style="color:#059669">R reparaciones</b>. <i>Atribución heurística por tec_taller actual.</i></div>')
+    out.append('<div class="scroller"><table style="font-size:12px;min-width:800px">')
+    out.append('<thead><tr>')
+    out.append('<th class="sticky-l1" style="text-align:left;left:0;min-width:180px;background:#f1f5f9;color:#0b3d91">Técnico</th>')
+    for m in months_sorted:
+        out.append(f'<th style="background:#f1f5f9;font-size:12px;padding:6px 10px;text-align:center">{MONTH_LABELS[m-1]}</th>')
+    out.append('<th style="background:#fff4d6;font-size:12px;padding:6px 12px;text-align:center">Total YTD</th>')
+    out.append('</tr></thead><tbody>')
 
-        active = ' style="display:block"' if mk == current_month else ' style="display:none"'
-        out.append(f'<div class="tec-dia-mes" data-mes="{mk}"{active}>')
-        out.append('<div class="scroller">')
-        out.append('<table style="font-size:11px;min-width:1400px">')
-        out.append('<thead><tr>')
-        out.append('<th class="sticky-l1" style="text-align:left;left:0;min-width:200px;background:#f1f5f9;color:#0b3d91">Técnico</th>')
-        for d in days_present:
-            dd = d[-2:]
-            out.append(f'<th style="background:#f1f5f9;font-size:10px;padding:4px 6px">{dd}</th>')
-        out.append('<th style="background:#fff4d6;font-size:11px;padding:4px 8px">Mes</th>')
-        out.append('</tr></thead><tbody>')
-
-        for tec in tecs_sorted:
-            row_p, row_r = 0, 0
-            cells = [f'<td class="lbl-name" style="left:0;min-width:200px">{html_escape(tec)}</td>']
-            for d in days_present:
-                v = grid.get((tec, d))
-                if v:
-                    p, r = v["p"], v["r"]
-                    row_p += p; row_r += r
-                    parts = []
-                    if p: parts.append(f'<b style="color:#0891b2">{p}</b>')
-                    if r: parts.append(f'<b style="color:#059669">{r}</b>')
-                    cells.append(f'<td style="text-align:center;font-size:11px" title="{p} ppto · {r} rep">{"".join(parts) if parts else "·"}</td>')
-                else:
-                    cells.append('<td style="text-align:center;color:#cbd5e1">·</td>')
-            if row_p or row_r:
-                cells.append(f'<td style="background:#fff4d6;text-align:center;font-weight:600"><span style="color:#0891b2">{row_p}P</span>+<span style="color:#059669">{row_r}R</span></td>')
+    # Totales fila
+    col_tot = {m: {"p": 0, "r": 0} for m in months_sorted}
+    grand = {"p": 0, "r": 0}
+    for tec in tecs_sorted:
+        row_p, row_r = 0, 0
+        cells = [f'<td class="lbl-name" style="left:0;min-width:180px">{html_escape(tec)}</td>']
+        for m in months_sorted:
+            v = grid.get((tec, m))
+            if v:
+                p, r = v["p"], v["r"]
+                row_p += p; row_r += r
+                col_tot[m]["p"] += p; col_tot[m]["r"] += r
+                parts = []
+                if p: parts.append(f'<b style="color:#0891b2">{p}</b>')
+                if r: parts.append(f'<b style="color:#059669">{r}</b>')
+                inner = "+".join(parts) if parts else "·"
+                cells.append(f'<td class="tec-mes-cell" data-tec="{html_escape(tec)}" data-mes="{m}" style="text-align:center;cursor:pointer" title="{p} ppto · {r} rep">{inner}</td>')
             else:
-                cells.append('<td style="background:#fff4d6;text-align:center;color:#cbd5e1">·</td>')
-            out.append('<tr>' + ''.join(cells) + '</tr>')
-        out.append('</tbody></table></div></div>')
-
-    out.append('''<script>(function(){
-      var sel=document.getElementById('tec-dia-month');
-      if(!sel) return;
-      sel.addEventListener('change', function(){
-        var v=sel.value;
-        document.querySelectorAll('.tec-dia-mes').forEach(function(el){
-          el.style.display = (el.dataset.mes===v ? 'block' : 'none');
-        });
-      });
-    })();</script>''')
-
+                cells.append('<td style="text-align:center;color:#cbd5e1">·</td>')
+        if row_p or row_r:
+            cells.append(f'<td class="tec-mes-cell" data-tec="{html_escape(tec)}" data-mes="all" style="background:#fff4d6;text-align:center;font-weight:600;cursor:pointer"><span style="color:#0891b2">{row_p}P</span>+<span style="color:#059669">{row_r}R</span></td>')
+            grand["p"] += row_p; grand["r"] += row_r
+        else:
+            cells.append('<td style="background:#fff4d6;text-align:center;color:#cbd5e1">·</td>')
+        out.append('<tr>' + ''.join(cells) + '</tr>')
+    # Fila total
+    cells = ['<td class="lbl-name" style="left:0;min-width:180px;background:#fff4d6;font-weight:600">Total mes</td>']
+    for m in months_sorted:
+        p = col_tot[m]["p"]; r = col_tot[m]["r"]
+        cells.append(f'<td style="background:#fff4d6;text-align:center;font-weight:600"><span style="color:#0891b2">{p}P</span>+<span style="color:#059669">{r}R</span></td>')
+    cells.append(f'<td style="background:#fff4d6;text-align:center;font-weight:700"><span style="color:#0891b2">{grand["p"]}P</span>+<span style="color:#059669">{grand["r"]}R</span></td>')
+    out.append('<tr style="background:#fff4d6">' + ''.join(cells) + '</tr>')
+    out.append('</tbody></table></div>')
     return ''.join(out)
+
 
 
 def build_tiempo_taller_section(cache):
@@ -2015,8 +1983,8 @@ def build_detalle_section(cache, sustis_by_parent=None):
     for r in rows:
         link = f'<a href="{JIRA_URL}{r["key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["key"]}</a>'
         body.append(
-            '<tr>'
-            f'<td>{html_escape(r["chain"])}</td>'
+            ('<tr data-no-tec="1">' if r["status"] in {"Pendiente asignar técnico","En cola taller","Presupuesto preparado pendiente de enviar","Pendiente confirmación presupuesto","Inspección de salida"} else '<tr>')
+            + f'<td>{html_escape(r["chain"])}</td>'
             f'<td>{link}</td>'
             f'<td title="{html_escape(r["cliente"])}" class="d-trunc">{html_escape(r["cliente"])}</td>'
             f'<td>{html_escape(r["status"])}</td>'

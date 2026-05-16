@@ -71,6 +71,8 @@
   .kpi-split td.n, .kpi-split th.n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
   .kpi-split tr:last-child td { border-bottom: none; }
   tr.tec-no-aplica { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
+  /* Rayado en tabla Detalle de incidencias para estados que no dependen del técnico */
+  #detalle-table tbody tr[data-no-tec] { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
   tr.tec-no-aplica td.lbl-name { color: #64748b; font-style: italic; }
   td.tec-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
   .multi-wrap { position: relative; display: inline-block; }
@@ -1437,21 +1439,26 @@ __SUSTIS_HTML__
   const KPI_NUEVAS_HOY = __KPI_NUEVAS_HOY_KEYS__;
 
   function applyKpiKeyFilter(keys, label) {
+    // Asegurar que la sub-pestaña Incidencias está activa (no Mapa)
+    var incBtn = document.querySelector('#total-tabs2 button[data-total-sub="inc"]');
+    if (incBtn && !incBtn.classList.contains('active')) incBtn.click();
     resetAllFilters();
     window._kpiFilterKeys = new Set(keys);
     window._kpiFilterLabel = label;
     updateKpiFilterBanner();
     applyFilters();
     const target = document.getElementById('detalle');
-    if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+    if (target) setTimeout(function(){ target.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 50);
   }
 
   const kpiAbiertasHoy = document.getElementById('kpi-abiertas-hoy');
   if (kpiAbiertasHoy) {
     kpiAbiertasHoy.addEventListener('click', () => {
+      var incBtn = document.querySelector('#total-tabs2 button[data-total-sub="inc"]');
+      if (incBtn && !incBtn.classList.contains('active')) incBtn.click();
       resetAllFilters();
       const target = document.getElementById('detalle');
-      if (target) target.scrollIntoView({behavior: 'smooth', block: 'start'});
+      if (target) setTimeout(function(){ target.scrollIntoView({behavior: 'smooth', block: 'start'}); }, 50);
     });
   }
 
