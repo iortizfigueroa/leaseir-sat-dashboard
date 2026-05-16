@@ -1814,6 +1814,49 @@ function _daysColor(d) {
       });
     });
   });
+
+  // Clic en celda tec-mes-cell → ir a Tiempos y filtrar tabla por técnico
+  function goToTiemposAndSearch(query){
+    var btn = document.querySelector('#stats-tabs2 button[data-stats-sub="tiempos"]');
+    if (btn) btn.click();
+    setTimeout(function(){
+      var search = document.getElementById('tm-search');
+      if (search) {
+        search.value = query;
+        search.dispatchEvent(new Event('input'));
+      }
+      var tbl = document.getElementById('tm-table');
+      if (tbl) tbl.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 100);
+  }
+  document.querySelectorAll('.tec-mes-cell').forEach(function(cell){
+    cell.addEventListener('click', function(){
+      var tec = cell.dataset.tec || '';
+      if (tec) goToTiemposAndSearch(tec);
+    });
+  });
+
+  // Clic en celdas filtrables de la matriz de avería → Tiempos con filtros
+  document.querySelectorAll('#av-table td.filter-cell').forEach(function(cell){
+    cell.addEventListener('click', function(){
+      var data = cell.dataset.filter;
+      if (!data) return;
+      try {
+        var f = JSON.parse(data);
+        var btn = document.querySelector('#stats-tabs2 button[data-stats-sub="tiempos"]');
+        if (btn) btn.click();
+        setTimeout(function(){
+          var chainSel = document.getElementById('tm-chain');
+          if (chainSel && f.c) {
+            chainSel.value = f.c;
+            chainSel.dispatchEvent(new Event('change'));
+          }
+          var tbl = document.getElementById('tm-table');
+          if (tbl) tbl.scrollIntoView({behavior:'smooth', block:'start'});
+        }, 100);
+      } catch(e) {}
+    });
+  });
 })();
 
 

@@ -1181,20 +1181,26 @@ def compute_tiempo_taller(ticket, now_utc):
     return {"entrada": entrada, "salida": salida, "dias": dias, "live": live}
 
 
-def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent):
+def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
+                          sustis_dias_by_parent=None, sustis_subkey_by_parent=None,
+                          sustis_consola_by_parent=None, sustis_manipulo_by_parent=None):
     """Recorre el universo y devuelve filas con toda la info para tabla detalle.
-    sustis_envio_by_parent: dict parent_key -> fecha_envio_dt (para días susti)."""
+    sustis_dias_by_parent: dias completos (envío→devolución o hoy) del histórico."""
+    sustis_dias_by_parent = sustis_dias_by_parent or {}
+    sustis_subkey_by_parent = sustis_subkey_by_parent or {}
+    sustis_consola_by_parent = sustis_consola_by_parent or {}
+    sustis_manipulo_by_parent = sustis_manipulo_by_parent or {}
     now_utc = datetime.now(timezone.utc)
     rows = []
     for k, t in cache.get("tickets", {}).items():
         if not is_in_universe_2026(t):
             continue
         taller = compute_tiempo_taller(t, now_utc)
-        # Días susti
+        # Días susti — preferir histórico si existe
         susti_status = sustis_by_parent.get(k, "")
         fe = sustis_envio_by_parent.get(k)
-        dias_susti = None
-        if fe:
+        dias_susti = sustis_dias_by_parent.get(k)
+        if dias_susti is None and fe:
             if not fe.tzinfo:
                 fe = fe.replace(tzinfo=timezone.utc)
             dias_susti = (now_utc - fe).days
@@ -1225,6 +1231,9 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent):
             "salida_taller": taller["salida"].strftime("%d/%m/%Y") if taller and taller["salida"] else "",
             "fecha_envio_susti": fe.strftime("%d/%m/%Y") if fe else "",
             "dias_susti": dias_susti,
+            "leas_susti": sustis_subkey_by_parent.get(k, ""),
+            "consola_susti": sustis_consola_by_parent.get(k, ""),
+            "manipulo_susti": sustis_manipulo_by_parent.get(k, ""),
             "created": (parse_iso(t.get("created")) or now_utc).strftime("%d/%m/%Y"),
         })
     return rows
@@ -1259,26 +1268,44 @@ def _kpis_html(prefix, total, mediana, media, max_d, kpi_id_prefix, label_total)
 
 
 def build_tiempos_section(cache, sustis_by_parent):
-    """Devuelve dict con html para Tiempo taller, Tiempo sustis y Detalle compartido."""
-    # Cargar fechas de envío de sustis activas
-    sustis_envio_by_parent = {}
+    """Devuelve dict con html para Tiempo taller, Tiempo sustis y Detalle compartido.
+    Usa sustis_historico.json (con activas+cerradas) si existe, sino sustis_activas.json."""
+    # Cargar fechas de envío + devolución
+    sustis_envio_by_parent = {}     # parent_key -> fecha_envio dt
+    sustis_dias_by_parent = {}      # parent_key -> dias (envío→devolución o hoy)
+    sustis_subkey_by_parent = {}    # parent_key -> sub-key
+    sustis_consola_by_parent = {}   # parent_key -> consola serial
+    sustis_manipulo_by_parent = {}  # parent_key -> manipulo serial
     try:
         from pathlib import Path as _PS
-        for _cand in [_PS("cache") / "sustis_activas.json", Path("cache") / "sustis_activas.json"]:
+        # Preferir histórico (incluye cerradas) si existe
+        for _cand in [_PS("cache") / "sustis_historico.json",
+                      Path("cache") / "sustis_historico.json",
+                      _PS("cache") / "sustis_activas.json",
+                      Path("cache") / "sustis_activas.json"]:
             if _cand.exists():
                 _su = json.loads(_cand.read_text(encoding="utf-8"))
                 for _it in _su.get("items", []) or []:
                     _pk = _it.get("parent_key")
+                    if not _pk: continue
                     _fe = _it.get("fecha_envio")
-                    if _pk and _fe:
+                    if _fe:
                         _dt = parse_iso(_fe)
-                        if _dt:
-                            sustis_envio_by_parent[_pk] = _dt
+                        if _dt: sustis_envio_by_parent[_pk] = _dt
+                    if "dias" in _it and _it["dias"] is not None:
+                        sustis_dias_by_parent[_pk] = _it["dias"]
+                    sustis_subkey_by_parent[_pk] = _it.get("key", "")
+                    sustis_consola_by_parent[_pk] = _it.get("consola_susti", "") or ""
+                    sustis_manipulo_by_parent[_pk] = _it.get("manipulo_susti", "") or ""
                 break
     except Exception:
         pass
 
-    rows = collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent)
+    rows = collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
+                                  sustis_dias_by_parent=sustis_dias_by_parent,
+                                  sustis_subkey_by_parent=sustis_subkey_by_parent,
+                                  sustis_consola_by_parent=sustis_consola_by_parent,
+                                  sustis_manipulo_by_parent=sustis_manipulo_by_parent)
     if not rows:
         empty = '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin tickets en la base.</div>'
         return {"taller": empty, "sustis": empty, "detail": empty}
@@ -1369,6 +1396,9 @@ def build_tiempos_section(cache, sustis_by_parent):
         ("bloq", "Bloq", "text", True),
         ("susti", "Susti", "text", True),
         ("susti_status", "Estado susti", "text", True),
+        ("leas_susti", "LEAS susti", "text", False),
+        ("consola_susti", "Cons. susti", "text", False),
+        ("manipulo_susti", "HP susti", "text", False),
         ("dias_taller", "Días taller", "num", True),
         ("dias_susti", "Días susti", "num", True),
         ("consola", "Consola", "text", False),
