@@ -70,7 +70,7 @@
   .kpi-split td, .kpi-split th { padding: 3px 6px; text-align: left; border-bottom: 1px solid #e2e8f0; }
   .kpi-split td.n, .kpi-split th.n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
   .kpi-split tr:last-child td { border-bottom: none; }
-  tr.tec-no-aplica { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
+  tr.tec-no-aplica td { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.22) 5px, rgba(148,163,184,0.22) 10px) !important; }
   /* Rayado en tabla Detalle de incidencias para estados que no dependen del técnico */
   #detalle-table tbody tr[data-no-tec] { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
   /* Resize columnas en tabla Tiempos */
@@ -563,7 +563,16 @@ __DETALLE_ROWS__
   </label>
   <span id="map-inc-count" style="color:var(--grey);font-size:12px;margin-left:auto"></span>
 </div>
-<div id="map-inc" style="height:calc(100vh - 220px);min-height:520px;border:1px solid var(--line);border-radius:8px"></div>
+<div style="display:flex;gap:10px;height:calc(100vh - 220px);min-height:520px">
+  <div id="map-inc" style="flex:1 1 60%;border:1px solid var(--line);border-radius:8px;min-width:0"></div>
+  <div id="map-inc-sidelist" style="flex:0 0 38%;max-width:520px;border:1px solid var(--line);border-radius:8px;background:white;display:flex;flex-direction:column;overflow:hidden">
+    <div style="padding:6px 10px;border-bottom:1px solid var(--line);background:#f8fafc;font-size:11px;color:#64748b;display:flex;justify-content:space-between;align-items:center">
+      <span><b id="map-inc-sidelist-count">0</b> incidencias visibles en el mapa</span>
+      <span style="font-size:10px">↑ haz zoom para acotar</span>
+    </div>
+    <div id="map-inc-sidelist-body" style="overflow:auto;flex:1;font-size:11px"></div>
+  </div>
+</div>
 <div id="map-inc-legend" style="margin-top:8px;font-size:11px;color:var(--grey);display:flex;flex-wrap:wrap;gap:8px"></div>
 </div><!-- /total-pane-map -->
 </div><!-- /view-total -->
@@ -1725,10 +1734,63 @@ function _daysColor(d) {
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-    document.getElementById('map-inc-chain').addEventListener('change', render);
-    document.getElementById('map-inc-status').addEventListener('change', render);
+    document.getElementById('map-inc-chain').addEventListener('change', function(){ render(); renderSideList(); });
+    document.getElementById('map-inc-status').addEventListener('change', function(){ render(); renderSideList(); });
     document.getElementById('map-inc-color').addEventListener('change', render);
+    map.on('moveend zoomend', renderSideList);
     render();
+    setTimeout(renderSideList, 300);
+  }
+
+  function renderSideList(){
+    if (!map) return;
+    var body = document.getElementById('map-inc-sidelist-body');
+    var countEl = document.getElementById('map-inc-sidelist-count');
+    if (!body || !countEl) return;
+    var bounds = map.getBounds();
+    var ch = document.getElementById('map-inc-chain').value;
+    var st = document.getElementById('map-inc-status').value;
+    var filtered = (window._MAP_DATA.incidencias||[]).filter(function(m){
+      if (ch && m.chain !== ch) return false;
+      if (st && m.status !== st) return false;
+      return bounds.contains([m.lat, m.lon]);
+    });
+    // Ordenar por días desc
+    filtered.sort(function(a,b){ return (b.days||0) - (a.days||0); });
+    countEl.textContent = filtered.length;
+    var rows = filtered.slice(0, 200).map(function(m){
+      var bloqMark = (m.bloq==='Sí'||m.bloq==='Si') ? '<span style="color:#c0392b;font-weight:600">B</span>' : '';
+      var sustiMark = (m.susti==='Sí'||m.susti==='Si') ? '<span style="color:#a23b72;font-weight:600">S</span>' : '';
+      var sustiState = m.susti_status ? '<span style="font-size:10px;color:#7d8590">'+m.susti_status+'</span>' : '';
+      return '<div class="ms-row" data-key="'+m.key+'" style="padding:6px 10px;border-bottom:1px solid #f1f5f9;cursor:pointer">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;gap:6px">' +
+        '<a href="https://leaseir.atlassian.net/browse/'+m.key+'" target="_blank" style="color:#2a59c4;font-weight:600;font-size:11px">'+m.key+'</a>' +
+        '<span style="font-size:10px;color:'+(m.color||'#64748b')+';font-weight:500">'+m.chain+'</span>' +
+        '</div>' +
+        '<div style="font-size:11px;color:#0f172a;margin-top:2px"><b>'+m.cliente+'</b></div>' +
+        '<div style="font-size:10px;color:#7d8590;margin-top:2px">'+m.loc+'</div>' +
+        '<div style="font-size:10px;margin-top:3px;display:flex;gap:6px;align-items:center">' +
+        '<span style="background:'+(m.color||'#64748b')+';color:white;padding:1px 5px;border-radius:3px">'+m.status+'</span>' +
+        '<span style="color:#64748b">·</span><span><b>'+m.days+'</b>d</span>' +
+        (bloqMark ? '<span>·</span>'+bloqMark : '') +
+        (sustiMark ? '<span>·</span>'+sustiMark+' '+sustiState : '') +
+        '</div></div>';
+    }).join('');
+    if (filtered.length > 200) rows += '<div style="padding:8px 10px;color:#7d8590;font-size:10px;font-style:italic">… ' + (filtered.length-200) + ' más. Haz zoom para acotar.</div>';
+    body.innerHTML = rows || '<div style="padding:14px;color:#7d8590;font-style:italic;text-align:center">Sin incidencias en este zoom.</div>';
+    // Clic en una fila → abre popup del marcador en el mapa
+    body.querySelectorAll('.ms-row').forEach(function(row){
+      row.addEventListener('mouseenter', function(){ row.style.background = '#eff6ff'; });
+      row.addEventListener('mouseleave', function(){ row.style.background = ''; });
+      row.addEventListener('click', function(e){
+        if (e.target.tagName === 'A') return;
+        var k = row.dataset.key;
+        var m = (window._MAP_DATA.incidencias||[]).find(function(x){return x.key===k;});
+        if (m && map) {
+          map.setView([m.lat, m.lon], Math.max(map.getZoom(), 13));
+        }
+      });
+    });
   }
 
   // Inicializar cuando se entra en sub-pestaña Mapa
