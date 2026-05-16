@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": 1,
-    "updated_at": "2026-05-16T23:00:58.845157+00:00"
+    "updated_at": "2026-05-16T23:11:02.052227+00:00"
   },
   "entries": {
     "alcala de henares": {
@@ -214,15 +214,6 @@
       "cliente": "Belgica Luxlaser Andre",
       "loc": "Belgica",
       "geocoded_at": "2026-05-16T00:23:47.446395+00:00"
-    },
-    "regina láser": {
-      "lat": 50.4855102,
-      "lon": -104.6151852,
-      "display_name": "Laser Quest, 10, Hesse Bay, Mount Pleasant, Regina, Saskatchewan, S4R 8C5, Canadá",
-      "query": "Regina Láser",
-      "cliente": "Regina Láser",
-      "loc": "Granada",
-      "geocoded_at": "2026-05-15T23:57:27.620377+00:00"
     },
     "elha logroño": {
       "lat": 42.4661196,
@@ -620,15 +611,6 @@
       "loc": "Lleida",
       "geocoded_at": "2026-05-16T00:24:17.701688+00:00"
     },
-    "galaxy": {
-      "lat": -6.2759234,
-      "lon": 106.9736803,
-      "display_name": "Galaxy, Jakasetia, Bekasi, Java Occidental, Java, 17147, Indonesia",
-      "query": "Galaxy",
-      "cliente": "Galaxy",
-      "loc": "Israel",
-      "geocoded_at": "2026-05-15T23:58:34.169446+00:00"
-    },
     "majadahonda": {
       "lat": 40.4728425,
       "lon": -3.8723542,
@@ -685,15 +667,6 @@
       "cliente": "Epil Point Messina",
       "loc": "Viale S. Martino, 156, 98123 Messina ME, Italia",
       "geocoded_at": "2026-05-15T23:58:59.820195+00:00"
-    },
-    "sebastian": {
-      "lat": 35.1770785,
-      "lon": -94.2654285,
-      "display_name": "Sebastian County, Arkansas, Estados Unidos de América",
-      "query": "sebastian",
-      "cliente": "Sin Vello San sebastian",
-      "loc": "sebastian",
-      "geocoded_at": "2026-05-15T23:59:00.969365+00:00"
     },
     "carrer de cristòfor colom, 22, 43001 tarragona": {
       "lat": 41.1600405,
@@ -941,15 +914,6 @@
       "loc": "A Coruña",
       "geocoded_at": "2026-05-16T00:24:29.965155+00:00"
     },
-    "regina": {
-      "lat": 50.4479733,
-      "lon": -104.6158764,
-      "display_name": "Regina, Saskatchewan, Canadá",
-      "query": "Regina",
-      "cliente": "Regina",
-      "loc": "Granada",
-      "geocoded_at": "2026-05-15T23:59:51.666259+00:00"
-    },
     "via santa maria a cubito, 80014 giugliano in campania na, italia": {
       "lat": null,
       "lon": null,
@@ -1113,6 +1077,48 @@
       "cliente": "Epil Point Colli Aminei  (91408)",
       "loc": "Italia",
       "geocoded_at": "2026-05-16T09:54:16.728894+00:00"
+    },
+    "regina láser": {
+      "lat": null,
+      "lon": null,
+      "display_name": null,
+      "query": "Regina Láser, Granada",
+      "strategy": "loc-with-cliente",
+      "cliente": "Regina Láser",
+      "loc": "Granada",
+      "geocoded_at": "2026-05-16T23:10:55.757014+00:00",
+      "failed": true
+    },
+    "galaxy": {
+      "lat": null,
+      "lon": null,
+      "display_name": null,
+      "query": "Galaxy, Israel",
+      "strategy": "loc-with-cliente",
+      "cliente": "Galaxy",
+      "loc": "Israel",
+      "geocoded_at": "2026-05-16T23:10:57.263639+00:00",
+      "failed": true
+    },
+    "sebastian": {
+      "lat": 43.3224219,
+      "lon": -1.9838889,
+      "display_name": "San Sebastián, Guipúzcoa, País Vasco, España",
+      "query": "San sebastian",
+      "strategy": "loc-with-cliente",
+      "cliente": "Sin Vello San sebastian",
+      "loc": "sebastian",
+      "geocoded_at": "2026-05-16T23:10:58.800235+00:00"
+    },
+    "regina": {
+      "lat": 36.9884193,
+      "lon": -3.5653647,
+      "display_name": "Calle Regina, Dúrcal, Comarca del Valle de Lecrín, Granada, Andalucía, 18650, España",
+      "query": "Regina, Granada",
+      "strategy": "loc-with-cliente",
+      "cliente": "Regina",
+      "loc": "Granada",
+      "geocoded_at": "2026-05-16T23:11:00.950956+00:00"
     }
   }
 }
