@@ -59,6 +59,8 @@
   .tabs2 button { padding: 5px 14px; font-size: 12px; border: none; background: transparent; color: #64748b; cursor: pointer; border-radius: 5px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
   .tabs2 button.active { background: white; color: #0b3d91; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
   .total-pane { display: none; }
+  .stats-pane { display: none; }
+  .stats-pane.active { display: block; }
   .total-pane.active { display: block; }
   /* KPI expandible */
   .kpi-expandable { cursor: pointer; }
@@ -561,6 +563,13 @@ __DETALLE_ROWS__
 </div><!-- /view-total -->
 
 <div id="view-stats" class="view">
+<div class="tabs2" id="stats-tabs2" style="margin-bottom:14px">
+  <button type="button" class="active" data-stats-sub="evol"><i class="ti ti-trending-up"></i> Evolución</button>
+  <button type="button" data-stats-sub="tiempos"><i class="ti ti-clock"></i> Tiempos</button>
+  <button type="button" data-stats-sub="averias"><i class="ti ti-tools"></i> Tipos de avería</button>
+</div>
+
+<div id="stats-pane-evol" class="stats-pane active">
 <h2 id="evol-estado">Evolución por estado (23:59h en cada corte)</h2>
 <div class="scroller">
 <table>
@@ -581,28 +590,38 @@ __CHAIN_TOTAL__
 </div>
 
 <h2 id="evol-kpis">Evolución diaria de KPIs</h2>
-<div class="legend">Snapshot diario de los KPIs principales. Se guarda automáticamente cada vez que el workflow refresca el dashboard. Se irá llenando día a día.</div>
+<div class="legend">Snapshot diario de los KPIs principales. Se guarda automáticamente cada vez que el workflow refresca el dashboard.</div>
 <div class="scroller">
 <table>
 __EVOLUCION_KPIS__
 </table>
 </div>
 
-<h2 id="tiempo-taller">Tiempo en taller (tickets 2026 cerrados)</h2>
-<div class="legend">Distribución de los días que tarda una incidencia desde que entra por primera vez a <b>Pdte. asignar técnico</b> hasta que sale a un estado terminal.</div>
+<h2 id="evol-tecnicos-dia">Presupuestos y reparaciones por técnico/día</h2>
+<div class="legend">Conteo de tickets que cada técnico ha avanzado por día. Formato celda: <b style="color:#0891b2">P presupuestos</b> + <b style="color:#059669">R reparaciones</b>. Selecciona mes con el dropdown.</div>
+__TEC_DIA_SECTION__
+</div><!-- /stats-pane-evol -->
+
+<div id="stats-pane-tiempos" class="stats-pane">
+<h2 id="tiempo-taller">Tiempo en taller</h2>
+<div class="legend">Base: tickets creados en 2026 + los abiertos a 1-ene-2026. Para abiertos a día de hoy, el tiempo se calcula hasta HOY. Clic en cualquier KPI (Total / Mediana / Media / Máx) filtra la tabla detalle abajo.</div>
 __TIEMPO_TALLER__
 
-<h3 id="tiempo-taller-detalle" style="margin:18px 0 4px;color:var(--blue);font-size:16px">Detalle de tickets con tiempo en taller medible</h3>
-<div class="legend">Tabla filtrable de los mismos tickets del KPI <b>Total tickets</b>. Incluye <b>Resumen avería</b> y <b>Días en taller</b>. Clic en el KPI lleva aquí.</div>
-__TALLER_DETAIL__
-
-<h2 id="tiempo-sustis">Tiempo de sustituciones (activas)</h2>
-<div class="legend">Distribución de días que las sustituciones activas llevan entregadas. Tiempo desde la <b>fecha de envío</b> de la sub-tarea hasta hoy. Cuando se devuelve, deja de aparecer en el cache.</div>
+<h2 id="tiempo-sustis" style="margin-top:18px">Tiempo de sustituciones</h2>
+<div class="legend">Base = misma. Mide días con sustitución entregada (fecha envío → hoy o devolución). Tickets sin susti se omiten en este bloque.</div>
 __TIEMPO_SUSTIS__
 
+<h3 id="tiempos-detalle" style="margin:18px 0 4px;color:var(--blue);font-size:16px">Detalle compartido</h3>
+<div class="legend">Mismos tickets de los dos bloques de arriba. Toggle de columnas arriba. Clic en KPIs filtra esta tabla.</div>
+__TALLER_DETAIL__
+</div><!-- /stats-pane-tiempos -->
+
+<div id="stats-pane-averias" class="stats-pane">
 <h2 id="averias-2026">Tipos de avería por año de venta (2026)</h2>
 <div class="legend">Reparaciones 2026 (tickets que pasaron por Inspección de salida) cruzadas: filas = año de venta del equipo, columnas = tipo de avería. Un ticket puede tocar varios cubos. Filtros por cadena e importe se aplican al instante.</div>
 __ANUAL_AVERIAS__
+</div><!-- /stats-pane-averias -->
+
 </div><!-- /view-stats -->
 
 <div id="view-chains" class="view">
@@ -1770,6 +1789,21 @@ function _daysColor(d) {
   });
 })();
 
+
+
+// ========================= STATS sub-pestañas =========================
+(function(){
+  var btns = document.querySelectorAll('#stats-tabs2 button');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var sub = b.dataset.statsSub;
+      btns.forEach(function(x){ x.classList.toggle('active', x===b); });
+      document.querySelectorAll('.stats-pane').forEach(function(p){
+        p.classList.toggle('active', p.id === 'stats-pane-' + sub);
+      });
+    });
+  });
+})();
 
 </script>
 </div><!-- /main-content -->

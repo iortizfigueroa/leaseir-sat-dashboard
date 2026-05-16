@@ -1079,6 +1079,119 @@ def build_anual_averias_section(cache):
     return html
 
 
+
+def build_tecnicos_dia_section(cache):
+    """Tabla técnicos x día con #presupuestos + #reparaciones desde 1-ene-2026.
+    Selector de mes (dropdown). Para cada (técnico, día) cuenta cuántos tickets
+    pasaron a 'Presupuesto preparado pendiente de enviar' (P) y a 'Inspección
+    de salida' (R) ese día con ese técnico."""
+    PRES_STATE = "Presupuesto preparado pendiente de enviar"
+    REP_STATE = "Inspección de salida"
+
+    cutoff = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+    now_utc = datetime.now(timezone.utc)
+
+    # grid[(tec, fecha)] = {"p": N, "r": N}
+    grid = {}
+    tecs = set()
+    months = set()
+
+    for k, t in cache.get("tickets", {}).items():
+        # Para conocer "qué técnico hizo la transición" no es trivial — no tenemos
+        # changelog del assignee/tec_taller. Heurística: usar el técnico ACTUAL
+        # cuando la transición ocurrió cerca del último estado, o usar la
+        # función person_for_status sobre el estado al que avanzó.
+        # Por simplicidad: para cada transición que entra en PRES o REP,
+        # atribuir al tec_taller actual del ticket (si está) o al asignado.
+        tec = (t.get("tec_taller") or "").strip() or (t.get("asignado") or "").strip() or "(Sin asignar)"
+        for tr in t.get("transitions", []):
+            if len(tr) < 3: continue
+            ts, fs, to = tr[0], tr[1], tr[2]
+            if to not in (PRES_STATE, REP_STATE): continue
+            dt = parse_iso(ts)
+            if not dt or dt < cutoff: continue
+            day_key = dt.strftime("%Y-%m-%d")
+            month_key = dt.strftime("%Y-%m")
+            months.add(month_key)
+            tecs.add(tec)
+            cell = grid.setdefault((tec, day_key), {"p": 0, "r": 0})
+            if to == PRES_STATE: cell["p"] += 1
+            else: cell["r"] += 1
+
+    if not grid:
+        return '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin datos suficientes desde 1-ene-2026.</div>'
+
+    months_sorted = sorted(months, reverse=True)
+    current_month = months_sorted[0]
+
+    # Por defecto rendering del mes más reciente; el resto se incluye como JSON para JS
+    # Generar tabla por mes — todos en el HTML, solo uno visible
+    out = []
+    out.append('<div style="margin:6px 0 10px;display:flex;gap:8px;align-items:center">')
+    out.append('<label style="font-size:13px;color:var(--grey)">Mes:</label>')
+    out.append('<select id="tec-dia-month" style="font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:4px">')
+    for mk in months_sorted:
+        out.append(f'<option value="{mk}">{mk}</option>')
+    out.append('</select>')
+    out.append('<span style="color:var(--grey);font-size:12px;margin-left:auto" id="tec-dia-info"></span>')
+    out.append('</div>')
+
+    tecs_sorted = sorted(tecs, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
+
+    for mk in months_sorted:
+        # Días del mes presentes
+        year, month = int(mk[:4]), int(mk[5:7])
+        from calendar import monthrange
+        ndays = monthrange(year, month)[1]
+        days_present = [f"{mk}-{d:02d}" for d in range(1, ndays + 1)]
+
+        active = ' style="display:block"' if mk == current_month else ' style="display:none"'
+        out.append(f'<div class="tec-dia-mes" data-mes="{mk}"{active}>')
+        out.append('<div class="scroller">')
+        out.append('<table style="font-size:11px;min-width:1400px">')
+        out.append('<thead><tr>')
+        out.append('<th class="sticky-l1" style="text-align:left;left:0;min-width:200px;background:#f1f5f9;color:#0b3d91">Técnico</th>')
+        for d in days_present:
+            dd = d[-2:]
+            out.append(f'<th style="background:#f1f5f9;font-size:10px;padding:4px 6px">{dd}</th>')
+        out.append('<th style="background:#fff4d6;font-size:11px;padding:4px 8px">Mes</th>')
+        out.append('</tr></thead><tbody>')
+
+        for tec in tecs_sorted:
+            row_p, row_r = 0, 0
+            cells = [f'<td class="lbl-name" style="left:0;min-width:200px">{html_escape(tec)}</td>']
+            for d in days_present:
+                v = grid.get((tec, d))
+                if v:
+                    p, r = v["p"], v["r"]
+                    row_p += p; row_r += r
+                    parts = []
+                    if p: parts.append(f'<b style="color:#0891b2">{p}</b>')
+                    if r: parts.append(f'<b style="color:#059669">{r}</b>')
+                    cells.append(f'<td style="text-align:center;font-size:11px" title="{p} ppto · {r} rep">{"".join(parts) if parts else "·"}</td>')
+                else:
+                    cells.append('<td style="text-align:center;color:#cbd5e1">·</td>')
+            if row_p or row_r:
+                cells.append(f'<td style="background:#fff4d6;text-align:center;font-weight:600"><span style="color:#0891b2">{row_p}P</span>+<span style="color:#059669">{row_r}R</span></td>')
+            else:
+                cells.append('<td style="background:#fff4d6;text-align:center;color:#cbd5e1">·</td>')
+            out.append('<tr>' + ''.join(cells) + '</tr>')
+        out.append('</tbody></table></div></div>')
+
+    out.append('''<script>(function(){
+      var sel=document.getElementById('tec-dia-month');
+      if(!sel) return;
+      sel.addEventListener('change', function(){
+        var v=sel.value;
+        document.querySelectorAll('.tec-dia-mes').forEach(function(el){
+          el.style.display = (el.dataset.mes===v ? 'block' : 'none');
+        });
+      });
+    })();</script>''')
+
+    return ''.join(out)
+
+
 def build_tiempo_taller_section(cache):
     """Stacked bar de tiempo en taller para tickets 2026 cerrados."""
     TALLER = {"Pendiente asignar técnico", "En cola taller",
@@ -1941,6 +2054,12 @@ def build_html(cache, out_path, template_path):
     except Exception as _e:
         tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempo taller: {_e}</div>'
 
+    # Tabla técnicos por día (mes a mes desde 1-ene-2026)
+    try:
+        tec_dia_html = build_tecnicos_dia_section(cache)
+    except Exception as _e:
+        tec_dia_html = f'<div style="color:#c0392b;padding:14px">Error tec-dia: {_e}</div>'
+
     # Stacked bar tiempo de sustituciones activas
     try:
         tiempo_sustis_html = build_tiempo_sustis_section(out_path)
@@ -2073,6 +2192,7 @@ def build_html(cache, out_path, template_path):
         "__EVOLUCION_KPIS__": evolucion_kpis,
         "__ANUAL_AVERIAS__": anual_averias_html,
         "__TIEMPO_TALLER__": tiempo_taller_html,
+        "__TEC_DIA_SECTION__": tec_dia_html,
         "__TIEMPO_SUSTIS__": tiempo_sustis_html,
         "__TALLER_DETAIL__": taller_detail_html,
         "__MAP_INCIDENCIAS__": json.dumps(map_markers_incidencias),
