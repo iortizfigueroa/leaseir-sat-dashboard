@@ -54,6 +54,8 @@
   td.ah-cell { cursor: pointer; transition: background 0.1s; }
   td.ah-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
   td.tec-cell { cursor: pointer; transition: background 0.1s; text-align: center; }
+  tr.tec-no-aplica { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
+  tr.tec-no-aplica td.lbl-name { color: #64748b; font-style: italic; }
   td.tec-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
   .multi-wrap { position: relative; display: inline-block; }
   .multi-btn { font-size: 13px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 4px; background: white; cursor: pointer; color: inherit; }
@@ -427,7 +429,7 @@ __DEMO_BANNER__
   <div class="kpi clickable" id="kpi-eq-reparados" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-wrench"></i>Equipos reparados hoy</div><div class="v" style="color:#059669">__EQ_REPARADOS__</div><div class="d" style="color:var(--grey)">Tickets que han pasado por inspección hoy</div></div>
   <div class="kpi clickable" id="kpi-entradas-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-login-2"></i>Entradas a taller hoy</div><div class="v" style="color:#1f6feb">__ENTRADAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que llegaron al taller hoy</div></div>
   <div class="kpi clickable" id="kpi-salidas-taller" title="Clic para filtrar Detalle (los que siguen abiertos)"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
-  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pendientes a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:13px;color:#c0392b;font-weight:500;margin-left:6px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span><span style="font-size:13px;color:#a23b72;font-weight:500;margin-left:6px" title="Bloqueantes con sustitución en estado Solicitado (casos más críticos)">· __PENDIENTES_TALLER_CRITIC__ críticos</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte · críticos = bloq + susti solicitada</div></div>
+  <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pdtes llegar a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:13px;color:#c0392b;font-weight:500;margin-left:6px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span><span style="font-size:13px;color:#a23b72;font-weight:500;margin-left:6px" title="Bloqueantes con sustitución en estado Solicitado">· __PENDIENTES_TALLER_CRITIC__ susti</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte · susti = bloq con susti solicitada</div></div>
   <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
   <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
@@ -445,14 +447,14 @@ __AH_ROWS__
 </div>
 
 <h2 id="tecnicos">Detalle de técnicos taller</h2>
-<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = suma de los 5 estados clave · Filas <b>verdes "Presupuesto hecho hoy" / "Equipo reparado hoy"</b> = tickets únicos avanzados hoy (clic muestra LEAS abajo).</div>
+<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = los 3 estados donde realmente trabaja el técnico. <b>Filas rayadas</b> = estados que no dependen del técnico (cola/cliente/transporte) · Filas <b>verdes "Presupuesto hecho hoy" / "Equipo reparado hoy"</b> = tickets únicos avanzados hoy (clic muestra LEAS abajo).</div>
 <div class="scroller">
 <table>
 __TEC_HEADER__
 __TEC_ROWS__
 </table>
 </div>
-<div id="avances-detail" class="avances-detail">
+<div id="avances-detail" class="avances-detail" style="font-size:11px">
   <div class="avances-detail-empty">Clic en una celda verde "Presupuesto hecho" / "Equipo reparado" para ver los tickets avanzados</div>
 </div>
 
@@ -488,7 +490,7 @@ __TEC_ROWS__
   <th class="sortable" data-col="2" data-type="text">Cliente / Centro</th>
   <th class="sortable" data-col="3" data-type="text">Estado</th>
   <th class="sortable" data-col="4" data-type="text">Gestión</th>
-  <th class="sortable" data-col="5" data-type="num">Días</th>
+  <th class="sortable" data-col="5" data-type="num" title="Días en el estado actual">Días estado</th>
   <th class="sortable" data-col="6" data-type="num" title="Días desde entrada a Pdte. asignar técnico">Días taller</th>
   <th class="sortable" data-col="7" data-type="text">Localización</th>
   <th class="sortable" data-col="8" data-type="date">Creada</th>

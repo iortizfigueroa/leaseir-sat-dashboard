@@ -248,9 +248,12 @@ ASIGNADO_STATES = {
 }
 
 # Estados donde "de verdad estamos esperando al técnico" (suma destacada en la tabla).
+# Solo cuando el técnico realmente está trabajando o tiene que empezar (no incluye colas
+# o esperas externas como cliente / transporte / inspección).
 ESPERANDO_TECNICO_STATES = {
-    "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
-    "Esperando inicio reparación", "En reparación",
+    "En preparación presupuesto",
+    "Esperando inicio reparación",
+    "En reparación",
 }
 
 
@@ -352,6 +355,8 @@ def build_tecnicos_section(cache, avances_extra=None):
                 cls_list.append("row-taller-first")
             if not next_taller:
                 cls_list.append("row-taller-last")
+        if st not in ESPERANDO_TECNICO_STATES:
+            cls_list.append("tec-no-aplica")
         cls_attr = f' class="{" ".join(cls_list)}"' if cls_list else ''
         row_tot = 0
         row_flow = {"in": 0, "out": 0}
