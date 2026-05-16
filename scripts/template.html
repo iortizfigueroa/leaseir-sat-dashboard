@@ -1805,6 +1805,135 @@ function _daysColor(d) {
   });
 })();
 
+
+// ========================= MAPAS POR CADENA + SUSTIS =========================
+(function(){
+  window._CHAIN_MAPS_INITED = window._CHAIN_MAPS_INITED || {};
+
+  function _daysColor(d) {
+    if (d == null || d === -1) return '#7d8590';  // -1 = solicitado sin fecha
+    var n = +d;
+    if (n <= 15) return '#1f8a4c';
+    if (n <= 25) return '#b8860b';
+    if (n <= 35) return '#cb6f0a';
+    return '#c0392b';
+  }
+
+  function initChainMap(slug) {
+    if (window._CHAIN_MAPS_INITED[slug]) return;
+    var data = (window._CHAIN_MAPS_DATA||{})[slug];
+    if (!data || !data.length) return;
+    var div = document.getElementById('map-chain-' + slug);
+    if (!div || !window.L) return;
+    window._CHAIN_MAPS_INITED[slug] = true;
+    var map = L.map('map-chain-' + slug).setView([40.4, -3.7], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '&copy; OpenStreetMap'
+    }).addTo(map);
+    data.forEach(function(m){
+      var marker = L.circleMarker([m.lat, m.lon], {
+        radius: 7, color: 'white', weight: 2,
+        fillColor: m.color || '#64748b', fillOpacity: 0.9
+      });
+      var url = 'https://leaseir.atlassian.net/browse/' + m.key;
+      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
+        '<div style="font-weight:600;margin-bottom:4px"><a href="'+url+'" target="_blank" style="color:#2a59c4">'+m.key+'</a></div>' +
+        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
+        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
+        '<div style="font-size:11px"><b>Estado:</b> '+m.status+'</div>' +
+        '<div style="font-size:11px"><b>Dias:</b> '+m.days+' &middot; <b>Bloq:</b> '+(m.bloq||'-')+' &middot; <b>Susti:</b> '+(m.susti||'-')+'</div>' +
+        '</div>';
+      marker.bindPopup(html);
+      marker.addTo(map);
+    });
+    var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
+    try { map.fitBounds(b, {padding:[30,30]}); } catch(e) {}
+    setTimeout(function(){ map.invalidateSize(); }, 250);
+  }
+
+  // Cuando se cambie a una sub-pestaña de cadena, inicializar su mapa
+  document.querySelectorAll('.tabs2 button[data-chain]').forEach(function(b){
+    b.addEventListener('click', function(){
+      var ch = b.dataset.chain;
+      if (ch === 'resumen') return;
+      var slug = ch.replace(/[^a-zA-Z0-9]+/g,'-').toLowerCase().replace(/^-|-$/g,'');
+      setTimeout(function(){ initChainMap(slug); }, 100);
+    });
+  });
+
+  // Mapa Sustituciones
+  var sustisMapInited = false;
+  var sustisMap = null;
+  var sustisMarkers = [];
+
+  function renderSustisMap(){
+    if (!sustisMap) return;
+    sustisMarkers.forEach(function(mk){ sustisMap.removeLayer(mk); });
+    sustisMarkers = [];
+    var data = window._SUSTIS_MAP_DATA || [];
+    var chFilter = document.getElementById('map-sustis-chain').value;
+    var stFilter = document.getElementById('map-sustis-state').value;
+    var filtered = data.filter(function(m){
+      if (chFilter && m.chain !== chFilter) return false;
+      if (stFilter === 'solicitado' && !m.is_solicitado) return false;
+      if (stFilter === 'activa' && m.is_solicitado) return false;
+      return true;
+    });
+    document.getElementById('map-sustis-count').textContent = filtered.length + ' sustituciones';
+    filtered.forEach(function(m){
+      var color = _daysColor(m.dias);
+      var opts = { radius: 8, color: 'white', weight: 2, fillColor: color, fillOpacity: 0.9 };
+      if (m.is_solicitado) {
+        opts.color = '#475569';
+        opts.weight = 2;
+        opts.dashArray = '3,3';
+      }
+      var mk = L.circleMarker([m.lat, m.lon], opts);
+      var purl = m.parent_key ? 'https://leaseir.atlassian.net/browse/'+m.parent_key : '';
+      var curl = m.key ? 'https://leaseir.atlassian.net/browse/'+m.key : '';
+      var diasTxt = m.dias === -1 ? '— (no entregada)' : (m.dias + ' días');
+      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
+        '<div style="font-weight:600;margin-bottom:4px">'+m.chain+' · ' + 
+        (curl ? '<a href="'+curl+'" target="_blank" style="color:#2a59c4">'+m.key+'</a>' : '') +
+        (purl ? ' / <a href="'+purl+'" target="_blank" style="color:#2a59c4">'+m.parent_key+'</a>' : '') + '</div>' +
+        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
+        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
+        '<div style="font-size:11px"><b>Estado:</b> '+m.subtask_status+'</div>' +
+        '<div style="font-size:11px"><b>Tiempo:</b> '+diasTxt+'</div>' +
+        '<div style="font-size:11px"><b>Consola:</b> '+(m.consola||'-')+' &middot; <b>Manipulo:</b> '+(m.manipulo||'-')+'</div>' +
+        '</div>';
+      mk.bindPopup(html);
+      mk.addTo(sustisMap);
+      sustisMarkers.push(mk);
+    });
+    if (filtered.length) {
+      var b = L.latLngBounds(filtered.map(function(p){return [p.lat, p.lon];}));
+      try { sustisMap.fitBounds(b, {padding:[30,30]}); } catch(e) {}
+    }
+  }
+
+  function initSustisMap(){
+    if (sustisMapInited) return;
+    var div = document.getElementById('map-sustis');
+    if (!div || !window.L) return;
+    sustisMapInited = true;
+    sustisMap = L.map('map-sustis').setView([40.4, -3.7], 5);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19, attribution: '&copy; OpenStreetMap'
+    }).addTo(sustisMap);
+    document.getElementById('map-sustis-chain').addEventListener('change', renderSustisMap);
+    document.getElementById('map-sustis-state').addEventListener('change', renderSustisMap);
+    renderSustisMap();
+  }
+
+  document.querySelectorAll('.sustis-tabs button[data-sustis="mapa"]').forEach(function(b){
+    b.addEventListener('click', function(){
+      setTimeout(initSustisMap, 100);
+      setTimeout(function(){ sustisMap && sustisMap.invalidateSize(); }, 300);
+    });
+  });
+})();
+
 </script>
 </div><!-- /main-content -->
 </div><!-- /main -->

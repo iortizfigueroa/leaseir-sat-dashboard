@@ -1,6 +1,7 @@
 """build_chains.py — Fase 2 iter E2: Inmovilizado SAT con 4 secciones + colores."""
 from __future__ import annotations
 
+import json
 import json as _json
 import re
 from datetime import date, datetime, timezone
@@ -635,7 +636,7 @@ def build_inmovilizado_section(chain, sustis_items, inmov_items):
 
 
 def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
-                     year, num_months, sustis_items=None, inmov_items=None):
+                     year, num_months, sustis_items=None, inmov_items=None, geo_entries=None):
     enriched = []
     for t in tickets_chain:
         e = enrich(t, serial_year, max_known, year)
@@ -843,6 +844,60 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
         )
     out.append('</tbody></table></div>')
 
+    # === MAPA por cadena ===
+    _ge = geo_entries or {}
+    import re as _re_local
+    def _addr_key(cli, loc):
+        loc_c = _re_local.sub(r"\s+", " ", str(loc or "")).strip()
+        cli_c = _re_local.sub(r"\s+", " ", str(cli or "")).strip()
+        if loc_c and len(loc_c) > 8: return loc_c.lower()
+        if cli_c: return cli_c.lower()
+        return ""
+    STATE_COLORS = {
+        "Abierto":"#3b82f6", "Recepcionado SAT":"#1d4ed8", "Pendiente recogida":"#7c3aed",
+        "Gestionado transporte":"#8b5cf6", "Pendiente asignar técnico":"#0891b2",
+        "En cola taller":"#06b6d4", "En preparación presupuesto":"#0e7490",
+        "Presupuesto preparado pendiente de enviar":"#f59e0b",
+        "Pendiente confirmación presupuesto":"#d97706",
+        "Esperando inicio reparación":"#ea580c", "En reparación":"#dc2626",
+        "Inspección de salida":"#059669", "Devuelto a cliente":"#16a34a",
+        "Enviado a técnico externo":"#be185d",
+        "Esperando respuesta cliente a presupuesto":"#a21caf",
+        "Pendiente definir servicio externo":"#9333ea"
+    }
+    markers = []
+    states_present = set()
+    for t in tickets_chain:
+        if not is_open(t.get("current_status")): continue
+        cli = t.get("cliente",""); loc = t.get("loc","")
+        key = _addr_key(cli, loc)
+        g = _ge.get(key)
+        if not g or g.get("lat") is None: continue
+        st = t.get("current_status","")
+        states_present.add(st)
+        d = days_since(last_status_change_dt(t)) or 0
+        markers.append({
+            "lat": g["lat"], "lon": g["lon"],
+            "key": t.get("key",""),
+            "cliente": (cli or "")[:80], "loc": (loc or "")[:80],
+            "status": st,
+            "color": STATE_COLORS.get(st, "#64748b"),
+            "days": d,
+            "bloq": t.get("bloq",""), "susti": t.get("susti",""),
+        })
+    if markers:
+        chain_slug = _re_local.sub(r"[^a-zA-Z0-9]+", "-", chain).strip("-").lower()
+        legend_items = ''.join(
+            f'<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px">'
+            f'<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:{STATE_COLORS.get(s,"#64748b")}"></span>{html_escape(s)}</span>'
+            for s in sorted(states_present)
+        )
+        out.append(f'<p class="chain-section-title">Mapa de incidencias abiertas — {html_escape(chain)} ({len(markers)} marcadores)</p>')
+        out.append(f'<div id="map-chain-{chain_slug}" style="height:420px;border:1px solid var(--line);border-radius:8px;margin:8px 0"></div>')
+        out.append(f'<div style="font-size:11px;color:var(--grey);margin-bottom:14px">{legend_items}</div>')
+        markers_json = json.dumps(markers, ensure_ascii=False)
+        out.append('<script>(function(){window._CHAIN_MAPS_DATA=window._CHAIN_MAPS_DATA||{};window._CHAIN_MAPS_DATA["' + chain_slug + '"]=' + markers_json + ';})();</script>')
+
     return "".join(out), {
         "nuevas": ytd_nuevas, "bloq": ytd_bloq, "parque": parque_ult,
         "tasa": tasa_ytd, "bloq_ano": bloq_ano, "abiertas": abiertas_hoy,
@@ -885,6 +940,17 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
     num_months = today.month
     max_known = compute_max_known_per_prefix(serial_year)
 
+    # Cargar geocodes para mapas por cadena
+    geo_entries = {}
+    try:
+        from pathlib import Path as _PG
+        for _cand in [_PG("cache") / "geocodes.json", _PG(__file__).resolve().parent.parent / "cache" / "geocodes.json"]:
+            if _cand.exists():
+                geo_entries = json.loads(_cand.read_text(encoding="utf-8")).get("entries", {})
+                break
+    except Exception:
+        pass
+
     tickets = cache.get("tickets", {})
     by_chain = {ch: [] for ch in CHAIN_ORDER}
     for k, t in tickets.items():
@@ -909,7 +975,8 @@ def build_chains_html(cache, airtable, serial_year, sustis=None, inmov=None):
     for ch in chains_to_show:
         pane_html, s = build_chain_pane(ch, by_chain.get(ch, []), ventas,
                                         serial_year, max_known, year, num_months,
-                                        sustis_items=sustis_items, inmov_items=inmov_items)
+                                        sustis_items=sustis_items, inmov_items=inmov_items,
+                                        geo_entries=geo_entries)
         stats_per_chain[ch] = s
         meta = (f'{s["nuevas"]} nuevas YTD · {s["bloq"]} bloqueantes · '
                 f'{s["abiertas"]} abiertas hoy')

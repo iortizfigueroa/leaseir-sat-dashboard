@@ -411,7 +411,7 @@ def days_cell_html(dias):
 # Serial consola, Serial manípulo, Modelo, LEAS principal, Estado principal,
 # Subtarea, Estado subtarea, Consola av, Manípulo av, Activity
 TYPES_14 = ['text', 'text', 'num', 'date'] + ['text']*10
-TYPES_INV = ['text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'text', 'num', 'date', 'text']
+TYPES_INV = ['text', 'text', 'text', 'text', 'num', 'date', 'text', 'text', 'text', 'text', 'text', 'text', 'text']
 TYPES_DISP = ['text']*6
 
 HEADERS_14 = ['Cliente', 'Localización', 'Días con sustitución', 'Fecha y hora de envío',
@@ -421,11 +421,12 @@ HEADERS_14 = ['Cliente', 'Localización', 'Días con sustitución', 'Fecha y hor
               'Consola averiada', 'Manípulo averiado',
               'Current Activity (Airtable)']
 
-INV_HEADERS = ['Num. Serie', 'Modelo', 'Cliente', 'Incidencia (sub-task)',
-               'Incidencia principal', 'Estado principal',
-               'Consola principal (avería)', 'HP principal (avería)',
-               'Estado Jira (sub-task)', 'Localización equipo averiado',
+# Orden nuevo: Días y Fecha envío justo después de Localización (más visibles).
+INV_HEADERS = ['Num. Serie', 'Modelo', 'Cliente', 'Localización equipo averiado',
                'Días con sustitución', 'Fecha y hora de envío',
+               'Incidencia (sub-task)', 'Incidencia principal', 'Estado principal',
+               'Consola principal (avería)', 'HP principal (avería)',
+               'Estado Jira (sub-task)',
                'Current Activity (Airtable)']
 
 
@@ -725,22 +726,22 @@ def render_inv_row_html(r, color_bg=None):
         html_escape(r['num_serie']),
         html_escape(r['modelo']),
         html_escape(r['cliente']),
+        html_escape(r['localizacion']),
+    ]
+    middle = [
+        html_escape(r['fecha_envio']),
         sub_link,
         leas_link,
         html_escape(r['estado_principal']),
         html_escape(r['consola_av']),
         html_escape(r['handpiece_av']),
         html_escape(r['sub_status']),
-        html_escape(r['localizacion']),
-    ]
-    tail = [
-        html_escape(r['fecha_envio']),
         html_escape(r['activity']),
     ]
     return (f'<tr{style}>'
             + ''.join(f'<td>{c}</td>' for c in pre)
             + days_cell_html(r['dias'])
-            + ''.join(f'<td>{c}</td>' for c in tail)
+            + ''.join(f'<td>{c}</td>' for c in middle)
             + '</tr>')
 
 
@@ -898,7 +899,7 @@ def render_inmovilizado_sat_html(data):
 # Entry point
 # ============================================================================
 def build_sustis_global_html(sustis, inmov):
-    """HTML para la pestaña Sustis con 2 sub-vistas: Resumen + Inmovilizado SAT."""
+    """HTML para la pestaña Sustis con 3 sub-vistas: Resumen + Inmovilizado SAT + Mapa."""
     sustis_items = (sustis or {}).get('items', []) if sustis else []
     inmov_items = (inmov or {}).get('items', []) if inmov else []
     if not sustis_items and not inmov_items:
@@ -907,12 +908,97 @@ def build_sustis_global_html(sustis, inmov):
     data = build_data(sustis_items, inmov_items)
     resumen_html = render_resumen_html(data)
     inmov_html = render_inmovilizado_sat_html(data)
+    mapa_html = render_sustis_mapa_html(sustis_items)
 
     out = []
     out.append('<div class="tabs2 sustis-tabs">')
     out.append('<button type="button" data-sustis="cadenas" class="active">Resumen por cadena</button>')
     out.append('<button type="button" data-sustis="inmovilizado">Inmovilizado SAT (A/B/C/D)</button>')
+    out.append('<button type="button" data-sustis="mapa">Mapa</button>')
     out.append('</div>')
     out.append(f'<div class="sustis-pane active" data-sustis="cadenas">{resumen_html}</div>')
     out.append(f'<div class="sustis-pane" data-sustis="inmovilizado">{inmov_html}</div>')
+    out.append(f'<div class="sustis-pane" data-sustis="mapa">{mapa_html}</div>')
     return ''.join(out)
+
+
+def render_sustis_mapa_html(sustis_items):
+    """Mapa con las sustituciones (activas + solicitadas). Solicitadas en gris/dashed."""
+    import json as _json
+    from pathlib import Path as _PG
+    geo_entries = {}
+    try:
+        for _cand in [_PG("cache") / "geocodes.json",
+                      _PG(__file__).resolve().parent.parent / "cache" / "geocodes.json"]:
+            if _cand.exists():
+                geo_entries = _json.loads(_cand.read_text(encoding="utf-8")).get("entries", {})
+                break
+    except Exception:
+        pass
+
+    import re as _re
+    def _addr_key(cli, loc):
+        loc_c = _re.sub(r"\s+", " ", str(loc or "")).strip()
+        cli_c = _re.sub(r"\s+", " ", str(cli or "")).strip()
+        if loc_c and len(loc_c) > 8: return loc_c.lower()
+        if cli_c: return cli_c.lower()
+        return ""
+
+    now_utc = datetime.now(timezone.utc)
+    markers = []
+    cadenas_present = set()
+    for it in sustis_items:
+        cli = it.get("cliente","") or it.get("parent_cliente","")
+        loc = it.get("loc","")
+        key = _addr_key(cli, loc)
+        g = geo_entries.get(key)
+        if not g or g.get("lat") is None: continue
+        ch = chain_for(cli, loc)
+        cadenas_present.add(ch)
+        fe = it.get("fecha_envio")
+        dias = None
+        if fe:
+            fe_dt = parse_iso(fe)
+            if fe_dt:
+                if not fe_dt.tzinfo: fe_dt = fe_dt.replace(tzinfo=timezone.utc)
+                dias = (now_utc - fe_dt).days
+        markers.append({
+            "lat": g["lat"], "lon": g["lon"],
+            "key": it.get("key",""),
+            "parent_key": it.get("parent_key",""),
+            "cliente": (cli or "")[:80], "loc": (loc or "")[:80],
+            "subtask_status": it.get("subtask_status",""),
+            "chain": ch,
+            "consola": it.get("consola_susti","") or "",
+            "manipulo": it.get("manipulo_susti","") or "",
+            "dias": dias if dias is not None else -1,  # -1 = sin fecha (solicitado)
+            "is_solicitado": (it.get("subtask_status","").lower() == "solicitado"),
+        })
+
+    if not markers:
+        return '<div style="padding:14px;color:#94a3b8;font-style:italic">No hay sustituciones geocodificadas.</div>'
+
+    chains_opts = ''.join(f'<option value="{html_escape(c)}">{html_escape(c)}</option>' for c in sorted(cadenas_present))
+    markers_json = _json.dumps(markers, ensure_ascii=False)
+
+    return (
+        '<div style="margin:8px 0 12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">'
+        '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px">Cadena:'
+        f'<select id="map-sustis-chain" style="font-size:12px;padding:4px 8px;border:1px solid #d0d7de;border-radius:4px"><option value="">Todas</option>{chains_opts}</select>'
+        '</label>'
+        '<label style="display:inline-flex;align-items:center;gap:6px;font-size:13px">Estado:'
+        '<select id="map-sustis-state" style="font-size:12px;padding:4px 8px;border:1px solid #d0d7de;border-radius:4px">'
+        '<option value="">Todos</option><option value="solicitado">Solo solicitadas</option><option value="activa">Solo entregadas</option>'
+        '</select></label>'
+        '<span id="map-sustis-count" style="color:#7d8590;font-size:12px;margin-left:auto"></span>'
+        '</div>'
+        '<div id="map-sustis" style="height:calc(100vh - 220px);min-height:520px;border:1px solid #d0d7de;border-radius:8px"></div>'
+        '<div style="margin-top:8px;font-size:11px;color:#7d8590;display:flex;flex-wrap:wrap;gap:8px">'
+        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#1f8a4c"></span>0-15 días</span>'
+        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b8860b"></span>16-25 días</span>'
+        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#cb6f0a"></span>26-35 días</span>'
+        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#c0392b"></span>&gt;35 días</span>'
+        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7d8590;border:2px dashed #475569"></span>Solicitada (no entregada)</span>'
+        '</div>'
+        '<script>window._SUSTIS_MAP_DATA=' + markers_json + ';</script>'
+    )
