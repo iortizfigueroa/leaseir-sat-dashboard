@@ -865,6 +865,13 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
         "Esperando respuesta cliente a presupuesto":"#a21caf",
         "Pendiente definir servicio externo":"#9333ea"
     }
+    import hashlib as _hashlib
+    def _atlantic_fb(key):
+        h = int(_hashlib.md5(key.encode()).hexdigest()[:8], 16)
+        dx = ((h >> 4) & 0xff) / 255.0 * 3.0 - 1.5
+        dy = (h & 0xff) / 255.0 * 3.0 - 1.5
+        return (36.0 + dy, -20.0 + dx)
+
     markers = []
     states_present = set()
     for t in tickets_chain:
@@ -872,31 +879,71 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
         cli = t.get("cliente",""); loc = t.get("loc","")
         key = _addr_key(cli, loc)
         g = _ge.get(key)
-        if not g or g.get("lat") is None: continue
+        no_geo = (not g or g.get("lat") is None)
+        if no_geo:
+            lat_v, lon_v = _atlantic_fb(t.get("key","") or "noid")
+        else:
+            lat_v, lon_v = g["lat"], g["lon"]
         st = t.get("current_status","")
         states_present.add(st)
         d = days_since(last_status_change_dt(t)) or 0
         markers.append({
-            "lat": g["lat"], "lon": g["lon"],
+            "lat": lat_v, "lon": lon_v,
             "key": t.get("key",""),
             "cliente": (cli or "")[:80], "loc": (loc or "")[:80],
             "status": st,
             "color": STATE_COLORS.get(st, "#64748b"),
             "days": d,
             "bloq": t.get("bloq",""), "susti": t.get("susti",""),
+            "no_geo": no_geo,
         })
+
+    # Sustituciones de la cadena
+    sustis_markers = []
+    if sustis_items:
+        from datetime import datetime as _DT, timezone as _TZ
+        _now = _DT.now(_TZ.utc)
+        for s in sustis_items:
+            if chain_of_sustis(s) != chain: continue
+            cli_s = s.get("cliente","") or s.get("parent_cliente",""); loc_s = s.get("loc","")
+            key_s = _addr_key(cli_s, loc_s)
+            g_s = _ge.get(key_s)
+            no_geo_s = (not g_s or g_s.get("lat") is None)
+            if no_geo_s:
+                lat_s, lon_s = _atlantic_fb((s.get("key","") or s.get("parent_key","") or "noid"))
+            else:
+                lat_s, lon_s = g_s["lat"], g_s["lon"]
+            fe = s.get("fecha_envio")
+            dias = None
+            if fe:
+                fdt = parse_iso(fe)
+                if fdt:
+                    if not fdt.tzinfo: fdt = fdt.replace(tzinfo=_TZ.utc)
+                    dias = (_now - fdt).days
+            sustis_markers.append({
+                "lat": lat_s, "lon": lon_s,
+                "key": s.get("key",""),
+                "parent_key": s.get("parent_key",""),
+                "cliente": (cli_s or "")[:80], "loc": (loc_s or "")[:80],
+                "subtask_status": s.get("subtask_status",""),
+                "consola": s.get("consola_susti","") or "",
+                "manipulo": s.get("manipulo_susti","") or "",
+                "dias": dias if dias is not None else -1,
+                "is_solicitado": (s.get("subtask_status","").lower() == "solicitado"),
+                "no_geo": no_geo_s,
+            })
     if markers:
         chain_slug = _re_local.sub(r"[^a-zA-Z0-9]+", "-", chain).strip("-").lower()
-        legend_items = ''.join(
-            f'<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px">'
-            f'<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:{STATE_COLORS.get(s,"#64748b")}"></span>{html_escape(s)}</span>'
-            for s in sorted(states_present)
-        )
-        out.append(f'<p class="chain-section-title">Mapa de incidencias abiertas — {html_escape(chain)} ({len(markers)} marcadores)</p>')
-        out.append(f'<div id="map-chain-{chain_slug}" style="height:420px;border:1px solid var(--line);border-radius:8px;margin:8px 0"></div>')
-        out.append(f'<div style="font-size:11px;color:var(--grey);margin-bottom:14px">{legend_items}</div>')
+        out.append(f'<p class="chain-section-title">Mapa — {html_escape(chain)} ({len(markers)} incidencias, {len(sustis_markers)} sustis)</p>')
+        out.append(f'<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:6px 0">')
+        out.append(f'<label style="font-size:12px;color:var(--grey)">Color: <select class="map-chain-color" data-slug="{chain_slug}" style="font-size:12px;padding:3px 6px;border:1px solid var(--line);border-radius:4px"><option value="estado">Estado</option><option value="funnel">Funnel</option><option value="dias">Días en estado</option></select></label>')
+        out.append(f'<label style="font-size:12px;color:var(--grey)"><input type="checkbox" class="map-chain-show-sustis" data-slug="{chain_slug}" checked> Mostrar sustis ({len(sustis_markers)})</label>')
+        out.append(f'</div>')
+        out.append(f'<div id="map-chain-{chain_slug}" style="height:480px;border:1px solid var(--line);border-radius:8px;margin:8px 0"></div>')
+        out.append(f'<div id="map-chain-{chain_slug}-legend" style="font-size:11px;color:var(--grey);margin-bottom:14px"></div>')
         markers_json = json.dumps(markers, ensure_ascii=False)
-        out.append('<script>(function(){window._CHAIN_MAPS_DATA=window._CHAIN_MAPS_DATA||{};window._CHAIN_MAPS_DATA["' + chain_slug + '"]=' + markers_json + ';})();</script>')
+        sustis_json = json.dumps(sustis_markers, ensure_ascii=False)
+        out.append('<script>(function(){window._CHAIN_MAPS_DATA=window._CHAIN_MAPS_DATA||{};window._CHAIN_MAPS_DATA["' + chain_slug + '"]=' + markers_json + ';window._CHAIN_SUSTIS_DATA=window._CHAIN_SUSTIS_DATA||{};window._CHAIN_SUSTIS_DATA["' + chain_slug + '"]=' + sustis_json + ';})();</script>')
 
     return "".join(out), {
         "nuevas": ytd_nuevas, "bloq": ytd_bloq, "parque": parque_ult,

@@ -1644,12 +1644,42 @@ function _daysColor(d) {
     var sel = document.getElementById('map-inc-chain');
     arr.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
   }
+  // Orden de resolución de la incidencia (funnel)
+  var FUNNEL_ORDER = [
+    "Abierto", "Recepcionado SAT", "Pendiente recogida", "Gestionado transporte",
+    "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
+    "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
+    "Esperando inicio reparación", "En reparación", "Inspección de salida",
+    "Devuelto a cliente", "Pendiente agendar llamada",
+    "Pendiente definir servicio externo", "Esperando respuesta cliente a presupuesto",
+    "Enviado a técnico externo"
+  ];
+  function _sortByFunnel(arr){
+    return arr.slice().sort(function(a,b){
+      var ia = FUNNEL_ORDER.indexOf(a), ib = FUNNEL_ORDER.indexOf(b);
+      if (ia<0) ia = 999; if (ib<0) ib = 999;
+      if (ia!==ib) return ia-ib;
+      return a.localeCompare(b,'es');
+    });
+  }
+
   function statusOptions(){
     var s = new Set();
     (window._MAP_DATA.incidencias||[]).forEach(function(m){ if(m.status) s.add(m.status); });
-    var arr = Array.from(s).sort();
+    var arr = _sortByFunnel(Array.from(s));
     var sel = document.getElementById('map-inc-status');
-    arr.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+    // Añadir opciones de grupo funnel arriba
+    var funnelOptgroup = document.createElement('optgroup');
+    funnelOptgroup.label = 'Por grupo funnel';
+    ['Inicio','Interna','Online','Externa'].forEach(function(g){
+      var o = document.createElement('option'); o.value = 'GROUP:'+g; o.textContent = g + ' (grupo)';
+      funnelOptgroup.appendChild(o);
+    });
+    sel.appendChild(funnelOptgroup);
+    var estOptgroup = document.createElement('optgroup');
+    estOptgroup.label = 'Por estado individual';
+    arr.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; estOptgroup.appendChild(o); });
+    sel.appendChild(estOptgroup);
   }
 
   function markerColor(m, mode){
@@ -1696,8 +1726,16 @@ function _daysColor(d) {
     var st = document.getElementById('map-inc-status').value;
     var mode = document.getElementById('map-inc-color').value;
     buildLegend(mode);
+    function _matchStatus(m, st){
+      if (!st) return true;
+      if (st.indexOf('GROUP:') === 0) {
+        var grp = st.slice(6);
+        return (window._FUNNEL_TAG[m.status] || '?') === grp;
+      }
+      return m.status === st;
+    }
     var filtered = (window._MAP_DATA.incidencias||[]).filter(function(m){
-      return (!ch || m.chain===ch) && (!st || m.status===st);
+      return (!ch || m.chain===ch) && _matchStatus(m, st);
     });
     document.getElementById('map-inc-count').textContent = filtered.length + ' incidencias';
     filtered.forEach(function(m){
@@ -1719,8 +1757,14 @@ function _daysColor(d) {
       markers.push(mk);
     });
     if (filtered.length) {
-      var b = L.latLngBounds(filtered.map(function(p){return [p.lat, p.lon];}));
-      try { map.fitBounds(b, {padding:[30,30]}); } catch(e) {}
+      try {
+        if (filtered.length === 1) {
+          map.setView([filtered[0].lat, filtered[0].lon], 11);
+        } else {
+          var b = L.latLngBounds(filtered.map(function(p){return [p.lat, p.lon];}));
+          map.fitBounds(b, {padding:[30,30], maxZoom:13});
+        }
+      } catch(e) {}
     }
   }
 
@@ -1730,7 +1774,7 @@ function _daysColor(d) {
     if (!el || !window.L) return;
     mapInited = true;
     chainOptions(); statusOptions();
-    map = L.map('map-inc').setView([40.4, -3.7], 5);
+    map = L.map('map-inc').setView([40.4, -3.7], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap'
     }).addTo(map);
@@ -1750,9 +1794,14 @@ function _daysColor(d) {
     var bounds = map.getBounds();
     var ch = document.getElementById('map-inc-chain').value;
     var st = document.getElementById('map-inc-status').value;
+    function _matchStatusSide(m, st){
+      if (!st) return true;
+      if (st.indexOf('GROUP:') === 0) return (window._FUNNEL_TAG[m.status]||'?') === st.slice(6);
+      return m.status === st;
+    }
     var filtered = (window._MAP_DATA.incidencias||[]).filter(function(m){
       if (ch && m.chain !== ch) return false;
-      if (st && m.status !== st) return false;
+      if (!_matchStatusSide(m, st)) return false;
       return bounds.contains([m.lat, m.lon]);
     });
     // Ordenar por días desc
@@ -1936,6 +1985,100 @@ function _daysColor(d) {
   }
 
   window._CHAIN_MAPS_INSTANCES = window._CHAIN_MAPS_INSTANCES || {};
+  window._CHAIN_MAP_LAYERS = window._CHAIN_MAP_LAYERS || {};  // slug -> {incLayer, susLayer}
+
+  function _markerColorChain(m, mode){
+    if (mode === 'funnel'){
+      var ft = (window._FUNNEL_TAG||{})[m.status] || '?';
+      return (window._FUNNEL_COLOR||{})[ft] || '#64748b';
+    }
+    if (mode === 'dias') return _daysColor(m.days);
+    return m.color || '#64748b';
+  }
+
+  function _renderChainLegend(slug, mode, statesPresent){
+    var el = document.getElementById('map-chain-' + slug + '-legend');
+    if (!el) return;
+    var items = '';
+    if (mode === 'funnel'){
+      Object.keys(window._FUNNEL_COLOR||{}).forEach(function(k){
+        items += '<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+window._FUNNEL_COLOR[k]+'"></span>'+k+'</span>';
+      });
+    } else if (mode === 'dias'){
+      [['0-5d','#1f8a4c'],['6-15d','#b8860b'],['16-30d','#cb6f0a'],['>30d','#c0392b']].forEach(function(p){
+        items += '<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+p[1]+'"></span>'+p[0]+'</span>';
+      });
+    } else {
+      Array.from(statesPresent||[]).sort().forEach(function(s){
+        items += '<span style="display:inline-flex;align-items:center;gap:4px;margin-right:8px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+((window._STATE_COLORS||{})[s]||'#64748b')+'"></span>'+s+'</span>';
+      });
+    }
+    el.innerHTML = items;
+  }
+
+  function _redrawChainMarkers(slug){
+    var inst = window._CHAIN_MAPS_INSTANCES[slug];
+    var map = inst && inst;
+    if (!map) return;
+    var layers = window._CHAIN_MAP_LAYERS[slug] || {};
+    var data = (window._CHAIN_MAPS_DATA||{})[slug] || [];
+    var sustisData = (window._CHAIN_SUSTIS_DATA||{})[slug] || [];
+    var colorMode = (document.querySelector('.map-chain-color[data-slug="'+slug+'"]')||{}).value || 'estado';
+    var showSustis = (document.querySelector('.map-chain-show-sustis[data-slug="'+slug+'"]')||{}).checked;
+    // Eliminar capas antiguas
+    if (layers.inc) map.removeLayer(layers.inc);
+    if (layers.sus) map.removeLayer(layers.sus);
+    // Capa incidencias
+    var incLayer = L.layerGroup();
+    var statesPresent = new Set();
+    data.forEach(function(m){
+      statesPresent.add(m.status);
+      var marker = L.circleMarker([m.lat, m.lon], {
+        radius: 7, color: 'white', weight: 2,
+        fillColor: _markerColorChain(m, colorMode), fillOpacity: 0.9
+      });
+      var url = 'https://leaseir.atlassian.net/browse/' + m.key;
+      var noGeoNote = m.no_geo ? '<div style="font-size:10px;color:#c0392b;font-style:italic">⚠ Sin geolocalización (puesto en Atlántico)</div>' : '';
+      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
+        '<div style="font-weight:600;margin-bottom:4px"><a href="'+url+'" target="_blank" style="color:#2a59c4">'+m.key+'</a></div>' +
+        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
+        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
+        '<div style="font-size:11px"><b>Estado:</b> '+m.status+'</div>' +
+        '<div style="font-size:11px"><b>Dias:</b> '+m.days+' &middot; <b>Bloq:</b> '+(m.bloq||'-')+' &middot; <b>Susti:</b> '+(m.susti||'-')+'</div>' +
+        noGeoNote + '</div>';
+      marker.bindPopup(html);
+      incLayer.addLayer(marker);
+    });
+    incLayer.addTo(map);
+    // Capa sustis
+    var susLayer = L.layerGroup();
+    if (showSustis) {
+      sustisData.forEach(function(s){
+        var color = s.is_solicitado ? '#7d8590' : _daysColor(s.dias);
+        var opts = {radius:8, color:'white', weight:2, fillColor:color, fillOpacity:0.9};
+        if (s.is_solicitado) { opts.color='#475569'; opts.dashArray='3,3'; }
+        var marker = L.circleMarker([s.lat, s.lon], opts);
+        var purl = s.parent_key ? 'https://leaseir.atlassian.net/browse/'+s.parent_key : '';
+        var curl = s.key ? 'https://leaseir.atlassian.net/browse/'+s.key : '';
+        var diasTxt = s.dias === -1 ? '— (no entregada)' : (s.dias + ' días');
+        var noGeoNote = s.no_geo ? '<div style="font-size:10px;color:#c0392b;font-style:italic">⚠ Sin geolocalización</div>' : '';
+        var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
+          '<div style="font-weight:600;margin-bottom:4px">Sustitución ' +
+          (curl ? '<a href="'+curl+'" target="_blank" style="color:#a23b72">'+s.key+'</a>' : '') +
+          (purl ? ' / <a href="'+purl+'" target="_blank" style="color:#2a59c4">'+s.parent_key+'</a>' : '') + '</div>' +
+          '<div style="margin-bottom:3px"><b>'+s.cliente+'</b></div>' +
+          '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+s.loc+'</div>' +
+          '<div style="font-size:11px"><b>Estado:</b> '+s.subtask_status+'</div>' +
+          '<div style="font-size:11px"><b>Tiempo:</b> '+diasTxt+'</div>' +
+          noGeoNote + '</div>';
+        marker.bindPopup(html);
+        susLayer.addLayer(marker);
+      });
+      susLayer.addTo(map);
+    }
+    window._CHAIN_MAP_LAYERS[slug] = {inc: incLayer, sus: susLayer};
+    _renderChainLegend(slug, colorMode, statesPresent);
+  }
 
   function initChainMap(slug) {
     var data = (window._CHAIN_MAPS_DATA||{})[slug];
@@ -1945,44 +2088,37 @@ function _daysColor(d) {
     if (!window.L) { console.warn('Leaflet (window.L) no cargado'); return; }
     var map = window._CHAIN_MAPS_INSTANCES[slug];
     if (map) {
-      // Ya inicializado: forzar invalidateSize + refit
       setTimeout(function(){
         map.invalidateSize();
         try {
-          var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
-          map.fitBounds(b, {padding:[30,30]});
+          if (data.length === 1) map.setView([data[0].lat, data[0].lon], 11);
+          else {
+            var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
+            map.fitBounds(b, {padding:[30,30], maxZoom:12});
+          }
         } catch(e) {}
       }, 50);
       return;
     }
-    window._CHAIN_MAPS_INITED[slug] = true;
-    map = L.map('map-chain-' + slug).setView([40.4, -3.7], 5);
+    map = L.map('map-chain-' + slug).setView([40.4, -3.7], 6);
     window._CHAIN_MAPS_INSTANCES[slug] = map;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-    data.forEach(function(m){
-      var marker = L.circleMarker([m.lat, m.lon], {
-        radius: 7, color: 'white', weight: 2,
-        fillColor: m.color || '#64748b', fillOpacity: 0.9
-      });
-      var url = 'https://leaseir.atlassian.net/browse/' + m.key;
-      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
-        '<div style="font-weight:600;margin-bottom:4px"><a href="'+url+'" target="_blank" style="color:#2a59c4">'+m.key+'</a></div>' +
-        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
-        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
-        '<div style="font-size:11px"><b>Estado:</b> '+m.status+'</div>' +
-        '<div style="font-size:11px"><b>Dias:</b> '+m.days+' &middot; <b>Bloq:</b> '+(m.bloq||'-')+' &middot; <b>Susti:</b> '+(m.susti||'-')+'</div>' +
-        '</div>';
-      marker.bindPopup(html);
-      marker.addTo(map);
-    });
-    // El div puede estar oculto al crear el mapa → forzar invalidateSize y luego fitBounds
+    _redrawChainMarkers(slug);
+    // Listeners de selector color y checkbox sustis
+    var colSel = document.querySelector('.map-chain-color[data-slug="'+slug+'"]');
+    if (colSel) colSel.addEventListener('change', function(){ _redrawChainMarkers(slug); });
+    var susChk = document.querySelector('.map-chain-show-sustis[data-slug="'+slug+'"]');
+    if (susChk) susChk.addEventListener('change', function(){ _redrawChainMarkers(slug); });
     setTimeout(function(){
       map.invalidateSize();
       try {
-        var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
-        map.fitBounds(b, {padding:[30,30]});
+        if (data.length === 1) map.setView([data[0].lat, data[0].lon], 11);
+        else {
+          var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
+          map.fitBounds(b, {padding:[30,30], maxZoom:12});
+        }
       } catch(e) {}
     }, 250);
   }
@@ -2054,8 +2190,14 @@ function _daysColor(d) {
       sustisMarkers.push(mk);
     });
     if (filtered.length) {
-      var b = L.latLngBounds(filtered.map(function(p){return [p.lat, p.lon];}));
-      try { sustisMap.fitBounds(b, {padding:[30,30]}); } catch(e) {}
+      try {
+        if (filtered.length === 1) {
+          sustisMap.setView([filtered[0].lat, filtered[0].lon], 11);
+        } else {
+          var b = L.latLngBounds(filtered.map(function(p){return [p.lat, p.lon];}));
+          sustisMap.fitBounds(b, {padding:[30,30], maxZoom:13});
+        }
+      } catch(e) {}
     }
   }
 
@@ -2064,7 +2206,7 @@ function _daysColor(d) {
     var div = document.getElementById('map-sustis');
     if (!div || !window.L) return;
     sustisMapInited = true;
-    sustisMap = L.map('map-sustis').setView([40.4, -3.7], 5);
+    sustisMap = L.map('map-sustis').setView([40.4, -3.7], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap'
     }).addTo(sustisMap);

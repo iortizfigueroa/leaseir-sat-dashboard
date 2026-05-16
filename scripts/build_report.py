@@ -918,47 +918,42 @@ def build_anual_averias_section(cache):
         if v <= 6000: return "mid"
         return "high"
 
-    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido",
+    # YEAR_ROWS coherente con 'Por cadena' (build_chains.bucket_year)
+    YEAR_ROWS = ["<2022", "2022", "2023", "2024", "2025", "2026", "Sin compra",
                  "Abierta", "Externa (técnico ext.)", "Cerrado s/insp", "Cancelado"]
     def year_row(y):
-        if not y: return "Desconocido"
+        if y is None: return "Sin compra"
         try:
             yi = int(y)
         except (TypeError, ValueError):
-            return "Desconocido"
-        if yi <= 1999: return "Desconocido"
-        if yi <= 2018: return "<=2018"
-        if yi >= 2025: return "2025+"
-        return str(yi)
+            return "Sin compra"
+        if yi >= 2026: return "2026"
+        if yi in (2025, 2024, 2023, 2022): return str(yi)
+        return "<2022"
 
-    # Cargar serial_year para unificar con la lógica de "Por cadena"
-    serial_year = {}
+    # Importar funciones de build_chains para usar EXACTAMENTE la misma lógica
     try:
+        from build_chains import compute_max_known_per_prefix, lookup_year, year_from_fventa
+        # Cargar serial_year
+        serial_year = {}
         from pathlib import Path as _PSY
         for _cand in [_PSY("data") / "serial_year.json", Path("data") / "serial_year.json"]:
             if _cand.exists():
                 serial_year = json.loads(_cand.read_text(encoding="utf-8"))
                 break
+        max_known = compute_max_known_per_prefix(serial_year)
+        def _year_compra(t):
+            y = year_from_fventa(t)
+            if y is None:
+                y = lookup_year(serial_year, t, max_known)
+            return y
     except Exception:
-        pass
-    def _normalize_serial(s):
-        if not s: return ""
-        import re as _re
-        s = _re.sub(r"\s+", "", str(s)).upper()
-        for prefix in ("C", "H", "MHR", "AHR", "MHP", "HP"):
-            if s.startswith(prefix) and len(s) > len(prefix) and s[len(prefix):].isdigit():
-                return s[len(prefix):].lstrip("0") or "0"
-        if s.isdigit(): return s.lstrip("0") or "0"
-        return s
-    def _year_from_serial(t):
-        for f in ("consola", "hp"):
-            s = (t.get(f) or "").strip()
-            if not s: continue
-            ns = _normalize_serial(s)
-            for k_try in (s.upper(), ns):
-                if k_try in serial_year:
-                    return serial_year[k_try]
-        return None
+        # Fallback: usar solo fventa
+        def _year_compra(t):
+            fv = (t.get("fventa") or "").strip()
+            if fv and len(fv) >= 4 and fv[:4].isdigit():
+                return int(fv[:4])
+            return None
 
     records = []
     for k, t in cache.get("tickets", {}).items():
@@ -972,12 +967,8 @@ def build_anual_averias_section(cache):
                 break
         is_currently_open = is_open(t.get("current_status"))
         st_now = t.get("current_status", "")
-        # Año compra: serial_year primero (más fiable), fallback a fventa
-        yr = _year_from_serial(t)
-        if not yr:
-            fv = (t.get("fventa") or "").strip()
-            if fv and len(fv) >= 4 and fv[:4].isdigit():
-                yr = int(fv[:4])
+        # Año compra unificado con la lógica de 'Por cadena'
+        yr = _year_compra(t)
         buckets = set()
         if passed:
             for v in (t.get("cambios") or []):
@@ -1015,7 +1006,17 @@ def build_anual_averias_section(cache):
             yrow = "Cerrado s/insp"
         records.append({"k": k, "y": yrow, "c": ch,
                         "i": importe_bucket(t.get("importe")),
-                        "b": sorted(buckets)})
+                        "b": sorted(buckets),
+                        "cli": (t.get("cliente") or "")[:60],
+                        "st": t.get("current_status", ""),
+                        "ti": t.get("tipo", ""),
+                        "mo": ", ".join(t.get("motivo") or []),
+                        "ca": ", ".join(t.get("cambios") or []),
+                        "co": t.get("consola", ""),
+                        "hp": t.get("hp", ""),
+                        "im": t.get("importe", ""),
+                        "fv": t.get("fventa") or "",
+                        "yr_int": yr if yr else None})
 
     if not records:
         return ('<div style="color:#94a3b8;padding:14px;font-style:italic">'
@@ -1072,6 +1073,14 @@ def build_anual_averias_section(cache):
         + ' &middot; '.join(f'<b>{k}</b>={html_escape(BUCKET_LABELS[k])}' for k in BUCKET_KEYS) +
         '</div>'
         '<script id="av-data" type="application/json">' + data_json + '</script>'
+        '<h3 style="margin:18px 0 4px;color:var(--blue);font-size:16px">Detalle de tickets (clic en celdas de la matriz arriba para filtrar)</h3>'
+        '<div class="legend">Tabla detalle de los tickets de la matriz. Se actualiza al cambiar Cadena/Importe arriba o al clicar una celda año×bucket. Clic en LEAS abre Jira.</div>'
+        '<div id="av-detail-banner" style="display:none;background:#e7eefa;border:1px solid #2a59c4;border-radius:6px;padding:6px 12px;margin:6px 0;font-size:13px;color:#1f3a5f"><i class="ti ti-filter"></i> <b class="av-detail-label">—</b> <button type="button" id="av-detail-clear" style="margin-left:10px;border:1px solid #2a59c4;background:white;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Quitar filtro celda</button></div>'
+        '<div class="scroller"><table id="av-detail-table" style="font-size:11px;min-width:1500px"><thead><tr>'
+        '<th>Cadena</th><th>Ticket</th><th>Cliente</th><th>Estado actual</th><th>Tipo avería</th>'
+        '<th>Resumen avería</th><th>Cambios/Mejoras</th><th>Año (fila)</th><th>Año compra</th>'
+        '<th>Importe</th><th>Consola</th><th>HP</th>'
+        '</tr></thead><tbody></tbody></table></div>'
         '<script>'
         '(function(){'
         'var DATA = JSON.parse(document.getElementById("av-data").textContent);'
@@ -1081,6 +1090,7 @@ def build_anual_averias_section(cache):
         'var selC = document.getElementById("av-filter-chain");'
         'var selI = document.getElementById("av-filter-importe");'
         'var cnt = document.getElementById("av-count");'
+        'var cellFilter = null;'
         'function recompute(){'
         '  var ch = selC.value, im = selI.value;'
         '  var grid = {}; YEARS.forEach(function(y){grid[y]={"_t":0}; BUCKETS.forEach(function(b){grid[y][b]=0;});});'
@@ -1100,14 +1110,66 @@ def build_anual_averias_section(cache):
         '    tr.querySelectorAll(".bucket-cell").forEach(function(td){'
         '      var v = grid[y][td.getAttribute("data-bucket")];'
         '      td.textContent = v || "·"; td.style.color = v ? "" : "#c0d0e0";'
+        '      td.style.cursor = v ? "pointer" : "default";'
         '    });'
+        '    var tcell = tr.querySelector(".tickets-cell");'
+        '    if (tcell) tcell.style.cursor = t ? "pointer" : "default";'
         '  });'
         '  var tf = tbl.querySelector("tfoot tr");'
         '  tf.querySelector(".tickets-cell").textContent = totals._t;'
         '  tf.querySelectorAll(".bucket-cell").forEach(function(td){'
         '    td.textContent = totals[td.getAttribute("data-bucket")] || "·";'
         '  });'
+        '  renderDetail();'
         '}'
+        'function renderDetail(){'
+        '  var ch = selC.value, im = selI.value;'
+        '  var tbody = document.querySelector("#av-detail-table tbody");'
+        '  var filtered = DATA.filter(function(r){'
+        '    if(ch && r.c!==ch) return false;'
+        '    if(im && r.i!==im) return false;'
+        '    if(cellFilter){'
+        '      if(cellFilter.y && r.y!==cellFilter.y) return false;'
+        '      if(cellFilter.b && (r.b||[]).indexOf(cellFilter.b)<0) return false;'
+        '    }'
+        '    return true;'
+        '  });'
+        '  var rows = filtered.slice(0, 1000).map(function(r){'
+        '    return "<tr>" +'
+        '      "<td>"+r.c+"</td>" +'
+        '      "<td><a href=\\"https://leaseir.atlassian.net/browse/"+r.k+"\\" target=\\"_blank\\" style=\\"color:#2a59c4\\">"+r.k+"</a></td>" +'
+        '      "<td>"+(r.cli||"")+"</td>" +'
+        '      "<td>"+(r.st||"")+"</td>" +'
+        '      "<td>"+(r.ti||"")+"</td>" +'
+        '      "<td>"+(r.mo||"")+"</td>" +'
+        '      "<td>"+(r.ca||"")+"</td>" +'
+        '      "<td>"+r.y+"</td>" +'
+        '      "<td>"+(r.yr_int||"-")+"</td>" +'
+        '      "<td style=\\"text-align:right\\">"+(r.im||"")+"</td>" +'
+        '      "<td>"+(r.co||"")+"</td>" +'
+        '      "<td>"+(r.hp||"")+"</td>" +'
+        '    "</tr>";'
+        '  }).join("");'
+        '  if(filtered.length>1000) rows += "<tr><td colspan=12 style=\\"padding:6px;color:#7d8590\\">… "+(filtered.length-1000)+" más</td></tr>";'
+        '  tbody.innerHTML = rows || "<tr><td colspan=12 style=\\"padding:14px;color:#7d8590;font-style:italic\\">Sin tickets en este filtro.</td></tr>";'
+        '  var banner = document.getElementById("av-detail-banner");'
+        '  if (cellFilter) {'
+        '    banner.style.display = "";'
+        '    var txt = "Filtro celda: año=" + cellFilter.y + (cellFilter.b ? " · bucket=" + cellFilter.b : "");'
+        '    banner.querySelector(".av-detail-label").textContent = txt + " · " + filtered.length + " tickets";'
+        '  } else { banner.style.display = "none"; }'
+        '}'
+        'document.getElementById("av-detail-clear").addEventListener("click", function(){ cellFilter = null; renderDetail(); });'
+        '// Clic en celdas de la matriz → filtra detail'
+        'tbl.addEventListener("click", function(e){'
+        '  var td = e.target.closest("td");'
+        '  if(!td) return;'
+        '  var tr = td.closest("tr");'
+        '  var y = tr ? tr.getAttribute("data-year") : null;'
+        '  if(!y) return;'
+        '  if(td.classList.contains("tickets-cell")) { cellFilter = {y: y, b: null}; renderDetail(); var t=document.getElementById("av-detail-table"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); return; }'
+        '  if(td.classList.contains("bucket-cell")) { var b = td.getAttribute("data-bucket"); cellFilter = {y: y, b: b}; renderDetail(); var t=document.getElementById("av-detail-table"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); return; }'
+        '});'
         'selC.addEventListener("change", recompute);'
         'selI.addEventListener("change", recompute);'
         'recompute();'
@@ -1183,13 +1245,15 @@ def compute_tiempo_taller(ticket, now_utc):
 
 def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
                           sustis_dias_by_parent=None, sustis_subkey_by_parent=None,
-                          sustis_consola_by_parent=None, sustis_manipulo_by_parent=None):
+                          sustis_consola_by_parent=None, sustis_manipulo_by_parent=None,
+                          sustis_active_by_parent=None):
     """Recorre el universo y devuelve filas con toda la info para tabla detalle.
     sustis_dias_by_parent: dias completos (envío→devolución o hoy) del histórico."""
     sustis_dias_by_parent = sustis_dias_by_parent or {}
     sustis_subkey_by_parent = sustis_subkey_by_parent or {}
     sustis_consola_by_parent = sustis_consola_by_parent or {}
     sustis_manipulo_by_parent = sustis_manipulo_by_parent or {}
+    sustis_active_by_parent = sustis_active_by_parent or {}
     now_utc = datetime.now(timezone.utc)
     rows = []
     for k, t in cache.get("tickets", {}).items():
@@ -1234,6 +1298,7 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "leas_susti": sustis_subkey_by_parent.get(k, ""),
             "consola_susti": sustis_consola_by_parent.get(k, ""),
             "manipulo_susti": sustis_manipulo_by_parent.get(k, ""),
+            "susti_active": sustis_active_by_parent.get(k, True),
             "created": (parse_iso(t.get("created")) or now_utc).strftime("%d/%m/%Y"),
         })
     return rows
@@ -1273,6 +1338,7 @@ def build_tiempos_section(cache, sustis_by_parent):
     # Cargar fechas de envío + devolución
     sustis_envio_by_parent = {}     # parent_key -> fecha_envio dt
     sustis_dias_by_parent = {}      # parent_key -> dias (envío→devolución o hoy)
+    sustis_active_by_parent = {}    # parent_key -> bool (sigue activa)
     sustis_subkey_by_parent = {}    # parent_key -> sub-key
     sustis_consola_by_parent = {}   # parent_key -> consola serial
     sustis_manipulo_by_parent = {}  # parent_key -> manipulo serial
@@ -1294,6 +1360,9 @@ def build_tiempos_section(cache, sustis_by_parent):
                         if _dt: sustis_envio_by_parent[_pk] = _dt
                     if "dias" in _it and _it["dias"] is not None:
                         sustis_dias_by_parent[_pk] = _it["dias"]
+                    # is_active: True si la sub-task sigue abierta (no devuelta).
+                    # En sustis_activas.json no existe → asumir activa (True).
+                    sustis_active_by_parent[_pk] = _it.get("is_active", True)
                     sustis_subkey_by_parent[_pk] = _it.get("key", "")
                     sustis_consola_by_parent[_pk] = _it.get("consola_susti", "") or ""
                     sustis_manipulo_by_parent[_pk] = _it.get("manipulo_susti", "") or ""
@@ -1305,7 +1374,8 @@ def build_tiempos_section(cache, sustis_by_parent):
                                   sustis_dias_by_parent=sustis_dias_by_parent,
                                   sustis_subkey_by_parent=sustis_subkey_by_parent,
                                   sustis_consola_by_parent=sustis_consola_by_parent,
-                                  sustis_manipulo_by_parent=sustis_manipulo_by_parent)
+                                  sustis_manipulo_by_parent=sustis_manipulo_by_parent,
+                                  sustis_active_by_parent=sustis_active_by_parent)
     if not rows:
         empty = '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin tickets en la base.</div>'
         return {"taller": empty, "sustis": empty, "detail": empty}
@@ -1318,7 +1388,9 @@ def build_tiempos_section(cache, sustis_by_parent):
         ("16-30 días","#cb6f0a", lambda d: 16 <= d <= 30),
         (">30 días",  "#c0392b", lambda d: d > 30),
     ]
-    taller_dias = [r["dias_taller"] for r in rows if r["dias_taller"] is not None]
+    # Solo tickets que YA salieron de taller (no live) y tienen tiempo medible
+    taller_dias = [r["dias_taller"] for r in rows
+                   if r["dias_taller"] is not None and not r.get("taller_live")]
     counts_taller = [0] * len(taller_buckets)
     for d in taller_dias:
         for i, (_, _, pred) in enumerate(taller_buckets):
@@ -1352,7 +1424,9 @@ def build_tiempos_section(cache, sustis_by_parent):
         ("26-35 días", "#cb6f0a", lambda d: 26 <= d <= 35),
         (">35 días",   "#c0392b", lambda d: d > 35),
     ]
-    susti_dias = [r["dias_susti"] for r in rows if r["dias_susti"] is not None]
+    # Solo sustituciones que YA se devolvieron (no activas) y tienen dias medidos
+    susti_dias = [r["dias_susti"] for r in rows
+                  if r["dias_susti"] is not None and not r.get("susti_active", True)]
     counts_susti = [0] * len(susti_buckets)
     for d in susti_dias:
         for i, (_, _, pred) in enumerate(susti_buckets):
@@ -1591,19 +1665,34 @@ def build_tiempos_section(cache, sustis_by_parent):
 
 def build_tecnicos_dia_section(cache):
     """Tabla agregada técnicos x mes con #presupuestos + #reparaciones desde 1-ene-2026.
-    NOTA: la atribución es heurística (tec_taller ACTUAL del ticket), porque no
-    tenemos changelog del campo. Funciona razonablemente al agregar por mes."""
+    Cuenta tickets ÚNICOS (no transiciones duplicadas) por mes en que pasaron por
+    Presupuesto o Inspección. Atribución por tec_taller ACTUAL (heurística).
+    Adicionalmente muestra columna 'Activos hoy' = tickets que tienen al técnico
+    asignado y siguen en estados de taller."""
     PRES_STATE = "Presupuesto preparado pendiente de enviar"
     REP_STATE = "Inspección de salida"
+    TALLER_OPEN = {"Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
+                   "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
+                   "Esperando inicio reparación", "En reparación", "Inspección de salida"}
     cutoff = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
     MONTH_LABELS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
 
-    # grid[(tec, month_num)] = {"p": N, "r": N}
+    # grid[(tec, month)] = {"p_keys": set, "r_keys": set}
+    # Contamos tickets únicos por (tec, mes, evento). Cada ticket suma 1 P si pasó
+    # al menos una vez por PRES en ese mes, idem para R.
     grid = {}
     tecs = set()
     months_seen = set()
+    active_now = {}  # tec -> count de tickets activos en taller hoy
     for k, t in cache.get("tickets", {}).items():
         tec = (t.get("tec_taller") or "").strip() or (t.get("asignado") or "").strip() or "(Sin asignar)"
+        # Activos hoy
+        if t.get("current_status") in TALLER_OPEN:
+            active_now[tec] = active_now.get(tec, 0) + 1
+            tecs.add(tec)
+        # Primer mes en 2026 con transición a PRES y a REP
+        first_pres_month = None
+        first_rep_month = None
         for tr in t.get("transitions", []):
             if len(tr) < 3: continue
             ts, fs, to = tr[0], tr[1], tr[2]
@@ -1611,11 +1700,18 @@ def build_tecnicos_dia_section(cache):
             dt = parse_iso(ts)
             if not dt or dt < cutoff: continue
             m = dt.month
-            months_seen.add(m)
-            tecs.add(tec)
-            cell = grid.setdefault((tec, m), {"p": 0, "r": 0})
-            if to == PRES_STATE: cell["p"] += 1
-            else: cell["r"] += 1
+            if to == PRES_STATE and first_pres_month is None:
+                first_pres_month = m
+            elif to == REP_STATE and first_rep_month is None:
+                first_rep_month = m
+        if first_pres_month:
+            months_seen.add(first_pres_month); tecs.add(tec)
+            cell = grid.setdefault((tec, first_pres_month), {"p": 0, "r": 0})
+            cell["p"] += 1
+        if first_rep_month:
+            months_seen.add(first_rep_month); tecs.add(tec)
+            cell = grid.setdefault((tec, first_rep_month), {"p": 0, "r": 0})
+            cell["r"] += 1
 
     if not grid:
         return '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin datos desde 1-ene-2026.</div>'
@@ -1624,10 +1720,11 @@ def build_tecnicos_dia_section(cache):
     tecs_sorted = sorted(tecs, key=lambda x: (0 if x == "(Sin asignar)" else 1, x.lower()))
 
     out = []
-    out.append('<div class="legend">Vista agregada: filas = técnicos, columnas = meses 2026. Cada celda muestra <b style="color:#0891b2">P presupuestos</b> + <b style="color:#059669">R reparaciones</b>. <i>Atribución heurística por tec_taller actual.</i></div>')
+    out.append('<div class="legend">Vista agregada: filas = técnicos, columnas = meses 2026. Cada celda muestra <b style="color:#0891b2">P presupuestos</b> + <b style="color:#059669">R reparaciones</b> (tickets ÚNICOS — un ticket cuenta 1 P/R en el mes de su PRIMERA transición a ese estado). <b>Activos hoy</b> = tickets que tiene asignados AHORA en estados de taller. <i>Atribución por tec_taller actual del ticket.</i></div>')
     out.append('<div class="scroller"><table style="font-size:12px;min-width:800px">')
     out.append('<thead><tr>')
     out.append('<th class="sticky-l1" style="text-align:left;left:0;min-width:180px;background:#f1f5f9;color:#0b3d91">Técnico</th>')
+    out.append('<th style="background:#dbeafe;font-size:12px;padding:6px 12px;text-align:center" title="Tickets en estados de taller con este técnico AHORA">Activos hoy</th>')
     for m in months_sorted:
         out.append(f'<th style="background:#f1f5f9;font-size:12px;padding:6px 10px;text-align:center">{MONTH_LABELS[m-1]}</th>')
     out.append('<th style="background:#fff4d6;font-size:12px;padding:6px 12px;text-align:center">Total YTD</th>')
@@ -1639,6 +1736,12 @@ def build_tecnicos_dia_section(cache):
     for tec in tecs_sorted:
         row_p, row_r = 0, 0
         cells = [f'<td class="lbl-name" style="left:0;min-width:180px">{html_escape(tec)}</td>']
+        # Columna "Activos hoy"
+        an = active_now.get(tec, 0)
+        if an > 0:
+            cells.append(f'<td class="tec-mes-cell" data-tec="{html_escape(tec)}" data-mes="active" style="background:#dbeafe;text-align:center;font-weight:600;cursor:pointer" title="Clic para ver tickets actuales">{an}</td>')
+        else:
+            cells.append('<td style="background:#dbeafe;text-align:center;color:#cbd5e1">·</td>')
         for m in months_sorted:
             v = grid.get((tec, m))
             if v:
@@ -1660,6 +1763,7 @@ def build_tecnicos_dia_section(cache):
         out.append('<tr>' + ''.join(cells) + '</tr>')
     # Fila total
     cells = ['<td class="lbl-name" style="left:0;min-width:180px;background:#fff4d6;font-weight:600">Total mes</td>']
+    cells.append(f'<td style="background:#dbeafe;text-align:center;font-weight:700">{sum(active_now.values())}</td>')
     for m in months_sorted:
         p = col_tot[m]["p"]; r = col_tot[m]["r"]
         cells.append(f'<td style="background:#fff4d6;text-align:center;font-weight:600"><span style="color:#0891b2">{p}P</span>+<span style="color:#059669">{r}R</span></td>')
@@ -2565,15 +2669,29 @@ def build_html(cache, out_path, template_path):
             return cli_c.lower()
         return ""
 
+    # Fallback Atlántico para tickets sin geocoding: lat≈36, lon≈-20 con offset hash-based
+    # para que no se apilen todos en el mismo punto.
+    import hashlib as _hashlib
+    def _atlantic_fallback(key):
+        h = int(_hashlib.md5(key.encode()).hexdigest()[:8], 16)
+        # Disperso en una rejilla 8x8 alrededor de (36, -20)
+        dx = ((h >> 4) & 0xff) / 255.0 * 3.0 - 1.5   # -1.5 a +1.5
+        dy = (h & 0xff) / 255.0 * 3.0 - 1.5
+        return (36.0 + dy, -20.0 + dx)
+
     map_markers_incidencias = []
     for _k, _t in cache.get("tickets", {}).items():
         if not is_open(_t.get("current_status")): continue
         _key = _addr_key_local(_t.get("cliente",""), _t.get("loc",""))
         _g = geo_entries.get(_key)
-        if not _g or _g.get("lat") is None: continue
+        _no_geo = (not _g or _g.get("lat") is None)
+        if _no_geo:
+            _lat, _lon = _atlantic_fallback(_k)
+        else:
+            _lat, _lon = _g["lat"], _g["lon"]
         _days = days_since(last_status_change_dt(_t))
         map_markers_incidencias.append({
-            "lat": _g["lat"], "lon": _g["lon"],
+            "lat": _lat, "lon": _lon,
             "key": _k,
             "cliente": (_t.get("cliente") or "")[:80],
             "loc": (_t.get("loc") or "")[:80],
@@ -2583,6 +2701,7 @@ def build_html(cache, out_path, template_path):
             "susti": _t.get("susti", ""),
             "days": _days if _days is not None else 0,
             "susti_status": sustis_by_parent.get(_k, ""),
+            "no_geo": _no_geo,
         })
 
     map_markers_sustis = []
@@ -2598,7 +2717,12 @@ def build_html(cache, out_path, template_path):
             for _it in _sd.get("items", []) or []:
                 _key = _addr_key_local(_it.get("cliente","") or _it.get("parent_cliente",""), _it.get("loc",""))
                 _g = geo_entries.get(_key)
-                if not _g or _g.get("lat") is None: continue
+                _no_geo_s = (not _g or _g.get("lat") is None)
+                _sub_key = _it.get("key","") or _it.get("parent_key","")
+                if _no_geo_s:
+                    _lat_s, _lon_s = _atlantic_fallback(_sub_key or "noid")
+                else:
+                    _lat_s, _lon_s = _g["lat"], _g["lon"]
                 _fe = _it.get("fecha_envio")
                 _dias = ""
                 if _fe:
@@ -2607,7 +2731,7 @@ def build_html(cache, out_path, template_path):
                         if not _fdt.tzinfo: _fdt = _fdt.replace(tzinfo=timezone.utc)
                         _dias = (_now - _fdt).days
                 map_markers_sustis.append({
-                    "lat": _g["lat"], "lon": _g["lon"],
+                    "lat": _lat_s, "lon": _lon_s,
                     "key": _it.get("key",""),
                     "parent_key": _it.get("parent_key",""),
                     "cliente": (_it.get("cliente") or "")[:80],
@@ -2616,6 +2740,7 @@ def build_html(cache, out_path, template_path):
                     "consola": _it.get("consola_susti",""),
                     "manipulo": _it.get("manipulo_susti",""),
                     "dias": _dias if _dias != "" else 0,
+                    "no_geo": _no_geo_s,
                 })
     except Exception:
         pass
