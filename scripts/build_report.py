@@ -918,7 +918,8 @@ def build_anual_averias_section(cache):
         if v <= 6000: return "mid"
         return "high"
 
-    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido", "Abierta", "Canc. s/rep"]
+    YEAR_ROWS = ["<=2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025+", "Desconocido",
+                 "Abierta", "Externa (técnico ext.)", "Cerrado s/insp", "Cancelado"]
     def year_row(y):
         if not y: return "Desconocido"
         try:
@@ -929,6 +930,35 @@ def build_anual_averias_section(cache):
         if yi <= 2018: return "<=2018"
         if yi >= 2025: return "2025+"
         return str(yi)
+
+    # Cargar serial_year para unificar con la lógica de "Por cadena"
+    serial_year = {}
+    try:
+        from pathlib import Path as _PSY
+        for _cand in [_PSY("data") / "serial_year.json", Path("data") / "serial_year.json"]:
+            if _cand.exists():
+                serial_year = json.loads(_cand.read_text(encoding="utf-8"))
+                break
+    except Exception:
+        pass
+    def _normalize_serial(s):
+        if not s: return ""
+        import re as _re
+        s = _re.sub(r"\s+", "", str(s)).upper()
+        for prefix in ("C", "H", "MHR", "AHR", "MHP", "HP"):
+            if s.startswith(prefix) and len(s) > len(prefix) and s[len(prefix):].isdigit():
+                return s[len(prefix):].lstrip("0") or "0"
+        if s.isdigit(): return s.lstrip("0") or "0"
+        return s
+    def _year_from_serial(t):
+        for f in ("consola", "hp"):
+            s = (t.get(f) or "").strip()
+            if not s: continue
+            ns = _normalize_serial(s)
+            for k_try in (s.upper(), ns):
+                if k_try in serial_year:
+                    return serial_year[k_try]
+        return None
 
     records = []
     for k, t in cache.get("tickets", {}).items():
@@ -941,10 +971,13 @@ def build_anual_averias_section(cache):
                 passed = True
                 break
         is_currently_open = is_open(t.get("current_status"))
-        fv = (t.get("fventa") or "").strip()
-        yr = None
-        if fv and len(fv) >= 4 and fv[:4].isdigit():
-            yr = int(fv[:4])
+        st_now = t.get("current_status", "")
+        # Año compra: serial_year primero (más fiable), fallback a fventa
+        yr = _year_from_serial(t)
+        if not yr:
+            fv = (t.get("fventa") or "").strip()
+            if fv and len(fv) >= 4 and fv[:4].isdigit():
+                yr = int(fv[:4])
         buckets = set()
         if passed:
             for v in (t.get("cambios") or []):
@@ -973,8 +1006,14 @@ def build_anual_averias_section(cache):
             yrow = year_row(yr)
         elif is_currently_open:
             yrow = "Abierta"
+        elif st_now == "Cancelado":
+            yrow = "Cancelado"
+        elif st_now == "Finalizado técnico externo":
+            yrow = "Externa (técnico ext.)"
         else:
-            yrow = "Canc. s/rep"
+            # Finalizada/Resuelta sin haber pasado por Inspección de salida:
+            # generalmente cierres internos sin diagnóstico/reparación.
+            yrow = "Cerrado s/insp"
         records.append({"k": k, "y": yrow, "c": ch,
                         "i": importe_bucket(t.get("importe")),
                         "b": sorted(buckets)})
@@ -1077,6 +1116,395 @@ def build_anual_averias_section(cache):
         '</script>'
     )
     return html
+
+
+
+
+# ========== TIEMPOS REFACTORIZADOS ==========
+# Base = creados 2026 OR (creados antes Y abiertos al 1-ene-2026)
+
+CUTOFF_2026 = datetime(2026, 1, 1, 0, 0, 0, tzinfo=timezone.utc)
+TALLER_TRANSIT_STATES = {"Pendiente asignar técnico", "En cola taller",
+                          "En preparación presupuesto", "Esperando inicio reparación",
+                          "En reparación", "Inspección de salida"}
+EXIT_TRANSIT_STATES = {"Devuelto a cliente", "Resuelto", "Finalizada", "Cancelado",
+                        "Finalizado técnico externo"}
+
+
+def is_in_universe_2026(ticket):
+    """True si el ticket entra en la base unificada de Tiempos."""
+    created = ticket.get("created") or ""
+    if created.startswith("2026"):
+        return True
+    # Creado antes pero abierto al 1-ene-2026
+    status_at_cutoff = status_at(ticket, CUTOFF_2026)
+    if status_at_cutoff and status_at_cutoff in OPEN_STATUSES:
+        return True
+    return False
+
+
+def compute_tiempo_taller(ticket, now_utc):
+    """Devuelve dict con entrada, salida, dias, live (bool si aún en taller/abierto)."""
+    entrada = None
+    salida = None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3:
+            continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        dt = parse_iso(ts)
+        if not dt:
+            continue
+        if entrada is None and to == "Pendiente asignar técnico":
+            entrada = dt
+        if entrada and (to in EXIT_TRANSIT_STATES) and (fs in TALLER_TRANSIT_STATES):
+            salida = dt
+            break
+    if not entrada:
+        return None
+    live = False
+    if salida:
+        dias = (salida - entrada).days
+    else:
+        # Aún en taller o en otro estado abierto: tiempo desde entrada hasta ahora
+        if is_open(ticket.get("current_status")):
+            dias = (now_utc - entrada).days
+            live = True
+        else:
+            # Cerrado pero sin salida limpia detectada → usar última transition
+            last = ticket.get("transitions", [])
+            if last:
+                last_dt = parse_iso(last[-1][0])
+                dias = (last_dt - entrada).days if last_dt else 0
+            else:
+                dias = 0
+    if dias < 0:
+        dias = 0
+    return {"entrada": entrada, "salida": salida, "dias": dias, "live": live}
+
+
+def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent):
+    """Recorre el universo y devuelve filas con toda la info para tabla detalle.
+    sustis_envio_by_parent: dict parent_key -> fecha_envio_dt (para días susti)."""
+    now_utc = datetime.now(timezone.utc)
+    rows = []
+    for k, t in cache.get("tickets", {}).items():
+        if not is_in_universe_2026(t):
+            continue
+        taller = compute_tiempo_taller(t, now_utc)
+        # Días susti
+        susti_status = sustis_by_parent.get(k, "")
+        fe = sustis_envio_by_parent.get(k)
+        dias_susti = None
+        if fe:
+            if not fe.tzinfo:
+                fe = fe.replace(tzinfo=timezone.utc)
+            dias_susti = (now_utc - fe).days
+        rows.append({
+            "k": k,
+            "chain": chain_of(t.get("cliente", ""), t.get("loc", "")),
+            "cliente": t.get("cliente", ""),
+            "status": t.get("current_status", ""),
+            "is_open": is_open(t.get("current_status", "")),
+            "tipo": t.get("tipo", ""),
+            "motivo": ", ".join(t.get("motivo") or []),
+            "cambios": ", ".join(t.get("cambios") or []),
+            "bloq": t.get("bloq", ""),
+            "susti": t.get("susti", ""),
+            "susti_status": susti_status,
+            "consola": t.get("consola", ""),
+            "hp": t.get("hp", ""),
+            "garantia": t.get("garantia", ""),
+            "fventa": t.get("fventa") or "",
+            "disparos": t.get("disparos", ""),
+            "importe": t.get("importe", ""),
+            "asignado": t.get("asignado", ""),
+            "tec_taller": t.get("tec_taller", ""),
+            "tec_externo": t.get("tec_externo", ""),
+            "dias_taller": taller["dias"] if taller else None,
+            "taller_live": taller["live"] if taller else False,
+            "entrada_taller": taller["entrada"].strftime("%d/%m/%Y") if taller and taller["entrada"] else "",
+            "salida_taller": taller["salida"].strftime("%d/%m/%Y") if taller and taller["salida"] else "",
+            "fecha_envio_susti": fe.strftime("%d/%m/%Y") if fe else "",
+            "dias_susti": dias_susti,
+            "created": (parse_iso(t.get("created")) or now_utc).strftime("%d/%m/%Y"),
+        })
+    return rows
+
+
+def _bar_html(buckets, counts, total, label):
+    segments = []
+    for (lbl, color, _), n in zip(buckets, counts):
+        pct = (n * 100.0 / total) if total else 0
+        if n > 0:
+            label_inline = "" if pct < 5 else str(n)
+            segments.append(
+                f'<div style="background:{color};height:100%;width:{pct:.2f}%;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:13px;min-width:0;overflow:hidden" title="{lbl}: {n} ({pct:.0f}%)">{label_inline}</div>'
+            )
+    return '<div style="display:flex;height:36px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#f1f5f9">' + "".join(segments) + '</div>'
+
+
+def _kpis_html(prefix, total, mediana, media, max_d, kpi_id_prefix, label_total):
+    return (
+        '<div style="display:flex;gap:12px;margin:6px 0 12px;flex-wrap:wrap">'
+        f'<div class="kpi clickable" data-tiempos-filter="all" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 150px;cursor:pointer"><div class="k">Total tickets</div><div class="v">{total}</div><div class="d">{label_total}</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="mediana" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 150px;cursor:pointer"><div class="k">Mediana</div><div class="v">{mediana:.0f}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">Click: ordena por días</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="media" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 150px;cursor:pointer"><div class="k">Media</div><div class="v">{media:.1f}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">Click: ordena por días</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="max" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 150px;cursor:pointer"><div class="k">Máximo</div><div class="v" style="color:#c0392b">{max_d}<span style="font-size:14px;color:var(--grey);margin-left:4px">días</span></div><div class="d">Click: solo top 10%</div></div>'
+        '</div>'
+    )
+
+
+def build_tiempos_section(cache, sustis_by_parent):
+    """Devuelve dict con html para Tiempo taller, Tiempo sustis y Detalle compartido."""
+    # Cargar fechas de envío de sustis activas
+    sustis_envio_by_parent = {}
+    try:
+        from pathlib import Path as _PS
+        for _cand in [_PS("cache") / "sustis_activas.json", Path("cache") / "sustis_activas.json"]:
+            if _cand.exists():
+                _su = json.loads(_cand.read_text(encoding="utf-8"))
+                for _it in _su.get("items", []) or []:
+                    _pk = _it.get("parent_key")
+                    _fe = _it.get("fecha_envio")
+                    if _pk and _fe:
+                        _dt = parse_iso(_fe)
+                        if _dt:
+                            sustis_envio_by_parent[_pk] = _dt
+                break
+    except Exception:
+        pass
+
+    rows = collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent)
+    if not rows:
+        empty = '<div style="color:#94a3b8;padding:14px;font-style:italic">Sin tickets en la base.</div>'
+        return {"taller": empty, "sustis": empty, "detail": empty}
+
+    # === Tiempo taller ===
+    taller_buckets = [
+        ("<4 días",   "#1f8a4c", lambda d: d < 4),
+        ("5-8 días",  "#65a30d", lambda d: 4 <= d <= 8),
+        ("9-15 días", "#b8860b", lambda d: 9 <= d <= 15),
+        ("16-30 días","#cb6f0a", lambda d: 16 <= d <= 30),
+        (">30 días",  "#c0392b", lambda d: d > 30),
+    ]
+    taller_dias = [r["dias_taller"] for r in rows if r["dias_taller"] is not None]
+    counts_taller = [0] * len(taller_buckets)
+    for d in taller_dias:
+        for i, (_, _, pred) in enumerate(taller_buckets):
+            if pred(d):
+                counts_taller[i] += 1
+                break
+    t_total = len(taller_dias)
+    t_mediana = sorted(taller_dias)[t_total // 2] if t_total else 0
+    t_media = (sum(taller_dias) / t_total) if t_total else 0
+    t_max = max(taller_dias) if taller_dias else 0
+    n_live = sum(1 for r in rows if r["taller_live"])
+    taller_kpis = _kpis_html("t", t_total, t_mediana, t_media, t_max, "taller",
+                             f"{n_live} aún en taller (live)")
+    taller_bar = _bar_html(taller_buckets, counts_taller, t_total, "taller")
+    taller_legend = ""
+    for (lbl, color, _), n in zip(taller_buckets, counts_taller):
+        pct = (n * 100.0 / t_total) if t_total else 0
+        taller_legend += (f'<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">'
+                          f'<span style="display:inline-block;width:12px;height:12px;background:{color};border-radius:3px"></span>'
+                          f'<b>{lbl}</b>: {n} ({pct:.0f}%)</span>')
+    taller_html = (taller_kpis + taller_bar +
+                   '<div style="margin-top:12px">' + taller_legend + '</div>'
+                   '<div class="legend" style="margin-top:8px">Base: tickets 2026 + abiertos al 1-ene-2026. Para abiertos aún en taller, tiempo = entrada a Pdte. asignar técnico hasta HOY.</div>')
+
+    # === Tiempo sustituciones ===
+    susti_buckets = [
+        ("0-7 días",   "#1f8a4c", lambda d: d <= 7),
+        ("8-15 días",  "#65a30d", lambda d: 8 <= d <= 15),
+        ("16-25 días", "#b8860b", lambda d: 16 <= d <= 25),
+        ("26-35 días", "#cb6f0a", lambda d: 26 <= d <= 35),
+        (">35 días",   "#c0392b", lambda d: d > 35),
+    ]
+    susti_dias = [r["dias_susti"] for r in rows if r["dias_susti"] is not None]
+    counts_susti = [0] * len(susti_buckets)
+    for d in susti_dias:
+        for i, (_, _, pred) in enumerate(susti_buckets):
+            if pred(d):
+                counts_susti[i] += 1
+                break
+    s_total = len(susti_dias)
+    if s_total:
+        s_mediana = sorted(susti_dias)[s_total // 2]
+        s_media = sum(susti_dias) / s_total
+        s_max = max(susti_dias)
+    else:
+        s_mediana = s_media = s_max = 0
+    sustis_kpis = _kpis_html("s", s_total, s_mediana, s_media, s_max, "sustis",
+                             "sustituciones con fecha de envío conocida")
+    sustis_bar = _bar_html(susti_buckets, counts_susti, s_total, "sustis")
+    sustis_legend = ""
+    for (lbl, color, _), n in zip(susti_buckets, counts_susti):
+        pct = (n * 100.0 / s_total) if s_total else 0
+        sustis_legend += (f'<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">'
+                          f'<span style="display:inline-block;width:12px;height:12px;background:{color};border-radius:3px"></span>'
+                          f'<b>{lbl}</b>: {n} ({pct:.0f}%)</span>')
+    if s_total == 0:
+        sustis_html = '<div style="color:#94a3b8;padding:14px;font-style:italic">No hay sustituciones activas con fecha de envío en la base 2026.</div>'
+    else:
+        sustis_html = (sustis_kpis + sustis_bar +
+                       '<div style="margin-top:12px">' + sustis_legend + '</div>'
+                       '<div class="legend" style="margin-top:8px">Tiempo desde fecha de envío de la sub-tarea hasta HOY (solo sustis activas en cache).</div>')
+
+    # === Tabla detalle compartida ===
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+    COLS = [
+        ("chain", "Cadena", "text", True),
+        ("k", "Ticket", "text", True),
+        ("cliente", "Cliente", "text", True),
+        ("status", "Estado actual", "text", True),
+        ("tipo", "Tipo avería", "text", True),
+        ("motivo", "Resumen avería", "text", False),
+        ("cambios", "Cambios/Mejoras", "text", False),
+        ("bloq", "Bloq", "text", True),
+        ("susti", "Susti", "text", True),
+        ("susti_status", "Estado susti", "text", True),
+        ("dias_taller", "Días taller", "num", True),
+        ("dias_susti", "Días susti", "num", True),
+        ("consola", "Consola", "text", False),
+        ("hp", "HP", "text", False),
+        ("garantia", "Garantía", "text", False),
+        ("disparos", "Disparos", "num", False),
+        ("importe", "Importe", "num", False),
+        ("fventa", "Fecha venta", "date", False),
+        ("entrada_taller", "Entrada taller", "date", False),
+        ("salida_taller", "Salida taller", "date", False),
+        ("created", "Creada", "date", True),
+        ("asignado", "Asignado", "text", False),
+        ("tec_taller", "Téc. taller", "text", False),
+        ("tec_externo", "Téc. externo", "text", False),
+    ]
+
+    chains_set = sorted({r["chain"] for r in rows})
+    statuses_set = sorted({r["status"] for r in rows if r["status"]})
+    tipos_set = sorted({r["tipo"] for r in rows if r["tipo"]})
+
+    toolbar = ['<div class="toolbar" style="flex-wrap:wrap;gap:6px">']
+    toolbar.append('<input type="text" id="tm-search" placeholder="Buscar texto...">')
+    toolbar.append('<select id="tm-chain"><option value="">Cadena: todas</option>' + ''.join(f'<option>{html_escape(c)}</option>' for c in chains_set) + '</select>')
+    toolbar.append('<select id="tm-status"><option value="">Estado: todos</option>' + ''.join(f'<option>{html_escape(s)}</option>' for s in statuses_set) + '</select>')
+    toolbar.append('<select id="tm-tipo"><option value="">Tipo: todos</option>' + ''.join(f'<option>{html_escape(s)}</option>' for s in tipos_set) + '</select>')
+    toolbar.append('<select id="tm-bloq"><option value="">Bloq: todos</option><option>Sí</option><option>No</option></select>')
+    toolbar.append('<select id="tm-susti"><option value="">Susti: todas</option><option>Sí</option><option>No</option></select>')
+    toolbar.append('<select id="tm-open"><option value="">Estado: todos</option><option value="open">Abiertas (live)</option><option value="closed">Cerradas</option></select>')
+    toolbar.append('<button type="button" id="tm-clear" class="multi-btn">✕ Limpiar</button>')
+    toolbar.append('<span class="count"><b id="tm-count">0</b> de <span id="tm-total">0</span> visibles</span>')
+    toolbar.append('</div>')
+
+    # Toggle columnas
+    toggle = ['<details style="margin:4px 0 8px"><summary style="cursor:pointer;color:var(--blue);font-size:12px">Mostrar/ocultar columnas</summary>',
+              '<div style="display:flex;flex-wrap:wrap;gap:8px;padding:8px;background:#f8fafc;border:1px solid var(--line);border-radius:6px;font-size:11px">']
+    for i, (key, label, dtype, default_on) in enumerate(COLS):
+        checked = " checked" if default_on else ""
+        toggle.append(f'<label><input type="checkbox" data-col-idx="{i}"{checked}> {html_escape(label)}</label>')
+    toggle.append('</div></details>')
+
+    # Header + rows
+    out = []
+    out.append(''.join(toolbar))
+    out.append(''.join(toggle))
+    out.append('<div class="scroller"><table id="tm-table" style="font-size:11px;min-width:2200px"><thead><tr>')
+    for i, (key, label, dtype, default_on) in enumerate(COLS):
+        hide = "" if default_on else 'style="display:none"'
+        out.append(f'<th class="sortable tm-col" data-col="{i}" data-type="{dtype}" {hide}>{html_escape(label)}</th>')
+    out.append('</tr></thead><tbody>')
+    # Sort por días taller desc
+    rows.sort(key=lambda r: -(r["dias_taller"] if r["dias_taller"] is not None else -1))
+    for r in rows:
+        link = f'<a href="{JIRA_URL}{r["k"]}" target="_blank" rel="noopener" style="color:#2a59c4">{r["k"]}</a>'
+        cell_vals = []
+        for key, label, dtype, default_on in COLS:
+            v = r.get(key, "")
+            if key == "k":
+                v = link
+            elif key == "dias_taller":
+                if r["taller_live"]:
+                    v = f'<span title="Aún en taller hoy" style="color:#c0392b;font-weight:600">{v}*</span>' if v is not None else "—"
+                else:
+                    v = v if v is not None else "—"
+            elif key == "dias_susti":
+                v = v if v is not None else "—"
+            elif key == "disparos":
+                v = format_int_dot(v) if v != "" else ""
+            else:
+                v = html_escape(str(v)) if v is not None else ""
+            hide = "" if default_on else 'style="display:none"'
+            cell_vals.append(f'<td class="tm-col" data-col="{COLS.index((key, label, dtype, default_on))}" {hide}>{v}</td>')
+        row_open = "open" if r["is_open"] else "closed"
+        out.append(f'<tr data-open="{row_open}" data-chain="{html_escape(r["chain"])}" data-status="{html_escape(r["status"])}" data-tipo="{html_escape(r["tipo"])}" data-bloq="{html_escape(r["bloq"])}" data-susti="{html_escape(r["susti"])}" data-dt="{r["dias_taller"] if r["dias_taller"] is not None else -1}">' + ''.join(cell_vals) + '</tr>')
+    out.append('</tbody></table></div>')
+
+    # JS para tabla
+    out.append('''<script>(function(){
+      var tbl=document.getElementById('tm-table');if(!tbl)return;
+      var rows=Array.from(tbl.tBodies[0].rows);
+      var cnt=document.getElementById('tm-count');document.getElementById('tm-total').textContent=rows.length;
+      var fs={search:'tm-search',chain:'tm-chain',status:'tm-status',tipo:'tm-tipo',bloq:'tm-bloq',susti:'tm-susti',open:'tm-open'};
+      var els={};for(var k in fs)els[k]=document.getElementById(fs[k]);
+      var topNFilter = null;
+      function apply(){
+        var q=(els.search.value||'').toLowerCase().trim();
+        var n=0;
+        var sortedDts=[];
+        rows.forEach(function(r){ var d=parseInt(r.dataset.dt)||0; if(d>=0)sortedDts.push(d); });
+        sortedDts.sort(function(a,b){return b-a;});
+        var threshold = topNFilter==='top10' ? sortedDts[Math.max(0,Math.floor(sortedDts.length*0.1)-1)] : -1;
+        for(var i=0;i<rows.length;i++){var r=rows[i];
+          var ok=(!q||r.textContent.toLowerCase().indexOf(q)>=0)
+            && (!els.chain.value||r.dataset.chain===els.chain.value)
+            && (!els.status.value||r.dataset.status===els.status.value)
+            && (!els.tipo.value||r.dataset.tipo===els.tipo.value)
+            && (!els.bloq.value||r.dataset.bloq===els.bloq.value)
+            && (!els.susti.value||r.dataset.susti===els.susti.value)
+            && (!els.open.value||r.dataset.open===els.open.value)
+            && (topNFilter!=='top10'||parseInt(r.dataset.dt)>=threshold);
+          r.style.display=ok?'':'none';if(ok)n++;
+        }cnt.textContent=n;
+      }
+      Object.values(els).forEach(function(e){e.addEventListener('input',apply);e.addEventListener('change',apply);});
+      document.getElementById('tm-clear').addEventListener('click',function(){Object.values(els).forEach(function(e){e.value='';});topNFilter=null;apply();});
+      // Toggle columnas
+      document.querySelectorAll('input[data-col-idx]').forEach(function(cb){
+        cb.addEventListener('change',function(){
+          var i=cb.dataset.colIdx;
+          document.querySelectorAll('.tm-col[data-col="'+i+'"]').forEach(function(el){
+            el.style.display = cb.checked ? '' : 'none';
+          });
+        });
+      });
+      // Sort por columna
+      var heads=tbl.tHead.rows[0].cells;var lastSort={col:-1,dir:1};
+      for(var hi=0;hi<heads.length;hi++){(function(th){th.style.cursor='pointer';th.addEventListener('click',function(){
+        var col=parseInt(th.dataset.col);var type=th.dataset.type||'text';var dir=(lastSort.col===col)?-lastSort.dir:1;lastSort={col:col,dir:dir};
+        var rs=Array.from(tbl.tBodies[0].rows);
+        rs.sort(function(a,b){var av=a.cells[col].textContent.trim();var bv=b.cells[col].textContent.trim();
+          if(type==='num'){av=parseFloat(av.replace(/\./g,'').replace(',','.'))||0;bv=parseFloat(bv.replace(/\./g,'').replace(',','.'))||0;return(av-bv)*dir;}
+          return av.localeCompare(bv,'es')*dir;});
+        for(var k=0;k<rs.length;k++)tbl.tBodies[0].appendChild(rs[k]);
+      });})(heads[hi]);}
+      apply();
+      // KPIs Tiempos clickables — scroll a tabla
+      document.querySelectorAll('[data-tiempos-filter]').forEach(function(kpi){
+        kpi.addEventListener('click',function(){
+          var f=kpi.dataset.tiemposFilter;
+          if(f==='all'){topNFilter=null;Object.values(els).forEach(function(e){e.value='';});}
+          else if(f==='max'){topNFilter='top10';}
+          else{topNFilter=null;}
+          apply();
+          tbl.scrollIntoView({behavior:'smooth',block:'start'});
+        });
+      });
+    })();</script>''')
+
+    detail_html = ''.join(out)
+
+    return {"taller": taller_html, "sustis": sustis_html, "detail": detail_html}
+# ========== FIN TIEMPOS REFACTORIZADOS ==========
+
 
 
 
@@ -2048,29 +2476,23 @@ def build_html(cache, out_path, template_path):
     except Exception as _e:
         anual_averias_html = f'<div style="color:#c0392b;padding:14px">Error tabla averias: {_e}</div>'
 
-    # Stacked bar tiempo en taller (2026 cerrados)
+    # Tiempos refactorizados (base 2026+1-ene abiertos + live)
     try:
-        tiempo_taller_html = build_tiempo_taller_section(cache)
+        _tiempos = build_tiempos_section(cache, sustis_by_parent)
+        tiempo_taller_html = _tiempos["taller"]
+        tiempo_sustis_html = _tiempos["sustis"]
+        taller_detail_html = _tiempos["detail"]
     except Exception as _e:
-        tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempo taller: {_e}</div>'
+        import traceback; traceback.print_exc()
+        tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempos: {_e}</div>'
+        tiempo_sustis_html = tiempo_taller_html
+        taller_detail_html = tiempo_taller_html
 
     # Tabla técnicos por día (mes a mes desde 1-ene-2026)
     try:
         tec_dia_html = build_tecnicos_dia_section(cache)
     except Exception as _e:
         tec_dia_html = f'<div style="color:#c0392b;padding:14px">Error tec-dia: {_e}</div>'
-
-    # Stacked bar tiempo de sustituciones activas
-    try:
-        tiempo_sustis_html = build_tiempo_sustis_section(out_path)
-    except Exception as _e:
-        tiempo_sustis_html = f'<div style="color:#c0392b;padding:14px">Error tiempo sustis: {_e}</div>'
-
-    # Tabla detalle filtrable de tickets cerrados con tiempo en taller medible
-    try:
-        taller_detail_html = build_taller_detail_section(cache, sustis_by_parent=sustis_by_parent)
-    except Exception as _e:
-        taller_detail_html = f'<div style="color:#c0392b;padding:14px">Error detalle taller: {_e}</div>'
 
     # Mapa: cargar geocodes + construir markers de incidencias abiertas y sustis activas
     geo_entries = {}
