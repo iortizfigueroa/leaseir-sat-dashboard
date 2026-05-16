@@ -1710,10 +1710,40 @@ def build_html(cache, out_path, template_path):
 
     # KPI Gestión externa
     EXTERNA_STATUSES = {"Enviado a técnico externo", "Esperando respuesta cliente a presupuesto", "Pendiente definir servicio externo"}
-    gestion_externa = sum(
-        1 for k, t in cache.get("tickets", {}).items()
-        if t.get("current_status") in EXTERNA_STATUSES
-    )
+    gestion_externa = 0
+    gestion_externa_split = {"Carlos Mora": 0, "Sincronis": 0, "GEE": 0, "Innet": 0, "Otros": 0, "(Sin asignar)": 0}
+    EXT_KEYS = {"carlos mora": "Carlos Mora", "carlos": "Carlos Mora",
+                "sincronis": "Sincronis",
+                "gee": "GEE",
+                "innet": "Innet"}
+    for k, t in cache.get("tickets", {}).items():
+        if t.get("current_status") in EXTERNA_STATUSES:
+            gestion_externa += 1
+            tec_ext = (t.get("tec_externo") or "").strip().lower()
+            matched = None
+            for kw, lbl in EXT_KEYS.items():
+                if kw in tec_ext:
+                    matched = lbl; break
+            if matched:
+                gestion_externa_split[matched] += 1
+            elif tec_ext:
+                gestion_externa_split["Otros"] += 1
+            else:
+                gestion_externa_split["(Sin asignar)"] += 1
+
+    # KPI Splits "En taller" — 4 subgrupos
+    EN_TALLER_SPLIT_DEFS = [
+        ("Sin presupuesto", "Pdte asignar / cola / preparación", {"Pendiente asignar técnico", "En cola taller", "En preparación presupuesto"}),
+        ("Pdte enviar/confirmar ppto", "Presupuesto preparado / pdte confirmación", {"Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto"}),
+        ("En reparación", "Esperando inicio + en reparación", {"Esperando inicio reparación", "En reparación"}),
+        ("Inspección de salida", "Listo para salir del taller", {"Inspección de salida"}),
+    ]
+    en_taller_split = []
+    for lbl, desc, states in EN_TALLER_SPLIT_DEFS:
+        n = sum(1 for k, t in cache.get("tickets", {}).items()
+                if t.get("current_status") in states)
+        en_taller_split.append({"label": lbl, "desc": desc, "count": n,
+                                "states": sorted(states)})
 
     # KPI Sustis solicitadas (pendientes de entregar) - del cache de sustis
     # KPI Salidas de taller hoy: transiciones hoy from=cualquier estado taller -> Devuelto/Resuelto/Finalizada
@@ -2033,6 +2063,8 @@ def build_html(cache, out_path, template_path):
         "__PENDIENTES_TALLER__": str(pendientes_taller),
         "__PENDIENTES_TALLER_BLOQ__": str(pendientes_taller_bloq),
         "__GESTION_EXTERNA__": str(gestion_externa),
+        "__GESTION_EXTERNA_SPLIT__": json.dumps(gestion_externa_split),
+        "__EN_TALLER_SPLIT__": json.dumps(en_taller_split),
         "__SUSTIS_SOLICITADAS__": str(sustis_solicitadas),
         "__SALIDAS_TALLER__": str(salidas_taller),
         "__NUEVAS_HOY__": str(nuevas_hoy_count),

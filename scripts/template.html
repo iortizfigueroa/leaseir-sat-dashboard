@@ -54,6 +54,20 @@
   td.ah-cell { cursor: pointer; transition: background 0.1s; }
   td.ah-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
   td.tec-cell { cursor: pointer; transition: background 0.1s; text-align: center; }
+  /* Sub-pestañas Incidencias / Mapa */
+  .tabs2 { display: inline-flex; gap: 2px; padding: 3px; background: #f1f5f9; border-radius: 7px; }
+  .tabs2 button { padding: 5px 14px; font-size: 12px; border: none; background: transparent; color: #64748b; cursor: pointer; border-radius: 5px; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
+  .tabs2 button.active { background: white; color: #0b3d91; box-shadow: 0 1px 2px rgba(0,0,0,0.06); }
+  .total-pane { display: none; }
+  .total-pane.active { display: block; }
+  /* KPI expandible */
+  .kpi-expandable { cursor: pointer; }
+  .kpi-split { display: none; background: #f8fafc; border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; margin: 6px 0; font-size: 11px; }
+  .kpi-split.open { display: block; }
+  .kpi-split table { width: 100%; border-collapse: collapse; }
+  .kpi-split td, .kpi-split th { padding: 3px 6px; text-align: left; border-bottom: 1px solid #e2e8f0; }
+  .kpi-split td.n, .kpi-split th.n { text-align: right; font-variant-numeric: tabular-nums; font-weight: 500; }
+  .kpi-split tr:last-child td { border-bottom: none; }
   tr.tec-no-aplica { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
   tr.tec-no-aplica td.lbl-name { color: #64748b; font-style: italic; }
   td.tec-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
@@ -366,7 +380,6 @@
       <div class="sb-submenu" id="sb-chains-submenu"></div>
     </div>
     <button type="button" data-view="sustis" class="sb-item"><i class="ti ti-arrows-exchange"></i>Sustituciones</button>
-    <button type="button" data-view="mapa" class="sb-item"><i class="ti ti-map-2"></i>Mapa</button>
   </nav>
   <div class="sb-section">Atajos Incidencias</div>
   <nav class="sb-nav">
@@ -411,10 +424,14 @@ __DEMO_BANNER__
   <option value="stats">Estadísticas de gestión</option>
   <option value="chains">Por cadena</option>
   <option value="sustis">Sustituciones</option>
-  <option value="mapa">Mapa</option>
 </select>
 
 <div id="view-total" class="view active">
+<div class="tabs2" id="total-tabs2" style="margin-bottom:14px">
+  <button type="button" class="active" data-total-sub="inc"><i class="ti ti-list-details"></i> Incidencias</button>
+  <button type="button" data-total-sub="map"><i class="ti ti-map-2"></i> Mapa</button>
+</div>
+<div id="total-pane-inc" class="total-pane active">
 <div class="nav">
   <a href="#kpis"><i class="ti ti-chart-pie"></i>KPIs</a>
   <a href="#abiertas"><i class="ti ti-calendar-event"></i>Abiertas hoy</a>
@@ -430,9 +447,9 @@ __DEMO_BANNER__
   <div class="kpi clickable" id="kpi-entradas-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-login-2"></i>Entradas a taller hoy</div><div class="v" style="color:#1f6feb">__ENTRADAS_TALLER__</div><div class="d" style="color:var(--grey)">Tickets que llegaron al taller hoy</div></div>
   <div class="kpi clickable" id="kpi-salidas-taller" title="Clic para filtrar Detalle (los que siguen abiertos)"><div class="k"><i class="ti ti-check"></i>Salidas de taller hoy</div><div class="v" style="color:#16a34a">__SALIDAS_TALLER__</div><div class="d" style="color:var(--grey)">Hacia Devuelto/Resuelto/Finalizada</div></div>
   <div class="kpi clickable" id="kpi-pendientes-taller" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-truck-loading"></i>Pdtes llegar a taller</div><div class="v">__PENDIENTES_TALLER__<span style="font-size:13px;color:#c0392b;font-weight:500;margin-left:6px">· __PENDIENTES_TALLER_BLOQ__ bloq.</span><span style="font-size:13px;color:#a23b72;font-weight:500;margin-left:6px" title="Bloqueantes con sustitución en estado Solicitado">· __PENDIENTES_TALLER_CRITIC__ susti</span></div><div class="d" style="color:var(--grey)">Abierto, recogida, transporte · susti = bloq con susti solicitada</div></div>
-  <div class="kpi clickable" id="kpi-en-taller" title="Clic para filtrar tabla Detalle"><div class="k"><i class="ti ti-tools"></i>En taller</div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__</div>
+  <div class="kpi clickable kpi-expandable" id="kpi-en-taller" title="Clic en el card filtra · clic en la flecha despliega"><div class="k"><i class="ti ti-tools"></i>En taller <span id="kpi-en-taller-toggle" style="font-size:11px;color:var(--grey);margin-left:4px">▾</span></div><div class="v">__EN_TALLER__</div><div class="d" style="color:var(--grey)">De asignar a inspección salida</div>__EN_TALLER_FLOW__<div class="kpi-split" id="kpi-en-taller-split"></div></div>
   <div class="kpi"><div class="k"><i class="ti ti-chart-bar"></i>% sobre pico taller</div><div class="v" style="color:__PEAK_COLOR__">__PEAK_PCT__%</div><div class="d" style="color:var(--grey)">Pico taller: __PEAK__ el __PEAK_LBL__</div></div>
-  <div class="kpi clickable" id="kpi-gestion-externa" title="Clic para filtrar Detalle"><div class="k"><i class="ti ti-external-link"></i>Gestión externa</div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div></div>
+  <div class="kpi clickable kpi-expandable" id="kpi-gestion-externa" title="Clic en el card filtra · clic en la flecha despliega"><div class="k"><i class="ti ti-external-link"></i>Gestión externa <span id="kpi-gestion-toggle" style="font-size:11px;color:var(--grey);margin-left:4px">▾</span></div><div class="v">__GESTION_EXTERNA__</div><div class="d" style="color:var(--grey)">Téc. externo / cliente</div><div class="kpi-split" id="kpi-gestion-split"></div></div>
   <div class="kpi clickable" id="kpi-sustis-solicitadas" title="Clic para ir a Estado sustituciones"><div class="k"><i class="ti ti-arrows-exchange"></i>Sustis solicitadas</div><div class="v">__SUSTIS_SOLICITADAS__</div><div class="d" style="color:var(--grey)">Pendientes de entregar</div></div>
   <div class="kpi clickable" id="kpi-estancadas" title="Clic para filtrar Detalle por >15d"><div class="k"><i class="ti ti-clock-pause"></i>Estancadas &gt;15d</div><div class="v">__ESTANCADAS_15__</div><div class="d" style="color:var(--grey)">Días en el estado actual</div></div>
 </div>
@@ -516,6 +533,31 @@ __DETALLE_ROWS__
 </table>
 </div>
 
+</div><!-- /total-pane-inc -->
+
+<div id="total-pane-map" class="total-pane">
+<div style="margin:8px 0 12px;display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+  <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px">
+    Cadena:
+    <select id="map-inc-chain" style="font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:4px"><option value="">Todas</option></select>
+  </label>
+  <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px">
+    Estado:
+    <select id="map-inc-status" style="font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:4px"><option value="">Todos</option></select>
+  </label>
+  <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px">
+    Color por:
+    <select id="map-inc-color" style="font-size:12px;padding:4px 8px;border:1px solid var(--line);border-radius:4px">
+      <option value="estado">Estado (detalle)</option>
+      <option value="funnel">Funnel (Inicio/Interna/Online/Externa)</option>
+      <option value="dias">Días en estado (verde/amarillo/rojo)</option>
+    </select>
+  </label>
+  <span id="map-inc-count" style="color:var(--grey);font-size:12px;margin-left:auto"></span>
+</div>
+<div id="map-inc" style="height:calc(100vh - 220px);min-height:520px;border:1px solid var(--line);border-radius:8px"></div>
+<div id="map-inc-legend" style="margin-top:8px;font-size:11px;color:var(--grey);display:flex;flex-wrap:wrap;gap:8px"></div>
+</div><!-- /total-pane-map -->
 </div><!-- /view-total -->
 
 <div id="view-stats" class="view">
@@ -571,19 +613,6 @@ __CHAINS_HTML__
 __SUSTIS_HTML__
 </div><!-- /view-sustis -->
 
-<div id="view-mapa" class="view">
-  <div style="margin:8px 0 12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-    <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-      <input type="checkbox" id="map-layer-inc" checked> <span style="display:inline-block;width:12px;height:12px;background:#c0392b;border-radius:50%"></span> Incidencias abiertas (<span id="map-cnt-inc">0</span>)
-    </label>
-    <label style="display:inline-flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
-      <input type="checkbox" id="map-layer-sus" checked> <span style="display:inline-block;width:12px;height:12px;background:#a23b72;border-radius:50%"></span> Sustituciones activas (<span id="map-cnt-sus">0</span>)
-    </label>
-    <span style="color:var(--grey);font-size:12px;margin-left:auto">Clic en un marcador para ver detalle. Zoom con la rueda del ratón.</span>
-  </div>
-  <div id="map" style="height:calc(100vh - 180px);min-height:520px;border:1px solid var(--line);border-radius:8px"></div>
-</div><!-- /view-mapa -->
-
 <div class="footer">Generado por <code>build_report.py</code> desde <code>cache/jira_status_timeline.json</code>. Refresh diario via GitHub Action.</div>
 
 <script>
@@ -594,7 +623,7 @@ __SUSTIS_HTML__
   function setView(name) {
     tabs1.forEach(b => b.classList.toggle('active', b.dataset.view === name));
     views.forEach(v => v.classList.toggle('active', v.id === 'view-' + name));
-    const TITLES = {total:'Incidencias abiertas', stats:'Estadísticas de gestión', chains:'Estadísticas por cadena', sustis:'Estado sustituciones', mapa:'Mapa'};
+    const TITLES = {total:'Incidencias abiertas', stats:'Estadísticas de gestión', chains:'Estadísticas por cadena', sustis:'Estado sustituciones'};
     const t = document.getElementById('topbar-title');
     if (t && TITLES[name]) t.textContent = TITLES[name];
     const sel = document.getElementById('tabs1-select');
@@ -1526,41 +1555,116 @@ __SUSTIS_HTML__
   });
 })();
 
-// ========================= MAPA =========================
+// ========================= DATOS MAPA =========================
 window._MAP_DATA = { incidencias: __MAP_INCIDENCIAS__, sustis: __MAP_SUSTIS__ };
+
+// Funnel info embebido para colorear
+window._FUNNEL_TAG = {
+  "Abierto":"Inicio","Recepcionado SAT":"Interna","Pendiente recogida":"Interna",
+  "Gestionado transporte":"Interna","Pendiente asignar técnico":"Interna",
+  "En cola taller":"Interna","En preparación presupuesto":"Interna",
+  "Presupuesto preparado pendiente de enviar":"Interna",
+  "Pendiente confirmación presupuesto":"Interna",
+  "Esperando inicio reparación":"Interna","En reparación":"Interna",
+  "Inspección de salida":"Interna","Devuelto a cliente":"Interna",
+  "Pendiente agendar llamada":"Online",
+  "Pendiente definir servicio externo":"Externa",
+  "Esperando respuesta cliente a presupuesto":"Externa",
+  "Enviado a técnico externo":"Externa"
+};
+window._FUNNEL_COLOR = {"Inicio":"#9aa5b1","Interna":"#1f6feb","Online":"#cb6f0a","Externa":"#a23b72"};
+window._STATE_COLORS = {
+  "Abierto":"#3b82f6", "Recepcionado SAT":"#1d4ed8", "Pendiente recogida":"#7c3aed",
+  "Gestionado transporte":"#8b5cf6", "Pendiente asignar técnico":"#0891b2",
+  "En cola taller":"#06b6d4", "En preparación presupuesto":"#0e7490",
+  "Presupuesto preparado pendiente de enviar":"#f59e0b",
+  "Pendiente confirmación presupuesto":"#d97706",
+  "Esperando inicio reparación":"#ea580c", "En reparación":"#dc2626",
+  "Inspección de salida":"#059669", "Devuelto a cliente":"#16a34a",
+  "Enviado a técnico externo":"#be185d", "Esperando respuesta cliente a presupuesto":"#a21caf",
+  "Pendiente definir servicio externo":"#9333ea"
+};
+
+function _daysColor(d) {
+  if (d == null || d === '') return '#64748b';
+  var n = +d;
+  if (n <= 5) return '#1f8a4c';
+  if (n <= 15) return '#b8860b';
+  if (n <= 30) return '#cb6f0a';
+  return '#c0392b';
+}
+
+// ========================= MAPA INCIDENCIAS (en pestaña Incidencias > Mapa) =========================
 (function(){
-  var mapInitialized = false;
-  var map = null;
-  var layerInc = null;
-  var layerSus = null;
+  var mapInited = false, map = null, markers = [];
 
-  function chainColor(ch) {
-    var m = {
-      'Elha':'#1f6feb','Sin Vello':'#cb6f0a','Dermasana':'#0891b2',
-      'Smart Duck':'#7c3aed','Epil Point':'#c0392b','Laser Factory':'#059669',
-      'Unico Italia':'#a23b72','Otros':'#64748b'
-    };
-    return m[ch] || '#64748b';
+  function chainOptions(){
+    var s = new Set();
+    (window._MAP_DATA.incidencias||[]).forEach(function(m){ if(m.chain) s.add(m.chain); });
+    var arr = Array.from(s).sort();
+    var sel = document.getElementById('map-inc-chain');
+    arr.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
   }
-  function daysColor(d) {
-    if (d == null || d === '') return '#64748b';
-    var n = +d;
-    if (n <= 15) return '#1f8a4c';
-    if (n <= 25) return '#b8860b';
-    if (n <= 35) return '#cb6f0a';
-    return '#c0392b';
+  function statusOptions(){
+    var s = new Set();
+    (window._MAP_DATA.incidencias||[]).forEach(function(m){ if(m.status) s.add(m.status); });
+    var arr = Array.from(s).sort();
+    var sel = document.getElementById('map-inc-status');
+    arr.forEach(function(c){ var o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
   }
 
-  function buildIncLayer() {
+  function markerColor(m, mode){
+    if (mode==='funnel'){
+      var ft = window._FUNNEL_TAG[m.status] || '?';
+      return window._FUNNEL_COLOR[ft] || '#64748b';
+    }
+    if (mode==='dias') return _daysColor(m.days);
+    // default estado
+    return window._STATE_COLORS[m.status] || '#64748b';
+  }
+
+  function buildLegend(mode){
+    var el = document.getElementById('map-inc-legend');
+    if (!el) return;
+    el.innerHTML = '';
+    var items = [];
+    if (mode==='funnel'){
+      items = Object.keys(window._FUNNEL_COLOR).map(function(k){return {label:k, color:window._FUNNEL_COLOR[k]};});
+    } else if (mode==='dias'){
+      items = [{label:'0-5d', color:'#1f8a4c'},{label:'6-15d', color:'#b8860b'},{label:'16-30d', color:'#cb6f0a'},{label:'>30d', color:'#c0392b'}];
+    } else {
+      // estado: solo los presentes
+      var present = new Set();
+      (window._MAP_DATA.incidencias||[]).forEach(function(m){ if(m.status) present.add(m.status); });
+      Array.from(present).sort().forEach(function(s){
+        items.push({label:s, color:window._STATE_COLORS[s]||'#64748b'});
+      });
+    }
+    items.forEach(function(it){
+      var span = document.createElement('span');
+      span.style.cssText = 'display:inline-flex;align-items:center;gap:4px;margin-right:8px';
+      span.innerHTML = '<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+it.color+'"></span>'+it.label;
+      el.appendChild(span);
+    });
+  }
+
+  function render(){
+    if (!map) return;
+    markers.forEach(function(mk){ map.removeLayer(mk); });
+    markers = [];
     var L = window.L;
-    var arr = window._MAP_DATA.incidencias || [];
-    document.getElementById('map-cnt-inc').textContent = arr.length;
-    var layer = L.layerGroup();
-    arr.forEach(function(m){
-      var color = m.bloq === 'Si' || m.bloq === 'Sí' ? '#c0392b' : chainColor(m.chain);
-      var marker = L.circleMarker([m.lat, m.lon], {
-        radius: 7, color: 'white', weight: 2,
-        fillColor: color, fillOpacity: 0.9
+    var ch = document.getElementById('map-inc-chain').value;
+    var st = document.getElementById('map-inc-status').value;
+    var mode = document.getElementById('map-inc-color').value;
+    buildLegend(mode);
+    var filtered = (window._MAP_DATA.incidencias||[]).filter(function(m){
+      return (!ch || m.chain===ch) && (!st || m.status===st);
+    });
+    document.getElementById('map-inc-count').textContent = filtered.length + ' incidencias';
+    filtered.forEach(function(m){
+      var color = markerColor(m, mode);
+      var mk = L.circleMarker([m.lat, m.lon], {
+        radius:7, color:'white', weight:2, fillColor:color, fillOpacity:0.9
       });
       var url = 'https://leaseir.atlassian.net/browse/' + m.key;
       var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
@@ -1571,77 +1675,101 @@ window._MAP_DATA = { incidencias: __MAP_INCIDENCIAS__, sustis: __MAP_SUSTIS__ };
         '<div style="font-size:11px"><b>Dias:</b> '+m.days+' &middot; <b>Bloq:</b> '+(m.bloq||'-')+' &middot; <b>Susti:</b> '+(m.susti||'-')+
         (m.susti_status ? ' ('+m.susti_status+')' : '')+'</div>' +
         '</div>';
-      marker.bindPopup(html);
-      layer.addLayer(marker);
+      mk.bindPopup(html);
+      mk.addTo(map);
+      markers.push(mk);
     });
-    return layer;
-  }
-  function buildSusLayer() {
-    var L = window.L;
-    var arr = window._MAP_DATA.sustis || [];
-    document.getElementById('map-cnt-sus').textContent = arr.length;
-    var layer = L.layerGroup();
-    arr.forEach(function(m){
-      var color = daysColor(m.dias);
-      var marker = L.circleMarker([m.lat, m.lon], {
-        radius: 8, color: 'white', weight: 2,
-        fillColor: color, fillOpacity: 0.9
-      });
-      var purl = m.parent_key ? 'https://leaseir.atlassian.net/browse/'+m.parent_key : '';
-      var curl = m.key ? 'https://leaseir.atlassian.net/browse/'+m.key : '';
-      var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
-        '<div style="font-weight:600;margin-bottom:4px">Sustitucion '+ (curl ? '<a href="'+curl+'" target="_blank" style="color:#2a59c4">'+m.key+'</a>' : '')+
-        (purl ? ' &middot; padre <a href="'+purl+'" target="_blank" style="color:#2a59c4">'+m.parent_key+'</a>' : '')+'</div>' +
-        '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
-        '<div style="color:#64748b;font-size:11px;margin-bottom:6px">'+m.loc+'</div>' +
-        '<div style="font-size:11px"><b>Estado:</b> '+m.subtask_status+'</div>' +
-        '<div style="font-size:11px"><b>Dias con sustitucion:</b> '+m.dias+'</div>' +
-        '<div style="font-size:11px"><b>Consola:</b> '+(m.consola||'-')+' &middot; <b>Manipulo:</b> '+(m.manipulo||'-')+'</div>' +
-        '</div>';
-      marker.bindPopup(html);
-      layer.addLayer(marker);
-    });
-    return layer;
+    if (filtered.length) {
+      var b = L.latLngBounds(filtered.map(function(p){return [p.lat, p.lon];}));
+      try { map.fitBounds(b, {padding:[30,30]}); } catch(e) {}
+    }
   }
 
-  function initMap() {
-    if (mapInitialized) return;
-    var el = document.getElementById('map');
+  function init(){
+    if (mapInited) return;
+    var el = document.getElementById('map-inc');
     if (!el || !window.L) return;
-    mapInitialized = true;
-    var all = [].concat(window._MAP_DATA.incidencias||[], window._MAP_DATA.sustis||[]);
-    map = L.map('map').setView([40.4, -3.7], 5);
+    mapInited = true;
+    chainOptions(); statusOptions();
+    map = L.map('map-inc').setView([40.4, -3.7], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap'
     }).addTo(map);
-    layerInc = buildIncLayer();
-    layerSus = buildSusLayer();
-    if (document.getElementById('map-layer-inc').checked) layerInc.addTo(map);
-    if (document.getElementById('map-layer-sus').checked) layerSus.addTo(map);
-    if (all.length) {
-      var b = L.latLngBounds(all.map(function(p){return [p.lat, p.lon];}));
-      try { map.fitBounds(b, {padding:[30,30]}); } catch(e) {}
-    }
-    document.getElementById('map-layer-inc').addEventListener('change', function(e){
-      if (e.target.checked) layerInc.addTo(map); else map.removeLayer(layerInc);
-    });
-    document.getElementById('map-layer-sus').addEventListener('change', function(e){
-      if (e.target.checked) layerSus.addTo(map); else map.removeLayer(layerSus);
-    });
+    document.getElementById('map-inc-chain').addEventListener('change', render);
+    document.getElementById('map-inc-status').addEventListener('change', render);
+    document.getElementById('map-inc-color').addEventListener('change', render);
+    render();
   }
 
-  document.querySelectorAll('.tabs1 button').forEach(function(b){
-    if (b.dataset.view === 'mapa') {
+  // Inicializar cuando se entra en sub-pestaña Mapa
+  document.querySelectorAll('#total-tabs2 button').forEach(function(b){
+    if (b.dataset.totalSub === 'map') {
       b.addEventListener('click', function(){
-        setTimeout(initMap, 50);
+        setTimeout(init, 50);
         setTimeout(function(){ map && map.invalidateSize(); }, 200);
       });
     }
   });
-  if (window.location.hash === '#mapa' || (function(){try{return localStorage.getItem('sat-view')==='mapa';}catch(e){return false;}})()) {
-    setTimeout(initMap, 100);
-  }
 })();
+
+// ========================= SPLITS EXPANDIBLES KPIs =========================
+(function(){
+  window._EN_TALLER_SPLIT = __EN_TALLER_SPLIT__;
+  window._GESTION_EXTERNA_SPLIT = __GESTION_EXTERNA_SPLIT__;
+
+  function renderTallerSplit(){
+    var el = document.getElementById('kpi-en-taller-split');
+    if (!el) return;
+    var rows = (window._EN_TALLER_SPLIT||[]).map(function(s){
+      return '<tr><td>'+s.label+'<div style="color:#94a3b8;font-size:10px">'+s.desc+'</div></td><td class="n">'+s.count+'</td></tr>';
+    }).join('');
+    el.innerHTML = '<table>'+rows+'</table>';
+  }
+  function renderGestionSplit(){
+    var el = document.getElementById('kpi-gestion-split');
+    if (!el) return;
+    var split = window._GESTION_EXTERNA_SPLIT || {};
+    var order = ['Carlos Mora','Sincronis','GEE','Innet','Otros','(Sin asignar)'];
+    var rows = order.filter(function(k){return split[k] !== undefined;})
+      .map(function(k){ return '<tr><td>'+k+'</td><td class="n">'+(split[k]||0)+'</td></tr>'; }).join('');
+    el.innerHTML = '<table>'+rows+'</table>';
+  }
+  renderTallerSplit();
+  renderGestionSplit();
+
+  function toggle(cardId, splitId, toggleId){
+    var card = document.getElementById(cardId);
+    var split = document.getElementById(splitId);
+    var tog = document.getElementById(toggleId);
+    if (!card || !split) return;
+    // El click del card está reservado para filtrar. La flecha despliega.
+    if (tog) {
+      tog.style.cursor = 'pointer';
+      tog.addEventListener('click', function(e){
+        e.stopPropagation();
+        split.classList.toggle('open');
+        tog.textContent = split.classList.contains('open') ? '▴' : '▾';
+      });
+    }
+  }
+  toggle('kpi-en-taller', 'kpi-en-taller-split', 'kpi-en-taller-toggle');
+  toggle('kpi-gestion-externa', 'kpi-gestion-split', 'kpi-gestion-toggle');
+})();
+
+// ========================= SUB-PESTAÑAS Incidencias / Mapa =========================
+(function(){
+  var btns = document.querySelectorAll('#total-tabs2 button');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var sub = b.dataset.totalSub;
+      btns.forEach(function(x){ x.classList.toggle('active', x===b); });
+      document.querySelectorAll('.total-pane').forEach(function(p){
+        p.classList.toggle('active', p.id === 'total-pane-' + sub);
+      });
+    });
+  });
+})();
+
 
 </script>
 </div><!-- /main-content -->
