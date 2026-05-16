@@ -1,11 +1,19 @@
 """geocode.py — Resuelve direcciones de tickets y sustis a lat/lon usando
 Nominatim (OpenStreetMap) y cachea resultados en cache/geocodes.json.
 
-Idempotente: solo geocodifica las direcciones nuevas. Rate limit 1 req/segundo.
+Idempotente: solo geocodifica las direcciones nuevas o las que fallaron.
+Rate limit 1 req/segundo (política Nominatim).
+
+Estrategias para mejorar matches:
+  1. Restringir a Europa (countrycodes).
+  2. Limpiar nombres comerciales conocidos (Sin Vello, Elha, etc.) y extraer
+     la parte que parezca ciudad/dirección.
+  3. Reintentar fallidas si el query cambia respecto a la última vez.
 
 Uso:
-    python scripts/geocode.py          # geocodifica todas las pendientes
-    python scripts/geocode.py --max 25 # solo 25 (para no agotar timeout)
+    python scripts/geocode.py            # geocodifica pendientes + reintenta fallidas con query nuevo
+    python scripts/geocode.py --max 25   # solo 25 (para no agotar timeout)
+    python scripts/geocode.py --reset-failed  # vacía las fallidas para reintentar todas
 """
 from __future__ import annotations
 import json
@@ -25,6 +33,9 @@ GEO_PATH = CACHE_DIR / "geocodes.json"
 NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
 USER_AGENT = "leaseir-sat-dashboard/1.0 (https://github.com/iortizfigueroa/leaseir-sat-dashboard)"
 
+# Países donde operan los clientes de Leaseir
+COUNTRY_CODES = "es,it,pt,fr,de,uk,gb,be,nl,ch,at,ie,lu,dk,se,no,fi,pl,cz"
+
 OPEN_STATUSES = {
     "Abierto", "Creado", "Devuelto a cliente", "En preparación presupuesto",
     "En cola taller", "En préstamo", "En reparación", "Enviado a técnico externo",
@@ -38,6 +49,27 @@ OPEN_STATUSES = {
     "Presupuesto preparado pendiente de enviar", "Queja creada",
     "Recepcionado SAT", "Reportado", "Solicitado",
 }
+
+# Nombres comerciales que NO sirven como dirección (a quitar al principio)
+COMMERCIAL_PREFIXES = [
+    "sin vello", "sinvello",
+    "elha",
+    "epil point", "epilpoint", "epil",
+    "dermasana",
+    "smart duck", "smartduck",
+    "laser factory", "laserfactory",
+    "centri unico", "centro unico", "centros unico",
+    "beauty cool",
+    "haiku larios", "haiku",
+    "ces depilacion", "ces depilación", "ces",
+    "mel clinics",
+    "estètica àngels", "estetica angels",
+    "samrt duck", "samrt",  # typos
+    "quora",
+    "cleanbody",
+    "depilacio laser profesional",
+    "depilación laser profesional",
+]
 
 
 def load_cache():
@@ -71,21 +103,43 @@ def addr_key(cliente, loc):
     return ""
 
 
-def query_address(cliente, loc):
+def build_query(cliente, loc):
+    """Genera la mejor query para Nominatim. Si la loc tiene calle/CP, usarla
+    tal cual. Si no, intentar extraer ciudad del cliente quitando el nombre
+    comercial conocido."""
     loc = clean_address(loc)
     cliente = clean_address(cliente)
-    if loc and len(loc) > 8:
-        return loc
-    if cliente:
-        return cliente
-    return ""
+
+    # Si tenemos loc con pinta de dirección postal (largo + tiene número o CP)
+    if loc and len(loc) > 10 and (re.search(r"\d", loc) or "," in loc):
+        return loc, "loc-direct"
+
+    # Si loc es solo una ciudad (corta sin número)
+    if loc and len(loc) >= 4 and not re.search(r"\d{4,}", loc):
+        # Probablemente solo el nombre de ciudad
+        return loc, "loc-city"
+
+    # Solo cliente — limpiar nombre comercial
+    base = cliente.lower()
+    for prefix in COMMERCIAL_PREFIXES:
+        if base.startswith(prefix):
+            rest = cliente[len(prefix):].strip(" -,")
+            if rest:
+                # rest probablemente es ciudad. Añadir España como default.
+                return rest, "cliente-clean"
+    # Quitar códigos tipo MHP40546, C03291 al final
+    cleaned = re.sub(r"[CHMP]\d{4,}", "", cliente).strip(" -,")
+    cleaned = re.sub(r"\s+", " ", cleaned)
+    return cleaned or cliente, "cliente-raw"
 
 
 def nominatim_search(query, retries=2):
     if not query:
         return None
-    url = f"{NOMINATIM_URL}?q={quote_plus(query)}&format=json&limit=1&addressdetails=0"
-    req = Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "es,en"})
+    url = (f"{NOMINATIM_URL}?q={quote_plus(query)}"
+           f"&format=json&limit=1&addressdetails=0"
+           f"&countrycodes={COUNTRY_CODES}")
+    req = Request(url, headers={"User-Agent": USER_AGENT, "Accept-Language": "es,en,it,pt,fr"})
     for attempt in range(retries + 1):
         try:
             with urlopen(req, timeout=15) as r:
@@ -121,7 +175,8 @@ def collect_addresses():
             if not key:
                 continue
             if key not in addresses:
-                addresses[key] = {"query": query_address(cliente, loc), "cliente": cliente, "loc": loc}
+                q, strat = build_query(cliente, loc)
+                addresses[key] = {"query": q, "strategy": strat, "cliente": cliente, "loc": loc}
     sustis_cache = CACHE_DIR / "sustis_activas.json"
     if sustis_cache.exists():
         s = json.loads(sustis_cache.read_text(encoding="utf-8"))
@@ -132,48 +187,84 @@ def collect_addresses():
             if not key:
                 continue
             if key not in addresses:
-                addresses[key] = {"query": query_address(cliente, loc), "cliente": cliente, "loc": loc}
+                q, strat = build_query(cliente, loc)
+                addresses[key] = {"query": q, "strategy": strat, "cliente": cliente, "loc": loc}
     return addresses
 
 
 def main():
     import argparse
     ap = argparse.ArgumentParser()
-    ap.add_argument("--max", type=int, default=0, help="Max nuevas a geocodificar (0 = todas)")
+    ap.add_argument("--max", type=int, default=0, help="Max nuevas a geocodificar")
+    ap.add_argument("--reset-failed", action="store_true", help="Vaciar entradas fallidas para reintentar")
+    ap.add_argument("--rebuild-bad", action="store_true", help="Reintentar las que no están en países OK (lat lejos de Europa)")
     args = ap.parse_args()
 
     print("[geocode] Cargando cache de geocodes...")
     cache = load_cache()
     entries = cache["entries"]
-    print(f"[geocode] {len(entries)} direcciones ya cacheadas")
+
+    if args.reset_failed:
+        before = len(entries)
+        entries = {k: v for k, v in entries.items() if not v.get("failed")}
+        cache["entries"] = entries
+        save_cache(cache)
+        print(f"[geocode] reset-failed: {before - len(entries)} entradas borradas")
+
+    if args.rebuild_bad:
+        # Quitar entries cuyos lat/lon caen fuera de Europa (lat 25-72, lon -25 to 45)
+        before = len(entries)
+        bad_keys = []
+        for k, v in entries.items():
+            lat = v.get("lat"); lon = v.get("lon")
+            if lat is None or lon is None: continue
+            if not (25 <= lat <= 72 and -25 <= lon <= 45):
+                bad_keys.append(k)
+        for k in bad_keys:
+            del entries[k]
+        cache["entries"] = entries
+        save_cache(cache)
+        print(f"[geocode] rebuild-bad: {len(bad_keys)} entradas fuera de Europa borradas")
+
+    print(f"[geocode] {len(entries)} direcciones ya cacheadas (OK + failed)")
 
     print("[geocode] Recopilando direcciones únicas de tickets y sustis...")
     addresses = collect_addresses()
     print(f"[geocode] {len(addresses)} direcciones únicas detectadas")
 
-    pending = [(k, v) for k, v in addresses.items() if k not in entries]
+    # Pendientes = no en cache OR (failed AND query distinta)
+    pending = []
+    for k, v in addresses.items():
+        if k not in entries:
+            pending.append((k, v))
+        else:
+            cur = entries[k]
+            if cur.get("failed") and cur.get("query") != v["query"]:
+                pending.append((k, v))
     if args.max > 0:
         pending = pending[:args.max]
-    print(f"[geocode] {len(pending)} nuevas a geocodificar")
+    print(f"[geocode] {len(pending)} nuevas/reintentos a geocodificar")
 
     n_new, n_failed = 0, 0
     for i, (key, info) in enumerate(pending, 1):
         q = info["query"]
-        print(f"[geocode] ({i}/{len(pending)}) {q[:60]}...", flush=True)
+        print(f"[geocode] ({i}/{len(pending)}) [{info['strategy']}] {q[:60]}...", flush=True)
         res = nominatim_search(q)
         now_iso = datetime.now(timezone.utc).isoformat()
         if res:
             entries[key] = {
                 "lat": res["lat"], "lon": res["lon"],
                 "display_name": res["display_name"],
-                "query": q, "cliente": info["cliente"], "loc": info["loc"],
+                "query": q, "strategy": info["strategy"],
+                "cliente": info["cliente"], "loc": info["loc"],
                 "geocoded_at": now_iso,
             }
             n_new += 1
         else:
             entries[key] = {
                 "lat": None, "lon": None, "display_name": None,
-                "query": q, "cliente": info["cliente"], "loc": info["loc"],
+                "query": q, "strategy": info["strategy"],
+                "cliente": info["cliente"], "loc": info["loc"],
                 "geocoded_at": now_iso, "failed": True,
             }
             n_failed += 1
