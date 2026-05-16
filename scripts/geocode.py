@@ -122,26 +122,43 @@ def aggressive_clean(text):
     return t
 
 
-def build_query(cliente, loc):
-    loc, cliente = clean_address(loc), clean_address(cliente)
-    # 1. Si loc parece dirección (largo y con número o coma)
-    if loc and len(loc) > 10 and (re.search(r"\d", loc) or "," in loc):
-        cleaned = aggressive_clean(loc)
-        return cleaned or loc, "loc-direct-clean"
-    # 2. Si loc es solo ciudad
-    if loc and len(loc) >= 4 and not re.search(r"\d{4,}", loc):
-        return aggressive_clean(loc) or loc, "loc-city"
-    # 3. Solo cliente, quitar nombre comercial
+def _extract_city_from_cliente(cliente):
+    """Quita el prefijo comercial de un cliente y devuelve la parte ciudad/dirección."""
     base = cliente.lower()
     for prefix in COMMERCIAL_PREFIXES:
         if base.startswith(prefix):
             rest = cliente[len(prefix):].strip(" -,!")
             if rest:
-                return aggressive_clean(rest) or rest, "cliente-clean"
-    # 4. Fallback
-    cleaned = re.sub(r"[CHMP]\d{4,}", "", cliente).strip(" -,")
+                return rest
+    # Quitar códigos tipo C00510 que no aportan
+    cleaned = re.sub(r"\b[CHMP]\d{4,}\b", "", cliente).strip(" -,")
     cleaned = re.sub(r"\s+", " ", cleaned)
-    return cleaned or cliente, "cliente-raw"
+    return cleaned
+
+
+def build_query(cliente, loc):
+    loc, cliente = clean_address(loc), clean_address(cliente)
+    # 1. loc parece dirección postal completa (largo + con número o coma)
+    if loc and len(loc) > 15 and (re.search(r"\d", loc) or "," in loc):
+        return aggressive_clean(loc) or loc, "loc-direct-clean"
+    # 2. loc cortito y ambiguo (ej "sebastian", "fuenlabrada"): combinar con
+    #    el cliente para evitar matches absurdos en otros países
+    if loc and len(loc) < 20 and not re.search(r"\d{4,}", loc):
+        # Combinar loc + cliente limpio
+        city_from_cliente = _extract_city_from_cliente(cliente)
+        if city_from_cliente and city_from_cliente.lower() != loc.lower():
+            combined = f"{city_from_cliente}"
+            # Si city_from_cliente ya menciona el loc, no duplicar
+            if loc.lower() not in city_from_cliente.lower():
+                combined = f"{city_from_cliente}, {loc}"
+            return aggressive_clean(combined) or combined, "loc-with-cliente"
+        return aggressive_clean(loc) or loc, "loc-city"
+    # 3. loc largo sin número (raro) → tal cual
+    if loc and len(loc) >= 4:
+        return aggressive_clean(loc) or loc, "loc-long"
+    # 4. Sin loc, solo cliente → quitar nombre comercial
+    cleaned = _extract_city_from_cliente(cliente)
+    return aggressive_clean(cleaned) or cleaned or cliente, "cliente-clean"
 
 
 def nominatim_search(query, retries=2):
