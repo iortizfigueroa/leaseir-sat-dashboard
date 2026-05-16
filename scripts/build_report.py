@@ -1230,14 +1230,19 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent):
     return rows
 
 
-def _bar_html(buckets, counts, total, label):
+def _bar_html(buckets, counts, total, label, kpi_id="taller", ranges=None):
+    """ranges: lista de (min, max) en días para cada bucket — se inyecta como data-tiempos-bucket."""
     segments = []
-    for (lbl, color, _), n in zip(buckets, counts):
+    for i, ((lbl, color, _), n) in enumerate(zip(buckets, counts)):
         pct = (n * 100.0 / total) if total else 0
         if n > 0:
             label_inline = "" if pct < 5 else str(n)
+            bucket_attr = ""
+            if ranges and i < len(ranges):
+                lo, hi = ranges[i]
+                bucket_attr = f' data-tiempos-bucket="{lo},{hi}" data-tiempos-kpi="{kpi_id}"'
             segments.append(
-                f'<div style="background:{color};height:100%;width:{pct:.2f}%;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:13px;min-width:0;overflow:hidden" title="{lbl}: {n} ({pct:.0f}%)">{label_inline}</div>'
+                f'<div{bucket_attr} style="background:{color};height:100%;width:{pct:.2f}%;display:flex;align-items:center;justify-content:center;color:white;font-weight:600;font-size:13px;min-width:0;overflow:hidden;cursor:pointer" title="{lbl}: {n} ({pct:.0f}%) — clic para filtrar">{label_inline}</div>'
             )
     return '<div style="display:flex;height:36px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#f1f5f9">' + "".join(segments) + '</div>'
 
@@ -1300,7 +1305,8 @@ def build_tiempos_section(cache, sustis_by_parent):
     n_live = sum(1 for r in rows if r["taller_live"])
     taller_kpis = _kpis_html("t", t_total, t_mediana, t_media, t_max, "taller",
                              f"{n_live} aún en taller (live)")
-    taller_bar = _bar_html(taller_buckets, counts_taller, t_total, "taller")
+    taller_ranges = [(0,3),(4,8),(9,15),(16,30),(31,9999)]
+    taller_bar = _bar_html(taller_buckets, counts_taller, t_total, "taller", "taller", taller_ranges)
     taller_legend = ""
     for (lbl, color, _), n in zip(taller_buckets, counts_taller):
         pct = (n * 100.0 / t_total) if t_total else 0
@@ -1335,7 +1341,8 @@ def build_tiempos_section(cache, sustis_by_parent):
         s_mediana = s_media = s_max = 0
     sustis_kpis = _kpis_html("s", s_total, s_mediana, s_media, s_max, "sustis",
                              "sustituciones con fecha de envío conocida")
-    sustis_bar = _bar_html(susti_buckets, counts_susti, s_total, "sustis")
+    sustis_ranges = [(0,7),(8,15),(16,25),(26,35),(36,9999)]
+    sustis_bar = _bar_html(susti_buckets, counts_susti, s_total, "sustis", "sustis", sustis_ranges)
     sustis_legend = ""
     for (lbl, color, _), n in zip(susti_buckets, counts_susti):
         pct = (n * 100.0 / s_total) if s_total else 0
@@ -1393,6 +1400,8 @@ def build_tiempos_section(cache, sustis_by_parent):
     toolbar.append('<button type="button" id="tm-clear" class="multi-btn">✕ Limpiar</button>')
     toolbar.append('<span class="count"><b id="tm-count">0</b> de <span id="tm-total">0</span> visibles</span>')
     toolbar.append('</div>')
+    # Banner KPI activo
+    toolbar.append('<div id="tm-kpi-banner" style="display:none;background:#e7eefa;border:1px solid #2a59c4;border-radius:6px;padding:6px 12px;margin:6px 0;font-size:13px;color:#1f3a5f"><i class="ti ti-filter"></i> Filtro KPI activo: <b class="tm-banner-label">—</b> <button type="button" id="tm-kpi-clear" style="margin-left:10px;border:1px solid #2a59c4;background:white;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Quitar</button></div>')
 
     # Toggle columnas
     toggle = ['<details style="margin:4px 0 8px"><summary style="cursor:pointer;color:var(--blue);font-size:12px">Mostrar/ocultar columnas</summary>',
@@ -1434,7 +1443,7 @@ def build_tiempos_section(cache, sustis_by_parent):
             hide = "" if default_on else 'style="display:none"'
             cell_vals.append(f'<td class="tm-col" data-col="{COLS.index((key, label, dtype, default_on))}" {hide}>{v}</td>')
         row_open = "open" if r["is_open"] else "closed"
-        out.append(f'<tr data-open="{row_open}" data-chain="{html_escape(r["chain"])}" data-status="{html_escape(r["status"])}" data-tipo="{html_escape(r["tipo"])}" data-bloq="{html_escape(r["bloq"])}" data-susti="{html_escape(r["susti"])}" data-dt="{r["dias_taller"] if r["dias_taller"] is not None else -1}">' + ''.join(cell_vals) + '</tr>')
+        out.append(f'<tr data-open="{row_open}" data-chain="{html_escape(r["chain"])}" data-status="{html_escape(r["status"])}" data-tipo="{html_escape(r["tipo"])}" data-bloq="{html_escape(r["bloq"])}" data-susti="{html_escape(r["susti"])}" data-dt="{r["dias_taller"] if r["dias_taller"] is not None else -1}" data-ds="{r["dias_susti"] if r["dias_susti"] is not None else -1}">' + ''.join(cell_vals) + '</tr>')
     out.append('</tbody></table></div>')
 
     # JS para tabla
@@ -1444,15 +1453,27 @@ def build_tiempos_section(cache, sustis_by_parent):
       var cnt=document.getElementById('tm-count');document.getElementById('tm-total').textContent=rows.length;
       var fs={search:'tm-search',chain:'tm-chain',status:'tm-status',tipo:'tm-tipo',bloq:'tm-bloq',susti:'tm-susti',open:'tm-open'};
       var els={};for(var k in fs)els[k]=document.getElementById(fs[k]);
-      var topNFilter = null;
+      // Filtros KPI Tiempos: {kpi: 'taller'|'sustis', mode: 'all'|'top10'|'bucket', bucket: [min,max]}
+      var kpiFilter = null;
       function apply(){
         var q=(els.search.value||'').toLowerCase().trim();
         var n=0;
-        var sortedDts=[];
-        rows.forEach(function(r){ var d=parseInt(r.dataset.dt)||0; if(d>=0)sortedDts.push(d); });
-        sortedDts.sort(function(a,b){return b-a;});
-        var threshold = topNFilter==='top10' ? sortedDts[Math.max(0,Math.floor(sortedDts.length*0.1)-1)] : -1;
+        // Para top10, calcular threshold del campo correcto
+        var fieldKey = kpiFilter && kpiFilter.kpi === 'sustis' ? 'ds' : 'dt';
+        var sortedVs=[];
+        rows.forEach(function(r){ var d=parseInt(r.dataset[fieldKey])||0; if(d>=0)sortedVs.push(d); });
+        sortedVs.sort(function(a,b){return b-a;});
+        var threshold = (kpiFilter && kpiFilter.mode==='top10') ? sortedVs[Math.max(0,Math.floor(sortedVs.length*0.1)-1)] : -1;
         for(var i=0;i<rows.length;i++){var r=rows[i];
+          var dt = parseInt(r.dataset.dt); var ds = parseInt(r.dataset.ds);
+          var v = (kpiFilter && kpiFilter.kpi === 'sustis') ? ds : dt;
+          var kpiOk = true;
+          if (kpiFilter) {
+            // 'all': solo filas con tiempo medido (>=0)
+            if (kpiFilter.mode === 'all') kpiOk = (v >= 0);
+            else if (kpiFilter.mode === 'top10') kpiOk = (v >= 0 && v >= threshold);
+            else if (kpiFilter.mode === 'bucket') kpiOk = (v >= kpiFilter.bucket[0] && v <= kpiFilter.bucket[1]);
+          }
           var ok=(!q||r.textContent.toLowerCase().indexOf(q)>=0)
             && (!els.chain.value||r.dataset.chain===els.chain.value)
             && (!els.status.value||r.dataset.status===els.status.value)
@@ -1460,12 +1481,29 @@ def build_tiempos_section(cache, sustis_by_parent):
             && (!els.bloq.value||r.dataset.bloq===els.bloq.value)
             && (!els.susti.value||r.dataset.susti===els.susti.value)
             && (!els.open.value||r.dataset.open===els.open.value)
-            && (topNFilter!=='top10'||parseInt(r.dataset.dt)>=threshold);
+            && kpiOk;
           r.style.display=ok?'':'none';if(ok)n++;
-        }cnt.textContent=n;
+        }
+        cnt.textContent=n;
+        // Mostrar banner del filtro KPI activo
+        var banner = document.getElementById('tm-kpi-banner');
+        if (banner) {
+          if (kpiFilter) {
+            var lbl = kpiFilter.kpi === 'sustis' ? 'Sustituciones' : 'Tiempo en taller';
+            var modeLbl = kpiFilter.mode === 'all' ? ' (todos con tiempo medido)' :
+                          kpiFilter.mode === 'top10' ? ' (top 10% mayor tiempo)' :
+                          kpiFilter.mode === 'bucket' ? (' (bucket ' + kpiFilter.bucket[0] + '-' + (kpiFilter.bucket[1]===9999?'∞':kpiFilter.bucket[1]) + 'd)') : '';
+            banner.style.display = '';
+            banner.querySelector('.tm-banner-label').textContent = lbl + modeLbl;
+          } else {
+            banner.style.display = 'none';
+          }
+        }
       }
       Object.values(els).forEach(function(e){e.addEventListener('input',apply);e.addEventListener('change',apply);});
-      document.getElementById('tm-clear').addEventListener('click',function(){Object.values(els).forEach(function(e){e.value='';});topNFilter=null;apply();});
+      document.getElementById('tm-clear').addEventListener('click',function(){Object.values(els).forEach(function(e){e.value='';});kpiFilter=null;apply();});
+      var bannerClose = document.getElementById('tm-kpi-clear');
+      if (bannerClose) bannerClose.addEventListener('click', function(){ kpiFilter = null; apply(); });
       // Toggle columnas
       document.querySelectorAll('input[data-col-idx]').forEach(function(cb){
         cb.addEventListener('change',function(){
@@ -1486,13 +1524,27 @@ def build_tiempos_section(cache, sustis_by_parent):
         for(var k=0;k<rs.length;k++)tbl.tBodies[0].appendChild(rs[k]);
       });})(heads[hi]);}
       apply();
-      // KPIs Tiempos clickables — scroll a tabla
+      // KPIs Tiempos clickables — filtran tabla
       document.querySelectorAll('[data-tiempos-filter]').forEach(function(kpi){
         kpi.addEventListener('click',function(){
-          var f=kpi.dataset.tiemposFilter;
-          if(f==='all'){topNFilter=null;Object.values(els).forEach(function(e){e.value='';});}
-          else if(f==='max'){topNFilter='top10';}
-          else{topNFilter=null;}
+          var f = kpi.dataset.tiemposFilter;
+          var k = kpi.dataset.tiemposKpi || 'taller';
+          if (f === 'all') kpiFilter = { kpi: k, mode: 'all' };
+          else if (f === 'max') kpiFilter = { kpi: k, mode: 'top10' };
+          else kpiFilter = { kpi: k, mode: 'all' };  // mediana y media también filtran
+          Object.values(els).forEach(function(e){e.value='';});
+          apply();
+          tbl.scrollIntoView({behavior:'smooth',block:'start'});
+        });
+      });
+      // Stacked bar segmentos clickables — filtran por bucket de días
+      document.querySelectorAll('[data-tiempos-bucket]').forEach(function(seg){
+        seg.style.cursor = 'pointer';
+        seg.addEventListener('click', function(){
+          var k = seg.dataset.tiemposKpi || 'taller';
+          var bucket = seg.dataset.tiemposBucket.split(',').map(function(x){return parseInt(x);});
+          kpiFilter = { kpi: k, mode: 'bucket', bucket: bucket };
+          Object.values(els).forEach(function(e){e.value='';});
           apply();
           tbl.scrollIntoView({behavior:'smooth',block:'start'});
         });

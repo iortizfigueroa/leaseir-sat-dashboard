@@ -73,6 +73,10 @@
   tr.tec-no-aplica { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
   /* Rayado en tabla Detalle de incidencias para estados que no dependen del técnico */
   #detalle-table tbody tr[data-no-tec] { background-image: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(148,163,184,0.10) 5px, rgba(148,163,184,0.10) 10px); }
+  /* Resize columnas en tabla Tiempos */
+  #tm-table th { position: relative; resize: horizontal; overflow: auto; min-width: 60px; max-width: 600px; }
+  #tm-table td.d-trunc { max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  #tm-table td[data-col="2"] { max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   tr.tec-no-aplica td.lbl-name { color: #64748b; font-style: italic; }
   td.tec-cell:hover { background: #e7eefa !important; outline: 2px solid #2a59c4; outline-offset: -2px; }
   .multi-wrap { position: relative; display: inline-block; }
@@ -1826,14 +1830,29 @@ function _daysColor(d) {
     return '#c0392b';
   }
 
+  window._CHAIN_MAPS_INSTANCES = window._CHAIN_MAPS_INSTANCES || {};
+
   function initChainMap(slug) {
-    if (window._CHAIN_MAPS_INITED[slug]) return;
     var data = (window._CHAIN_MAPS_DATA||{})[slug];
     if (!data || !data.length) return;
     var div = document.getElementById('map-chain-' + slug);
-    if (!div || !window.L) return;
+    if (!div) { console.warn('map-chain-' + slug + ' no existe'); return; }
+    if (!window.L) { console.warn('Leaflet (window.L) no cargado'); return; }
+    var map = window._CHAIN_MAPS_INSTANCES[slug];
+    if (map) {
+      // Ya inicializado: forzar invalidateSize + refit
+      setTimeout(function(){
+        map.invalidateSize();
+        try {
+          var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
+          map.fitBounds(b, {padding:[30,30]});
+        } catch(e) {}
+      }, 50);
+      return;
+    }
     window._CHAIN_MAPS_INITED[slug] = true;
-    var map = L.map('map-chain-' + slug).setView([40.4, -3.7], 5);
+    map = L.map('map-chain-' + slug).setView([40.4, -3.7], 5);
+    window._CHAIN_MAPS_INSTANCES[slug] = map;
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19, attribution: '&copy; OpenStreetMap'
     }).addTo(map);
@@ -1853,20 +1872,36 @@ function _daysColor(d) {
       marker.bindPopup(html);
       marker.addTo(map);
     });
-    var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
-    try { map.fitBounds(b, {padding:[30,30]}); } catch(e) {}
-    setTimeout(function(){ map.invalidateSize(); }, 250);
+    // El div puede estar oculto al crear el mapa → forzar invalidateSize y luego fitBounds
+    setTimeout(function(){
+      map.invalidateSize();
+      try {
+        var b = L.latLngBounds(data.map(function(p){return [p.lat, p.lon];}));
+        map.fitBounds(b, {padding:[30,30]});
+      } catch(e) {}
+    }, 250);
   }
 
   // Cuando se cambie a una sub-pestaña de cadena, inicializar su mapa
+  function _chainSlug(name){
+    return (name||'').replace(/[^a-zA-Z0-9]+/g,'-').toLowerCase().replace(/^-|-$/g,'');
+  }
   document.querySelectorAll('.tabs2 button[data-chain]').forEach(function(b){
     b.addEventListener('click', function(){
       var ch = b.dataset.chain;
       if (ch === 'resumen') return;
-      var slug = ch.replace(/[^a-zA-Z0-9]+/g,'-').toLowerCase().replace(/^-|-$/g,'');
-      setTimeout(function(){ initChainMap(slug); }, 100);
+      var slug = _chainSlug(ch);
+      // Espera a que la pestaña esté visible
+      setTimeout(function(){ initChainMap(slug); }, 150);
     });
   });
+  // Si la página carga ya en una pestaña de cadena (localStorage), inicializar
+  setTimeout(function(){
+    var activeChainBtn = document.querySelector('#view-chains .tabs2 button.active[data-chain]');
+    if (activeChainBtn && activeChainBtn.dataset.chain !== 'resumen') {
+      initChainMap(_chainSlug(activeChainBtn.dataset.chain));
+    }
+  }, 500);
 
   // Mapa Sustituciones
   var sustisMapInited = false;
