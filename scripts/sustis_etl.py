@@ -944,6 +944,13 @@ def render_sustis_mapa_html(sustis_items):
         if cli_c: return cli_c.lower()
         return ""
 
+    import hashlib as _hashlib
+    def _atlantic_fb(key):
+        h = int(_hashlib.md5((key or "noid").encode()).hexdigest()[:8], 16)
+        dx = ((h >> 4) & 0xff) / 255.0 * 3.0 - 1.5
+        dy = (h & 0xff) / 255.0 * 3.0 - 1.5
+        return (36.0 + dy, -20.0 + dx)
+
     now_utc = datetime.now(timezone.utc)
     markers = []
     cadenas_present = set()
@@ -952,7 +959,11 @@ def render_sustis_mapa_html(sustis_items):
         loc = it.get("loc","")
         key = _addr_key(cli, loc)
         g = geo_entries.get(key)
-        if not g or g.get("lat") is None: continue
+        no_geo = (not g or g.get("lat") is None)
+        if no_geo:
+            lat_v, lon_v = _atlantic_fb(it.get("key","") or it.get("parent_key",""))
+        else:
+            lat_v, lon_v = g["lat"], g["lon"]
         ch = chain_for(cli, loc)
         cadenas_present.add(ch)
         fe = it.get("fecha_envio")
@@ -963,7 +974,7 @@ def render_sustis_mapa_html(sustis_items):
                 if not fe_dt.tzinfo: fe_dt = fe_dt.replace(tzinfo=timezone.utc)
                 dias = (now_utc - fe_dt).days
         markers.append({
-            "lat": g["lat"], "lon": g["lon"],
+            "lat": lat_v, "lon": lon_v,
             "key": it.get("key",""),
             "parent_key": it.get("parent_key",""),
             "cliente": (cli or "")[:80], "loc": (loc or "")[:80],
@@ -971,8 +982,9 @@ def render_sustis_mapa_html(sustis_items):
             "chain": ch,
             "consola": it.get("consola_susti","") or "",
             "manipulo": it.get("manipulo_susti","") or "",
-            "dias": dias if dias is not None else -1,  # -1 = sin fecha (solicitado)
+            "dias": dias if dias is not None else -1,
             "is_solicitado": (it.get("subtask_status","").lower() == "solicitado"),
+            "no_geo": no_geo,
         })
 
     if not markers:

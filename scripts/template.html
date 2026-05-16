@@ -2175,8 +2175,9 @@ function _daysColor(d) {
       var purl = m.parent_key ? 'https://leaseir.atlassian.net/browse/'+m.parent_key : '';
       var curl = m.key ? 'https://leaseir.atlassian.net/browse/'+m.key : '';
       var diasTxt = m.dias === -1 ? '— (no entregada)' : (m.dias + ' días');
+      var noGeoNote = m.no_geo ? '<div style="font-size:10px;color:#c0392b;font-style:italic;margin-top:4px">⚠ Sin geolocalización — puesto en Atlántico</div>' : '';
       var html = '<div style="font-family:Inter,sans-serif;font-size:12px;max-width:280px">' +
-        '<div style="font-weight:600;margin-bottom:4px">'+m.chain+' · ' + 
+        '<div style="font-weight:600;margin-bottom:4px">'+m.chain+' · ' +
         (curl ? '<a href="'+curl+'" target="_blank" style="color:#2a59c4">'+m.key+'</a>' : '') +
         (purl ? ' / <a href="'+purl+'" target="_blank" style="color:#2a59c4">'+m.parent_key+'</a>' : '') + '</div>' +
         '<div style="margin-bottom:3px"><b>'+m.cliente+'</b></div>' +
@@ -2184,7 +2185,7 @@ function _daysColor(d) {
         '<div style="font-size:11px"><b>Estado:</b> '+m.subtask_status+'</div>' +
         '<div style="font-size:11px"><b>Tiempo:</b> '+diasTxt+'</div>' +
         '<div style="font-size:11px"><b>Consola:</b> '+(m.consola||'-')+' &middot; <b>Manipulo:</b> '+(m.manipulo||'-')+'</div>' +
-        '</div>';
+        noGeoNote + '</div>';
       mk.bindPopup(html);
       mk.addTo(sustisMap);
       sustisMarkers.push(mk);
