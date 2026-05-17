@@ -964,12 +964,17 @@ def build_anual_averias_section(cache, tiempos_rows=None):
             continue
         # Año compra unificado con la lógica de 'Por cadena'
         yr = _year_compra(t)
-        # Buckets desde CAMBIOS únicamente (lo que realmente se cambió en taller).
-        # NO usamos motivo como fallback — evita inflar el count (caso Elha 19 diodos).
+        # Buckets desde CAMBIOS (lo que se cambió en taller).
         buckets = set()
         for v in (t.get("cambios") or []):
             b = val2bucket.get(str(v).lower())
             if b: buckets.add(b)
+        # Regla Nacho (15-may-2026): si Resumen avería (motivo) contiene "diodo" o
+        # "umbilical", añadir el bucket correspondiente AUNQUE no esté en cambios.
+        for v in (t.get("motivo") or []):
+            vl = str(v).lower()
+            if "umbilical" in vl: buckets.add("Umbi")
+            elif "diodo" in vl: buckets.add("Diod")
         ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
         yrow = year_row(yr)  # solo año de venta, sin filas de estado
         records.append({"k": k, "y": yrow, "c": ch,
