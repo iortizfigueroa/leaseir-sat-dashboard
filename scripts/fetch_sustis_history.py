@@ -158,7 +158,21 @@ def infer_modelo(consola, manipulo):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cache", required=True)
+    ap.add_argument("--max-age-hours", type=float, default=20.0,
+                    help="Skip fetch si el cache se modificó hace menos de N horas (default 20)")
+    ap.add_argument("--force", action="store_true",
+                    help="Forzar refetch ignorando --max-age-hours")
     args = ap.parse_args()
+
+    # Skip si el cache es reciente — sustis cerradas no cambian, ahorra ~60s/run
+    cache_p = Path(args.cache)
+    if cache_p.exists() and not args.force:
+        from datetime import datetime, timezone
+        age_seconds = datetime.now(timezone.utc).timestamp() - cache_p.stat().st_mtime
+        age_hours = age_seconds / 3600.0
+        if age_hours < args.max_age_hours:
+            print(f"[sustis-hist] Cache reciente ({age_hours:.1f}h < {args.max_age_hours}h) — SKIP fetch")
+            return
 
     base, sess = session_from_env()
     print(f"[sustis-hist] JQL: {JQL_SUSTIS_HIST}")

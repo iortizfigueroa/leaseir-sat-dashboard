@@ -1114,7 +1114,7 @@ def build_anual_averias_section(cache, tiempos_rows=None):
         '    td.textContent = totals[td.getAttribute("data-bucket")] || "·";'
         '  });'
         '}'
-        '// Clic en celdas de la matriz → setea extra filter en tm-detail abajo'
+        '/* Clic en celdas de la matriz: setea extra filter en tm-detail abajo */ '
         'tbl.addEventListener("click", function(e){'
         '  var td = e.target.closest("td");'
         '  if(!td) return;'
