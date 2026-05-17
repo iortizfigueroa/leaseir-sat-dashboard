@@ -182,27 +182,58 @@ def nominatim_search(query, retries=2):
             return None
 
 
-def extract_latlng_from_gmap_url(url):
-    """Extrae (lat, lon) de un URL de Google Maps. Devuelve None si no se puede parsear.
-    Soporta los patrones más comunes: @lat,lon / q=lat,lon / ll=lat,lon / !3d/!4d."""
+def resolve_gmap_short_url(url, timeout=10):
+    """Resuelve short links de Google Maps (maps.app.goo.gl / goo.gl/maps)
+    siguiendo el HTTP redirect. Devuelve el URL final o None si falla."""
     if not url: return None
     s = str(url).strip()
-    # @lat,lon (place URLs: /maps/place/.../@41.3851,2.1734,17z)
-    m = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", s)
-    if m:
-        try: return float(m.group(1)), float(m.group(2))
-        except ValueError: pass
-    # q=lat,lon o ll=lat,lon (?q=41.3851,2.1734)
-    m = re.search(r"[?&](?:q|ll|destination)=(-?\d+\.\d+),(-?\d+\.\d+)", s)
-    if m:
-        try: return float(m.group(1)), float(m.group(2))
-        except ValueError: pass
-    # !3d<lat>!4d<lon> (data param)
+    is_short = ("maps.app.goo.gl" in s) or ("goo.gl/maps" in s)
+    if not is_short: return s
+    try:
+        # urlopen sigue redirects por defecto. Usamos HEAD-like (GET con tiny body).
+        req = Request(s, headers={"User-Agent": USER_AGENT,
+                                    "Accept-Language": "en,es;q=0.9"})
+        with urlopen(req, timeout=timeout) as r:
+            return r.geturl()
+    except (URLError, HTTPError, ValueError) as e:
+        print(f"  [warn] resolve_gmap_short_url({s[:50]}): {e}", file=sys.stderr)
+        return None
+
+
+def _extract_latlng_patterns(s):
+    """Aplica los regex de coords sobre el URL ya resuelto.
+    PRIORIDAD: !3d/!4d (coords del PLACE/centro) > q=/ll=/destination= > @ (vista de cámara)
+    El @ es la posición de la cámara del mapa, NO del centro — solo usarlo como último recurso."""
+    # 1. !3d<lat>!4d<lon> (coords reales del place — máxima prioridad)
     m = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", s)
     if m:
         try: return float(m.group(1)), float(m.group(2))
         except ValueError: pass
+    # 2. q=lat,lon / ll=lat,lon / destination=lat,lon (param explícito)
+    m = re.search(r"[?&](?:q|ll|destination)=(-?\d+\.\d+),(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # 3. @lat,lon — solo si no hay nada mejor (es la posición de cámara, no del centro)
+    m = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
     return None
+
+
+def extract_latlng_from_gmap_url(url):
+    """Extrae (lat, lon) de un URL de Google Maps. Resuelve short links primero
+    si es necesario. Devuelve None si no se puede parsear."""
+    if not url: return None
+    s = str(url).strip()
+    # Si es short link, resolver el redirect HTTP primero
+    if ("maps.app.goo.gl" in s) or ("goo.gl/maps" in s):
+        resolved = resolve_gmap_short_url(s)
+        if not resolved or resolved == s:
+            return None
+        s = resolved
+    return _extract_latlng_patterns(s)
 
 
 def collect_addresses():
@@ -221,11 +252,13 @@ def collect_addresses():
             loc = t.get("loc", "")
             gmap_url = (t.get("gmap_url") or "").strip()
             if not gmap_url: continue
+            # Validación barata (sin fetch HTTP): debe parecer un URL de Google Maps
+            if not (gmap_url.startswith("http") and
+                    ("google" in gmap_url or "goo.gl" in gmap_url)):
+                continue
             key = addr_key(cliente, loc)
             if key and key not in gmap_by_key:
-                # Validar que el URL produce coords (sino no merece la pena)
-                if extract_latlng_from_gmap_url(gmap_url):
-                    gmap_by_key[key] = gmap_url
+                gmap_by_key[key] = gmap_url
 
     for cache_name, key_field in [("jira_status_timeline.json", "tickets"),
                                     ("sustis_activas.json", "items")]:
