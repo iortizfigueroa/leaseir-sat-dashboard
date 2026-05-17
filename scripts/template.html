@@ -472,7 +472,7 @@ __AH_ROWS__
 </div>
 
 <h2 id="tecnicos">Detalle de técnicos taller</h2>
-<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = los 3 estados donde realmente trabaja el técnico. <b>Filas rayadas</b> = estados que no dependen del técnico (cola/cliente/transporte) · Filas <b>verdes "Presupuesto hecho hoy" / "Equipo reparado hoy"</b> = tickets únicos avanzados hoy (clic muestra LEAS abajo).</div>
+<div class="legend">Persona = <b>Persona asignada (Jira)</b> hasta "Esperando inicio reparación" inclusive · <b>Técnico taller</b> a partir de "En reparación". Clic en una celda filtra la tabla Detalle por ese estado + persona. ▲ entran hoy · ▼ salen hoy. Bloque "En taller" resaltado · Fila amarilla "Esperando técnico" = los 3 estados donde realmente trabaja el técnico. <b>Filas rayadas</b> = estados que no dependen del técnico (cola/cliente/transporte) · Filas <b>verdes "Pptos hechos hoy" / "Equipo reparado hoy"</b> = tickets únicos avanzados hoy (clic muestra LEAS abajo).</div>
 <div class="scroller">
 <table>
 __TEC_HEADER__
@@ -605,15 +605,29 @@ __CHAIN_TOTAL__
 </div>
 
 <h2 id="evol-kpis">Evolución diaria de KPIs</h2>
-<div class="legend">Snapshot diario de los KPIs principales. Se guarda automáticamente cada vez que el workflow refresca el dashboard.</div>
+<div class="legend">Snapshot diario de los KPIs principales. Se guarda automáticamente cada vez que el workflow refresca el dashboard. <b>Tip:</b> clic en el encabezado <b>Presupuestos hechos</b> o <b>Equipos reparados</b> para desplegar el detalle por técnico.</div>
 <div class="scroller">
-<table>
+<table id="evol-kpis-table">
 __EVOLUCION_KPIS__
 </table>
 </div>
+<script>(function(){
+  var tbl = document.getElementById('evol-kpis-table');
+  if(!tbl) return;
+  tbl.querySelectorAll('.evol-toggle').forEach(function(th){
+    th.addEventListener('click', function(){
+      var grp = th.getAttribute('data-grp');
+      var subs = tbl.querySelectorAll('.evol-sub-' + grp);
+      var hidden = subs.length && subs[0].style.display === 'none';
+      subs.forEach(function(c){ c.style.display = hidden ? '' : 'none'; });
+      var icon = th.querySelector('span');
+      if(icon) icon.textContent = hidden ? '▼' : '▶';
+    });
+  });
+})();</script>
 
-<h2 id="evol-tecnicos-dia">Presupuestos y reparaciones por técnico/día</h2>
-<div class="legend">Conteo de tickets que cada técnico ha avanzado por día. Formato celda: <b style="color:#0891b2">P presupuestos</b> + <b style="color:#059669">R reparaciones</b>. Selecciona mes con el dropdown.</div>
+<h2 id="evol-tecnicos-dia">Pptos &amp; Reparaciones por técnico × mes</h2>
+<div class="legend">Cada mes se muestra como un grupo de barras (una por técnico). Dentro de cada barra: <b style="color:#0891b2">P (Pptos)</b> en la base + <b style="color:#059669">R (Reparaciones)</b> apilado encima. Clic en una barra filtra la tabla detalle de abajo. Arranque: <b>mayo 2026</b>.</div>
 __TEC_DIA_SECTION__
 </div><!-- /stats-pane-evol -->
 
@@ -2167,9 +2181,12 @@ function _daysColor(d) {
       var color = _daysColor(m.dias);
       var opts = { radius: 8, color: 'white', weight: 2, fillColor: color, fillOpacity: 0.9 };
       if (m.is_solicitado) {
-        opts.color = '#475569';
-        opts.weight = 2;
-        opts.dashArray = '3,3';
+        // Color distintivo brillante para "donde hay que enviar y tienen necesidad"
+        opts.fillColor = '#d946ef';  // magenta/violeta brillante
+        opts.color = '#7e22ce';      // borde violeta oscuro
+        opts.weight = 3;
+        opts.radius = 10;
+        opts.fillOpacity = 0.95;
       }
       var mk = L.circleMarker([m.lat, m.lon], opts);
       var purl = m.parent_key ? 'https://leaseir.atlassian.net/browse/'+m.parent_key : '';

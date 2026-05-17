@@ -1010,7 +1010,7 @@ def render_sustis_mapa_html(sustis_items):
         '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#b8860b"></span>16-25 días</span>'
         '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#cb6f0a"></span>26-35 días</span>'
         '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#c0392b"></span>&gt;35 días</span>'
-        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#7d8590;border:2px dashed #475569"></span>Solicitada (no entregada)</span>'
+        '<span style="display:inline-flex;align-items:center;gap:4px"><span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#d946ef;border:2px solid #7e22ce"></span><b>Solicitada — enviar</b></span>'
         '</div>'
         '<script>window._SUSTIS_MAP_DATA=' + markers_json + ';</script>'
     )
