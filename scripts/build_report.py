@@ -956,6 +956,8 @@ def build_anual_averias_section(cache, tiempos_rows=None):
                 return int(fv[:4])
             return None
 
+    # Mismo cutoff que el KPI Abiertas hoy → para que la fila "Abierta" cuadre con el KPI
+    _now_cutoff = datetime.now(timezone.utc)
     records = []
     for k, t in cache.get("tickets", {}).items():
         # Base unificada con Tiempos: creados 2026 OR (creados antes Y abiertos a 1-ene-2026)
@@ -966,8 +968,10 @@ def build_anual_averias_section(cache, tiempos_rows=None):
             if len(tr) >= 3 and tr[2] in INSP_STATES:
                 passed = True
                 break
-        is_currently_open = is_open(t.get("current_status"))
-        st_now = t.get("current_status", "")
+        # Usar status_at(now) en lugar de current_status para alinear con el KPI
+        _st_at_now = status_at(t, _now_cutoff)
+        is_currently_open = is_open(_st_at_now)
+        st_now = _st_at_now or t.get("current_status", "")
         # Año compra unificado con la lógica de 'Por cadena'
         yr = _year_compra(t)
         buckets = set()
@@ -1120,10 +1124,10 @@ def build_anual_averias_section(cache, tiempos_rows=None):
         '  if(!td) return;'
         '  var tr = td.closest("tr");'
         '  var y = tr ? tr.getAttribute("data-year") : null;'
-        '  if(!y || typeof window.av_setExtraFilter !== "function") return;'
+        '  if(!y || typeof window.avd_setExtraFilter !== "function") return;'
         '  if(td.classList.contains("tickets-cell")) {'
         '    cellFilter = {y: y, b: null};'
-        '    window.av_setExtraFilter(function(row){'
+        '    window.avd_setExtraFilter(function(row){'
         '      return (row.getAttribute("data-av-year") || "") === y;'
         '    }, "año=" + y);'
         '    return;'
@@ -1131,7 +1135,7 @@ def build_anual_averias_section(cache, tiempos_rows=None):
         '  if(td.classList.contains("bucket-cell")) {'
         '    var b = td.getAttribute("data-bucket");'
         '    cellFilter = {y: y, b: b};'
-        '    window.av_setExtraFilter(function(row){'
+        '    window.avd_setExtraFilter(function(row){'
         '      if ((row.getAttribute("data-av-year") || "") !== y) return false;'
         '      var buckets = (row.getAttribute("data-av-buckets") || "").split(",");'
         '      return buckets.indexOf(b) >= 0;'
@@ -1160,7 +1164,7 @@ def build_anual_averias_section(cache, tiempos_rows=None):
             f'<div class="legend">{len(detail_rows)} tickets de la matriz arriba (mismo universo que Tiempos). '
             'Clic en una celda de la matriz filtra esta tabla por año×bucket.</div>'
         )
-        html += _render_tm_detail(detail_rows, prefix="av", extra_attrs_fn=_extra_av, intro_html=intro)
+        html += _render_tm_detail(detail_rows, prefix="avd", extra_attrs_fn=_extra_av, intro_html=intro)
     else:
         html += '<div class="legend" style="margin-top:14px">Tabla detalle no disponible (tiempos_rows no provistos).</div>'
 
