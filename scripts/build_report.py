@@ -868,11 +868,12 @@ def build_tiempo_sustis_section(out_path):
     )
 
 
-def build_anual_averias_section(cache):
+def build_anual_averias_section(cache, tiempos_rows=None):
     """Tabla cruzada Año venta x Tipo averia para tickets 2026 que pasaron por
     Inspeccion de salida. Usa customfield_10815 (Cambios obs y mejoras),
     agrupado en 10 buckets clinicos. Genera datos embebidos en JS para que el
     filtro (cadena + importe) se aplique client-side sin recargar la pagina.
+    Si se pasa tiempos_rows, renderiza tabla detalle estilo Tiempos abajo.
     """
     INSP_STATES = {"Inspeccion de salida", "Inspección de salida"}
 
@@ -1073,14 +1074,6 @@ def build_anual_averias_section(cache):
         + ' &middot; '.join(f'<b>{k}</b>={html_escape(BUCKET_LABELS[k])}' for k in BUCKET_KEYS) +
         '</div>'
         '<script id="av-data" type="application/json">' + data_json + '</script>'
-        '<h3 style="margin:18px 0 4px;color:var(--blue);font-size:16px">Detalle de tickets (clic en celdas de la matriz arriba para filtrar)</h3>'
-        '<div class="legend">Tabla detalle de los tickets de la matriz. Se actualiza al cambiar Cadena/Importe arriba o al clicar una celda año×bucket. Clic en LEAS abre Jira.</div>'
-        '<div id="av-detail-banner" style="display:none;background:#e7eefa;border:1px solid #2a59c4;border-radius:6px;padding:6px 12px;margin:6px 0;font-size:13px;color:#1f3a5f"><i class="ti ti-filter"></i> <b class="av-detail-label">—</b> <button type="button" id="av-detail-clear" style="margin-left:10px;border:1px solid #2a59c4;background:white;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Quitar filtro celda</button></div>'
-        '<div class="scroller"><table id="av-detail-table" style="font-size:11px;min-width:1500px"><thead><tr>'
-        '<th>Cadena</th><th>Ticket</th><th>Cliente</th><th>Estado actual</th><th>Tipo avería</th>'
-        '<th>Resumen avería</th><th>Cambios/Mejoras</th><th>Año (fila)</th><th>Año compra</th>'
-        '<th>Importe</th><th>Consola</th><th>HP</th>'
-        '</tr></thead><tbody></tbody></table></div>'
         '<script>'
         '(function(){'
         'var DATA = JSON.parse(document.getElementById("av-data").textContent);'
@@ -1091,7 +1084,6 @@ def build_anual_averias_section(cache):
         'var selI = document.getElementById("av-filter-importe");'
         'var cnt = document.getElementById("av-count");'
         'var cellFilter = null;'
-        'function _esc(s){if(s==null)return "";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}'
         'function recompute(){'
         '  var ch = selC.value, im = selI.value;'
         '  var grid = {}; YEARS.forEach(function(y){grid[y]={"_t":0}; BUCKETS.forEach(function(b){grid[y][b]=0;});});'
@@ -1121,55 +1113,31 @@ def build_anual_averias_section(cache):
         '  tf.querySelectorAll(".bucket-cell").forEach(function(td){'
         '    td.textContent = totals[td.getAttribute("data-bucket")] || "·";'
         '  });'
-        '  renderDetail();'
         '}'
-        'function renderDetail(){'
-        '  var ch = selC.value, im = selI.value;'
-        '  var tbody = document.querySelector("#av-detail-table tbody");'
-        '  var filtered = DATA.filter(function(r){'
-        '    if(ch && r.c!==ch) return false;'
-        '    if(im && r.i!==im) return false;'
-        '    if(cellFilter){'
-        '      if(cellFilter.y && r.y!==cellFilter.y) return false;'
-        '      if(cellFilter.b && (r.b||[]).indexOf(cellFilter.b)<0) return false;'
-        '    }'
-        '    return true;'
-        '  });'
-        '  var rows = filtered.slice(0, 1000).map(function(r){'
-        '    return "<tr>" +'
-        '      "<td>"+_esc(r.c)+"</td>" +'
-        '      "<td><a href=\\"https://leaseir.atlassian.net/browse/"+_esc(r.k)+"\\" target=\\"_blank\\" style=\\"color:#2a59c4\\">"+_esc(r.k)+"</a></td>" +'
-        '      "<td>"+_esc(r.cli||"")+"</td>" +'
-        '      "<td>"+_esc(r.st||"")+"</td>" +'
-        '      "<td>"+_esc(r.ti||"")+"</td>" +'
-        '      "<td>"+_esc(r.mo||"")+"</td>" +'
-        '      "<td>"+_esc(r.ca||"")+"</td>" +'
-        '      "<td>"+_esc(r.y)+"</td>" +'
-        '      "<td>"+_esc(r.yr_int||"-")+"</td>" +'
-        '      "<td style=\\"text-align:right\\">"+_esc(r.im||"")+"</td>" +'
-        '      "<td>"+_esc(r.co||"")+"</td>" +'
-        '      "<td>"+_esc(r.hp||"")+"</td>" +'
-        '    "</tr>";'
-        '  }).join("");'
-        '  if(filtered.length>1000) rows += "<tr><td colspan=12 style=\\"padding:6px;color:#7d8590\\">… "+(filtered.length-1000)+" más</td></tr>";'
-        '  tbody.innerHTML = rows || "<tr><td colspan=12 style=\\"padding:14px;color:#7d8590;font-style:italic\\">Sin tickets en este filtro.</td></tr>";'
-        '  var banner = document.getElementById("av-detail-banner");'
-        '  if (cellFilter) {'
-        '    banner.style.display = "";'
-        '    var txt = "Filtro celda: año=" + cellFilter.y + (cellFilter.b ? " · bucket=" + cellFilter.b : "");'
-        '    banner.querySelector(".av-detail-label").textContent = txt + " · " + filtered.length + " tickets";'
-        '  } else { banner.style.display = "none"; }'
-        '}'
-        'document.getElementById("av-detail-clear").addEventListener("click", function(){ cellFilter = null; renderDetail(); });'
-        '// Clic en celdas de la matriz → filtra detail'
+        '// Clic en celdas de la matriz → setea extra filter en tm-detail abajo'
         'tbl.addEventListener("click", function(e){'
         '  var td = e.target.closest("td");'
         '  if(!td) return;'
         '  var tr = td.closest("tr");'
         '  var y = tr ? tr.getAttribute("data-year") : null;'
-        '  if(!y) return;'
-        '  if(td.classList.contains("tickets-cell")) { cellFilter = {y: y, b: null}; renderDetail(); var t=document.getElementById("av-detail-table"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); return; }'
-        '  if(td.classList.contains("bucket-cell")) { var b = td.getAttribute("data-bucket"); cellFilter = {y: y, b: b}; renderDetail(); var t=document.getElementById("av-detail-table"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"}); return; }'
+        '  if(!y || typeof window.av_setExtraFilter !== "function") return;'
+        '  if(td.classList.contains("tickets-cell")) {'
+        '    cellFilter = {y: y, b: null};'
+        '    window.av_setExtraFilter(function(row){'
+        '      return (row.getAttribute("data-av-year") || "") === y;'
+        '    }, "año=" + y);'
+        '    return;'
+        '  }'
+        '  if(td.classList.contains("bucket-cell")) {'
+        '    var b = td.getAttribute("data-bucket");'
+        '    cellFilter = {y: y, b: b};'
+        '    window.av_setExtraFilter(function(row){'
+        '      if ((row.getAttribute("data-av-year") || "") !== y) return false;'
+        '      var buckets = (row.getAttribute("data-av-buckets") || "").split(",");'
+        '      return buckets.indexOf(b) >= 0;'
+        '    }, "año=" + y + " · bucket=" + b);'
+        '    return;'
+        '  }'
         '});'
         'selC.addEventListener("change", recompute);'
         'selI.addEventListener("change", recompute);'
@@ -1177,6 +1145,25 @@ def build_anual_averias_section(cache):
         '})();'
         '</script>'
     )
+
+    # === Tabla detalle estilo Tiempos (tm-table) ===
+    if tiempos_rows:
+        # Construir lookup: leas_key -> (year_row, [buckets])
+        av_lookup = {r["k"]: (r["y"], r["b"]) for r in records}
+        detail_rows = [r for r in tiempos_rows if r["k"] in av_lookup]
+        def _extra_av(r):
+            yrow, bs = av_lookup.get(r["k"], ("", []))
+            return {"av-year": yrow, "av-buckets": ",".join(bs)}
+        intro = (
+            '<h3 style="margin:18px 0 4px;color:var(--blue);font-size:16px">'
+            'Detalle de tickets — Tipos de avería</h3>'
+            f'<div class="legend">{len(detail_rows)} tickets de la matriz arriba (mismo universo que Tiempos). '
+            'Clic en una celda de la matriz filtra esta tabla por año×bucket.</div>'
+        )
+        html += _render_tm_detail(detail_rows, prefix="av", extra_attrs_fn=_extra_av, intro_html=intro)
+    else:
+        html += '<div class="legend" style="margin-top:14px">Tabla detalle no disponible (tiempos_rows no provistos).</div>'
+
     return html
 
 
@@ -1322,6 +1309,227 @@ def _bar_html(buckets, counts, total, label, kpi_id="taller", ranges=None):
     return '<div style="display:flex;height:36px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#f1f5f9">' + "".join(segments) + '</div>'
 
 
+# COLS compartidas para tm-table (Tiempos, Tipos avería detalle, Técnicos detalle)
+TM_COLS = [
+    ("chain", "Cadena", "text", True),
+    ("k", "Ticket", "text", True),
+    ("cliente", "Cliente", "text", True),
+    ("status", "Estado actual", "text", True),
+    ("tipo", "Tipo avería", "text", True),
+    ("motivo", "Resumen avería", "text", False),
+    ("cambios", "Cambios/Mejoras", "text", False),
+    ("bloq", "Bloq", "text", True),
+    ("susti", "Susti", "text", True),
+    ("susti_status", "Estado susti", "text", True),
+    ("leas_susti", "LEAS susti", "text", False),
+    ("consola_susti", "Cons. susti", "text", False),
+    ("manipulo_susti", "HP susti", "text", False),
+    ("dias_taller", "Días taller", "num", True),
+    ("dias_susti", "Días susti", "num", True),
+    ("consola", "Consola", "text", False),
+    ("hp", "HP", "text", False),
+    ("garantia", "Garantía", "text", False),
+    ("disparos", "Disparos", "num", False),
+    ("importe", "Importe", "num", False),
+    ("fventa", "Fecha venta", "date", False),
+    ("entrada_taller", "Entrada taller", "date", False),
+    ("salida_taller", "Salida taller", "date", False),
+    ("created", "Creada", "date", True),
+    ("asignado", "Asignado", "text", False),
+    ("tec_taller", "Téc. taller", "text", False),
+    ("tec_externo", "Téc. externo", "text", False),
+]
+
+
+def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_kpi_filter=False):
+    """Renderiza bloque tm-table completo (toolbar + tabla + JS) con prefix único.
+
+    rows: lista de dicts (output de collect_tiempos_data).
+    prefix: id único (e.g., "tm", "av", "tec").
+    extra_attrs_fn: row → dict {nombre: valor} de data-* adicionales en <tr>.
+    intro_html: HTML a insertar antes del toolbar (h3, descripción, banner externo, etc.).
+    enable_kpi_filter: True solo para Tiempos (añade handlers KPIs + stacked bars).
+    """
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+    P = prefix
+    COLS = TM_COLS
+
+    chains_set = sorted({r["chain"] for r in rows})
+    statuses_set = sorted({r["status"] for r in rows if r["status"]})
+    tipos_set = sorted({r["tipo"] for r in rows if r["tipo"]})
+
+    toolbar = (
+        f'<div class="toolbar" style="flex-wrap:wrap;gap:6px">'
+        f'<input type="text" id="{P}-search" placeholder="Buscar texto...">'
+        f'<select id="{P}-chain"><option value="">Cadena: todas</option>'
+        + ''.join(f'<option>{html_escape(c)}</option>' for c in chains_set) + '</select>'
+        f'<select id="{P}-status"><option value="">Estado: todos</option>'
+        + ''.join(f'<option>{html_escape(s)}</option>' for s in statuses_set) + '</select>'
+        f'<select id="{P}-tipo"><option value="">Tipo: todos</option>'
+        + ''.join(f'<option>{html_escape(s)}</option>' for s in tipos_set) + '</select>'
+        f'<select id="{P}-bloq"><option value="">Bloq: todos</option><option>Sí</option><option>No</option></select>'
+        f'<select id="{P}-susti"><option value="">Susti: todas</option><option>Sí</option><option>No</option></select>'
+        f'<select id="{P}-open"><option value="">Estado: todos</option><option value="open">Abiertas (live)</option><option value="closed">Cerradas</option></select>'
+        f'<button type="button" id="{P}-clear" class="multi-btn">✕ Limpiar</button>'
+        f'<span class="count"><b id="{P}-count">0</b> de <span id="{P}-total">0</span> visibles</span>'
+        f'</div>'
+    )
+
+    banner = (
+        f'<div id="{P}-kpi-banner" style="display:none;background:#e7eefa;border:1px solid #2a59c4;border-radius:6px;padding:6px 12px;margin:6px 0;font-size:13px;color:#1f3a5f">'
+        f'<i class="ti ti-filter"></i> Filtro activo: <b id="{P}-banner-label">—</b> '
+        f'<button type="button" id="{P}-kpi-clear" style="margin-left:10px;border:1px solid #2a59c4;background:white;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Quitar</button>'
+        f'</div>'
+    )
+
+    toggle = [
+        '<details style="margin:4px 0 8px"><summary style="cursor:pointer;color:var(--blue);font-size:12px">Mostrar/ocultar columnas</summary>',
+        '<div style="display:flex;flex-wrap:wrap;gap:8px;padding:8px;background:#f8fafc;border:1px solid var(--line);border-radius:6px;font-size:11px">'
+    ]
+    for i, (key, label, dtype, default_on) in enumerate(COLS):
+        checked = " checked" if default_on else ""
+        toggle.append(f'<label><input type="checkbox" class="{P}-col-toggle" data-col-idx="{i}"{checked}> {html_escape(label)}</label>')
+    toggle.append('</div></details>')
+    toggle_html = ''.join(toggle)
+
+    rows_sorted = sorted(rows, key=lambda r: -(r["dias_taller"] if r.get("dias_taller") is not None else -1))
+    parts = [f'<div class="scroller"><table id="{P}-table" style="font-size:11px;min-width:2200px"><thead><tr>']
+    for i, (key, label, dtype, default_on) in enumerate(COLS):
+        hide = "" if default_on else ' style="display:none"'
+        parts.append(f'<th class="sortable {P}-col" data-col="{i}" data-type="{dtype}"{hide}>{html_escape(label)}</th>')
+    parts.append('</tr></thead><tbody>')
+    for r in rows_sorted:
+        link = f'<a href="{JIRA_URL}{r["k"]}" target="_blank" rel="noopener" style="color:#2a59c4">{r["k"]}</a>'
+        cells = []
+        for ci, (key, label, dtype, default_on) in enumerate(COLS):
+            v = r.get(key, "")
+            if key == "k":
+                v = link
+            elif key == "dias_taller":
+                if r.get("taller_live"):
+                    v = f'<span title="Aún en taller hoy" style="color:#c0392b;font-weight:600">{v}*</span>' if v is not None else "—"
+                else:
+                    v = v if v is not None else "—"
+            elif key == "dias_susti":
+                v = v if v is not None else "—"
+            elif key == "disparos":
+                v = format_int_dot(v) if v != "" else ""
+            else:
+                v = html_escape(str(v)) if v is not None else ""
+            hide = "" if default_on else ' style="display:none"'
+            cells.append(f'<td class="{P}-col" data-col="{ci}"{hide}>{v}</td>')
+        attrs = (
+            f'data-open="{"open" if r.get("is_open") else "closed"}" '
+            f'data-chain="{html_escape(r.get("chain",""))}" '
+            f'data-status="{html_escape(r.get("status",""))}" '
+            f'data-tipo="{html_escape(r.get("tipo",""))}" '
+            f'data-bloq="{html_escape(r.get("bloq",""))}" '
+            f'data-susti="{html_escape(r.get("susti",""))}" '
+            f'data-dt="{r["dias_taller"] if r.get("dias_taller") is not None else -1}" '
+            f'data-ds="{r["dias_susti"] if r.get("dias_susti") is not None else -1}" '
+            f'data-tlive="{1 if r.get("taller_live") else 0}" '
+            f'data-sactive="{1 if r.get("susti_active", True) else 0}"'
+        )
+        if extra_attrs_fn:
+            for k, val in (extra_attrs_fn(r) or {}).items():
+                attrs += f' data-{k}="{html_escape(str(val))}"'
+        parts.append(f'<tr {attrs}>' + ''.join(cells) + '</tr>')
+    parts.append('</tbody></table></div>')
+    table_html = ''.join(parts)
+
+    # JS — usamos replace de __P__ para evitar conflicto con f-string llaves
+    kpi_block = ""
+    if enable_kpi_filter:
+        kpi_block = (
+            "document.querySelectorAll('[data-tiempos-filter]').forEach(function(kpi){"
+            "kpi.addEventListener('click',function(){"
+            "var f=kpi.dataset.tiemposFilter;var k=kpi.dataset.tiemposKpi||'taller';"
+            "if(f==='all')kpiFilter={kpi:k,mode:'all'};"
+            "else if(f==='max')kpiFilter={kpi:k,mode:'top10'};"
+            "else kpiFilter={kpi:k,mode:'all'};"
+            "Object.values(els).forEach(function(e){e.value='';});apply();"
+            "tbl.scrollIntoView({behavior:'smooth',block:'start'});"
+            "});});"
+            "document.querySelectorAll('[data-tiempos-bucket]').forEach(function(seg){"
+            "seg.style.cursor='pointer';"
+            "seg.addEventListener('click',function(){"
+            "var k=seg.dataset.tiemposKpi||'taller';"
+            "var bucket=seg.dataset.tiemposBucket.split(',').map(function(x){return parseInt(x);});"
+            "kpiFilter={kpi:k,mode:'bucket',bucket:bucket};"
+            "Object.values(els).forEach(function(e){e.value='';});apply();"
+            "tbl.scrollIntoView({behavior:'smooth',block:'start'});"
+            "});});"
+        )
+
+    js_tpl = (
+        "<script>(function(){"
+        "var P='__P__';"
+        "var tbl=document.getElementById(P+'-table');if(!tbl)return;"
+        "var rows=Array.from(tbl.tBodies[0].rows);"
+        "var cnt=document.getElementById(P+'-count');document.getElementById(P+'-total').textContent=rows.length;"
+        "var fs={search:P+'-search',chain:P+'-chain',status:P+'-status',tipo:P+'-tipo',bloq:P+'-bloq',susti:P+'-susti',open:P+'-open'};"
+        "var els={};for(var k in fs)els[k]=document.getElementById(fs[k]);"
+        "var kpiFilter=null;var extraFilter=null;"
+        "window[P.replace(/-/g,'_')+'_setExtraFilter']=function(fn,label){extraFilter=fn;if(extraFilter)extraFilter._label=label||'';apply();tbl.scrollIntoView({behavior:'smooth',block:'start'});};"
+        "window[P.replace(/-/g,'_')+'_clearExtraFilter']=function(){extraFilter=null;apply();};"
+        "function apply(){"
+        "var q=(els.search.value||'').toLowerCase().trim();var n=0;"
+        "var fieldKey=kpiFilter&&kpiFilter.kpi==='sustis'?'ds':'dt';"
+        "var liveKey=kpiFilter&&kpiFilter.kpi==='sustis'?'sactive':'tlive';"
+        "var sortedVs=[];rows.forEach(function(r){var d=parseInt(r.dataset[fieldKey])||0;var isExcl=r.dataset[liveKey]==='1';if(d>=0&&!isExcl)sortedVs.push(d);});"
+        "sortedVs.sort(function(a,b){return b-a;});"
+        "var threshold=(kpiFilter&&kpiFilter.mode==='top10')?sortedVs[Math.max(0,Math.floor(sortedVs.length*0.1)-1)]:-1;"
+        "for(var i=0;i<rows.length;i++){var r=rows[i];"
+        "var dt=parseInt(r.dataset.dt);var ds=parseInt(r.dataset.ds);"
+        "var tlive=r.dataset.tlive==='1';var sactive=r.dataset.sactive==='1';"
+        "var v=(kpiFilter&&kpiFilter.kpi==='sustis')?ds:dt;"
+        "var kpiOk=true;"
+        "if(kpiFilter){var excl=(kpiFilter.kpi==='sustis')?sactive:tlive;"
+        "if(kpiFilter.mode==='all')kpiOk=(v>=0&&!excl);"
+        "else if(kpiFilter.mode==='top10')kpiOk=(v>=0&&!excl&&v>=threshold);"
+        "else if(kpiFilter.mode==='bucket')kpiOk=(v>=kpiFilter.bucket[0]&&v<=kpiFilter.bucket[1]&&!excl);}"
+        "var extraOk=!extraFilter||extraFilter(r);"
+        "var ok=(!q||r.textContent.toLowerCase().indexOf(q)>=0)"
+        "&&(!els.chain.value||r.dataset.chain===els.chain.value)"
+        "&&(!els.status.value||r.dataset.status===els.status.value)"
+        "&&(!els.tipo.value||r.dataset.tipo===els.tipo.value)"
+        "&&(!els.bloq.value||r.dataset.bloq===els.bloq.value)"
+        "&&(!els.susti.value||r.dataset.susti===els.susti.value)"
+        "&&(!els.open.value||r.dataset.open===els.open.value)"
+        "&&kpiOk&&extraOk;"
+        "r.style.display=ok?'':'none';if(ok)n++;}"
+        "cnt.textContent=n;"
+        "var banner=document.getElementById(P+'-kpi-banner');"
+        "if(banner){if(kpiFilter||extraFilter){var bits=[];"
+        "if(kpiFilter){var lbl=kpiFilter.kpi==='sustis'?'Sustituciones':'Tiempo en taller';"
+        "var ml=kpiFilter.mode==='all'?' (todos)':kpiFilter.mode==='top10'?' (top 10%)':kpiFilter.mode==='bucket'?(' ('+kpiFilter.bucket[0]+'-'+(kpiFilter.bucket[1]===9999?'∞':kpiFilter.bucket[1])+'d)'):'';"
+        "bits.push(lbl+ml);}"
+        "if(extraFilter&&extraFilter._label)bits.push(extraFilter._label);"
+        "banner.style.display='';document.getElementById(P+'-banner-label').textContent=bits.join(' · ');"
+        "}else banner.style.display='none';}}"
+        "Object.values(els).forEach(function(e){e.addEventListener('input',apply);e.addEventListener('change',apply);});"
+        "document.getElementById(P+'-clear').addEventListener('click',function(){Object.values(els).forEach(function(e){e.value='';});kpiFilter=null;extraFilter=null;apply();});"
+        "var bc=document.getElementById(P+'-kpi-clear');if(bc)bc.addEventListener('click',function(){kpiFilter=null;extraFilter=null;apply();});"
+        "document.querySelectorAll('.'+P+'-col-toggle').forEach(function(cb){"
+        "cb.addEventListener('change',function(){var i=cb.getAttribute('data-col-idx');"
+        "document.querySelectorAll('.'+P+'-col[data-col=\"'+i+'\"]').forEach(function(el){el.style.display=cb.checked?'':'none';});});});"
+        "var heads=tbl.tHead.rows[0].cells;var lastSort={col:-1,dir:1};"
+        "for(var hi=0;hi<heads.length;hi++){(function(th){th.style.cursor='pointer';th.addEventListener('click',function(){"
+        "var col=parseInt(th.dataset.col);var type=th.dataset.type||'text';var dir=(lastSort.col===col)?-lastSort.dir:1;lastSort={col:col,dir:dir};"
+        "var rs=Array.from(tbl.tBodies[0].rows);rs.sort(function(a,b){var av=a.cells[col].textContent.trim();var bv=b.cells[col].textContent.trim();"
+        "if(type==='num'){av=parseFloat(av.replace(/\\./g,'').replace(',','.'))||0;bv=parseFloat(bv.replace(/\\./g,'').replace(',','.'))||0;return(av-bv)*dir;}"
+        "return av.localeCompare(bv,'es')*dir;});"
+        "for(var k=0;k<rs.length;k++)tbl.tBodies[0].appendChild(rs[k]);"
+        "});})(heads[hi]);}"
+        "apply();"
+        "__KPI_BLOCK__"
+        "})();</script>"
+    )
+    js_html = js_tpl.replace("__P__", P).replace("__KPI_BLOCK__", kpi_block)
+
+    return intro_html + toolbar + banner + toggle_html + table_html + js_html
+
+
 def _kpis_html(prefix, total, mediana, media, max_d, kpi_id_prefix, label_total):
     return (
         '<div style="display:flex;gap:12px;margin:6px 0 12px;flex-wrap:wrap">'
@@ -1458,38 +1666,18 @@ def build_tiempos_section(cache, sustis_by_parent):
                        '<div style="margin-top:12px">' + sustis_legend + '</div>'
                        '<div class="legend" style="margin-top:8px">Tiempo desde fecha de envío de la sub-tarea hasta HOY (solo sustis activas en cache).</div>')
 
-    # === Tabla detalle compartida ===
-    JIRA_URL = "https://leaseir.atlassian.net/browse/"
-    COLS = [
-        ("chain", "Cadena", "text", True),
-        ("k", "Ticket", "text", True),
-        ("cliente", "Cliente", "text", True),
-        ("status", "Estado actual", "text", True),
-        ("tipo", "Tipo avería", "text", True),
-        ("motivo", "Resumen avería", "text", False),
-        ("cambios", "Cambios/Mejoras", "text", False),
-        ("bloq", "Bloq", "text", True),
-        ("susti", "Susti", "text", True),
-        ("susti_status", "Estado susti", "text", True),
-        ("leas_susti", "LEAS susti", "text", False),
-        ("consola_susti", "Cons. susti", "text", False),
-        ("manipulo_susti", "HP susti", "text", False),
-        ("dias_taller", "Días taller", "num", True),
-        ("dias_susti", "Días susti", "num", True),
-        ("consola", "Consola", "text", False),
-        ("hp", "HP", "text", False),
-        ("garantia", "Garantía", "text", False),
-        ("disparos", "Disparos", "num", False),
-        ("importe", "Importe", "num", False),
-        ("fventa", "Fecha venta", "date", False),
-        ("entrada_taller", "Entrada taller", "date", False),
-        ("salida_taller", "Salida taller", "date", False),
-        ("created", "Creada", "date", True),
-        ("asignado", "Asignado", "text", False),
-        ("tec_taller", "Téc. taller", "text", False),
-        ("tec_externo", "Téc. externo", "text", False),
-    ]
+    # === Tabla detalle compartida — usa el helper _render_tm_detail ===
+    detail_html = _render_tm_detail(rows, prefix="tm", enable_kpi_filter=True)
 
+    return {"taller": taller_html, "sustis": sustis_html, "detail": detail_html, "rows": rows}
+# ========== FIN TIEMPOS REFACTORIZADOS ==========
+
+
+def _OLD_build_tiempos_detail_unused():
+    """Bloque antiguo conservado por si hay regresión. Reemplazado por _render_tm_detail."""
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+    COLS = []
+    rows = []
     chains_set = sorted({r["chain"] for r in rows})
     statuses_set = sorted({r["status"] for r in rows if r["status"]})
     tipos_set = sorted({r["tipo"] for r in rows if r["tipo"]})
@@ -1664,15 +1852,12 @@ def build_tiempos_section(cache, sustis_by_parent):
       });
     })();</script>''')
 
-    detail_html = ''.join(out)
-
-    return {"taller": taller_html, "sustis": sustis_html, "detail": detail_html}
-# ========== FIN TIEMPOS REFACTORIZADOS ==========
+    return ''.join(out)
 
 
 
 
-def build_tecnicos_mensual_section(cache):
+def build_tecnicos_mensual_section(cache, tiempos_rows=None):
     """Gráfico de barras agrupadas+apiladas: técnicos × mes 2026 (Pptos + Reparaciones).
     Para cada mes, un grupo de barras (una por técnico). Cada barra apila P (cyan)
     + R (verde). Click en una barra → filtra tabla detalle estilo Tiempos.
@@ -1683,7 +1868,7 @@ def build_tecnicos_mensual_section(cache):
     TALLER_OPEN = {"Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
                    "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
                    "Esperando inicio reparación", "En reparación", "Inspección de salida"}
-    cutoff = datetime(2026, 5, 1, 0, 0, 0, tzinfo=timezone.utc)  # arranca mayo 2026
+    cutoff = datetime(2026, 5, 14, 0, 0, 0, tzinfo=timezone.utc)  # arranca 14-may-2026
     MONTH_LABELS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"]
     PRES_COLOR = "#0891b2"   # cyan
     REP_COLOR  = "#059669"   # verde
@@ -1834,41 +2019,6 @@ def build_tecnicos_mensual_section(cache):
     svg.append('</svg>')
     svg_str = "\n".join(svg)
 
-    # ===== Tabla detalle (estilo tm-table simplificada) =====
-    # Cada fila = ticket que tuvo P o R desde mayo 2026. Filtros: tec, mes, kind.
-    rows_data = []
-    for k, evs in ticket_events.items():
-        t = cache["tickets"][k]
-        tec = ticket_tec[k]
-        # Encode events as comma-separated codes "P5,R6"
-        ev_codes = ",".join(f"{kind}{m}" for (m, kind) in evs)
-        meses_evs = sorted({m for (m, _) in evs})
-        kinds_evs = sorted({kind for (_, kind) in evs})
-        rows_data.append({
-            "k": k,
-            "tec": tec,
-            "chain": chain_of(t.get("cliente", ""), t.get("loc", "")),
-            "cliente": (t.get("cliente") or "")[:80],
-            "status": t.get("current_status") or "",
-            "tipo": t.get("tipo") or "",
-            "motivo": ", ".join(t.get("motivo") or []),
-            "consola": t.get("consola") or "",
-            "hp": t.get("hp") or "",
-            "fventa": t.get("fventa") or "",
-            "importe": t.get("importe") or "",
-            "ev_codes": ev_codes,
-            "meses": meses_evs,
-            "kinds": kinds_evs,
-            "p_count": sum(1 for (_, kind) in evs if kind == "P"),
-            "r_count": sum(1 for (_, kind) in evs if kind == "R"),
-        })
-
-    rows_data.sort(key=lambda r: (r["tec"], -r["p_count"] - r["r_count"]))
-    rows_json = json.dumps(rows_data, ensure_ascii=False)
-    months_json = json.dumps(months_sorted)
-    month_labels_json = json.dumps(MONTH_LABELS)
-    tecs_json = json.dumps(tecs_sorted)
-
     active_now_html = ""
     if active_now:
         items = sorted(active_now.items(), key=lambda x: -x[1])
@@ -1887,106 +2037,53 @@ def build_tecnicos_mensual_section(cache):
         '</div>'
     )
 
-    # Tabla detalle HTML
-    detail_html = (
-        '<h3 style="margin:18px 0 4px;color:var(--blue);font-size:16px">Detalle de tickets — Pptos & Reparaciones por técnico</h3>'
-        '<div class="legend">Cada fila = un ticket que tuvo al menos un Ppto o Reparación desde mayo 2026. <b>Atribución por tec_taller actual</b> (heurística). Clic en una barra del gráfico filtra esta tabla.</div>'
-        '<div id="tec-detail-banner" style="display:none;background:#e7eefa;border:1px solid #2a59c4;border-radius:6px;padding:6px 12px;margin:6px 0;font-size:13px;color:#1f3a5f"><i class="ti ti-filter"></i> <b class="tec-detail-label">—</b> '
-        '<button type="button" id="tec-detail-clear" style="margin-left:10px;border:1px solid #2a59c4;background:white;border-radius:4px;padding:2px 8px;font-size:12px;cursor:pointer">✕ Quitar filtro</button></div>'
-        '<div class="toolbar" style="flex-wrap:wrap;gap:6px;margin:6px 0">'
-        '<input type="text" id="tec-search" placeholder="Buscar texto..." style="padding:4px 8px;font-size:12px;border:1px solid #d0d7de;border-radius:4px">'
-        '<select id="tec-filter-tec" style="padding:4px 8px;font-size:12px;border:1px solid #d0d7de;border-radius:4px"><option value="">Técnico: todos</option>'
-        + ''.join(f'<option>{html_escape(t)}</option>' for t in tecs_sorted) + '</select>'
-        '<select id="tec-filter-mes" style="padding:4px 8px;font-size:12px;border:1px solid #d0d7de;border-radius:4px"><option value="">Mes: todos</option>'
-        + ''.join(f'<option value="{m}">{MONTH_LABELS[m-1]}</option>' for m in months_sorted) + '</select>'
-        '<select id="tec-filter-kind" style="padding:4px 8px;font-size:12px;border:1px solid #d0d7de;border-radius:4px"><option value="">Tipo: todos</option><option value="P">Solo Pptos</option><option value="R">Solo Reparaciones</option></select>'
-        '<span style="margin-left:auto;color:#475569;font-size:12px">Visibles: <b id="tec-count">0</b> / <b id="tec-total">0</b></span>'
-        '</div>'
-        '<div class="scroller"><table id="tec-detail-table" style="font-size:11.5px;min-width:1400px">'
-        '<thead><tr>'
-        '<th>Técnico</th><th>Cadena</th><th>LEAS</th><th>Cliente</th><th>Estado actual</th>'
-        '<th>Tipo avería</th><th>Resumen avería</th><th>Eventos</th>'
-        '<th>P</th><th>R</th><th>Consola</th><th>HP</th><th>F. venta</th><th>Importe</th>'
-        '</tr></thead><tbody></tbody></table></div>'
-    )
+    # ===== Tabla detalle estilo Tiempos (tm-table) =====
+    # Solo incluimos tickets con eventos P o R desde 14-may.
+    # Augmentamos cada row con tec, meses_csv, kinds_csv via ticket_events.
+    if tiempos_rows:
+        # Filtrar a tickets con eventos
+        detail_rows = [r for r in tiempos_rows if r["k"] in ticket_events]
+        def _extra_tec(r):
+            evs = ticket_events.get(r["k"], [])
+            meses_csv = ",".join(str(m) for (m, _) in evs)
+            kinds_csv = ",".join(kind for (_, kind) in evs)
+            return {
+                "tec-tec": ticket_tec.get(r["k"], ""),
+                "tec-meses": meses_csv,
+                "tec-kinds": kinds_csv,
+            }
+        intro = (
+            f'<h3 style="margin:18px 0 4px;color:var(--blue);font-size:16px">'
+            f'Detalle de tickets — Pptos & Reparaciones por técnico</h3>'
+            f'<div class="legend">{len(detail_rows)} tickets con evento P o R desde 14-may-2026. '
+            f'<b>Atribución por tec_taller actual</b> (heurística). Clic en una barra del gráfico filtra esta tabla.</div>'
+        )
+        detail_html = _render_tm_detail(detail_rows, prefix="tec", extra_attrs_fn=_extra_tec, intro_html=intro)
+    else:
+        detail_html = '<div class="legend">Detalle no disponible (tiempos_rows no provistos).</div>'
 
-    # JS
-    js = (
+    # JS handler de clicks en barras → window.tec_setExtraFilter
+    chart_js = (
         '<script>(function(){'
-        f'var DATA={rows_json};'
-        f'var MONTHS={months_json};'
-        f'var MONTH_LABELS={month_labels_json};'
-        f'var TECS={tecs_json};'
-        'var filter={tec:"",mes:"",kind:""};'
-        'function _esc(s){if(s==null)return "";return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}'
-        'function matches(r){'
-        '  var qq=(document.getElementById("tec-search").value||"").toLowerCase();'
-        '  var tf=document.getElementById("tec-filter-tec").value;'
-        '  var mf=document.getElementById("tec-filter-mes").value;'
-        '  var kf=document.getElementById("tec-filter-kind").value;'
-        '  if(filter.tec && r.tec!==filter.tec) return false;'
-        '  if(filter.mes && r.meses.indexOf(parseInt(filter.mes,10))<0) return false;'
-        '  if(filter.kind && r.kinds.indexOf(filter.kind)<0) return false;'
-        '  if(tf && r.tec!==tf) return false;'
-        '  if(mf && r.meses.indexOf(parseInt(mf,10))<0) return false;'
-        '  if(kf && r.kinds.indexOf(kf)<0) return false;'
-        '  if(qq){'
-        '    var txt=(r.k+" "+r.tec+" "+r.chain+" "+r.cliente+" "+r.status+" "+r.tipo+" "+r.motivo+" "+r.consola+" "+r.hp).toLowerCase();'
-        '    if(txt.indexOf(qq)<0) return false;'
-        '  }'
-        '  return true;'
-        '}'
-        'function render(){'
-        '  var rows=DATA.filter(matches);'
-        '  document.getElementById("tec-count").textContent=rows.length;'
-        '  document.getElementById("tec-total").textContent=DATA.length;'
-        '  var html=rows.slice(0,2000).map(function(r){'
-        '    return "<tr>"+'
-        '      "<td><b>"+_esc(r.tec)+"</b></td>"+'
-        '      "<td>"+_esc(r.chain)+"</td>"+'
-        '      "<td><a href=\\"https://leaseir.atlassian.net/browse/"+_esc(r.k)+"\\" target=\\"_blank\\" style=\\"color:#2a59c4\\">"+_esc(r.k)+"</a></td>"+'
-        '      "<td>"+_esc(r.cliente)+"</td>"+'
-        '      "<td>"+_esc(r.status)+"</td>"+'
-        '      "<td>"+_esc(r.tipo)+"</td>"+'
-        '      "<td>"+_esc(r.motivo)+"</td>"+'
-        '      "<td>"+_esc(r.ev_codes)+"</td>"+'
-        '      "<td style=\\"text-align:right;color:#0891b2;font-weight:600\\">"+(r.p_count||"·")+"</td>"+'
-        '      "<td style=\\"text-align:right;color:#059669;font-weight:600\\">"+(r.r_count||"·")+"</td>"+'
-        '      "<td>"+_esc(r.consola)+"</td>"+'
-        '      "<td>"+_esc(r.hp)+"</td>"+'
-        '      "<td>"+_esc(r.fventa)+"</td>"+'
-        '      "<td style=\\"text-align:right\\">"+_esc(r.importe)+"</td>"+'
-        '    "</tr>";'
-        '  }).join("");'
-        '  if(rows.length>2000) html += "<tr><td colspan=14 style=\\"padding:6px;color:#7d8590\\">… "+(rows.length-2000)+" más</td></tr>";'
-        '  document.querySelector("#tec-detail-table tbody").innerHTML=html||"<tr><td colspan=14 style=\\"padding:14px;color:#7d8590;font-style:italic\\">Sin tickets con este filtro.</td></tr>";'
-        '  var banner=document.getElementById("tec-detail-banner");'
-        '  if(filter.tec||filter.mes||filter.kind){'
-        '    banner.style.display="";'
-        '    var bits=[];'
-        '    if(filter.tec) bits.push("téc=" + filter.tec);'
-        '    if(filter.mes) bits.push("mes=" + MONTH_LABELS[parseInt(filter.mes,10)-1]);'
-        '    if(filter.kind) bits.push("tipo=" + (filter.kind==="P"?"Pptos":"Reparaciones"));'
-        '    banner.querySelector(".tec-detail-label").textContent="Filtro: " + bits.join(" · ") + " · " + rows.length + " tickets";'
-        '  } else banner.style.display="none";'
-        '}'
+        'function bindBars(){'
         'document.querySelectorAll(".tec-bar").forEach(function(el){'
-        '  el.addEventListener("click",function(){'
-        '    filter.tec=el.getAttribute("data-tec");'
-        '    filter.mes=el.getAttribute("data-mes");'
-        '    filter.kind=el.getAttribute("data-kind");'
-        '    render();'
-        '    var t=document.getElementById("tec-detail-table"); if(t) t.scrollIntoView({behavior:"smooth",block:"start"});'
-        '  });'
-        '});'
-        'document.getElementById("tec-detail-clear").addEventListener("click",function(){'
-        '  filter={tec:"",mes:"",kind:""};render();'
-        '});'
-        '["tec-search","tec-filter-tec","tec-filter-mes","tec-filter-kind"].forEach(function(id){'
-        '  var el=document.getElementById(id); if(!el) return;'
-        '  el.addEventListener(el.tagName==="INPUT"?"input":"change",render);'
-        '});'
-        'render();'
+        'el.addEventListener("click",function(){'
+        'var tec=el.getAttribute("data-tec");var mes=el.getAttribute("data-mes");var kind=el.getAttribute("data-kind");'
+        'if(typeof window.tec_setExtraFilter==="function"){'
+        'var monthLabels=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];'
+        'var lbl="téc="+tec+" · mes="+monthLabels[parseInt(mes,10)-1]+" · "+(kind==="P"?"Pptos":"Reparaciones");'
+        'window.tec_setExtraFilter(function(r){'
+        'var rtec=r.getAttribute("data-tec-tec")||"";'
+        'var rmeses=(r.getAttribute("data-tec-meses")||"").split(",");'
+        'var rkinds=(r.getAttribute("data-tec-kinds")||"").split(",");'
+        'if(rtec!==tec)return false;'
+        'if(rmeses.indexOf(mes)<0)return false;'
+        'if(rkinds.indexOf(kind)<0)return false;'
+        'return true;'
+        '},lbl);'
+        '}'
+        '});});}'
+        'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindBars);else bindBars();'
         '})();</script>'
     )
 
@@ -1997,7 +2094,7 @@ def build_tecnicos_mensual_section(cache):
         svg_str +
         '</div>' +
         detail_html +
-        js
+        chart_js
     )
 
 
@@ -3009,27 +3106,30 @@ def build_html(cache, out_path, template_path):
     else:
         evolucion_kpis = '<tr><th colspan="9" style="color:#94a3b8;font-style:italic">Aún no hay historial. Se irá llenando a partir de hoy.</th></tr>'
 
-    # Año venta x tipo averia (tabla con filtros cadena+importe)
-    try:
-        anual_averias_html = build_anual_averias_section(cache)
-    except Exception as _e:
-        anual_averias_html = f'<div style="color:#c0392b;padding:14px">Error tabla averias: {_e}</div>'
-
-    # Tiempos refactorizados (base 2026+1-ene abiertos + live)
+    # Tiempos refactorizados (base 2026+1-ene abiertos + live) — primero porque produce las rows compartidas
+    _tiempos_rows = None
     try:
         _tiempos = build_tiempos_section(cache, sustis_by_parent)
         tiempo_taller_html = _tiempos["taller"]
         tiempo_sustis_html = _tiempos["sustis"]
         taller_detail_html = _tiempos["detail"]
+        _tiempos_rows = _tiempos.get("rows")
     except Exception as _e:
         import traceback; traceback.print_exc()
         tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempos: {_e}</div>'
         tiempo_sustis_html = tiempo_taller_html
         taller_detail_html = tiempo_taller_html
 
-    # Gráfico técnicos por mes (desde mayo 2026) — reemplaza la tabla mensual
+    # Año venta x tipo averia (matriz + tabla detalle estilo Tiempos)
     try:
-        tec_dia_html = build_tecnicos_mensual_section(cache)
+        anual_averias_html = build_anual_averias_section(cache, tiempos_rows=_tiempos_rows)
+    except Exception as _e:
+        import traceback; traceback.print_exc()
+        anual_averias_html = f'<div style="color:#c0392b;padding:14px">Error tabla averias: {_e}</div>'
+
+    # Gráfico técnicos por mes (desde 14-may-2026) + tabla detalle estilo Tiempos
+    try:
+        tec_dia_html = build_tecnicos_mensual_section(cache, tiempos_rows=_tiempos_rows)
     except Exception as _e:
         import traceback; traceback.print_exc()
         tec_dia_html = f'<div style="color:#c0392b;padding:14px">Error tec mensual: {_e}</div>'
