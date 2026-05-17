@@ -182,8 +182,51 @@ def nominatim_search(query, retries=2):
             return None
 
 
+def extract_latlng_from_gmap_url(url):
+    """Extrae (lat, lon) de un URL de Google Maps. Devuelve None si no se puede parsear.
+    Soporta los patrones más comunes: @lat,lon / q=lat,lon / ll=lat,lon / !3d/!4d."""
+    if not url: return None
+    s = str(url).strip()
+    # @lat,lon (place URLs: /maps/place/.../@41.3851,2.1734,17z)
+    m = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # q=lat,lon o ll=lat,lon (?q=41.3851,2.1734)
+    m = re.search(r"[?&](?:q|ll|destination)=(-?\d+\.\d+),(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # !3d<lat>!4d<lon> (data param)
+    m = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    return None
+
+
 def collect_addresses():
     addresses = {}
+    # Pre-pass: tickets con gmap_url tienen prioridad — recorrer tickets primero y
+    # capturar gmap_url por addr_key (cualquier ticket abierto en ese centro lo usa).
+    gmap_by_key = {}  # addr_key -> gmap_url
+    for cache_name in ["jira_status_timeline.json"]:
+        path = CACHE_DIR / cache_name
+        if not path.exists(): continue
+        d = json.loads(path.read_text(encoding="utf-8"))
+        for k, t in d.get("tickets", {}).items():
+            # Permitimos cualquier ticket (no solo abiertos) ya que gmap_url
+            # es semánticamente atributo del CENTRO no del ticket
+            cliente = t.get("cliente", "")
+            loc = t.get("loc", "")
+            gmap_url = (t.get("gmap_url") or "").strip()
+            if not gmap_url: continue
+            key = addr_key(cliente, loc)
+            if key and key not in gmap_by_key:
+                # Validar que el URL produce coords (sino no merece la pena)
+                if extract_latlng_from_gmap_url(gmap_url):
+                    gmap_by_key[key] = gmap_url
+
     for cache_name, key_field in [("jira_status_timeline.json", "tickets"),
                                     ("sustis_activas.json", "items")]:
         path = CACHE_DIR / cache_name
@@ -196,16 +239,28 @@ def collect_addresses():
                 loc = t.get("loc", "")
                 key = addr_key(cliente, loc)
                 if key and key not in addresses:
-                    q, strat = build_query(cliente, loc)
-                    addresses[key] = {"query": q, "strategy": strat, "cliente": cliente, "loc": loc}
+                    if key in gmap_by_key:
+                        addresses[key] = {"query": gmap_by_key[key], "strategy": "gmap-url",
+                                          "cliente": cliente, "loc": loc,
+                                          "gmap_url": gmap_by_key[key]}
+                    else:
+                        q, strat = build_query(cliente, loc)
+                        addresses[key] = {"query": q, "strategy": strat,
+                                          "cliente": cliente, "loc": loc}
         else:
             for it in d.get("items", []) or []:
                 cliente = it.get("cliente", "") or it.get("parent_cliente", "")
                 loc = it.get("loc", "")
                 key = addr_key(cliente, loc)
                 if key and key not in addresses:
-                    q, strat = build_query(cliente, loc)
-                    addresses[key] = {"query": q, "strategy": strat, "cliente": cliente, "loc": loc}
+                    if key in gmap_by_key:
+                        addresses[key] = {"query": gmap_by_key[key], "strategy": "gmap-url",
+                                          "cliente": cliente, "loc": loc,
+                                          "gmap_url": gmap_by_key[key]}
+                    else:
+                        q, strat = build_query(cliente, loc)
+                        addresses[key] = {"query": q, "strategy": strat,
+                                          "cliente": cliente, "loc": loc}
     return addresses
 
 
@@ -241,20 +296,47 @@ def main():
     print(f"[geocode] {len(addresses)} direcciones únicas detectadas")
     pending = []
     for k, v in addresses.items():
+        # gmap-url: SIEMPRE refresca para que cambios en Jira se reflejen rápido
+        if v.get("strategy") == "gmap-url":
+            cur = entries.get(k, {})
+            if (cur.get("strategy") != "gmap-url" or
+                cur.get("query") != v["query"]):
+                pending.append((k, v))
+            continue
         if k not in entries:
             pending.append((k, v))
         else:
             cur = entries[k]
             if cur.get("failed") and cur.get("query") != v["query"]:
                 pending.append((k, v))
+            # Si la entry actual NO es gmap-url pero AHORA hay opciones, ya se
+            # gestiona arriba (strategy gmap-url tiene prioridad).
     if args.max > 0: pending = pending[:args.max]
     print(f"[geocode] {len(pending)} pendientes")
-    n_new, n_failed = 0, 0
+    n_new, n_failed, n_gmap = 0, 0, 0
     for i, (key, info) in enumerate(pending, 1):
         q = info["query"]
+        now_iso = datetime.now(timezone.utc).isoformat()
+        # gmap-url: extraer lat/lon del URL sin llamar Nominatim
+        if info.get("strategy") == "gmap-url":
+            coords = extract_latlng_from_gmap_url(info.get("gmap_url") or q)
+            if coords:
+                lat, lon = coords
+                entries[key] = {"lat": lat, "lon": lon,
+                                "display_name": "Google Maps URL del centro",
+                                "query": info["gmap_url"] or q,
+                                "strategy": "gmap-url", "cliente": info["cliente"],
+                                "loc": info["loc"], "geocoded_at": now_iso}
+                n_gmap += 1
+                print(f"[geocode] ({i}/{len(pending)}) [gmap-url] {info['cliente'][:30]} → {lat:.4f},{lon:.4f}")
+                if i % 10 == 0: save_cache(cache)
+                continue
+            else:
+                print(f"[geocode] ({i}/{len(pending)}) [gmap-url FAILED] {info['cliente'][:30]} — caer a Nominatim", file=sys.stderr)
+                # Fallback: usar build_query estándar
+                q, _ = build_query(info["cliente"], info["loc"])
         print(f"[geocode] ({i}/{len(pending)}) [{info['strategy']}] {q[:60]}...", flush=True)
         res = nominatim_search(q)
-        now_iso = datetime.now(timezone.utc).isoformat()
         if res:
             entries[key] = {"lat": res["lat"], "lon": res["lon"],
                             "display_name": res["display_name"], "query": q,
@@ -272,7 +354,7 @@ def main():
     save_cache(cache)
     total = len(entries)
     geo_ok = sum(1 for v in entries.values() if v.get("lat") is not None)
-    print(f"[geocode] Done. Total: {total} · OK: {geo_ok} · Failed (run): {n_failed} · Nuevos OK: {n_new}")
+    print(f"[geocode] Done. Total: {total} · OK: {geo_ok} · Failed: {n_failed} · Nominatim nuevos: {n_new} · gmap-url: {n_gmap}")
 
 
 if __name__ == "__main__":

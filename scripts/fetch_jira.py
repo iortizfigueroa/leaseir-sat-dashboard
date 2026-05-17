@@ -55,6 +55,7 @@ FIELDS = [
     "customfield_10143",  # Nombre técnico externo
     "customfield_10615",  # Resumen avería (multi-select)
     "customfield_10815",  # Cambios, observaciones y mejoras (multi-select)
+    "customfield_11354",  # Localización en Google Maps (URL)
     "comment",
 ]
 
@@ -190,6 +191,7 @@ def extract(issue):
         "tec_externo": opt(f.get("customfield_10143")) or "",
         "motivo": [opt(x) for x in (f.get("customfield_10615") or []) if opt(x)],
         "cambios": [opt(x) for x in (f.get("customfield_10815") or []) if opt(x)],
+        "gmap_url": (f.get("customfield_11354") or "").strip(),
         "ult_comentario": latest_comment(f),
         "transitions": transitions,
         "fetched_at": datetime.now(timezone.utc).isoformat(),
