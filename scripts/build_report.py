@@ -919,9 +919,9 @@ def build_anual_averias_section(cache, tiempos_rows=None):
         if v <= 6000: return "mid"
         return "high"
 
-    # YEAR_ROWS coherente con 'Por cadena' (build_chains.bucket_year)
-    YEAR_ROWS = ["<2022", "2022", "2023", "2024", "2025", "2026", "Sin compra",
-                 "Abierta", "Externa (técnico ext.)", "Cerrado s/insp", "Cancelado"]
+    # YEAR_ROWS idénticas a 'Por cadena' (build_chains.bucket_year): solo año de venta,
+    # sin filas de estado (Abierta/Cerrado/Cancelado/Externa) para evitar mezclar dimensiones
+    YEAR_ROWS = ["<2022", "2022", "2023", "2024", "2025", "2026", "Sin compra"]
     def year_row(y):
         if y is None: return "Sin compra"
         try:
@@ -956,59 +956,22 @@ def build_anual_averias_section(cache, tiempos_rows=None):
                 return int(fv[:4])
             return None
 
-    # Mismo cutoff que el KPI Abiertas hoy → para que la fila "Abierta" cuadre con el KPI
-    _now_cutoff = datetime.now(timezone.utc)
+    # Universo: SOLO tickets creados en 2026 — mismo que Por cadena, alinea counts por año
     records = []
     for k, t in cache.get("tickets", {}).items():
-        # Base unificada con Tiempos: creados 2026 OR (creados antes Y abiertos a 1-ene-2026)
-        if not is_in_universe_2026(t):
+        created = t.get("created") or ""
+        if not created.startswith("2026"):
             continue
-        passed = False
-        for tr in t.get("transitions", []):
-            if len(tr) >= 3 and tr[2] in INSP_STATES:
-                passed = True
-                break
-        # Usar status_at(now) en lugar de current_status para alinear con el KPI
-        _st_at_now = status_at(t, _now_cutoff)
-        is_currently_open = is_open(_st_at_now)
-        st_now = _st_at_now or t.get("current_status", "")
         # Año compra unificado con la lógica de 'Por cadena'
         yr = _year_compra(t)
+        # Buckets desde CAMBIOS únicamente (lo que realmente se cambió en taller).
+        # NO usamos motivo como fallback — evita inflar el count (caso Elha 19 diodos).
         buckets = set()
-        if passed:
-            for v in (t.get("cambios") or []):
-                b = val2bucket.get(str(v).lower())
-                if b: buckets.add(b)
-            # Complementar SIEMPRE con resumen avería para Diodo/Umbilical
-            # (a veces no se rellenan bien en cambios pero sí en motivo)
-            for v in (t.get("motivo") or []):
-                vl = str(v).lower()
-                if "umbilical" in vl: buckets.add("Umbi")
-                elif "diodo" in vl: buckets.add("Diod")
-            # Fallback completo si todavía no hay buckets
-            if not buckets:
-                for v in (t.get("motivo") or []):
-                    vl = str(v).lower()
-                    if "umbilical" in vl: buckets.add("Umbi")
-                    elif "buffer" in vl: buckets.add("Buff")
-                    elif "puntera" in vl or "zafiro" in vl: buckets.add("Punt")
-                    elif "diodo" in vl: buckets.add("Diod")
-                    elif "placa" in vl: buckets.add("Plac")
-                    elif "gatillo" in vl: buckets.add("Gati")
-                    elif "pantalla" in vl: buckets.add("Pant")
-                    elif "otros" in vl: buckets.add("Otro")
+        for v in (t.get("cambios") or []):
+            b = val2bucket.get(str(v).lower())
+            if b: buckets.add(b)
         ch = chain_of(t.get("cliente", ""), t.get("loc", ""))
-        # PRIORIDAD: si sigue abierto hoy, es "Abierta" (aunque haya pasado por Inspección).
-        if is_currently_open:
-            yrow = "Abierta"
-        elif passed:
-            yrow = year_row(yr)
-        elif st_now == "Cancelado":
-            yrow = "Cancelado"
-        elif st_now == "Finalizado técnico externo":
-            yrow = "Externa (técnico ext.)"
-        else:
-            yrow = "Cerrado s/insp"
+        yrow = year_row(yr)  # solo año de venta, sin filas de estado
         records.append({"k": k, "y": yrow, "c": ch,
                         "i": importe_bucket(t.get("importe")),
                         "b": sorted(buckets),
@@ -2762,7 +2725,9 @@ def build_html(cache, out_path, template_path):
     chain_total = ('<tr class="total"><td class="lbl-name">Total</td>'
                    + "".join(f'<td class="num">{len(opens[l])}</td>' for l, _ in cutoffs) + '</tr>')
 
-    today_total = len(opens[cutoffs[-1][0]])
+    # today_total: usar current_status (lo que Jira reporta AHORA), no status_at(today-end-UTC).
+    # Esto cuadra con lo que muestra la matriz Tipos avería y otros widgets en tiempo real.
+    today_total = sum(1 for k, t in cache.get("tickets", {}).items() if is_open(t.get("current_status")))
     week_ago_total = len(opens[cutoffs[-6][0]]) if len(cutoffs) >= 6 else today_total
     dweek = today_total - week_ago_total
     arrow = "▲" if dweek > 0 else ("▼" if dweek < 0 else "→")
