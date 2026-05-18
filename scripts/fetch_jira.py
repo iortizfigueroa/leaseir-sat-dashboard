@@ -56,8 +56,23 @@ FIELDS = [
     "customfield_10615",  # Resumen avería (multi-select)
     "customfield_10815",  # Cambios, observaciones y mejoras (multi-select)
     "customfield_11354",  # Localización en Google Maps (URL)
+    "customfield_10128",  # Forma de resolución (select) → mapea a gestión
     "comment",
 ]
+
+
+def map_gestion(forma_resolucion):
+    """Mapea el campo 'Forma de resolución' de Jira a la categoría de Gestión:
+    None/vacío → 'Inicio', 'Gestión online' → 'Online',
+    'Reparación en taller' → 'Interna', 'Técnico externo' → 'Externa'.
+    """
+    if not forma_resolucion:
+        return "Inicio"
+    v = str(forma_resolucion).lower()
+    if "online" in v: return "Online"
+    if "externo" in v or "externa" in v: return "Externa"
+    if "taller" in v or "interna" in v: return "Interna"
+    return "Inicio"
 
 
 def _q(s):
@@ -192,6 +207,8 @@ def extract(issue):
         "motivo": [opt(x) for x in (f.get("customfield_10615") or []) if opt(x)],
         "cambios": [opt(x) for x in (f.get("customfield_10815") or []) if opt(x)],
         "gmap_url": (f.get("customfield_11354") or "").strip(),
+        "forma_resolucion": opt(f.get("customfield_10128")) or "",
+        "gestion": map_gestion(opt(f.get("customfield_10128"))),
         "ult_comentario": latest_comment(f),
         "transitions": transitions,
         "fetched_at": datetime.now(timezone.utc).isoformat(),

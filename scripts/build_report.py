@@ -31,7 +31,12 @@ FUNNEL_ORDER = [
     "Pendiente asignar técnico", "En cola taller", "En preparación presupuesto",
     "Presupuesto preparado pendiente de enviar", "Pendiente confirmación presupuesto",
     "Esperando inicio reparación", "En reparación", "Inspección de salida",
-    "Devuelto a cliente", "Pendiente agendar llamada", "Pendiente definir servicio externo",
+    "Devuelto a cliente",
+    # Estados virtuales online (split de los 3 estados splittables cuando gestion=Online)
+    "Pendiente agendar llamada (online)",
+    "Esperando inicio reparación (online)",
+    "En reparación (online)",
+    "Pendiente agendar llamada", "Pendiente definir servicio externo",
     "Esperando respuesta cliente a presupuesto", "Enviado a técnico externo",
 ]
 
@@ -47,6 +52,10 @@ FUNNEL_TAG = {
     "Pendiente definir servicio externo": "Externa",
     "Esperando respuesta cliente a presupuesto": "Externa",
     "Enviado a técnico externo": "Externa",
+    # Estados virtuales online
+    "Pendiente agendar llamada (online)": "Online",
+    "Esperando inicio reparación (online)": "Online",
+    "En reparación (online)": "Online",
 }
 
 CHAIN_ORDER = ["Elha", "Sin Vello", "Dermasana", "Smart Duck",
@@ -133,6 +142,52 @@ def is_open(s):
     return s in OPEN_STATUSES
 
 
+# Estados que indican que la máquina llegó físicamente al taller (presupuesto/inspección).
+# Si un ticket online ha pasado por aquí, deja de ser "puramente online" porque la máquina sí vino.
+WORKSHOP_PHYSICAL_STATES = {
+    "En preparación presupuesto",
+    "Presupuesto preparado pendiente de enviar",
+    "Pendiente confirmación presupuesto",
+    "Esperando respuesta cliente a presupuesto",
+    "Inspección de salida",
+    "Devuelto a cliente",  # ya devolución física
+}
+
+# Estados donde online es relevante (Pdte agendar llamada, Esperando inicio rep., En reparación)
+ONLINE_SPLITTABLE_STATES = {
+    "Pendiente agendar llamada",
+    "Esperando inicio reparación",
+    "En reparación",
+}
+
+
+def is_truly_online(ticket):
+    """True si el ticket es gestion=Online Y la máquina nunca ha llegado físicamente
+    al taller (no ha pasado por presupuesto/inspección)."""
+    if (ticket.get("gestion") or "").lower() != "online":
+        return False
+    for tr in ticket.get("transitions", []):
+        if len(tr) >= 3 and tr[2] in WORKSHOP_PHYSICAL_STATES:
+            return False
+    return True
+
+
+def online_state_label(state):
+    """Devuelve el label del estado virtual online si aplica, sino el estado original."""
+    if state in ONLINE_SPLITTABLE_STATES:
+        return state + " (online)"
+    return state
+
+
+def display_state(ticket, state=None):
+    """Devuelve el estado a mostrar en tablas: si es truly online y está en uno de los 3
+    estados splittables, devuelve la variante (online). Sino, el estado tal cual."""
+    s = state if state is not None else ticket.get("current_status", "")
+    if s in ONLINE_SPLITTABLE_STATES and is_truly_online(ticket):
+        return s + " (online)"
+    return s
+
+
 def compute_cutoffs(today):
     """Devuelve hasta 21 cortes únicos: 6 fin-de-mes + 15 días laborables.
     Si un fin-de-mes cae en uno de los 15 días laborables, se conserva una sola vez."""
@@ -176,7 +231,10 @@ def replay_opens(cache, cutoffs):
             cdt = datetime(d.year, d.month, d.day, 23, 59, 59, tzinfo=timezone.utc)
             s = status_at(t, cdt)
             if is_open(s):
-                opens[lbl].append((key, chain, s))
+                # Si el ticket está en un estado splittable Y es truly online, usar
+                # estado virtual "(online)" para que aparezca como fila separada en la tabla
+                s_display = display_state(t, s)
+                opens[lbl].append((key, chain, s_display))
     return opens
 
 
@@ -254,6 +312,9 @@ ESPERANDO_TECNICO_STATES = {
     "En preparación presupuesto",
     "Esperando inicio reparación",
     "En reparación",
+    # Variantes online (también dependen del técnico, pero la máquina no llega al taller)
+    "Esperando inicio reparación (online)",
+    "En reparación (online)",
 }
 
 
@@ -288,15 +349,20 @@ def compute_changes_today_por_asignado(cache):
 
 
 def build_tecnicos_section(cache, avances_extra=None):
-    """Tabla estados x persona (assignee hasta Esperando inicio reparación, después tec_taller)."""
+    """Tabla estados x persona (assignee hasta Esperando inicio reparación, después tec_taller).
+    Estados splittables (Pdte agendar llamada, Esperando inicio rep., En reparación) se separan
+    en versión "(online)" si el ticket es truly online (gestion=Online sin pasar por taller).
+    """
     grid = {}
     asignados_set = set()
     states_set = set()
     for key, t in cache.get("tickets", {}).items():
         if not is_open(t.get("current_status")):
             continue
-        st = t.get("current_status") or ""
-        persona = person_for_status(t, st)
+        st_raw = t.get("current_status") or ""
+        # Si está en un estado splittable Y es truly online, usar la versión virtual
+        st = display_state(t, st_raw)
+        persona = person_for_status(t, st_raw)  # persona se calcula con el estado RAW
         asignados_set.add(persona)
         states_set.add(st)
         grid[(st, persona)] = grid.get((st, persona), 0) + 1
@@ -1277,6 +1343,8 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "asignado": t.get("asignado", ""),
             "tec_taller": t.get("tec_taller", ""),
             "tec_externo": t.get("tec_externo", ""),
+            "gestion": t.get("gestion") or "Inicio",
+            "is_online": is_truly_online(t),
             "dias_taller": taller["dias"] if taller else None,
             "taller_live": taller["live"] if taller else False,
             "entrada_taller": taller["entrada"].strftime("%d/%m/%Y") if taller and taller["entrada"] else "",
@@ -1315,6 +1383,7 @@ TM_COLS = [
     ("k", "Ticket", "text", True),
     ("cliente", "Cliente", "text", True),
     ("status", "Estado actual", "text", True),
+    ("gestion", "Gestión", "text", True),
     ("tipo", "Tipo avería", "text", True),
     ("motivo", "Resumen avería", "text", False),
     ("cambios", "Cambios/Mejoras", "text", False),
@@ -1597,9 +1666,11 @@ def build_tiempos_section(cache, sustis_by_parent):
         ("16-30 días","#cb6f0a", lambda d: 16 <= d <= 30),
         (">30 días",  "#c0392b", lambda d: d > 30),
     ]
-    # Solo tickets que YA salieron de taller (no live) y tienen tiempo medible
+    # Solo tickets que YA salieron de taller (no live) y tienen tiempo medible.
+    # EXCLUIR truly online (la máquina nunca llegó al taller físicamente).
     taller_dias = [r["dias_taller"] for r in rows
-                   if r["dias_taller"] is not None and not r.get("taller_live")]
+                   if r["dias_taller"] is not None and not r.get("taller_live")
+                   and not r.get("is_online")]
     counts_taller = [0] * len(taller_buckets)
     for d in taller_dias:
         for i, (_, _, pred) in enumerate(taller_buckets):
@@ -2472,7 +2543,7 @@ def build_abiertas_hoy_section(cache):
             body += ' <span style="font-size:11px;color:#7d8590">·</span> ' + ' '.join(flow)
         return body
 
-    parts = ['<tr><th class="sticky-l1">Funnel</th><th class="sticky-l2">Estado</th>']
+    parts = ['<tr><th class="sticky-l1">Gestión</th><th class="sticky-l2">Estado</th>']
     for ch in CHAIN_ORDER:
         parts.append(f'<th>{ch}</th>')
     parts.append('<th class="col-total">Total</th></tr>')
@@ -2670,7 +2741,7 @@ def build_html(cache, out_path, template_path):
     th_cells = "".join(
         f'<th class="{hdr_cls(i)}">{fmt_short(l)}</th>' for i, (l, _) in enumerate(cutoffs)
     )
-    state_header = '<tr><th class="sticky-l1">Funnel</th><th class="sticky-l2">Estado</th>' + th_cells + '</tr>'
+    state_header = '<tr><th class="sticky-l1">Gestión</th><th class="sticky-l2">Estado</th>' + th_cells + '</tr>'
     chain_header = '<tr><th class="sticky-l1">Cadena</th>' + th_cells + '</tr>'
 
     taller_set_local = set(TALLER_STATUSES_ORDER)
