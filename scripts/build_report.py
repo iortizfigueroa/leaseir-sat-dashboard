@@ -2225,11 +2225,12 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         detail_html = '<div class="legend">Detalle no disponible (tiempos_rows no provistos).</div>'
 
     # JS handler de clicks en barras → window.tec_setExtraFilter
+    # (NOTA: los /* ... */ están dentro de strings JS, no a nivel Python)
     chart_js = (
         '<script>(function(){'
         'var monthLabels=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];'
         'function bindHandlers(){'
-        /* Segmentos P/R individuales: filtra por tec+mes+kind */
+        '/* Segmentos P/R individuales: filtra por tec+mes+kind */ '
         'document.querySelectorAll(".tec-bar").forEach(function(el){'
         'el.addEventListener("click",function(){'
         'var tec=el.getAttribute("data-tec");var mes=el.getAttribute("data-mes");var kind=el.getAttribute("data-kind");'
@@ -2245,7 +2246,7 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         'return true;'
         '},lbl);'
         '});});'
-        /* Barra completa (Total P+R): filtra por tec+mes sin kind */
+        '/* Total P+R: filtra por tec+mes sin kind */ '
         'document.querySelectorAll(".tec-bar-total").forEach(function(el){'
         'el.addEventListener("click",function(ev){'
         'ev.stopPropagation();'
@@ -2260,7 +2261,7 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         'return true;'
         '},lbl);'
         '});});'
-        /* Filtro Día: dropdown filtra detail por fecha exacta */
+        '/* Filtro Dia: dropdown filtra detail por fecha exacta */ '
         'var daySel=document.getElementById("tec-day-filter");'
         'var dayClr=document.getElementById("tec-day-clear");'
         'if(daySel){daySel.addEventListener("change",function(){'
