@@ -267,6 +267,18 @@ def main():
             extra = [k for k in open_in_cache if k not in set(keys)]
             print(f"[update] {len(extra)} tickets abiertos extra a refrescar (assignee+campos)")
             keys = list(keys) + extra
+            # Backfill: refresca tickets que no tienen campos nuevos (gestion / forma_resolucion /
+            # mantenimiento / gmap_url). Pasa una sola vez tras añadir un campo nuevo al schema.
+            already = set(keys)
+            backfill = [k for k, t in (cache.get("tickets") or {}).items()
+                        if k not in already and (
+                            "gestion" not in t or
+                            "forma_resolucion" not in t or
+                            "mantenimiento" not in t
+                        )]
+            if backfill:
+                print(f"[update] backfill: {len(backfill)} tickets sin campos nuevos a refrescar")
+                keys = list(keys) + backfill
 
     print(f"Fetching {len(keys)} tickets...")
     for i, k in enumerate(keys, 1):
