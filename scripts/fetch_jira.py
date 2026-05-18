@@ -58,8 +58,22 @@ FIELDS = [
     "customfield_11354",  # Localización en Google Maps (URL)
     "customfield_10128",  # Forma de resolución (select) → mapea a gestión
     "customfield_10183",  # ¿Tiene contrato de mantenimiento? (select)
+    "attachment",         # Para extraer el nombre del presupuesto (E26xxxx / E25xxxx)
     "comment",
 ]
+
+
+def extract_presupuesto(attachments):
+    """Devuelve el nombre del fichero presupuesto (E2[0-9]\\d{4}) o "" si no hay.
+    Si hay varios, devuelve el primero encontrado."""
+    if not attachments: return ""
+    import re as _re
+    pat = _re.compile(r"E2[0-9]\d{4}", _re.IGNORECASE)
+    for a in attachments:
+        name = (a or {}).get("filename") or ""
+        if pat.search(name):
+            return name
+    return ""
 
 
 def map_gestion(forma_resolucion):
@@ -211,6 +225,7 @@ def extract(issue):
         "forma_resolucion": opt(f.get("customfield_10128")) or "",
         "gestion": map_gestion(opt(f.get("customfield_10128"))),
         "mantenimiento": opt(f.get("customfield_10183")) or "",
+        "presupuesto": extract_presupuesto(f.get("attachment") or []),
         "ult_comentario": latest_comment(f),
         "transitions": transitions,
         "fetched_at": datetime.now(timezone.utc).isoformat(),
@@ -268,13 +283,14 @@ def main():
             print(f"[update] {len(extra)} tickets abiertos extra a refrescar (assignee+campos)")
             keys = list(keys) + extra
             # Backfill: refresca tickets que no tienen campos nuevos (gestion / forma_resolucion /
-            # mantenimiento / gmap_url). Pasa una sola vez tras añadir un campo nuevo al schema.
+            # mantenimiento / gmap_url / presupuesto). Pasa una vez tras añadir un campo al schema.
             already = set(keys)
             backfill = [k for k, t in (cache.get("tickets") or {}).items()
                         if k not in already and (
                             "gestion" not in t or
                             "forma_resolucion" not in t or
-                            "mantenimiento" not in t
+                            "mantenimiento" not in t or
+                            "presupuesto" not in t
                         )]
             if backfill:
                 print(f"[update] backfill: {len(backfill)} tickets sin campos nuevos a refrescar")
