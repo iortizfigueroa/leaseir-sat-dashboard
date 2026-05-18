@@ -57,6 +57,7 @@ FIELDS = [
     "customfield_10815",  # Cambios, observaciones y mejoras (multi-select)
     "customfield_11354",  # Localización en Google Maps (URL)
     "customfield_10128",  # Forma de resolución (select) → mapea a gestión
+    "customfield_10183",  # ¿Tiene contrato de mantenimiento? (select)
     "comment",
 ]
 
@@ -209,6 +210,7 @@ def extract(issue):
         "gmap_url": (f.get("customfield_11354") or "").strip(),
         "forma_resolucion": opt(f.get("customfield_10128")) or "",
         "gestion": map_gestion(opt(f.get("customfield_10128"))),
+        "mantenimiento": opt(f.get("customfield_10183")) or "",
         "ult_comentario": latest_comment(f),
         "transitions": transitions,
         "fetched_at": datetime.now(timezone.utc).isoformat(),

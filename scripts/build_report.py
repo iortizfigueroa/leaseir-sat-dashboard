@@ -313,6 +313,7 @@ ESPERANDO_TECNICO_STATES = {
     "Esperando inicio reparación",
     "En reparación",
     # Variantes online (también dependen del técnico, pero la máquina no llega al taller)
+    "Pendiente agendar llamada (online)",
     "Esperando inicio reparación (online)",
     "En reparación (online)",
 }
@@ -407,15 +408,22 @@ def build_tecnicos_section(cache, avances_extra=None):
     parts.append('</tr>')
     header = "".join(parts)
 
+    # Estados online que se pintan con el azul de taller aunque no estén en taller físico
+    BLUE_ONLINE_STATES = {
+        "Pendiente agendar llamada (online)",
+        "Esperando inicio reparación (online)",
+        "En reparación (online)",
+    }
     # Body
     body_parts = []
     for st in states_order:
         is_taller = st in taller_set
+        is_blue_online = st in BLUE_ONLINE_STATES
         idx = states_order.index(st)
-        prev_taller = (idx > 0 and states_order[idx - 1] in taller_set)
-        next_taller = (idx < len(states_order) - 1 and states_order[idx + 1] in taller_set)
+        prev_taller = (idx > 0 and (states_order[idx - 1] in taller_set or states_order[idx - 1] in BLUE_ONLINE_STATES))
+        next_taller = (idx < len(states_order) - 1 and (states_order[idx + 1] in taller_set or states_order[idx + 1] in BLUE_ONLINE_STATES))
         cls_list = []
-        if is_taller:
+        if is_taller or is_blue_online:
             cls_list.append("row-taller")
             if not prev_taller:
                 cls_list.append("row-taller-first")
@@ -1297,6 +1305,48 @@ def compute_tiempo_taller(ticket, now_utc):
     return {"entrada": entrada, "salida": salida, "dias": dias, "live": live}
 
 
+def compute_tiempo_ppto(ticket):
+    """Días desde primera entrada a 'En preparación presupuesto' hasta primera transición
+    a 'Presupuesto preparado pendiente de enviar'. None si no se puede calcular."""
+    entrada = None
+    salida = None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3: continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        dt = parse_iso(ts)
+        if not dt: continue
+        if entrada is None and to == "En preparación presupuesto":
+            entrada = dt
+        if entrada and to == "Presupuesto preparado pendiente de enviar":
+            salida = dt
+            break
+    if entrada and salida:
+        d = (salida - entrada).days
+        return d if d >= 0 else None
+    return None
+
+
+def compute_tiempo_reparacion(ticket):
+    """Días desde primera entrada a 'Esperando inicio reparación' hasta primera transición
+    a 'Inspección de salida'. None si no se puede calcular."""
+    entrada = None
+    salida = None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3: continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        dt = parse_iso(ts)
+        if not dt: continue
+        if entrada is None and to == "Esperando inicio reparación":
+            entrada = dt
+        if entrada and to == "Inspección de salida":
+            salida = dt
+            break
+    if entrada and salida:
+        d = (salida - entrada).days
+        return d if d >= 0 else None
+    return None
+
+
 def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
                           sustis_dias_by_parent=None, sustis_subkey_by_parent=None,
                           sustis_consola_by_parent=None, sustis_manipulo_by_parent=None,
@@ -1344,7 +1394,11 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "tec_taller": t.get("tec_taller", ""),
             "tec_externo": t.get("tec_externo", ""),
             "gestion": t.get("gestion") or "Inicio",
+            "forma_resolucion": t.get("forma_resolucion", ""),
             "is_online": is_truly_online(t),
+            "mantenimiento": t.get("mantenimiento", ""),
+            "dias_ppto": compute_tiempo_ppto(t),
+            "dias_reparacion": compute_tiempo_reparacion(t),
             "dias_taller": taller["dias"] if taller else None,
             "taller_live": taller["live"] if taller else False,
             "entrada_taller": taller["entrada"].strftime("%d/%m/%Y") if taller and taller["entrada"] else "",
@@ -1383,7 +1437,7 @@ TM_COLS = [
     ("k", "Ticket", "text", True),
     ("cliente", "Cliente", "text", True),
     ("status", "Estado actual", "text", True),
-    ("gestion", "Gestión", "text", True),
+    ("forma_resolucion", "Gestión", "text", True),
     ("tipo", "Tipo avería", "text", True),
     ("motivo", "Resumen avería", "text", False),
     ("cambios", "Cambios/Mejoras", "text", False),
@@ -1394,7 +1448,10 @@ TM_COLS = [
     ("consola_susti", "Cons. susti", "text", False),
     ("manipulo_susti", "HP susti", "text", False),
     ("dias_taller", "Días taller", "num", True),
+    ("dias_ppto", "Días ppto", "num", False),
+    ("dias_reparacion", "Días repar.", "num", False),
     ("dias_susti", "Días susti", "num", True),
+    ("mantenimiento", "Mantenim.", "text", False),
     ("consola", "Consola", "text", False),
     ("hp", "HP", "text", False),
     ("garantia", "Garantía", "text", False),
@@ -1480,6 +1537,8 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
                 else:
                     v = v if v is not None else "—"
             elif key == "dias_susti":
+                v = v if v is not None else "—"
+            elif key in ("dias_ppto", "dias_reparacion"):
                 v = v if v is not None else "—"
             elif key == "disparos":
                 v = format_int_dot(v) if v != "" else ""
