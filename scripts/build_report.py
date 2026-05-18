@@ -1726,10 +1726,12 @@ def build_tiempos_section(cache, sustis_by_parent):
         (">30 días",  "#c0392b", lambda d: d > 30),
     ]
     # Solo tickets que YA salieron de taller (no live) y tienen tiempo medible.
-    # EXCLUIR truly online (la máquina nunca llegó al taller físicamente).
+    # EXCLUIR los gestionados Online y Externa (la máquina no se gestiona en taller físico).
+    # Solo cuentan Interna (Reparación en taller) e Inicio (sin asignar todavía).
+    _excluded_gestion = {"Online", "Externa"}
     taller_dias = [r["dias_taller"] for r in rows
                    if r["dias_taller"] is not None and not r.get("taller_live")
-                   and not r.get("is_online")]
+                   and r.get("gestion") not in _excluded_gestion]
     counts_taller = [0] * len(taller_buckets)
     for d in taller_dias:
         for i, (_, _, pred) in enumerate(taller_buckets):
@@ -1740,9 +1742,15 @@ def build_tiempos_section(cache, sustis_by_parent):
     t_mediana = sorted(taller_dias)[t_total // 2] if t_total else 0
     t_media = (sum(taller_dias) / t_total) if t_total else 0
     t_max = max(taller_dias) if taller_dias else 0
-    n_live = sum(1 for r in rows if r["taller_live"])
-    taller_kpis = _kpis_html("t", t_total, t_mediana, t_media, t_max, "taller",
-                             f"tickets cerrados (excluidos {n_live} aún en taller)")
+    # Stats excluidos
+    n_live = sum(1 for r in rows if r["taller_live"]
+                 and r.get("gestion") not in _excluded_gestion)
+    n_online_excl = sum(1 for r in rows if r.get("gestion") == "Online")
+    n_externa_excl = sum(1 for r in rows if r.get("gestion") == "Externa")
+    taller_kpis = _kpis_html(
+        "t", t_total, t_mediana, t_media, t_max, "taller",
+        f"tickets cerrados (excluidos {n_live} aún en taller · {n_online_excl} Online · {n_externa_excl} Externa)"
+    )
     taller_ranges = [(0,3),(4,8),(9,15),(16,30),(31,9999)]
     taller_bar = _bar_html(taller_buckets, counts_taller, t_total, "taller", "taller", taller_ranges)
     taller_legend = ""
@@ -1753,7 +1761,7 @@ def build_tiempos_section(cache, sustis_by_parent):
                           f'<b>{lbl}</b>: {n} ({pct:.0f}%)</span>')
     taller_html = (taller_kpis + taller_bar +
                    '<div style="margin-top:12px">' + taller_legend + '</div>'
-                   '<div class="legend" style="margin-top:8px">Base: tickets 2026 + abiertos al 1-ene-2026. Para abiertos aún en taller, tiempo = entrada a Pdte. asignar técnico hasta HOY.</div>')
+                   '<div class="legend" style="margin-top:8px">Base: tickets 2026 + abiertos al 1-ene-2026. <b>Excluidos:</b> Gestión = Online (la máquina no llega al taller) y Externa (lo hace técnico externo). Para abiertos aún en taller, tiempo = entrada a Pdte. asignar técnico hasta HOY.</div>')
 
     # === Tiempo sustituciones ===
     susti_buckets = [
@@ -2004,13 +2012,14 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
     REP_COLOR  = "#059669"   # verde
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
 
-    # Per-ticket events: lista de (mes, tipo, tec)
+    # Per-ticket events: lista de (mes, tipo, fecha_iso)
     # tec se determina como tec_taller actual (heurística aceptada)
-    ticket_events = {}  # k -> list of (month, "P"/"R")
+    ticket_events = {}  # k -> list of (month, "P"/"R", "YYYY-MM-DD")
     ticket_tec = {}     # k -> tec actual
     active_now = {}     # tec -> count tickets activos en taller hoy
     tecs_set = set()
     months_set = set()
+    dates_set = set()   # set de "YYYY-MM-DD" con al menos un evento
 
     for k, t in cache.get("tickets", {}).items():
         tec = (t.get("tec_taller") or "").strip() or (t.get("asignado") or "").strip() or "(Sin asignar)"
@@ -2019,26 +2028,27 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
             active_now[tec] = active_now.get(tec, 0) + 1
             tecs_set.add(tec)
         # Primera transición a PRES y REP en >= mayo 2026
-        first_pres_month = None
-        first_rep_month = None
+        first_pres_dt = None
+        first_rep_dt = None
         for tr in t.get("transitions", []):
             if len(tr) < 3: continue
             ts, fs, to = tr[0], tr[1], tr[2]
             if to not in (PRES_STATE, REP_STATE): continue
             dt = parse_iso(ts)
             if not dt or dt < cutoff: continue
-            m = dt.month
-            if to == PRES_STATE and first_pres_month is None:
-                first_pres_month = m
-            elif to == REP_STATE and first_rep_month is None:
-                first_rep_month = m
+            if to == PRES_STATE and first_pres_dt is None:
+                first_pres_dt = dt
+            elif to == REP_STATE and first_rep_dt is None:
+                first_rep_dt = dt
         evs = []
-        if first_pres_month:
-            evs.append((first_pres_month, "P"))
-            months_set.add(first_pres_month); tecs_set.add(tec)
-        if first_rep_month:
-            evs.append((first_rep_month, "R"))
-            months_set.add(first_rep_month); tecs_set.add(tec)
+        if first_pres_dt:
+            iso = first_pres_dt.date().isoformat()
+            evs.append((first_pres_dt.month, "P", iso))
+            months_set.add(first_pres_dt.month); tecs_set.add(tec); dates_set.add(iso)
+        if first_rep_dt:
+            iso = first_rep_dt.date().isoformat()
+            evs.append((first_rep_dt.month, "R", iso))
+            months_set.add(first_rep_dt.month); tecs_set.add(tec); dates_set.add(iso)
         if evs:
             ticket_events[k] = evs
 
@@ -2052,7 +2062,7 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
     grid = {}
     for k, evs in ticket_events.items():
         tec = ticket_tec[k]
-        for m, kind in evs:
+        for m, kind, _iso in evs:
             cell = grid.setdefault((tec, m), {"p": 0, "r": 0, "leas": set()})
             if kind == "P":
                 cell["p"] += 1
@@ -2123,10 +2133,15 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
                     f'x="{x:.1f}" y="{y_p:.1f}" width="{BAR_W}" height="{h_p:.1f}" fill="{PRES_COLOR}" '
                     f'style="cursor:pointer"><title>{tec_esc} · {MONTH_LABELS[m-1]} · Pptos: {p}</title></rect>'
                 )
-            # Total número encima
+            # Total número encima — clickable para filtrar Total P+R sin separar kind
             if total > 0:
-                svg.append(f'<text x="{x + BAR_W/2:.1f}" y="{_y(total) - 4:.1f}" text-anchor="middle" '
-                           f'fill="#334155" font-weight="600" font-size="10">{total}</text>')
+                svg.append(
+                    f'<text class="tec-bar-total" data-tec="{tec_esc}" data-mes="{m}" '
+                    f'x="{x + BAR_W/2:.1f}" y="{_y(total) - 4:.1f}" text-anchor="middle" '
+                    f'fill="#334155" font-weight="700" font-size="11" style="cursor:pointer;text-decoration:underline">'
+                    f'<title>{tec_esc} · {MONTH_LABELS[m-1]} · Total P+R: {total} (clic = sin separar P/R)</title>'
+                    f'{total}</text>'
+                )
             # Etiqueta tec rotada bajo la barra
             tx = x + BAR_W / 2
             ty = TOP_PAD + PLOT_H + 8
@@ -2175,18 +2190,35 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         detail_rows = [r for r in tiempos_rows if r["k"] in ticket_events]
         def _extra_tec(r):
             evs = ticket_events.get(r["k"], [])
-            meses_csv = ",".join(str(m) for (m, _) in evs)
-            kinds_csv = ",".join(kind for (_, kind) in evs)
+            meses_csv = ",".join(str(m) for (m, _, _) in evs)
+            kinds_csv = ",".join(kind for (_, kind, _) in evs)
+            dates_csv = ",".join(iso for (_, _, iso) in evs)
             return {
                 "tec-tec": ticket_tec.get(r["k"], ""),
                 "tec-meses": meses_csv,
                 "tec-kinds": kinds_csv,
+                "tec-dates": dates_csv,
             }
+        # Filtro Día: dropdown con todas las fechas con eventos (desc), para filtrar el detail
+        dates_sorted = sorted(dates_set, reverse=True)
+        day_opts = ''.join(f'<option value="{d}">{d}</option>' for d in dates_sorted)
+        day_filter_html = (
+            '<div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:10px 0 4px;padding:9px 12px;background:#f1f5f9;border:1px solid var(--line);border-radius:7px;font-size:12px">'
+            '<label style="display:inline-flex;align-items:center;gap:6px"><span style="color:#475569">Filtrar por día:</span>'
+            '<select id="tec-day-filter" style="padding:4px 8px;border:1px solid var(--line);border-radius:4px;font-size:12px;background:white">'
+            '<option value="">Todos los días</option>'
+            + day_opts +
+            '</select></label>'
+            '<button type="button" id="tec-day-clear" style="border:1px solid var(--line);background:white;border-radius:4px;padding:4px 10px;font-size:12px;cursor:pointer">✕ Quitar día</button>'
+            '<span style="margin-left:auto;color:#475569">Clic en segmento P/R = filtra por tec+mes+kind · Clic en el <b>número de arriba</b> = Total P+R sin separar</span>'
+            '</div>'
+        )
         intro = (
             f'<h3 style="margin:18px 0 4px;color:var(--blue);font-size:16px">'
             f'Detalle de tickets — Pptos & Reparaciones por técnico</h3>'
             f'<div class="legend">{len(detail_rows)} tickets con evento P o R desde 14-may-2026. '
             f'<b>Atribución por tec_taller actual</b> (heurística). Clic en una barra del gráfico filtra esta tabla.</div>'
+            + day_filter_html
         )
         detail_html = _render_tm_detail(detail_rows, prefix="tec", extra_attrs_fn=_extra_tec, intro_html=intro)
     else:
@@ -2195,12 +2227,13 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
     # JS handler de clicks en barras → window.tec_setExtraFilter
     chart_js = (
         '<script>(function(){'
-        'function bindBars(){'
+        'var monthLabels=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];'
+        'function bindHandlers(){'
+        /* Segmentos P/R individuales: filtra por tec+mes+kind */
         'document.querySelectorAll(".tec-bar").forEach(function(el){'
         'el.addEventListener("click",function(){'
         'var tec=el.getAttribute("data-tec");var mes=el.getAttribute("data-mes");var kind=el.getAttribute("data-kind");'
-        'if(typeof window.tec_setExtraFilter==="function"){'
-        'var monthLabels=["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"];'
+        'if(typeof window.tec_setExtraFilter!=="function") return;'
         'var lbl="téc="+tec+" · mes="+monthLabels[parseInt(mes,10)-1]+" · "+(kind==="P"?"Pptos":"Reparaciones");'
         'window.tec_setExtraFilter(function(r){'
         'var rtec=r.getAttribute("data-tec-tec")||"";'
@@ -2211,9 +2244,40 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         'if(rkinds.indexOf(kind)<0)return false;'
         'return true;'
         '},lbl);'
+        '});});'
+        /* Barra completa (Total P+R): filtra por tec+mes sin kind */
+        'document.querySelectorAll(".tec-bar-total").forEach(function(el){'
+        'el.addEventListener("click",function(ev){'
+        'ev.stopPropagation();'
+        'var tec=el.getAttribute("data-tec");var mes=el.getAttribute("data-mes");'
+        'if(typeof window.tec_setExtraFilter!=="function") return;'
+        'var lbl="téc="+tec+" · mes="+monthLabels[parseInt(mes,10)-1]+" · Total P+R";'
+        'window.tec_setExtraFilter(function(r){'
+        'var rtec=r.getAttribute("data-tec-tec")||"";'
+        'var rmeses=(r.getAttribute("data-tec-meses")||"").split(",");'
+        'if(rtec!==tec)return false;'
+        'if(rmeses.indexOf(mes)<0)return false;'
+        'return true;'
+        '},lbl);'
+        '});});'
+        /* Filtro Día: dropdown filtra detail por fecha exacta */
+        'var daySel=document.getElementById("tec-day-filter");'
+        'var dayClr=document.getElementById("tec-day-clear");'
+        'if(daySel){daySel.addEventListener("change",function(){'
+        'var d=daySel.value;'
+        'if(typeof window.tec_setExtraFilter!=="function") return;'
+        'if(!d){if(window.tec_clearExtraFilter)window.tec_clearExtraFilter();return;}'
+        'window.tec_setExtraFilter(function(r){'
+        'var rdates=(r.getAttribute("data-tec-dates")||"").split(",");'
+        'return rdates.indexOf(d)>=0;'
+        '},"día="+d);'
+        '});}'
+        'if(dayClr){dayClr.addEventListener("click",function(){'
+        'if(daySel)daySel.value="";'
+        'if(window.tec_clearExtraFilter)window.tec_clearExtraFilter();'
+        '});}'
         '}'
-        '});});}'
-        'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindBars);else bindBars();'
+        'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bindHandlers);else bindHandlers();'
         '})();</script>'
     )
 
