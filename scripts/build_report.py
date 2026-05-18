@@ -1658,6 +1658,113 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
     return intro_html + toolbar + banner + toggle_html + table_html + js_html
 
 
+def _percentile(sorted_list, p):
+    """p en [0,1]. Lista ya ordenada ascendentemente. Devuelve 0 si vacía."""
+    if not sorted_list:
+        return 0
+    if len(sorted_list) == 1:
+        return sorted_list[0]
+    idx = p * (len(sorted_list) - 1)
+    lo = int(idx)
+    hi = min(lo + 1, len(sorted_list) - 1)
+    frac = idx - lo
+    return sorted_list[lo] * (1 - frac) + sorted_list[hi] * frac
+
+
+def _kpis_html_p25_p75(prefix, total, p25, mediana, p75, media, max_d, kpi_id_prefix, label_total):
+    """Versión extendida con P25, mediana, P75 incluidos."""
+    return (
+        '<div style="display:flex;gap:10px;margin:6px 0 12px;flex-wrap:wrap">'
+        f'<div class="kpi clickable" data-tiempos-filter="all" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 120px;cursor:pointer"><div class="k">Total tickets</div><div class="v">{total}</div><div class="d">{label_total}</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="mediana" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 100px;cursor:pointer"><div class="k">P25</div><div class="v" style="color:#1f8a4c">{p25:.0f}<span style="font-size:13px;color:var(--grey);margin-left:4px">días</span></div><div class="d">25% se cierran ≤ esto</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="mediana" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 100px;cursor:pointer"><div class="k">Mediana (P50)</div><div class="v">{mediana:.0f}<span style="font-size:13px;color:var(--grey);margin-left:4px">días</span></div><div class="d">la mitad ≤ esto</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="mediana" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 100px;cursor:pointer"><div class="k">P75</div><div class="v" style="color:#cb6f0a">{p75:.0f}<span style="font-size:13px;color:var(--grey);margin-left:4px">días</span></div><div class="d">75% se cierran ≤ esto</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="media" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 100px;cursor:pointer"><div class="k">Media</div><div class="v">{media:.1f}<span style="font-size:13px;color:var(--grey);margin-left:4px">días</span></div><div class="d">sensible a outliers</div></div>'
+        f'<div class="kpi clickable" data-tiempos-filter="max" data-tiempos-kpi="{kpi_id_prefix}" style="flex:1 1 100px;cursor:pointer"><div class="k">Máximo</div><div class="v" style="color:#c0392b">{max_d}<span style="font-size:13px;color:var(--grey);margin-left:4px">días</span></div><div class="d">top 10%</div></div>'
+        '</div>'
+    )
+
+
+def _evol_chart_svg(history, key_p25, key_med, key_p75, title=""):
+    """Genera un SVG inline pequeño con 3 líneas (P25/mediana/P75) sobre fechas.
+    history: dict {date_iso: {key_p25, key_med, key_p75, ...}}. Solo usa fechas con datos.
+    """
+    # Recoger puntos donde haya AL MENOS uno de los 3 valores
+    dates = sorted(history.keys())
+    points = []
+    for d in dates:
+        v = history.get(d, {})
+        p25 = v.get(key_p25)
+        med = v.get(key_med)
+        p75 = v.get(key_p75)
+        if p25 is None and med is None and p75 is None:
+            continue
+        points.append({"d": d, "p25": p25, "med": med, "p75": p75})
+    if len(points) < 1:
+        return ('<div style="padding:10px;color:#94a3b8;font-style:italic;font-size:12px">'
+                'Sin histórico aún. Se irá llenando día a día.</div>')
+
+    # Dimensions del mini chart
+    W = 340
+    H = 130
+    PAD_L, PAD_R, PAD_T, PAD_B = 28, 12, 14, 22
+    plot_w = W - PAD_L - PAD_R
+    plot_h = H - PAD_T - PAD_B
+
+    all_vals = []
+    for p in points:
+        for k in ("p25", "med", "p75"):
+            v = p.get(k)
+            if v is not None: all_vals.append(v)
+    if not all_vals: return ""
+    y_max = max(all_vals) * 1.1 or 1
+    y_min = 0
+
+    def _x(i):
+        if len(points) == 1: return PAD_L + plot_w / 2
+        return PAD_L + (i / (len(points) - 1)) * plot_w
+    def _y(v):
+        return PAD_T + plot_h - ((v - y_min) / (y_max - y_min)) * plot_h
+
+    svg = [f'<svg viewBox="0 0 {W} {H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:{W}px;display:block;font-family:Inter,sans-serif;font-size:9px">']
+    # Eje Y (3 ticks)
+    for tv in (y_max / 4, y_max / 2, y_max * 3 / 4):
+        y = _y(tv)
+        svg.append(f'<line x1="{PAD_L}" y1="{y:.1f}" x2="{W - PAD_R}" y2="{y:.1f}" stroke="#eef0f4" stroke-width="1"/>')
+        svg.append(f'<text x="{PAD_L - 4}" y="{y + 3:.1f}" text-anchor="end" fill="#94a3b8">{tv:.0f}</text>')
+    # Eje X (primer y último label de fecha, formato MM-DD)
+    if len(points) >= 1:
+        first_label = points[0]["d"][5:]   # MM-DD
+        last_label = points[-1]["d"][5:]
+        svg.append(f'<text x="{PAD_L:.1f}" y="{H - 6}" fill="#475569">{first_label}</text>')
+        svg.append(f'<text x="{W - PAD_R:.1f}" y="{H - 6}" text-anchor="end" fill="#475569">{last_label}</text>')
+
+    def _line(key, color, dash=""):
+        coords = []
+        for i, p in enumerate(points):
+            v = p.get(key)
+            if v is None: continue
+            coords.append(f"{_x(i):.1f},{_y(v):.1f}")
+        if not coords: return
+        d_attr = ' stroke-dasharray="3,3"' if dash else ""
+        svg.append(f'<polyline fill="none" stroke="{color}" stroke-width="1.6"{d_attr} points="{" ".join(coords)}"/>')
+
+    _line("p25", "#1f8a4c", dash=True)
+    _line("med", "#0b3d91")
+    _line("p75", "#cb6f0a", dash=True)
+
+    svg.append('</svg>')
+    legend = (
+        '<div style="display:flex;gap:10px;font-size:10px;color:#475569;justify-content:center;margin-top:2px">'
+        '<span><span style="display:inline-block;width:10px;height:2px;background:#1f8a4c;vertical-align:middle;border-bottom:1px dashed #1f8a4c"></span> P25</span>'
+        '<span><span style="display:inline-block;width:10px;height:2px;background:#0b3d91;vertical-align:middle"></span> Mediana</span>'
+        '<span><span style="display:inline-block;width:10px;height:2px;background:#cb6f0a;vertical-align:middle;border-bottom:1px dashed #cb6f0a"></span> P75</span>'
+        '</div>'
+    )
+    title_html = f'<div style="font-size:10px;color:#475569;text-align:center;margin-bottom:2px">{html_escape(title)}</div>' if title else ""
+    return title_html + "".join(svg) + legend
+
+
 def _kpis_html(prefix, total, mediana, media, max_d, kpi_id_prefix, label_total):
     return (
         '<div style="display:flex;gap:12px;margin:6px 0 12px;flex-wrap:wrap">'
@@ -1739,7 +1846,10 @@ def build_tiempos_section(cache, sustis_by_parent):
                 counts_taller[i] += 1
                 break
     t_total = len(taller_dias)
-    t_mediana = sorted(taller_dias)[t_total // 2] if t_total else 0
+    taller_sorted = sorted(taller_dias)
+    t_p25 = _percentile(taller_sorted, 0.25)
+    t_mediana = _percentile(taller_sorted, 0.50)
+    t_p75 = _percentile(taller_sorted, 0.75)
     t_media = (sum(taller_dias) / t_total) if t_total else 0
     t_max = max(taller_dias) if taller_dias else 0
     # Stats excluidos
@@ -1747,9 +1857,9 @@ def build_tiempos_section(cache, sustis_by_parent):
                  and r.get("gestion") not in _excluded_gestion)
     n_online_excl = sum(1 for r in rows if r.get("gestion") == "Online")
     n_externa_excl = sum(1 for r in rows if r.get("gestion") == "Externa")
-    taller_kpis = _kpis_html(
-        "t", t_total, t_mediana, t_media, t_max, "taller",
-        f"tickets cerrados (excluidos {n_live} aún en taller · {n_online_excl} Online · {n_externa_excl} Externa)"
+    taller_kpis = _kpis_html_p25_p75(
+        "t", t_total, t_p25, t_mediana, t_p75, t_media, t_max, "taller",
+        f"cerrados (excl. {n_live} live · {n_online_excl} Online · {n_externa_excl} Externa)"
     )
     taller_ranges = [(0,3),(4,8),(9,15),(16,30),(31,9999)]
     taller_bar = _bar_html(taller_buckets, counts_taller, t_total, "taller", "taller", taller_ranges)
@@ -1759,9 +1869,35 @@ def build_tiempos_section(cache, sustis_by_parent):
         taller_legend += (f'<span style="display:inline-flex;align-items:center;gap:6px;margin-right:14px;font-size:13px">'
                           f'<span style="display:inline-block;width:12px;height:12px;background:{color};border-radius:3px"></span>'
                           f'<b>{lbl}</b>: {n} ({pct:.0f}%)</span>')
-    taller_html = (taller_kpis + taller_bar +
-                   '<div style="margin-top:12px">' + taller_legend + '</div>'
-                   '<div class="legend" style="margin-top:8px">Base: tickets 2026 + abiertos al 1-ene-2026. <b>Excluidos:</b> Gestión = Online (la máquina no llega al taller) y Externa (lo hace técnico externo). Para abiertos aún en taller, tiempo = entrada a Pdte. asignar técnico hasta HOY.</div>')
+    # Mini chart evolución diaria P25/Med/P75 — cargar kpi_history.json
+    _history = {}
+    try:
+        from pathlib import Path as _PH
+        for _cand in [_PH("cache") / "kpi_history.json",
+                      Path("cache") / "kpi_history.json"]:
+            if _cand.exists():
+                _history = json.loads(_cand.read_text(encoding="utf-8"))
+                break
+    except Exception:
+        _history = {}
+    taller_chart = _evol_chart_svg(_history, "taller_p25", "taller_mediana", "taller_p75",
+                                    title="Evol. diaria días en taller")
+    taller_evol_panel = (
+        '<div style="flex:0 0 360px;background:white;border:1px solid var(--line);'
+        'border-radius:8px;padding:8px 10px;min-width:300px">'
+        + taller_chart +
+        '</div>'
+    )
+    taller_html = (
+        '<div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">'
+        '<div style="flex:1 1 460px;min-width:300px">'
+        + taller_kpis + taller_bar +
+        '<div style="margin-top:12px">' + taller_legend + '</div>'
+        '</div>'
+        + taller_evol_panel +
+        '</div>'
+        '<div class="legend" style="margin-top:8px">Base: tickets 2026 + abiertos al 1-ene-2026. <b>Excluidos:</b> Gestión = Online (la máquina no llega al taller) y Externa (lo hace técnico externo). Para abiertos aún en taller, tiempo = entrada a Pdte. asignar técnico hasta HOY.</div>'
+    )
 
     # === Tiempo sustituciones ===
     susti_buckets = [
@@ -1781,14 +1917,16 @@ def build_tiempos_section(cache, sustis_by_parent):
                 counts_susti[i] += 1
                 break
     s_total = len(susti_dias)
-    if s_total:
-        s_mediana = sorted(susti_dias)[s_total // 2]
-        s_media = sum(susti_dias) / s_total
-        s_max = max(susti_dias)
-    else:
-        s_mediana = s_media = s_max = 0
-    sustis_kpis = _kpis_html("s", s_total, s_mediana, s_media, s_max, "sustis",
-                             "sustituciones DEVUELTAS (excluidas las activas)")
+    susti_sorted = sorted(susti_dias)
+    s_p25 = _percentile(susti_sorted, 0.25)
+    s_mediana = _percentile(susti_sorted, 0.50)
+    s_p75 = _percentile(susti_sorted, 0.75)
+    s_media = (sum(susti_dias) / s_total) if s_total else 0
+    s_max = max(susti_dias) if susti_dias else 0
+    sustis_kpis = _kpis_html_p25_p75(
+        "s", s_total, s_p25, s_mediana, s_p75, s_media, s_max, "sustis",
+        "sustituciones devueltas (excl. activas)"
+    )
     sustis_ranges = [(0,7),(8,15),(16,25),(26,35),(36,9999)]
     sustis_bar = _bar_html(susti_buckets, counts_susti, s_total, "sustis", "sustis", sustis_ranges)
     sustis_legend = ""
@@ -1800,14 +1938,40 @@ def build_tiempos_section(cache, sustis_by_parent):
     if s_total == 0:
         sustis_html = '<div style="color:#94a3b8;padding:14px;font-style:italic">No hay sustituciones activas con fecha de envío en la base 2026.</div>'
     else:
-        sustis_html = (sustis_kpis + sustis_bar +
-                       '<div style="margin-top:12px">' + sustis_legend + '</div>'
-                       '<div class="legend" style="margin-top:8px">Tiempo desde fecha de envío de la sub-tarea hasta HOY (solo sustis activas en cache).</div>')
+        sustis_chart = _evol_chart_svg(_history, "susti_p25", "susti_mediana", "susti_p75",
+                                        title="Evol. diaria días susti")
+        sustis_evol_panel = (
+            '<div style="flex:0 0 360px;background:white;border:1px solid var(--line);'
+            'border-radius:8px;padding:8px 10px;min-width:300px">'
+            + sustis_chart +
+            '</div>'
+        )
+        sustis_html = (
+            '<div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap">'
+            '<div style="flex:1 1 460px;min-width:300px">'
+            + sustis_kpis + sustis_bar +
+            '<div style="margin-top:12px">' + sustis_legend + '</div>'
+            '</div>'
+            + sustis_evol_panel +
+            '</div>'
+            '<div class="legend" style="margin-top:8px">Tiempo desde fecha de envío de la sub-tarea hasta HOY (solo sustis activas en cache).</div>'
+        )
 
     # === Tabla detalle compartida — usa el helper _render_tm_detail ===
     detail_html = _render_tm_detail(rows, prefix="tm", enable_kpi_filter=True)
 
-    return {"taller": taller_html, "sustis": sustis_html, "detail": detail_html, "rows": rows}
+    return {
+        "taller": taller_html, "sustis": sustis_html, "detail": detail_html, "rows": rows,
+        # Stats para snapshot diario en kpi_history.json
+        "stats": {
+            "taller_p25": round(t_p25, 1) if t_total else None,
+            "taller_mediana": round(t_mediana, 1) if t_total else None,
+            "taller_p75": round(t_p75, 1) if t_total else None,
+            "susti_p25": round(s_p25, 1) if s_total else None,
+            "susti_mediana": round(s_mediana, 1) if s_total else None,
+            "susti_p75": round(s_p75, 1) if s_total else None,
+        },
+    }
 # ========== FIN TIEMPOS REFACTORIZADOS ==========
 
 
@@ -2261,11 +2425,54 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         'return true;'
         '},lbl);'
         '});});'
-        '/* Filtro Dia: dropdown filtra detail por fecha exacta */ '
+        '/* Filtro Dia: dropdown filtra detail por fecha exacta Y reemplaza chart por vista día */ '
         'var daySel=document.getElementById("tec-day-filter");'
         'var dayClr=document.getElementById("tec-day-clear");'
+        'function renderDayChart(d){'
+        'var mainEl=document.getElementById("tec-chart-main");'
+        'var dayEl=document.getElementById("tec-chart-day");'
+        'if(!mainEl||!dayEl) return;'
+        'if(!d){mainEl.style.display="";dayEl.style.display="none";return;}'
+        'var dataEl=document.getElementById("tec-events-data");'
+        'var events=[];try{events=JSON.parse(dataEl.textContent);}catch(e){}'
+        'var filtered=events.filter(function(e){return e.date===d;});'
+        'var perTec={};'
+        'filtered.forEach(function(e){'
+        'if(!perTec[e.tec])perTec[e.tec]={p:0,r:0,leas:[]};'
+        'if(e.kind==="P")perTec[e.tec].p++;else perTec[e.tec].r++;'
+        'perTec[e.tec].leas.push(e.k);'
+        '});'
+        'var tecs=Object.keys(perTec).sort();'
+        'var totalEvents=filtered.length;'
+        'var html=\'<div style="margin:6px 0 10px;padding:8px 12px;background:#dbeafe;border:1px solid #93c5fd;border-radius:6px;font-size:13px"><b style="color:#0b3d91">Vista del día \'+d+\'</b> &middot; \'+totalEvents+\' eventos (clic en filas filtra la tabla detalle)</div>\';'
+        'if(tecs.length===0){html+=\'<div style="padding:20px;color:#94a3b8;font-style:italic;text-align:center">Sin eventos ese día</div>\';}'
+        'else{var maxTot=1;tecs.forEach(function(t){var tot=perTec[t].p+perTec[t].r;if(tot>maxTot)maxTot=tot;});'
+        'html+=\'<table style="width:100%;max-width:700px;border-collapse:collapse;font-size:13px">\';'
+        'html+=\'<thead><tr style="background:#f1f5f9"><th style="text-align:left;padding:6px 10px">Técnico</th><th style="padding:6px 10px;text-align:center;color:#0891b2">Pptos</th><th style="padding:6px 10px;text-align:center;color:#059669">Reparac.</th><th style="padding:6px 10px;text-align:center">Total</th><th style="padding:6px 10px">Distribución</th></tr></thead><tbody>\';'
+        'tecs.forEach(function(t){'
+        'var p=perTec[t].p,r=perTec[t].r,tot=p+r;'
+        'var pW=tot?(p/maxTot*200):0,rW=tot?(r/maxTot*200):0;'
+        'html+=\'<tr style="border-bottom:1px solid #e5e7eb;cursor:pointer" data-tec="\'+t+\'"><td style="padding:6px 10px"><b>\'+t+\'</b></td><td style="text-align:center;color:#0891b2;font-weight:600;padding:6px 10px">\'+(p||"·")+\'</td><td style="text-align:center;color:#059669;font-weight:600;padding:6px 10px">\'+(r||"·")+\'</td><td style="text-align:center;font-weight:600;padding:6px 10px">\'+tot+\'</td><td style="padding:6px 10px"><div style="display:flex;height:18px"><div style="width:\'+pW+\'px;background:#0891b2;height:100%"></div><div style="width:\'+rW+\'px;background:#059669;height:100%"></div></div></td></tr>\';'
+        '});'
+        'html+=\'</tbody></table>\';}'
+        'dayEl.innerHTML=html;'
+        'mainEl.style.display="none";'
+        'dayEl.style.display="";'
+        '/* Clic en fila de tec → filtra detail por tec+día */'
+        'dayEl.querySelectorAll("tr[data-tec]").forEach(function(tr){'
+        'tr.addEventListener("click",function(){'
+        'var tec=tr.getAttribute("data-tec");'
+        'if(typeof window.tec_setExtraFilter!=="function") return;'
+        'window.tec_setExtraFilter(function(r){'
+        'var rtec=r.getAttribute("data-tec-tec")||"";'
+        'var rdates=(r.getAttribute("data-tec-dates")||"").split(",");'
+        'return rtec===tec && rdates.indexOf(d)>=0;'
+        '},"téc="+tec+" · día="+d);'
+        '});});'
+        '}'
         'if(daySel){daySel.addEventListener("change",function(){'
         'var d=daySel.value;'
+        'renderDayChart(d);'
         'if(typeof window.tec_setExtraFilter!=="function") return;'
         'if(!d){if(window.tec_clearExtraFilter)window.tec_clearExtraFilter();return;}'
         'window.tec_setExtraFilter(function(r){'
@@ -2275,6 +2482,7 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         '});}'
         'if(dayClr){dayClr.addEventListener("click",function(){'
         'if(daySel)daySel.value="";'
+        'renderDayChart(null);'
         'if(window.tec_clearExtraFilter)window.tec_clearExtraFilter();'
         '});}'
         '}'
@@ -2282,12 +2490,26 @@ def build_tecnicos_mensual_section(cache, tiempos_rows=None):
         '})();</script>'
     )
 
+    # Datos crudos de eventos para que el JS pueda re-renderizar el chart en modo "día"
+    events_for_js = []
+    for k, evs in ticket_events.items():
+        tec = ticket_tec[k]
+        for m, kind, iso in evs:
+            events_for_js.append({"k": k, "tec": tec, "mes": m, "kind": kind, "date": iso})
+    events_json = json.dumps(events_for_js, ensure_ascii=False)
+
+    chart_container = (
+        '<div style="overflow-x:auto;background:white;border:1px solid var(--line);border-radius:8px;padding:10px">'
+        '<div id="tec-chart-main">' + svg_str + '</div>'
+        '<div id="tec-chart-day" style="display:none"></div>'
+        '</div>'
+        '<script id="tec-events-data" type="application/json">' + events_json + '</script>'
+    )
+
     return (
         active_now_html +
         legend_html +
-        '<div style="overflow-x:auto;background:white;border:1px solid var(--line);border-radius:8px;padding:10px">' +
-        svg_str +
-        '</div>' +
+        chart_container +
         detail_html +
         chart_js
     )
@@ -3227,6 +3449,8 @@ def build_html(cache, out_path, template_path):
                 "gestion_externa": gestion_externa,
                 "sustis_solicitadas": sustis_solicitadas,
                 "estancadas_15d": estancadas_15,
+                # Stats P25/Mediana/P75 de Tiempo en taller y sustis
+                **(_tiempos_stats or {}),
             }
             hist_path.write_text(json.dumps(history, ensure_ascii=False, indent=2), encoding="utf-8")
     except Exception as e:
@@ -3305,12 +3529,14 @@ def build_html(cache, out_path, template_path):
 
     # Tiempos refactorizados (base 2026+1-ene abiertos + live) — primero porque produce las rows compartidas
     _tiempos_rows = None
+    _tiempos_stats = {}
     try:
         _tiempos = build_tiempos_section(cache, sustis_by_parent)
         tiempo_taller_html = _tiempos["taller"]
         tiempo_sustis_html = _tiempos["sustis"]
         taller_detail_html = _tiempos["detail"]
         _tiempos_rows = _tiempos.get("rows")
+        _tiempos_stats = _tiempos.get("stats") or {}
     except Exception as _e:
         import traceback; traceback.print_exc()
         tiempo_taller_html = f'<div style="color:#c0392b;padding:14px">Error tiempos: {_e}</div>'
