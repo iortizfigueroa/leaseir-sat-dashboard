@@ -64,15 +64,16 @@ FIELDS = [
 
 
 def extract_presupuesto(attachments):
-    """Devuelve el nombre del fichero presupuesto (E2[0-9]\\d{4}) o "" si no hay.
-    Si hay varios, devuelve el primero encontrado."""
+    """Devuelve solo el código del presupuesto (E2[0-9]\\d{4}, e.g. E260986)
+    extraído del nombre del fichero adjunto. "" si no hay."""
     if not attachments: return ""
     import re as _re
     pat = _re.compile(r"E2[0-9]\d{4}", _re.IGNORECASE)
     for a in attachments:
         name = (a or {}).get("filename") or ""
-        if pat.search(name):
-            return name
+        m = pat.search(name)
+        if m:
+            return m.group(0).upper()
     return ""
 
 
