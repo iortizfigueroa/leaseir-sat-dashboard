@@ -2871,12 +2871,13 @@ BORDER = Border(left=thin, right=thin, top=thin, bottom=thin)
 
 
 def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=None,
-                        sustis_by_parent=None):
+                        sustis_by_parent=None, nuevas_hoy_keys=None):
     """Genera la sección 'Flujo de incidencias' (Opción A flow árbol) con counts
     clicables que filtran la tabla detalle. Devuelve dict {"svg":..., "keys":...}."""
     tickets = cache.get("tickets", {}) or {}
     entradas_taller_keys = set(entradas_taller_keys or [])
     salidas_taller_keys = set(salidas_taller_keys or [])
+    nuevas_hoy_keys = set(nuevas_hoy_keys or [])
     sustis_by_parent = sustis_by_parent or {}
 
     # Categorización de estados
@@ -2898,7 +2899,7 @@ def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=Non
         "abiertas", "sin_asignar", "online", "externo", "ext_pdte", "ext_env",
         "interna", "pdte_llegar", "pdte_llegar_bloq", "pdte_llegar_susti",
         "en_taller", "tll_sin_ppto", "tll_pdte_ppto", "tll_reparacion",
-        "tll_inspeccion", "en_vuelo", "entradas_hoy", "salidas_hoy",
+        "tll_inspeccion", "en_vuelo", "entradas_hoy", "salidas_hoy", "nuevas_hoy",
     ]}
     for k, t in tickets.items():
         if not is_open(t.get("current_status")): continue
@@ -2934,6 +2935,7 @@ def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=Non
                 sets["en_vuelo"].append(k)
     sets["entradas_hoy"] = sorted(entradas_taller_keys)
     sets["salidas_hoy"] = sorted(salidas_taller_keys)
+    sets["nuevas_hoy"] = sorted(nuevas_hoy_keys)
 
     n = {k: len(v) for k, v in sets.items()}
 
@@ -2953,7 +2955,8 @@ def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=Non
         )
 
     svg = ['<svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" '
-           'style="width:100%;max-width:980px;display:block;font-family:Inter,system-ui,sans-serif">',
+           'preserveAspectRatio="xMidYMid meet" '
+           'style="width:100%;min-width:900px;display:block;font-family:Inter,system-ui,sans-serif">',
            # Líneas árbol primero (van debajo de los rects)
            # Top → fila nivel 1
            '<line x1="490" y1="68" x2="490" y2="86" stroke="#94a3b8" stroke-width="1"/>',
@@ -2982,15 +2985,20 @@ def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=Non
     # Nivel 0: total
     svg.append(box(420, 24, 140, 50, "Abiertas hoy", n["abiertas"], "abiertas",
                    color="#f1f5f9", text="#0b3d91"))
+    svg.append(f'<g class="flow-node" data-flow-key="nuevas_hoy" data-flow-label="Nuevas creadas hoy (y abiertas)" style="cursor:pointer">'
+               f'<rect x="280" y="32" width="78" height="32" rx="4" fill="#dbeafe" stroke="#1f6feb" stroke-width="0.5"/>'
+               f'<text x="319" y="46" text-anchor="middle" font-size="9" fill="#1f6feb">Nuevas hoy</text>'
+               f'<text x="319" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#0c447c">{n["nuevas_hoy"]}</text>'
+               f'</g>')
     svg.append(f'<g class="flow-node" data-flow-key="entradas_hoy" data-flow-label="Entradas a taller hoy" style="cursor:pointer">'
-               f'<rect x="570" y="32" width="50" height="32" rx="4" fill="#dcfce7" stroke="#1f8a4c" stroke-width="0.5"/>'
-               f'<text x="595" y="48" text-anchor="middle" font-size="9" fill="#1f8a4c">▲ entran</text>'
-               f'<text x="595" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#0b6a3a">{n["entradas_hoy"]}</text>'
+               f'<rect x="568" y="32" width="100" height="32" rx="4" fill="#dcfce7" stroke="#1f8a4c" stroke-width="0.5"/>'
+               f'<text x="618" y="46" text-anchor="middle" font-size="9" fill="#1f8a4c">▲ entran taller</text>'
+               f'<text x="618" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#0b6a3a">{n["entradas_hoy"]}</text>'
                f'</g>')
     svg.append(f'<g class="flow-node" data-flow-key="salidas_hoy" data-flow-label="Salidas de taller hoy" style="cursor:pointer">'
-               f'<rect x="360" y="32" width="50" height="32" rx="4" fill="#fee2e2" stroke="#c0392b" stroke-width="0.5"/>'
-               f'<text x="385" y="48" text-anchor="middle" font-size="9" fill="#c0392b">▼ salen</text>'
-               f'<text x="385" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#7f1d1d">{n["salidas_hoy"]}</text>'
+               f'<rect x="678" y="32" width="100" height="32" rx="4" fill="#fee2e2" stroke="#c0392b" stroke-width="0.5"/>'
+               f'<text x="728" y="46" text-anchor="middle" font-size="9" fill="#c0392b">▼ salen taller</text>'
+               f'<text x="728" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#7f1d1d">{n["salidas_hoy"]}</text>'
                f'</g>')
 
     # Nivel 1: 4 categorías por gestión
@@ -3066,17 +3074,22 @@ def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=Non
 
     flow_html = ''.join(svg)
 
-    # JS para el click handler (asume que applyKpiKeyFilter ya existe en el template)
+    # JS para el click handler — leer _FLOW_KEYS_DATA y applyKpiKeyFilter EN CLICK
+    # (no en closure, porque _FLOW_KEYS_DATA puede no estar definido al cargar el SVG)
     flow_js = (
         '<script>(function(){'
-        'var data=window._FLOW_KEYS_DATA||{};'
+        'function bind(){'
         'document.querySelectorAll(".flow-node").forEach(function(el){'
+        'if(el._fbnd) return; el._fbnd=true;'
         'el.addEventListener("click",function(){'
         'var k=el.getAttribute("data-flow-key");'
         'var lbl=el.getAttribute("data-flow-label")||k;'
+        'var data=window._FLOW_KEYS_DATA||{};'
         'var keys=data[k]||[];'
         'if(typeof window.applyKpiKeyFilter==="function") window.applyKpiKeyFilter(keys,lbl+" ("+keys.length+")");'
-        '});});'
+        'else console.warn("applyKpiKeyFilter no disponible aún");'
+        '});});}'
+        'if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",bind);else bind();'
         '})();</script>'
     )
 
@@ -4023,7 +4036,8 @@ def build_html(cache, out_path, template_path):
         _flow = build_flow_section(cache,
                                     entradas_taller_keys=entradas_taller_keys,
                                     salidas_taller_keys=salidas_taller_tickets,
-                                    sustis_by_parent=sustis_by_parent)
+                                    sustis_by_parent=sustis_by_parent,
+                                    nuevas_hoy_keys=nuevas_hoy_keys_set)
         _flow_html = _flow["html"]
         _flow_keys_json = json.dumps({k: sorted(v) for k, v in _flow["keys"].items()},
                                        ensure_ascii=False)
