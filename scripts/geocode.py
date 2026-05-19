@@ -182,22 +182,92 @@ def nominatim_search(query, retries=2):
             return None
 
 
-def resolve_gmap_short_url(url, timeout=10):
-    """Resuelve short links de Google Maps (maps.app.goo.gl / goo.gl/maps)
-    siguiendo el HTTP redirect. Devuelve el URL final o None si falla."""
+def preprocess_gmap_url(url):
+    """Maneja casos especiales antes de hacer fetch HTTP:
+    - google.com/url?...&url=DESTINO  → extrae el parámetro url y lo decodifica
+    Devuelve el URL listo para resolver (puede ser relativo, en cuyo caso se prefija)."""
+    if not url: return ""
+    s = str(url).strip()
+    if "google." in s and "/url?" in s:
+        try:
+            from urllib.parse import urlparse, parse_qs, unquote
+            parsed = urlparse(s)
+            qs = parse_qs(parsed.query)
+            target = qs.get("url", [""])[0]
+            if target:
+                s = unquote(target)
+                if s.startswith("/"):
+                    s = "https://www.google.com" + s
+        except Exception:
+            pass
+    return s
+
+
+def http_resolve(url, timeout=10):
+    """Hace GET siguiendo redirects y devuelve el URL final. None si falla."""
     if not url: return None
     s = str(url).strip()
-    is_short = ("maps.app.goo.gl" in s) or ("goo.gl/maps" in s)
-    if not is_short: return s
     try:
-        # urlopen sigue redirects por defecto. Usamos HEAD-like (GET con tiny body).
-        req = Request(s, headers={"User-Agent": USER_AGENT,
+        req = Request(s, headers={"User-Agent": "Mozilla/5.0 " + USER_AGENT,
                                     "Accept-Language": "en,es;q=0.9"})
         with urlopen(req, timeout=timeout) as r:
             return r.geturl()
     except (URLError, HTTPError, ValueError) as e:
-        print(f"  [warn] resolve_gmap_short_url({s[:50]}): {e}", file=sys.stderr)
+        print(f"  [warn] http_resolve({s[:60]}): {e}", file=sys.stderr)
         return None
+
+
+def http_fetch_html(url, timeout=10, max_bytes=200_000):
+    """Descarga el HTML (limitado a max_bytes) de un URL. Devuelve string o ""."""
+    if not url: return ""
+    try:
+        req = Request(str(url).strip(),
+                      headers={"User-Agent": "Mozilla/5.0 " + USER_AGENT,
+                               "Accept-Language": "en,es;q=0.9"})
+        with urlopen(req, timeout=timeout) as r:
+            data = r.read(max_bytes)
+            return data.decode("utf-8", errors="ignore")
+    except (URLError, HTTPError, ValueError) as e:
+        print(f"  [warn] http_fetch_html({str(url)[:60]}): {e}", file=sys.stderr)
+        return ""
+
+
+def _extract_latlng_from_html(html):
+    """Busca coords en el HTML de Google Maps. Soporta múltiples patrones."""
+    if not html: return None
+    # Pattern 1: center=lat%2Clon (URL-encoded comma)
+    m = re.search(r"center=(-?\d+\.\d+)%2C(-?\d+\.\d+)", html)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # Pattern 2: center=lat,lon (raw comma)
+    m = re.search(r"center=(-?\d+\.\d+),(-?\d+\.\d+)", html)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # Pattern 3: !3d<lat>!4d<lon>
+    m = re.search(r"!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)", html)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # Pattern 4: @lat,lon
+    m = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", html)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    return None
+
+
+def resolve_gmap_short_url(url, timeout=10):
+    """Resuelve short links de Google Maps (maps.app.goo.gl / goo.gl/maps /
+    share.google) siguiendo el HTTP redirect. Devuelve el URL final o el original
+    si no es un short link."""
+    if not url: return None
+    s = str(url).strip()
+    is_short = any(d in s for d in ("maps.app.goo.gl", "goo.gl/maps", "share.google"))
+    if not is_short: return s
+    resolved = http_resolve(s, timeout=timeout)
+    return resolved if resolved else None
 
 
 def _extract_latlng_patterns(s):
@@ -223,17 +293,45 @@ def _extract_latlng_patterns(s):
 
 
 def extract_latlng_from_gmap_url(url):
-    """Extrae (lat, lon) de un URL de Google Maps. Resuelve short links primero
-    si es necesario. Devuelve None si no se puede parsear."""
+    """Extrae (lat, lon) de un URL de Google Maps.
+    Maneja:
+    - URLs directos con @lat,lon o !3d!4d
+    - Short links (maps.app.goo.gl, goo.gl/maps, share.google) → resuelve redirect
+    - URLs de redirect de Google (google.com/url?...&url=DESTINO)
+    - URLs con Place ID hex (!1s0xHEX) sin coords → fetch para obtener canónica
+    Devuelve None si no se puede parsear.
+    """
     if not url: return None
-    s = str(url).strip()
-    # Si es short link, resolver el redirect HTTP primero
-    if ("maps.app.goo.gl" in s) or ("goo.gl/maps" in s):
+    # Paso 1: si es un redirect google.com/url?, extraer el url destino
+    s = preprocess_gmap_url(url)
+    if not s: return None
+    # Paso 2: si es un short link, resolver redirect HTTP
+    if any(d in s for d in ("maps.app.goo.gl", "goo.gl/maps", "share.google")):
         resolved = resolve_gmap_short_url(s)
-        if not resolved or resolved == s:
-            return None
+        if not resolved: return None
         s = resolved
-    return _extract_latlng_patterns(s)
+    # Paso 3: intentar extraer coords del URL actual
+    coords = _extract_latlng_patterns(s)
+    if coords: return coords
+    # Paso 4: si tiene Place ID hex (!1s0x...) o feature ID (?cid=) pero no coords,
+    # hacer fetch para que Google redirija a la URL canónica con @lat,lon o !3d!4d
+    if "/maps/place" in s and ("!1s0x" in s or "?cid=" in s or "?ftid=" in s or "data=" in s):
+        resolved = http_resolve(s)
+        if resolved and resolved != s:
+            coords = _extract_latlng_patterns(resolved)
+            if coords: return coords
+    # Paso 5 (fallback final): descargar HTML y buscar coords en el body
+    # Sirve para URLs como /maps?ftid=, share.google con kgmid, búsquedas Google, etc.
+    if "google." in s:
+        html = http_fetch_html(s)
+        coords = _extract_latlng_from_html(html)
+        if coords: return coords
+        # Intento extra: si el HTML menciona @lat,lon en algún anchor con /place/, fetch ese
+        m = re.search(r"https?://[^\"']*google\.com/maps[^\"']*@(-?\d+\.\d+),(-?\d+\.\d+)", html or "")
+        if m:
+            try: return float(m.group(1)), float(m.group(2))
+            except ValueError: pass
+    return None
 
 
 def collect_addresses():
