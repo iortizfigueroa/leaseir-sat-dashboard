@@ -1316,20 +1316,38 @@ def _normalize_ppto_code(v):
 
 
 def compute_tiempo_recepcion(ticket):
-    """Días desde la fecha de creación del ticket hasta la primera transición a
-    'Pendiente asignar técnico' (cuando la máquina llega al taller).
-    Devuelve None si no se puede calcular."""
-    created = parse_iso(ticket.get("created"))
-    if not created: return None
+    """Días desde la primera transición a 'Pendiente recogida' hasta la primera
+    transición a 'Pendiente asignar técnico' (cuando la máquina llega al taller)."""
+    entrada = None
     for tr in ticket.get("transitions", []):
         if len(tr) < 3: continue
         ts, fs, to = tr[0], tr[1], tr[2]
-        if to == "Pendiente asignar técnico":
-            dt = parse_iso(ts)
-            if dt:
-                d = (dt - created).days
-                return d if d >= 0 else None
-            break
+        dt = parse_iso(ts)
+        if not dt: continue
+        if entrada is None and to == "Pendiente recogida":
+            entrada = dt
+            continue
+        if entrada and to == "Pendiente asignar técnico":
+            d = (dt - entrada).days
+            return d if d >= 0 else None
+    return None
+
+
+def compute_tiempo_recepcion_transporte(ticket):
+    """Días desde la primera transición a 'Gestionado transporte' hasta la primera
+    transición a 'Pendiente asignar técnico' (recepción desde que sale el transporte)."""
+    entrada = None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3: continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        dt = parse_iso(ts)
+        if not dt: continue
+        if entrada is None and to == "Gestionado transporte":
+            entrada = dt
+            continue
+        if entrada and to == "Pendiente asignar técnico":
+            d = (dt - entrada).days
+            return d if d >= 0 else None
     return None
 
 
@@ -1346,6 +1364,24 @@ def compute_tiempo_devolucion(ticket):
             entrada = dt
             continue
         if entrada and to == "Resuelto":
+            d = (dt - entrada).days
+            return d if d >= 0 else None
+    return None
+
+
+def compute_tiempo_externo(ticket):
+    """Días desde la primera transición a 'Esperando respuesta cliente a presupuesto'
+    hasta la primera transición a 'Finalizado técnico externo'."""
+    entrada = None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3: continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        dt = parse_iso(ts)
+        if not dt: continue
+        if entrada is None and to == "Esperando respuesta cliente a presupuesto":
+            entrada = dt
+            continue
+        if entrada and to == "Finalizado técnico externo":
             d = (dt - entrada).days
             return d if d >= 0 else None
     return None
@@ -1445,9 +1481,11 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "mantenimiento": t.get("mantenimiento", ""),
             "presupuesto": _normalize_ppto_code(t.get("presupuesto", "")),
             "dias_recepcion": compute_tiempo_recepcion(t),
+            "dias_recepcion_tte": compute_tiempo_recepcion_transporte(t),
             "dias_ppto": compute_tiempo_ppto(t),
             "dias_reparacion": compute_tiempo_reparacion(t),
             "dias_devolucion": compute_tiempo_devolucion(t),
+            "dias_externo": compute_tiempo_externo(t),
             "dias_taller": taller["dias"] if taller else None,
             "taller_live": taller["live"] if taller else False,
             "entrada_taller": taller["entrada"].strftime("%d/%m/%Y") if taller and taller["entrada"] else "",
@@ -1497,10 +1535,12 @@ TM_COLS = [
     ("consola_susti", "Cons. susti", "text", False),
     ("manipulo_susti", "HP susti", "text", False),
     ("dias_recepcion", "Días recep.", "num", False),
+    ("dias_recepcion_tte", "Días recep. transp.", "num", False),
     ("dias_taller", "Días taller", "num", True),
     ("dias_ppto", "Días ppto", "num", False),
     ("dias_reparacion", "Días repar.", "num", False),
     ("dias_devolucion", "Días devol.", "num", False),
+    ("dias_externo", "Días externo", "num", False),
     ("dias_susti", "Días susti", "num", True),
     ("mantenimiento", "Mantenim.", "text", False),
     ("consola", "Consola", "text", False),
@@ -1591,7 +1631,7 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
                     v = v if v is not None else "—"
             elif key == "dias_susti":
                 v = v if v is not None else "—"
-            elif key in ("dias_ppto", "dias_reparacion", "dias_recepcion", "dias_devolucion"):
+            elif key in ("dias_ppto", "dias_reparacion", "dias_recepcion", "dias_recepcion_tte", "dias_devolucion", "dias_externo"):
                 v = v if v is not None else "—"
             elif key == "disparos":
                 v = format_int_dot(v) if v != "" else ""
