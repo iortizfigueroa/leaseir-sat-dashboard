@@ -2870,6 +2870,219 @@ thin = Side(border_style="thin", color="BFBFBF")
 BORDER = Border(left=thin, right=thin, top=thin, bottom=thin)
 
 
+def build_flow_section(cache, entradas_taller_keys=None, salidas_taller_keys=None,
+                        sustis_by_parent=None):
+    """Genera la sección 'Flujo de incidencias' (Opción A flow árbol) con counts
+    clicables que filtran la tabla detalle. Devuelve dict {"svg":..., "keys":...}."""
+    tickets = cache.get("tickets", {}) or {}
+    entradas_taller_keys = set(entradas_taller_keys or [])
+    salidas_taller_keys = set(salidas_taller_keys or [])
+    sustis_by_parent = sustis_by_parent or {}
+
+    # Categorización de estados
+    PDTE_LLEGAR = {"Abierto", "Recepcionado SAT", "Pendiente recogida",
+                    "Gestionado transporte"}
+    TALLER_SIN_PPTO = {"Pendiente asignar técnico", "En cola taller",
+                        "En preparación presupuesto"}
+    TALLER_PDTE_PPTO = {"Presupuesto preparado pendiente de enviar",
+                         "Pendiente confirmación presupuesto",
+                         "Esperando inicio reparación"}
+    TALLER_EN_REPARACION = {"En reparación"}
+    TALLER_INSPECCION = {"Inspección de salida"}
+    EN_VUELO = {"Devuelto a cliente"}
+    EXTERNO_PDTE = {"Pendiente definir servicio externo"}
+    EXTERNO_ENVIADOS = {"Enviado a técnico externo",
+                         "Esperando respuesta cliente a presupuesto"}
+
+    sets = {k: [] for k in [
+        "abiertas", "sin_asignar", "online", "externo", "ext_pdte", "ext_env",
+        "interna", "pdte_llegar", "pdte_llegar_bloq", "pdte_llegar_susti",
+        "en_taller", "tll_sin_ppto", "tll_pdte_ppto", "tll_reparacion",
+        "tll_inspeccion", "en_vuelo", "entradas_hoy", "salidas_hoy",
+    ]}
+    for k, t in tickets.items():
+        if not is_open(t.get("current_status")): continue
+        gestion = (t.get("gestion") or "Inicio")
+        st = t.get("current_status", "")
+        sets["abiertas"].append(k)
+        # Por gestión
+        if gestion == "Inicio":
+            sets["sin_asignar"].append(k)
+        elif gestion == "Online":
+            sets["online"].append(k)
+        elif gestion == "Externa":
+            sets["externo"].append(k)
+            if st in EXTERNO_PDTE: sets["ext_pdte"].append(k)
+            elif st in EXTERNO_ENVIADOS: sets["ext_env"].append(k)
+        elif gestion == "Interna":
+            sets["interna"].append(k)
+            if st in PDTE_LLEGAR:
+                sets["pdte_llegar"].append(k)
+                if (t.get("bloq") or "").lower() == "sí" or (t.get("bloq") or "").lower() == "si":
+                    sets["pdte_llegar_bloq"].append(k)
+                if k in sustis_by_parent:
+                    sets["pdte_llegar_susti"].append(k)
+            elif st in TALLER_SIN_PPTO:
+                sets["en_taller"].append(k); sets["tll_sin_ppto"].append(k)
+            elif st in TALLER_PDTE_PPTO:
+                sets["en_taller"].append(k); sets["tll_pdte_ppto"].append(k)
+            elif st in TALLER_EN_REPARACION:
+                sets["en_taller"].append(k); sets["tll_reparacion"].append(k)
+            elif st in TALLER_INSPECCION:
+                sets["en_taller"].append(k); sets["tll_inspeccion"].append(k)
+            elif st in EN_VUELO:
+                sets["en_vuelo"].append(k)
+    sets["entradas_hoy"] = sorted(entradas_taller_keys)
+    sets["salidas_hoy"] = sorted(salidas_taller_keys)
+
+    n = {k: len(v) for k, v in sets.items()}
+
+    # SVG flow tree (700px wide, ~560 alto). Cada caja clicable: data-flow-key + data-flow-label
+    def box(x, y, w, h, label, count, key, color="#f1f5f9", text="#0b3d91",
+            sub_color="#475569", subtitle=""):
+        sub_html = (f'<text x="{x+w/2:.0f}" y="{y+h-8:.0f}" text-anchor="middle" '
+                    f'font-size="9" fill="{sub_color}">{html_escape(subtitle)}</text>') if subtitle else ""
+        return (
+            f'<g class="flow-node" data-flow-key="{key}" data-flow-label="{html_escape(label)}" '
+            f'style="cursor:pointer">'
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="6" fill="{color}" '
+            f'stroke="{text}" stroke-width="0.5" stroke-opacity="0.3"/>'
+            f'<text x="{x+w/2:.0f}" y="{y+18:.0f}" text-anchor="middle" font-size="10" fill="{sub_color}">{html_escape(label)}</text>'
+            f'<text x="{x+w/2:.0f}" y="{y+h/2+10:.0f}" text-anchor="middle" font-size="20" font-weight="600" fill="{text}">{count}</text>'
+            f'{sub_html}</g>'
+        )
+
+    svg = ['<svg viewBox="0 0 980 480" xmlns="http://www.w3.org/2000/svg" '
+           'style="width:100%;max-width:980px;display:block;font-family:Inter,system-ui,sans-serif">',
+           # Líneas árbol primero (van debajo de los rects)
+           # Top → fila nivel 1
+           '<line x1="490" y1="68" x2="490" y2="86" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="90" y1="86" x2="890" y2="86" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="90" y1="86" x2="90" y2="104" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="265" y1="86" x2="265" y2="104" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="440" y1="86" x2="440" y2="104" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="715" y1="86" x2="715" y2="104" stroke="#94a3b8" stroke-width="1"/>',
+           # Externo → 2 hijos
+           '<line x1="440" y1="164" x2="440" y2="182" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="380" y1="182" x2="500" y2="182" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="380" y1="182" x2="380" y2="200" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="500" y1="182" x2="500" y2="200" stroke="#94a3b8" stroke-width="1"/>',
+           # Interna → 3 hijos
+           '<line x1="715" y1="164" x2="715" y2="182" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="580" y1="182" x2="850" y2="182" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="580" y1="182" x2="580" y2="200" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="715" y1="182" x2="715" y2="200" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="850" y1="182" x2="850" y2="200" stroke="#94a3b8" stroke-width="1"/>',
+           # Pdte llegar → 2 hijos
+           '<line x1="580" y1="270" x2="580" y2="288" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="525" y1="288" x2="635" y2="288" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="525" y1="288" x2="525" y2="304" stroke="#94a3b8" stroke-width="1"/>',
+           '<line x1="635" y1="288" x2="635" y2="304" stroke="#94a3b8" stroke-width="1"/>']
+
+    # Nivel 0: total
+    svg.append(box(420, 24, 140, 50, "Abiertas hoy", n["abiertas"], "abiertas",
+                   color="#f1f5f9", text="#0b3d91"))
+    svg.append(f'<g class="flow-node" data-flow-key="entradas_hoy" data-flow-label="Entradas a taller hoy" style="cursor:pointer">'
+               f'<rect x="570" y="32" width="50" height="32" rx="4" fill="#dcfce7" stroke="#1f8a4c" stroke-width="0.5"/>'
+               f'<text x="595" y="48" text-anchor="middle" font-size="9" fill="#1f8a4c">▲ entran</text>'
+               f'<text x="595" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#0b6a3a">{n["entradas_hoy"]}</text>'
+               f'</g>')
+    svg.append(f'<g class="flow-node" data-flow-key="salidas_hoy" data-flow-label="Salidas de taller hoy" style="cursor:pointer">'
+               f'<rect x="360" y="32" width="50" height="32" rx="4" fill="#fee2e2" stroke="#c0392b" stroke-width="0.5"/>'
+               f'<text x="385" y="48" text-anchor="middle" font-size="9" fill="#c0392b">▼ salen</text>'
+               f'<text x="385" y="60" text-anchor="middle" font-size="13" font-weight="600" fill="#7f1d1d">{n["salidas_hoy"]}</text>'
+               f'</g>')
+
+    # Nivel 1: 4 categorías por gestión
+    svg.append(box(40, 104, 100, 60, "Sin asignar", n["sin_asignar"], "sin_asignar",
+                   color="#f1f5f9", text="#475569"))
+    svg.append(box(215, 104, 100, 60, "Online", n["online"], "online",
+                   color="#dbeafe", text="#0c447c"))
+    svg.append(box(390, 104, 100, 60, "Externo", n["externo"], "externo",
+                   color="#fee2cf", text="#712b13"))
+    svg.append(box(545, 104, 340, 60, "Interna · taller", n["interna"], "interna",
+                   color="#d1fae5", text="#085041"))
+
+    # Nivel 2 bajo Externo
+    svg.append(box(330, 200, 100, 60, "Pdte servicio", n["ext_pdte"], "ext_pdte",
+                   color="#fef3c7", text="#854f0b"))
+    svg.append(box(450, 200, 100, 60, "Enviados", n["ext_env"], "ext_env",
+                   color="#fef3c7", text="#854f0b"))
+
+    # Nivel 2 bajo Interna: 3 cajas (Pdte llegar / En taller / En vuelo)
+    svg.append(box(525, 200, 110, 80, "Pdte llegar a taller", n["pdte_llegar"], "pdte_llegar",
+                   color="#d1fae5", text="#085041"))
+    # En taller — caja más ancha con sub-detalles dentro
+    svg.append(f'<g class="flow-node" data-flow-key="en_taller" data-flow-label="En taller" style="cursor:pointer">'
+               f'<rect x="650" y="200" width="170" height="200" rx="8" fill="#bbf7d0" '
+               f'stroke="#1f8a4c" stroke-width="1.5"/>'
+               f'<text x="735" y="218" text-anchor="middle" font-size="10" fill="#085041">En taller AHORA</text>'
+               f'<text x="735" y="244" text-anchor="middle" font-size="26" font-weight="600" fill="#085041">{n["en_taller"]}</text>'
+               f'</g>')
+    # Sub-buckets dentro de En taller (no clicables en el rect padre, individualmente)
+    svg.append(f'<g class="flow-node" data-flow-key="tll_sin_ppto" data-flow-label="En taller · sin ppto" style="cursor:pointer">'
+               f'<rect x="660" y="260" width="75" height="32" rx="4" fill="#ffffff" stroke="#5dcaa5" stroke-width="0.5"/>'
+               f'<text x="697" y="274" text-anchor="middle" font-size="8" fill="#0f6e56">Sin ppto</text>'
+               f'<text x="697" y="288" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">{n["tll_sin_ppto"]}</text>'
+               f'</g>')
+    svg.append(f'<g class="flow-node" data-flow-key="tll_pdte_ppto" data-flow-label="En taller · pdte ppto" style="cursor:pointer">'
+               f'<rect x="740" y="260" width="75" height="32" rx="4" fill="#ffffff" stroke="#5dcaa5" stroke-width="0.5"/>'
+               f'<text x="777" y="274" text-anchor="middle" font-size="8" fill="#0f6e56">Pdte ppto</text>'
+               f'<text x="777" y="288" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">{n["tll_pdte_ppto"]}</text>'
+               f'</g>')
+    svg.append(f'<g class="flow-node" data-flow-key="tll_reparacion" data-flow-label="En taller · en reparación" style="cursor:pointer">'
+               f'<rect x="660" y="297" width="75" height="32" rx="4" fill="#ffffff" stroke="#5dcaa5" stroke-width="0.5"/>'
+               f'<text x="697" y="311" text-anchor="middle" font-size="8" fill="#0f6e56">Reparación</text>'
+               f'<text x="697" y="325" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">{n["tll_reparacion"]}</text>'
+               f'</g>')
+    svg.append(f'<g class="flow-node" data-flow-key="tll_inspeccion" data-flow-label="En taller · inspección" style="cursor:pointer">'
+               f'<rect x="740" y="297" width="75" height="32" rx="4" fill="#ffffff" stroke="#5dcaa5" stroke-width="0.5"/>'
+               f'<text x="777" y="311" text-anchor="middle" font-size="8" fill="#0f6e56">Inspección</text>'
+               f'<text x="777" y="325" text-anchor="middle" font-size="13" font-weight="600" fill="#085041">{n["tll_inspeccion"]}</text>'
+               f'</g>')
+    # Flujo hoy dentro de En taller
+    svg.append(f'<line x1="660" y1="345" x2="815" y2="345" stroke="#5dcaa5" stroke-width="0.5"/>')
+    svg.append(f'<g class="flow-node" data-flow-key="entradas_hoy" data-flow-label="Entradas a taller hoy" style="cursor:pointer">'
+               f'<text x="700" y="365" text-anchor="middle" font-size="10" fill="#1f8a4c">▲ {n["entradas_hoy"]}</text>'
+               f'<text x="700" y="378" text-anchor="middle" font-size="8" fill="#475569">entran hoy</text>'
+               f'</g>')
+    svg.append(f'<g class="flow-node" data-flow-key="salidas_hoy" data-flow-label="Salidas de taller hoy" style="cursor:pointer">'
+               f'<text x="775" y="365" text-anchor="middle" font-size="10" fill="#c0392b">▼ {n["salidas_hoy"]}</text>'
+               f'<text x="775" y="378" text-anchor="middle" font-size="8" fill="#475569">salen hoy</text>'
+               f'</g>')
+
+    svg.append(box(835, 200, 100, 80, "En vuelo a cliente", n["en_vuelo"], "en_vuelo",
+                   color="#d1fae5", text="#085041"))
+
+    # Nivel 3 bajo Pdte llegar: bloqueantes + sustis
+    svg.append(box(470, 304, 110, 40, "Bloqueantes", n["pdte_llegar_bloq"], "pdte_llegar_bloq",
+                   color="#fef3c7", text="#854f0b"))
+    svg.append(box(585, 304, 110, 40, "Con sustitución", n["pdte_llegar_susti"], "pdte_llegar_susti",
+                   color="#fbeaf0", text="#993556"))
+
+    # Leyenda
+    svg.append('<text x="40" y="430" font-size="10" fill="#94a3b8">Clic en cualquier número filtra la tabla de Detalle de incidencias abiertas.</text>')
+    svg.append('</svg>')
+
+    flow_html = ''.join(svg)
+
+    # JS para el click handler (asume que applyKpiKeyFilter ya existe en el template)
+    flow_js = (
+        '<script>(function(){'
+        'var data=window._FLOW_KEYS_DATA||{};'
+        'document.querySelectorAll(".flow-node").forEach(function(el){'
+        'el.addEventListener("click",function(){'
+        'var k=el.getAttribute("data-flow-key");'
+        'var lbl=el.getAttribute("data-flow-label")||k;'
+        'var keys=data[k]||[];'
+        'if(typeof window.applyKpiKeyFilter==="function") window.applyKpiKeyFilter(keys,lbl+" ("+keys.length+")");'
+        '});});'
+        '})();</script>'
+    )
+
+    return {"html": flow_html + flow_js, "keys": sets}
+
+
 def hdr_cell(c, t):
     c.value = t
     c.font = Font(name=FONT_X, bold=True, color="FFFFFF", size=10)
@@ -3805,6 +4018,20 @@ def build_html(cache, out_path, template_path):
     except Exception:
         pass
 
+    # === Flujo de incidencias (Opción A árbol) — coexiste con KPIs actuales ===
+    try:
+        _flow = build_flow_section(cache,
+                                    entradas_taller_keys=entradas_taller_keys,
+                                    salidas_taller_keys=salidas_taller_tickets,
+                                    sustis_by_parent=sustis_by_parent)
+        _flow_html = _flow["html"]
+        _flow_keys_json = json.dumps({k: sorted(v) for k, v in _flow["keys"].items()},
+                                       ensure_ascii=False)
+    except Exception as _e:
+        import traceback; traceback.print_exc()
+        _flow_html = f'<div style="color:#c0392b;padding:14px">Error flow: {_e}</div>'
+        _flow_keys_json = "{}"
+
     html = template_path.read_text(encoding="utf-8")
     repl = {
         "__TODAY__": today_label,
@@ -3865,6 +4092,8 @@ def build_html(cache, out_path, template_path):
         "__KPI_SALIDAS_TALLER_KEYS__": json.dumps(sorted(salidas_taller_tickets)),
         "__KPI_NUEVAS_HOY_KEYS__": json.dumps(sorted(nuevas_hoy_keys_set)),
         "__PENDIENTES_TALLER_CRITIC__": str(pendientes_taller_critic),
+        "__FLOW_SECTION__": _flow_html,
+        "__FLOW_KEYS_JSON__": _flow_keys_json,
     }
     for k, v in repl.items():
         html = html.replace(k, v)
