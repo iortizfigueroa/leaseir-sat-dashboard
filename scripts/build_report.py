@@ -3110,8 +3110,44 @@ def build_abiertas_hoy_section(cache):
     return header, "\n".join(body_parts)
 
 
-def build_detalle_section(cache, sustis_by_parent=None):
+def _load_sustis_maps_for_detalle():
+    """Carga maps de sustituciones para enriquecer la tabla Detalle.
+    Devuelve dict con envio/dias/subkey/consola/manipulo by parent_key."""
+    out = {"envio": {}, "dias": {}, "subkey": {}, "consola": {}, "manipulo": {}}
+    try:
+        for _cand in [Path("cache") / "sustis_historico.json",
+                      Path("cache") / "sustis_activas.json"]:
+            if _cand.exists():
+                _su = json.loads(_cand.read_text(encoding="utf-8"))
+                for _it in _su.get("items", []) or []:
+                    _pk = _it.get("parent_key")
+                    if not _pk:
+                        continue
+                    _fe = _it.get("fecha_envio")
+                    if _fe:
+                        _dt = parse_iso(_fe)
+                        if _dt:
+                            out["envio"][_pk] = _dt
+                    if "dias" in _it and _it["dias"] is not None:
+                        out["dias"][_pk] = _it["dias"]
+                    out["subkey"][_pk] = _it.get("key", "") or ""
+                    out["consola"][_pk] = _it.get("consola_susti", "") or ""
+                    out["manipulo"][_pk] = _it.get("manipulo_susti", "") or ""
+                break
+    except Exception:
+        pass
+    return out
+
+
+def build_detalle_section(cache, sustis_by_parent=None, sustis_maps=None):
     sustis_by_parent = sustis_by_parent or {}
+    sustis_maps = sustis_maps if sustis_maps is not None else _load_sustis_maps_for_detalle()
+    s_envio = sustis_maps.get("envio", {})
+    s_dias = sustis_maps.get("dias", {})
+    s_subkey = sustis_maps.get("subkey", {})
+    s_consola = sustis_maps.get("consola", {})
+    s_manipulo = sustis_maps.get("manipulo", {})
+    now_utc = datetime.now(timezone.utc)
     JIRA_URL = "https://leaseir.atlassian.net/browse/"
     rows = []
     for key, t in cache.get("tickets", {}).items():
@@ -3140,6 +3176,17 @@ def build_detalle_section(cache, sustis_by_parent=None):
         dt_taller_label = dt_taller.strftime("%d/%m/%Y") if dt_taller else ""
         dt_color = COLOR_GREEN if (dias_taller is not None and dias_taller < 5) else (
             COLOR_YELLOW if (dias_taller is not None and dias_taller <= 15) else COLOR_RED)
+
+        # Extras (cols 24-39, hidden por defecto)
+        taller_info = compute_tiempo_taller(t, now_utc)
+        entrada_s = taller_info["entrada"].strftime("%d/%m/%Y") if (taller_info and taller_info.get("entrada")) else ""
+        salida_s = taller_info["salida"].strftime("%d/%m/%Y") if (taller_info and taller_info.get("salida")) else ""
+        dias_su = s_dias.get(key)
+        if dias_su is None:
+            _fe = s_envio.get(key)
+            if _fe:
+                _fe2 = _fe if _fe.tzinfo else _fe.replace(tzinfo=timezone.utc)
+                dias_su = (now_utc - _fe2).days
         rows.append({
             "chain": chain, "key": key,
             "cliente": t.get("cliente", ""),
@@ -3161,6 +3208,23 @@ def build_detalle_section(cache, sustis_by_parent=None):
             "importe": t.get("importe", ""),
             "tec_externo": t.get("tec_externo", ""),
             "ult_com": (t.get("ult_comentario", "") or "")[:300],
+            # Extras
+            "motivo": ", ".join(t.get("motivo") or []),
+            "cambios": ", ".join(t.get("cambios") or []),
+            "leas_susti": s_subkey.get(key, ""),
+            "consola_susti": s_consola.get(key, ""),
+            "manipulo_susti": s_manipulo.get(key, ""),
+            "dias_recepcion": compute_tiempo_recepcion(t),
+            "dias_recepcion_tte": compute_tiempo_recepcion_transporte(t),
+            "dias_ppto": compute_tiempo_ppto(t),
+            "dias_reparacion": compute_tiempo_reparacion(t),
+            "dias_devolucion": compute_tiempo_devolucion(t),
+            "dias_externo": compute_tiempo_externo(t),
+            "dias_susti": dias_su,
+            "mantenimiento": t.get("mantenimiento", ""),
+            "presupuesto": _normalize_ppto_code(t.get("presupuesto", "")),
+            "entrada_taller": entrada_s,
+            "salida_taller": salida_s,
         })
 
     idx = {s: i for i, s in enumerate(FUNNEL_ORDER)}
@@ -3168,9 +3232,31 @@ def build_detalle_section(cache, sustis_by_parent=None):
                               idx.get(r["status"], 999),
                               -(r["days"] if isinstance(r["days"], int) else 0)))
 
+    def _num_cell(v):
+        return "" if (v is None or v == "") else html_escape(str(v))
+
     body = []
     for r in rows:
         link = f'<a href="{JIRA_URL}{r["key"]}" target="_blank" rel="noopener" style="color:#2a59c4;text-decoration:none">{r["key"]}</a>'
+        # Cells extra (cols 24-39, hidden por defecto)
+        extras_html = (
+            f'<td class="dtl-extra" data-col="24" style="display:none" title="{html_escape(r["motivo"])}">{html_escape(r["motivo"])}</td>'
+            f'<td class="dtl-extra" data-col="25" style="display:none" title="{html_escape(r["cambios"])}">{html_escape(r["cambios"])}</td>'
+            f'<td class="dtl-extra" data-col="26" style="display:none;text-align:center">{html_escape(r["leas_susti"])}</td>'
+            f'<td class="dtl-extra" data-col="27" style="display:none;text-align:center">{html_escape(r["consola_susti"])}</td>'
+            f'<td class="dtl-extra" data-col="28" style="display:none;text-align:center">{html_escape(r["manipulo_susti"])}</td>'
+            f'<td class="dtl-extra" data-col="29" style="display:none;text-align:center">{_num_cell(r["dias_recepcion"])}</td>'
+            f'<td class="dtl-extra" data-col="30" style="display:none;text-align:center">{_num_cell(r["dias_recepcion_tte"])}</td>'
+            f'<td class="dtl-extra" data-col="31" style="display:none;text-align:center">{_num_cell(r["dias_ppto"])}</td>'
+            f'<td class="dtl-extra" data-col="32" style="display:none;text-align:center">{_num_cell(r["dias_reparacion"])}</td>'
+            f'<td class="dtl-extra" data-col="33" style="display:none;text-align:center">{_num_cell(r["dias_devolucion"])}</td>'
+            f'<td class="dtl-extra" data-col="34" style="display:none;text-align:center">{_num_cell(r["dias_externo"])}</td>'
+            f'<td class="dtl-extra" data-col="35" style="display:none;text-align:center">{_num_cell(r["dias_susti"])}</td>'
+            f'<td class="dtl-extra" data-col="36" style="display:none;text-align:center">{html_escape(r["mantenimiento"])}</td>'
+            f'<td class="dtl-extra" data-col="37" style="display:none">{html_escape(r["presupuesto"])}</td>'
+            f'<td class="dtl-extra" data-col="38" style="display:none">{html_escape(r["entrada_taller"])}</td>'
+            f'<td class="dtl-extra" data-col="39" style="display:none">{html_escape(r["salida_taller"])}</td>'
+        )
         body.append(
             ('<tr data-no-tec="1">' if r["status"] in {"Pendiente asignar técnico","En cola taller","Presupuesto preparado pendiente de enviar","Pendiente confirmación presupuesto","Inspección de salida"} else '<tr>')
             + f'<td>{html_escape(r["chain"])}</td>'
@@ -3197,7 +3283,8 @@ def build_detalle_section(cache, sustis_by_parent=None):
             f'<td>{html_escape(r["tec_externo"])}</td>'
             f'<td title="{html_escape(r["ult_com"])}" class="d-trunc">{html_escape(r["ult_com"])}</td>'
             f'<td>{html_escape(r["asignado"])}</td>'
-            '</tr>'
+            + extras_html
+            + '</tr>'
         )
     return "\n".join(body)
 

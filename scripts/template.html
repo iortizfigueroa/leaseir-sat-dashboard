@@ -505,8 +505,52 @@ __TEC_ROWS__
   <select id="filter-bucket"><option value="">Días: todos</option><option value="t">🔵 Creada hoy</option><option value="g">🟢 0-5d</option><option value="y">🟡 6-15d</option><option value="r">🔴 &gt;15d</option></select>
   <select id="filter-asignado"><option value="">Asignada: todas</option></select>
   <button type="button" id="clear-filters" class="multi-btn" title="Resetea todos los filtros">✕ Limpiar</button>
+  <button type="button" id="detalle-export" class="multi-btn" title="Descarga las filas y columnas visibles a CSV (se abre en Excel)" style="background:#16a34a;color:white;border-color:#16a34a">📥 Excel</button>
   <span class="count"><b id="detalle-count">0</b> de <span id="detalle-total">0</span> visibles</span>
 </div>
+<details style="margin:4px 0 8px"><summary style="cursor:pointer;color:var(--blue);font-size:12px">Mostrar/ocultar columnas</summary>
+<div id="detalle-col-toggle" style="display:flex;flex-wrap:wrap;gap:8px;padding:8px;background:#f8fafc;border:1px solid var(--line);border-radius:6px;font-size:11px">
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="0" checked> Cadena</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="1" checked> Ticket</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="2" checked> Cliente / Centro</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="3" checked> Estado</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="4" checked> Gestión</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="5" checked> Días estado</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="6" checked> Días taller</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="7" checked> Localización</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="8" checked> Creada</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="9" checked> Tipo avería</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="10" checked> Bloq</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="11" checked> Susti</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="12" checked> Estado susti</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="13" checked> Fecha venta</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="14" checked> Consola</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="15" checked> HP</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="16" checked> Disparos</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="17" checked> Garantía</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="18" checked> Descripción</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="19" checked> Téc. taller</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="20" checked> Importe</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="21" checked> Téc. externo</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="22" checked> Último comentario</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="23" checked> Persona asignada</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="24"> Resumen avería</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="25"> Cambios/Mejoras</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="26"> LEAS susti</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="27"> Cons. susti</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="28"> HP susti</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="29"> Días recep.</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="30"> Días recep. transp.</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="31"> Días ppto</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="32"> Días repar.</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="33"> Días devol.</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="34"> Días externo</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="35"> Días susti</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="36"> Mantenim.</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="37"> Presupuesto</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="38"> Entrada taller</label>
+  <label><input type="checkbox" class="dtl-col-toggle" data-col="39"> Salida taller</label>
+</div></details>
 <div class="scroller">
 <table id="detalle-table">
 <thead><tr>
@@ -534,6 +578,22 @@ __TEC_ROWS__
   <th class="sortable" data-col="21" data-type="text">Téc. externo</th>
   <th class="sortable" data-col="22" data-type="text">Último comentario</th>
   <th class="sortable" data-col="23" data-type="text">Persona asignada</th>
+  <th class="sortable dtl-extra" data-col="24" data-type="text" style="display:none">Resumen avería</th>
+  <th class="sortable dtl-extra" data-col="25" data-type="text" style="display:none">Cambios/Mejoras</th>
+  <th class="sortable dtl-extra" data-col="26" data-type="text" style="display:none">LEAS susti</th>
+  <th class="sortable dtl-extra" data-col="27" data-type="text" style="display:none">Cons. susti</th>
+  <th class="sortable dtl-extra" data-col="28" data-type="text" style="display:none">HP susti</th>
+  <th class="sortable dtl-extra" data-col="29" data-type="num" style="display:none">Días recep.</th>
+  <th class="sortable dtl-extra" data-col="30" data-type="num" style="display:none">Días recep. transp.</th>
+  <th class="sortable dtl-extra" data-col="31" data-type="num" style="display:none">Días ppto</th>
+  <th class="sortable dtl-extra" data-col="32" data-type="num" style="display:none">Días repar.</th>
+  <th class="sortable dtl-extra" data-col="33" data-type="num" style="display:none">Días devol.</th>
+  <th class="sortable dtl-extra" data-col="34" data-type="num" style="display:none">Días externo</th>
+  <th class="sortable dtl-extra" data-col="35" data-type="num" style="display:none">Días susti</th>
+  <th class="sortable dtl-extra" data-col="36" data-type="text" style="display:none">Mantenim.</th>
+  <th class="sortable dtl-extra" data-col="37" data-type="text" style="display:none">Presupuesto</th>
+  <th class="sortable dtl-extra" data-col="38" data-type="date" style="display:none">Entrada taller</th>
+  <th class="sortable dtl-extra" data-col="39" data-type="date" style="display:none">Salida taller</th>
 </tr></thead>
 <tbody>
 __DETALLE_ROWS__
@@ -1191,6 +1251,71 @@ __SUSTIS_HTML__
       }, 80);
     });
   });
+
+  // Toggle columnas en tabla Detalle
+  const detalleHeaders = tbl.tHead.rows[0].cells;
+  function applyColToggle(colIdx, show) {
+    if (colIdx < 0 || colIdx >= detalleHeaders.length) return;
+    const disp = show ? '' : 'none';
+    detalleHeaders[colIdx].style.display = disp;
+    for (const r of allRows) {
+      if (r.cells[colIdx]) r.cells[colIdx].style.display = disp;
+    }
+  }
+  document.querySelectorAll('.dtl-col-toggle').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const colIdx = parseInt(cb.dataset.col);
+      applyColToggle(colIdx, cb.checked);
+    });
+  });
+
+  // Export CSV (Excel) de filas y columnas visibles
+  function csvEscape(s) {
+    s = (s == null) ? '' : String(s);
+    if (s.indexOf('"') >= 0 || s.indexOf(';') >= 0 || s.indexOf(',') >= 0 || s.indexOf('\n') >= 0) {
+      return '"' + s.replace(/"/g, '""') + '"';
+    }
+    return s;
+  }
+  const exportBtn = document.getElementById('detalle-export');
+  if (exportBtn) {
+    exportBtn.addEventListener('click', () => {
+      // Columnas visibles
+      const visibleCols = [];
+      for (let i = 0; i < detalleHeaders.length; i++) {
+        const th = detalleHeaders[i];
+        const isHidden = (th.style.display === 'none');
+        if (!isHidden) visibleCols.push(i);
+      }
+      // Header
+      const lines = [];
+      lines.push(visibleCols.map(i => csvEscape(detalleHeaders[i].textContent.trim())).join(';'));
+      // Filas visibles
+      let exported = 0;
+      for (const r of allRows) {
+        if (r.style.display === 'none') continue;
+        const cells = visibleCols.map(i => {
+          if (!r.cells[i]) return '';
+          // Si hay un <a> (col Ticket), usar su texto
+          const a = r.cells[i].querySelector('a');
+          const text = a ? a.textContent.trim() : r.cells[i].textContent.trim();
+          return csvEscape(text);
+        });
+        lines.push(cells.join(';'));
+        exported++;
+      }
+      const csv = '﻿' + lines.join('\r\n');  // BOM UTF-8 para Excel
+      const blob = new Blob([csv], {type: 'text/csv;charset=utf-8'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      const ts = new Date().toISOString().slice(0,10);
+      a.href = url;
+      a.download = 'Incidencias_abiertas_' + ts + '.csv';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 100);
+    });
+  }
 
   // Sort en cualquier tabla con <th class="sortable"> fuera de #detalle-table
   document.querySelectorAll('table').forEach(tbl => {
