@@ -1497,6 +1497,11 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "manipulo_susti": sustis_manipulo_by_parent.get(k, ""),
             "susti_active": sustis_active_by_parent.get(k, True),
             "created": (parse_iso(t.get("created")) or now_utc).strftime("%d/%m/%Y"),
+            "factura": (t.get("factura") or "").strip(),
+            "factura_importe": t.get("factura_importe"),
+            "factura_cobrado": t.get("factura_cobrado"),
+            "factura_pendiente": t.get("factura_pendiente"),
+            "factura_estado": (t.get("factura_estado") or "").strip(),
         })
     return rows
 
@@ -1519,6 +1524,36 @@ def _bar_html(buckets, counts, total, label, kpi_id="taller", ranges=None):
 
 
 # COLS compartidas para tm-table (Tiempos, Tipos avería detalle, Técnicos detalle)
+def _format_money_eur(v):
+    """Formato '1.234,56 EUR'. Devuelve '' si v es None/vacío/no numérico."""
+    if v is None or v == "":
+        return ""
+    try:
+        n = float(v)
+    except (ValueError, TypeError):
+        return ""
+    s = format(n, ",.2f").replace(",", "_").replace(".", ",").replace("_", ".")
+    return s + " EUR"
+
+
+def _estado_factura_badge(est):
+    """Badge HTML coloreado para estado de factura (Cobrado/Vencido/Pendiente)."""
+    if not est:
+        return ""
+    e = est.lower()
+    if e == "cobrado":
+        color, bg = "#16a34a", "#dcfce7"
+    elif e == "vencido":
+        color, bg = "#dc2626", "#fee2e2"
+    elif e == "pendiente":
+        color, bg = "#ca8a04", "#fef9c3"
+    else:
+        color, bg = "#64748b", "#f1f5f9"
+    return ('<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'
+            + bg + ';color:' + color + ';font-weight:600;font-size:10px">'
+            + html_escape(est) + '</span>')
+
+
 TM_COLS = [
     ("chain", "Cadena", "text", True),
     ("k", "Ticket", "text", True),
@@ -1556,6 +1591,11 @@ TM_COLS = [
     ("asignado", "Asignado", "text", False),
     ("tec_taller", "Téc. taller", "text", False),
     ("tec_externo", "Téc. externo", "text", False),
+    ("factura", "Factura", "text", False),
+    ("factura_importe", "Importe Factura", "num", False),
+    ("factura_cobrado", "Cobrado", "num", False),
+    ("factura_pendiente", "Pendiente de cobro", "num", False),
+    ("factura_estado", "Estado factura", "text", False),
 ]
 
 
@@ -1635,6 +1675,10 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
                 v = v if v is not None else "—"
             elif key == "disparos":
                 v = format_int_dot(v) if v != "" else ""
+            elif key in ("factura_importe", "factura_cobrado", "factura_pendiente"):
+                v = _format_money_eur(v)
+            elif key == "factura_estado":
+                v = _estado_factura_badge(v)
             else:
                 v = html_escape(str(v)) if v is not None else ""
             hide = "" if default_on else ' style="display:none"'
