@@ -1305,6 +1305,52 @@ def compute_tiempo_taller(ticket, now_utc):
     return {"entrada": entrada, "salida": salida, "dias": dias, "live": live}
 
 
+_PPTO_CODE_RE = re.compile(r"E2[0-9]\d{4}", re.IGNORECASE)
+
+def _normalize_ppto_code(v):
+    """Extrae solo el código E2[0-9]\\d{4} del valor de presupuesto.
+    Maneja tanto filenames completos ('E260986 LEASEIR...pdf') como códigos ya limpios."""
+    if not v: return ""
+    m = _PPTO_CODE_RE.search(str(v))
+    return m.group(0).upper() if m else ""
+
+
+def compute_tiempo_recepcion(ticket):
+    """Días desde la fecha de creación del ticket hasta la primera transición a
+    'Pendiente asignar técnico' (cuando la máquina llega al taller).
+    Devuelve None si no se puede calcular."""
+    created = parse_iso(ticket.get("created"))
+    if not created: return None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3: continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        if to == "Pendiente asignar técnico":
+            dt = parse_iso(ts)
+            if dt:
+                d = (dt - created).days
+                return d if d >= 0 else None
+            break
+    return None
+
+
+def compute_tiempo_devolucion(ticket):
+    """Días desde la primera transición a 'Devuelto a cliente' hasta la primera
+    transición a 'Resuelto'. Devuelve None si no se puede calcular."""
+    entrada = None
+    for tr in ticket.get("transitions", []):
+        if len(tr) < 3: continue
+        ts, fs, to = tr[0], tr[1], tr[2]
+        dt = parse_iso(ts)
+        if not dt: continue
+        if entrada is None and to == "Devuelto a cliente":
+            entrada = dt
+            continue
+        if entrada and to == "Resuelto":
+            d = (dt - entrada).days
+            return d if d >= 0 else None
+    return None
+
+
 def compute_tiempo_ppto(ticket):
     """Días desde primera entrada a 'En preparación presupuesto' hasta primera transición
     a 'Presupuesto preparado pendiente de enviar'. None si no se puede calcular."""
@@ -1397,9 +1443,11 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "forma_resolucion": t.get("forma_resolucion", ""),
             "is_online": is_truly_online(t),
             "mantenimiento": t.get("mantenimiento", ""),
-            "presupuesto": t.get("presupuesto", ""),
+            "presupuesto": _normalize_ppto_code(t.get("presupuesto", "")),
+            "dias_recepcion": compute_tiempo_recepcion(t),
             "dias_ppto": compute_tiempo_ppto(t),
             "dias_reparacion": compute_tiempo_reparacion(t),
+            "dias_devolucion": compute_tiempo_devolucion(t),
             "dias_taller": taller["dias"] if taller else None,
             "taller_live": taller["live"] if taller else False,
             "entrada_taller": taller["entrada"].strftime("%d/%m/%Y") if taller and taller["entrada"] else "",
@@ -1448,9 +1496,11 @@ TM_COLS = [
     ("leas_susti", "LEAS susti", "text", False),
     ("consola_susti", "Cons. susti", "text", False),
     ("manipulo_susti", "HP susti", "text", False),
+    ("dias_recepcion", "Días recep.", "num", False),
     ("dias_taller", "Días taller", "num", True),
     ("dias_ppto", "Días ppto", "num", False),
     ("dias_reparacion", "Días repar.", "num", False),
+    ("dias_devolucion", "Días devol.", "num", False),
     ("dias_susti", "Días susti", "num", True),
     ("mantenimiento", "Mantenim.", "text", False),
     ("consola", "Consola", "text", False),
@@ -1499,6 +1549,7 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
         f'<select id="{P}-susti"><option value="">Susti: todas</option><option>Sí</option><option>No</option></select>'
         f'<select id="{P}-open"><option value="">Estado: todos</option><option value="open">Abiertas (live)</option><option value="closed">Cerradas</option></select>'
         f'<button type="button" id="{P}-clear" class="multi-btn">✕ Limpiar</button>'
+        f'<button type="button" id="{P}-export" class="multi-btn" title="Descarga las filas y columnas visibles a CSV (se abre en Excel)" style="background:#16a34a;color:white;border-color:#16a34a">📥 Excel</button>'
         f'<span class="count"><b id="{P}-count">0</b> de <span id="{P}-total">0</span> visibles</span>'
         f'</div>'
     )
@@ -1540,7 +1591,7 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
                     v = v if v is not None else "—"
             elif key == "dias_susti":
                 v = v if v is not None else "—"
-            elif key in ("dias_ppto", "dias_reparacion"):
+            elif key in ("dias_ppto", "dias_reparacion", "dias_recepcion", "dias_devolucion"):
                 v = v if v is not None else "—"
             elif key == "disparos":
                 v = format_int_dot(v) if v != "" else ""
@@ -1639,6 +1690,31 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
         "}else banner.style.display='none';}}"
         "Object.values(els).forEach(function(e){e.addEventListener('input',apply);e.addEventListener('change',apply);});"
         "document.getElementById(P+'-clear').addEventListener('click',function(){Object.values(els).forEach(function(e){e.value='';});kpiFilter=null;extraFilter=null;apply();});"
+        "/* Botón Export CSV: descarga filas y columnas visibles */ "
+        "var exportBtn=document.getElementById(P+'-export');"
+        "if(exportBtn){exportBtn.addEventListener('click',function(){"
+        "var visibleColIdx=[];"
+        "var heads=tbl.tHead.rows[0].cells;"
+        "for(var i=0;i<heads.length;i++){if(heads[i].style.display!=='none')visibleColIdx.push(i);}"
+        "var lines=[];"
+        "var headerCells=visibleColIdx.map(function(i){return '\"'+heads[i].textContent.trim().replace(/\"/g,'\"\"')+'\"';});"
+        "lines.push(headerCells.join(';'));"
+        "for(var r=0;r<rows.length;r++){if(rows[r].style.display==='none')continue;"
+        "var rowCells=visibleColIdx.map(function(i){"
+        "var c=rows[r].cells[i];if(!c)return '';"
+        "var txt=c.textContent.replace(/\\s+/g,' ').trim();"
+        "return '\"'+txt.replace(/\"/g,'\"\"')+'\"';"
+        "});"
+        "lines.push(rowCells.join(';'));}"
+        "var BOM='\\uFEFF';var content=BOM+lines.join('\\n');"
+        "var blob=new Blob([content],{type:'text/csv;charset=utf-8;'});"
+        "var url=URL.createObjectURL(blob);"
+        "var a=document.createElement('a');a.href=url;"
+        "var now=new Date();var date=now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0');"
+        "a.download=P+'_export_'+date+'.csv';"
+        "document.body.appendChild(a);a.click();document.body.removeChild(a);"
+        "setTimeout(function(){URL.revokeObjectURL(url);},100);"
+        "});}"
         "var bc=document.getElementById(P+'-kpi-clear');if(bc)bc.addEventListener('click',function(){kpiFilter=null;extraFilter=null;apply();});"
         "document.querySelectorAll('.'+P+'-col-toggle').forEach(function(cb){"
         "cb.addEventListener('change',function(){var i=cb.getAttribute('data-col-idx');"
