@@ -75,6 +75,13 @@ jobs:
         run: |
           python scripts/fetch_sustis_history.py --cache cache/sustis_historico.json
 
+      - name: Enrich presupuesto desde Holded (para tickets sin PDF en attachments)
+        continue-on-error: true
+        env:
+          HOLDED_API_KEY: ${{ secrets.HOLDED_API_KEY }}
+        run: |
+          python scripts/enrich_from_holded.py --cache cache/jira_status_timeline.json
+
       - name: Geocode addresses (Nominatim) for mapa
         continue-on-error: true
         run: |
