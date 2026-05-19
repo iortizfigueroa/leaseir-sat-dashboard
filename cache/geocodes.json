@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": 1,
-    "updated_at": "2026-05-19T14:34:32.731705+00:00"
+    "updated_at": "2026-05-19T16:42:25.360822+00:00"
   },
   "entries": {
     "alcala de henares": {
@@ -1228,15 +1228,14 @@
       "failed": true
     },
     "via enrico de nicola, 193, 03043 cassino fr, italia 39 331 411 0046": {
-      "lat": null,
-      "lon": null,
-      "display_name": null,
-      "query": "Via Enrico de Nicola, 193, 03043 Cassino FR, Italia 39 331 411 0046",
-      "strategy": "loc-direct-clean",
+      "lat": 41.4909445,
+      "lon": 13.8345326,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://maps.app.goo.gl/b4ZS6QSvRMX3Xsbx5",
+      "strategy": "gmap-url",
       "cliente": "Epil Point Cassino",
       "loc": "Via Enrico de Nicola, 193, 03043 Cassino FR, Italia 39 331 411 0046",
-      "geocoded_at": "2026-05-19T10:29:00.581192+00:00",
-      "failed": true
+      "geocoded_at": "2026-05-19T16:42:24.505784+00:00"
     },
     "mario pinto portugal": {
       "lat": 38.7550566,
@@ -1267,6 +1266,26 @@
       "cliente": "Cibeles holea SUSTQUAD009",
       "loc": "Huelva",
       "geocoded_at": "2026-05-19T13:31:36.291917+00:00"
+    },
+    "c. hermes, 6, teatinos-universidad, 29010 málaga": {
+      "lat": 38.69313855,
+      "lon": -78.1367655,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://www.google.com/maps/place//data=!4m2!3m1!1s0xd72f78d5680abf3:0x9cc4398a1841ccfc?sa=X&ved=1t:8290&ictx=111",
+      "strategy": "gmap-url",
+      "cliente": "Sin Vello Teatinos",
+      "loc": "C. Hermes, 6, Teatinos-Universidad, 29010 Málaga",
+      "geocoded_at": "2026-05-19T16:42:24.804334+00:00"
+    },
+    "c. san sebastián, 12, 29130 alhaurín de la torre, málaga": {
+      "lat": 38.69313855,
+      "lon": -78.1367655,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://www.google.com/maps/place//data=!4m2!3m1!1s0xd72fb7472ba8f3f:0xc12ca708816241cc?sa=X&ved=1t:8290&ictx=111",
+      "strategy": "gmap-url",
+      "cliente": "Sin Vello ALHAURIN DE LA TORRE",
+      "loc": "C. San Sebastián, 12, 29130 Alhaurín de la Torre, Málaga",
+      "geocoded_at": "2026-05-19T16:42:25.090136+00:00"
     }
   }
 }
