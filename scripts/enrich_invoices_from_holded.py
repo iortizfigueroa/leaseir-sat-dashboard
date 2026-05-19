@@ -1,24 +1,20 @@
-"""enrich_invoices_from_holded.py — para cada ticket con presupuesto (E2xxxxx),
-busca la factura asociada en Holded y rellena en el cache:
-  - factura            : docNumber de la invoice (e.g. "SInv26-202600945")
-  - factura_importe    : total (float, €)
-  - factura_cobrado    : suma de pagos (float, €)
-  - factura_pendiente  : total - cobrado
+"""enrich_invoices_from_holded.py - cruce ppto-factura via from.id en Holded.
+
+Para cada ticket con presupuesto (E2xxxxx) busca la factura asociada en Holded
+y rellena en el cache:
+  - factura            : docNumber de la invoice (SInv26-202600750)
+  - factura_importe    : total (float EUR)
+  - factura_cobrado    : paymentsTotal (float EUR)
+  - factura_pendiente  : total - paymentsTotal
   - factura_estado     : "Cobrado" | "Vencido" | "Pendiente" | ""
-  - factura_fecha_venc : timestamp UNIX del vencimiento (int o None)
+  - factura_fecha_venc : timestamp UNIX (int) o None
 
-Estrategia de cruce:
-  Holded enlaza un estimate (E26xxxx) aceptado con su factura. En la API la
-  factura suele exponer ese vínculo en `from.docNumber`. Como fallback, busca
-  el código de presupuesto en `notes`, `desc` o `description` de la factura.
+Cruce: Holded enlaza por ID interno (invoice.from.id apunta a estimate.id).
+Pasos: 1) descargar estimates indexando id -> docNumber, 2) descargar invoices
+y para cada una resolver invoice.from.id al docNumber del estimate origen,
+3) fallback a texto E2xxx en notes/desc si no hay from.
 
-Si un mismo presupuesto tiene varias facturas, nos quedamos con la más reciente
-(criterio: campo `date` de la invoice, mayor = más nueva).
-
-Requiere variable de entorno HOLDED_API_KEY. Si no está, sale sin hacer nada
-(no es bloqueante; el workflow lleva `continue-on-error: true`).
-
-Uso: python scripts/enrich_invoices_from_holded.py --cache cache/jira_status_timeline.json
+Multi-factura: usamos la mas reciente (campo date).
 """
 from __future__ import annotations
 
@@ -34,21 +30,19 @@ from urllib.error import URLError, HTTPError
 
 
 HOLDED_BASE = "https://api.holded.com/api/invoicing/v1/documents"
-# Códigos de presupuesto Holded para Leaseir: E2YYxxx, E2YYxxxx, etc.
 PPTO_PAT = re.compile(r"E2[0-9]\d{3,6}", re.IGNORECASE)
 
 
-def fetch_all_invoices(api_key, timeout=30):
-    """Devuelve lista completa de invoices Holded paginadas."""
+def fetch_all(doc_type, api_key, timeout=30):
     out = []
-    for page in range(1, 21):  # límite seguridad: 20 pages * 500 = 10.000
-        url = f"{HOLDED_BASE}/invoice?starttmp=1700000000&endtmp=2000000000&page={page}"
+    for page in range(1, 21):
+        url = f"{HOLDED_BASE}/{doc_type}?starttmp=1700000000&endtmp=2000000000&page={page}"
         req = Request(url, headers={"key": api_key, "Accept": "application/json"})
         try:
             with urlopen(req, timeout=timeout) as r:
                 data = json.loads(r.read().decode("utf-8"))
         except (URLError, HTTPError, ValueError) as e:
-            print(f"  [warn] invoice page {page} falló: {e}", file=sys.stderr)
+            print(f"  [warn] {doc_type} page {page} fallo: {e}", file=sys.stderr)
             break
         if not isinstance(data, list) or not data:
             break
@@ -62,65 +56,73 @@ def _safe_str(v):
     return v if isinstance(v, str) else (str(v) if v is not None else "")
 
 
-def build_estimate_to_invoice(invoices):
-    """Indexa {estimate_docNumber_uppercase: invoice} probando varios campos.
+def _to_int(v):
+    try:
+        return int(v) if v else 0
+    except (ValueError, TypeError):
+        return 0
 
-    Prefer matches por `from.docNumber` (vínculo directo de Holded).
-    Si la misma estimate apunta a varias invoices, conservamos la de fecha
-    más reciente.
-    """
+
+def build_estimate_to_invoice(estimates, invoices):
+    est_id_to_docnum = {}
+    for e in estimates:
+        eid = e.get("id")
+        dn = _safe_str(e.get("docNumber")).strip()
+        if eid and dn:
+            est_id_to_docnum[eid] = dn
+
     idx = {}
+    n_by_id = 0
+    n_by_text = 0
+
     for inv in invoices:
+        inv_date = _to_int(inv.get("date"))
         candidates = []
-        # 1) from.docNumber — convención Holded para documentos derivados
+
         frm = inv.get("from")
         if isinstance(frm, dict):
-            dn = _safe_str(frm.get("docNumber")).strip()
-            if dn and PPTO_PAT.match(dn):
-                candidates.append(dn)
+            ftype = _safe_str(frm.get("docType")).lower()
+            fid = _safe_str(frm.get("id")).strip()
+            if ftype == "estimate" and fid:
+                est_dn = est_id_to_docnum.get(fid)
+                if est_dn:
+                    candidates.append(("id", est_dn))
         elif isinstance(frm, list):
             for entry in frm:
-                if isinstance(entry, dict):
-                    dn = _safe_str(entry.get("docNumber")).strip()
-                    if dn and PPTO_PAT.match(dn):
-                        candidates.append(dn)
-        # 2) campos forecastedFrom / fromDocNumber (otras variantes)
-        for fld in ("forecastedFrom", "fromDocNumber", "originalDocNumber"):
-            v = _safe_str(inv.get(fld)).strip()
-            if v and PPTO_PAT.match(v):
-                candidates.append(v)
-        # 3) fallback: códigos E2xxx en notes / desc / description
+                if isinstance(entry, dict) and _safe_str(entry.get("docType")).lower() == "estimate":
+                    fid = _safe_str(entry.get("id")).strip()
+                    est_dn = est_id_to_docnum.get(fid)
+                    if est_dn:
+                        candidates.append(("id", est_dn))
+
         if not candidates:
             for fld in ("notes", "desc", "description"):
                 v = _safe_str(inv.get(fld))
                 if v:
                     for m in PPTO_PAT.findall(v):
-                        candidates.append(m)
-        # Pick más reciente
-        inv_date = inv.get("date") or 0
-        try:
-            inv_date = int(inv_date)
-        except (ValueError, TypeError):
-            inv_date = 0
-        for k in candidates:
+                        candidates.append(("text", m))
+
+        for source, k in candidates:
             k_up = k.upper()
             prev = idx.get(k_up)
             if not prev:
                 idx[k_up] = inv
-                continue
-            prev_date = prev.get("date") or 0
-            try:
-                prev_date = int(prev_date)
-            except (ValueError, TypeError):
-                prev_date = 0
-            if inv_date > prev_date:
-                idx[k_up] = inv
+                if source == "id":
+                    n_by_id += 1
+                else:
+                    n_by_text += 1
+            else:
+                if inv_date > _to_int(prev.get("date")):
+                    idx[k_up] = inv
+
+    print(f"[enrich-invoices] cruces: {n_by_id} por from.id, {n_by_text} por texto/desc")
     return idx
 
 
 def compute_invoice_state(total, paid, due_ts):
-    """Devuelve (estado, pending). Si pending <= 1 céntimo => Cobrado."""
-    pending = round((total or 0) - (paid or 0), 2)
+    total = total or 0
+    paid = paid or 0
+    pending = round(total - paid, 2)
     if pending <= 0.01:
         return "Cobrado", 0.0
     now = datetime.now(timezone.utc).timestamp()
@@ -159,14 +161,13 @@ def main():
         print("[enrich-invoices] no hay tickets con presupuesto, skip.")
         return 0
 
-    print(f"[enrich-invoices] {len(with_ppto)} tickets con presupuesto. Consultando Holded invoices...")
-    invoices = fetch_all_invoices(api_key)
+    print(f"[enrich-invoices] {len(with_ppto)} tickets con presupuesto. Descargando Holded...")
+    estimates = fetch_all("estimate", api_key)
+    print(f"[enrich-invoices] {len(estimates)} estimates descargados.")
+    invoices = fetch_all("invoice", api_key)
     print(f"[enrich-invoices] {len(invoices)} invoices descargadas.")
-    if invoices:
-        sample_keys = sorted(list(invoices[0].keys()))[:25]
-        print(f"[enrich-invoices] DEBUG primera invoice (claves): {sample_keys}")
 
-    idx = build_estimate_to_invoice(invoices)
+    idx = build_estimate_to_invoice(estimates, invoices)
     print(f"[enrich-invoices] {len(idx)} estimates con factura mapeada.")
 
     enriched = 0
@@ -175,7 +176,6 @@ def main():
         ppto = (t.get("presupuesto") or "").strip().upper()
         inv = idx.get(ppto)
         if not inv:
-            # Limpia campos antiguos por si quedaron de runs previos
             t["factura"] = ""
             t["factura_importe"] = None
             t["factura_cobrado"] = None
@@ -185,9 +185,8 @@ def main():
             no_match += 1
             continue
         total = _f(inv.get("total"))
-        paid = _f(inv.get("paymentsTotal") or inv.get("paid") or 0)
-        # Vencimiento: prueba varios campos (Holded usa `dueDate` en unixtime)
-        due_raw = inv.get("dueDate") or inv.get("duedate") or inv.get("expirationDate") or None
+        paid = _f(inv.get("paymentsTotal"))
+        due_raw = inv.get("dueDate") or inv.get("duedate") or None
         try:
             due_ts = int(due_raw) if due_raw else None
         except (ValueError, TypeError):
@@ -203,7 +202,7 @@ def main():
 
     cache["tickets"] = tickets
     cache_path.write_text(json.dumps(cache, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"[enrich-invoices] {enriched} tickets con factura encontrada, {no_match} sin factura.")
+    print(f"[enrich-invoices] {enriched} tickets con factura, {no_match} sin factura.")
     return 0
 
 
