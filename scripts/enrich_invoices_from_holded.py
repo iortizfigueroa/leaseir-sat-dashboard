@@ -56,6 +56,20 @@ def _safe_str(v):
     return v if isinstance(v, str) else (str(v) if v is not None else "")
 
 
+def _extract_ppto_code(raw):
+    """Extrae el codigo E2xxxxx de un campo presupuesto crudo.
+
+    El campo puede ser un codigo limpio ('E260398'), el filename de un
+    attachment ('E260398 LEASEIR Brull.pdf'), o algo con ruido. Devuelve el
+    codigo upper-case o '' si no encuentra match.
+    """
+    if not raw:
+        return ""
+    s = str(raw).strip()
+    m = PPTO_PAT.search(s)
+    return m.group(0).upper() if m else ""
+
+
 def _to_int(v):
     try:
         return int(v) if v else 0
@@ -156,10 +170,23 @@ def main():
     cache = json.loads(cache_path.read_text(encoding="utf-8"))
     tickets = cache.get("tickets", {}) or {}
 
-    with_ppto = [(k, t) for k, t in tickets.items() if (t.get("presupuesto") or "").strip()]
+    # Tickets con presupuesto + codigo E2xxxxx extraido
+    with_ppto = []
+    n_dirty = 0
+    for k, t in tickets.items():
+        ppto_raw = (t.get("presupuesto") or "").strip()
+        if not ppto_raw:
+            continue
+        code = _extract_ppto_code(ppto_raw)
+        if not code:
+            n_dirty += 1
+            continue
+        with_ppto.append((k, t, code))
     if not with_ppto:
         print("[enrich-invoices] no hay tickets con presupuesto, skip.")
         return 0
+    if n_dirty:
+        print(f"[enrich-invoices] {n_dirty} tickets con presupuesto pero sin codigo E2xxx valido.")
 
     print(f"[enrich-invoices] {len(with_ppto)} tickets con presupuesto. Descargando Holded...")
     estimates = fetch_all("estimate", api_key)
@@ -172,8 +199,7 @@ def main():
 
     enriched = 0
     no_match = 0
-    for k, t in with_ppto:
-        ppto = (t.get("presupuesto") or "").strip().upper()
+    for k, t, ppto in with_ppto:
         inv = idx.get(ppto)
         if not inv:
             t["factura"] = ""
