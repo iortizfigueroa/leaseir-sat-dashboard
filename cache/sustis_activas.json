@@ -1,24 +1,24 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-19T12:25:18.528493+00:00",
+    "last_fetched_at": "2026-05-19T13:31:22.149780+00:00",
     "schema_version": 1,
-    "count": 50
+    "count": 51
   },
   "items": [
     {
-      "key": "LEAS-6259",
+      "key": "LEAS-6306",
       "subtask_status": "En préstamo",
-      "cliente": "Ces Depilación SADA (DS0125)",
-      "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
-      "consola_susti": "SUSTMHR015",
-      "manipulo_susti": "40518",
+      "cliente": "Cibeles holea SUSTQUAD009",
+      "loc": "Huelva",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD011",
       "fecha_envio": null,
-      "parent_key": "LEAS-6258",
+      "parent_key": "LEAS-6305",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Ces Depilación SADA (DS0125)",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "40367",
-      "modelo": "MHR"
+      "parent_cliente": "Cibeles holea SUSTQUAD009",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6249",
@@ -34,21 +34,6 @@
       "consola_averiada": "90747",
       "manipulo_averiado": "30279",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-6248",
-      "subtask_status": "En préstamo",
-      "cliente": "Sin Vello Ibiza",
-      "loc": "Ibiza",
-      "consola_susti": null,
-      "manipulo_susti": "H01069",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6246",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Sin Vello Ibiza",
-      "consola_averiada": "",
-      "manipulo_averiado": "H03051",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6244",
@@ -141,6 +126,36 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6259",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Ces Depilación SADA (DS0125)",
+      "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
+      "consola_susti": "SUSTMHR015",
+      "manipulo_susti": "40518",
+      "fecha_envio": "2026-05-15T14:30:00.000+0200",
+      "parent_key": "LEAS-6258",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Ces Depilación SADA (DS0125)",
+      "consola_averiada": "No aparece",
+      "manipulo_averiado": "40367",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6248",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Sin Vello Ibiza",
+      "loc": "Ibiza",
+      "consola_susti": null,
+      "manipulo_susti": "H01069",
+      "fecha_envio": "2026-05-15T14:30:00.000+0200",
+      "parent_key": "LEAS-6246",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Sin Vello Ibiza",
+      "consola_averiada": "",
+      "manipulo_averiado": "H03051",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-5967",
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Palencia",
@@ -149,7 +164,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-05-14T11:11:00.000+0200",
       "parent_key": "LEAS-5872",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sin Vello Palencia",
       "consola_averiada": "",
       "manipulo_averiado": "H00565",
@@ -164,7 +179,7 @@
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-05-13T15:39:00.000+0200",
       "parent_key": "LEAS-6221",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello Cadiz",
       "consola_averiada": "C00155",
       "manipulo_averiado": "H00155",
@@ -314,7 +329,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-04-30T16:53:00.000+0200",
       "parent_key": "LEAS-6091",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Velez Malaga",
       "consola_averiada": "C00564",
       "manipulo_averiado": "H00564",
