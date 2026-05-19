@@ -82,6 +82,13 @@ jobs:
         run: |
           python scripts/enrich_from_holded.py --cache cache/jira_status_timeline.json
 
+      - name: Enrich factura desde Holded (cruce ppto -> invoice + cobrado/pendiente/estado)
+        continue-on-error: true
+        env:
+          HOLDED_API_KEY: ${{ secrets.HOLDED_API_KEY }}
+        run: |
+          python scripts/enrich_invoices_from_holded.py --cache cache/jira_status_timeline.json
+
       - name: Geocode addresses (Nominatim) for mapa
         continue-on-error: true
         run: |

@@ -3225,6 +3225,11 @@ def build_detalle_section(cache, sustis_by_parent=None, sustis_maps=None):
             "presupuesto": _normalize_ppto_code(t.get("presupuesto", "")),
             "entrada_taller": entrada_s,
             "salida_taller": salida_s,
+            "factura": (t.get("factura") or "").strip(),
+            "factura_importe": t.get("factura_importe"),
+            "factura_cobrado": t.get("factura_cobrado"),
+            "factura_pendiente": t.get("factura_pendiente"),
+            "factura_estado": (t.get("factura_estado") or "").strip(),
         })
 
     idx = {s: i for i, s in enumerate(FUNNEL_ORDER)}
@@ -3234,6 +3239,32 @@ def build_detalle_section(cache, sustis_by_parent=None, sustis_maps=None):
 
     def _num_cell(v):
         return "" if (v is None or v == "") else html_escape(str(v))
+
+    def _money(v):
+        if v is None or v == "":
+            return ""
+        try:
+            n = float(v)
+        except (ValueError, TypeError):
+            return ""
+        s = format(n, ",.2f").replace(",", "_").replace(".", ",").replace("_", ".")
+        return s + " EUR"
+
+    def _estado_badge(est):
+        if not est:
+            return ""
+        e = est.lower()
+        if e == "cobrado":
+            color, bg = "#16a34a", "#dcfce7"
+        elif e == "vencido":
+            color, bg = "#dc2626", "#fee2e2"
+        elif e == "pendiente":
+            color, bg = "#ca8a04", "#fef9c3"
+        else:
+            color, bg = "#64748b", "#f1f5f9"
+        return ('<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'
+                + bg + ';color:' + color + ';font-weight:600;font-size:10px">'
+                + html_escape(est) + '</span>')
 
     body = []
     for r in rows:
@@ -3256,6 +3287,11 @@ def build_detalle_section(cache, sustis_by_parent=None, sustis_maps=None):
             f'<td class="dtl-extra" data-col="37" style="display:none">{html_escape(r["presupuesto"])}</td>'
             f'<td class="dtl-extra" data-col="38" style="display:none">{html_escape(r["entrada_taller"])}</td>'
             f'<td class="dtl-extra" data-col="39" style="display:none">{html_escape(r["salida_taller"])}</td>'
+            f'<td class="dtl-extra" data-col="40" style="display:none">{html_escape(r["factura"])}</td>'
+            f'<td class="dtl-extra" data-col="41" style="display:none;text-align:right;font-variant-numeric:tabular-nums">{_money(r["factura_importe"])}</td>'
+            f'<td class="dtl-extra" data-col="42" style="display:none;text-align:right;font-variant-numeric:tabular-nums">{_money(r["factura_cobrado"])}</td>'
+            f'<td class="dtl-extra" data-col="43" style="display:none;text-align:right;font-variant-numeric:tabular-nums">{_money(r["factura_pendiente"])}</td>'
+            f'<td class="dtl-extra" data-col="44" style="display:none;text-align:center">{_estado_badge(r["factura_estado"])}</td>'
         )
         body.append(
             ('<tr data-no-tec="1">' if r["status"] in {"Pendiente asignar técnico","En cola taller","Presupuesto preparado pendiente de enviar","Pendiente confirmación presupuesto","Inspección de salida"} else '<tr>')
