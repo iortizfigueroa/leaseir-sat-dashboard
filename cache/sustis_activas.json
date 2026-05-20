@@ -1,40 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-20T14:01:26.780600+00:00",
+    "last_fetched_at": "2026-05-20T16:41:20.542813+00:00",
     "schema_version": 1,
     "count": 52
   },
   "items": [
-    {
-      "key": "LEAS-6323",
-      "subtask_status": "En préstamo",
-      "cliente": "Ces Depilación TEMPLE",
-      "loc": "Rúa Tapia, 44, bajo derecha, 15679 O Temple, A Coruña",
-      "consola_susti": null,
-      "manipulo_susti": "40551",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6302",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Ces Depilación TEMPLE",
-      "consola_averiada": "",
-      "manipulo_averiado": "40183",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6319",
-      "subtask_status": "En préstamo",
-      "cliente": "DONLY LASER",
-      "loc": "Carrer del Brasil, 27, L'Olivereta, 46018 València, Valencia",
-      "consola_susti": "sustmhr030",
-      "manipulo_susti": "sustdual003",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6315",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "DONLY LASER",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00448",
-      "modelo": "MHR"
-    },
     {
       "key": "LEAS-6316",
       "subtask_status": "En préstamo",
@@ -124,6 +94,36 @@
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6323",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Ces Depilación TEMPLE",
+      "loc": "Rúa Tapia, 44, bajo derecha, 15679 O Temple, A Coruña",
+      "consola_susti": null,
+      "manipulo_susti": "40551",
+      "fecha_envio": "2026-05-20T17:06:00.000+0200",
+      "parent_key": "LEAS-6302",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Ces Depilación TEMPLE",
+      "consola_averiada": "",
+      "manipulo_averiado": "40183",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-6319",
+      "subtask_status": "Equipo enviado",
+      "cliente": "DONLY LASER",
+      "loc": "Carrer del Brasil, 27, L'Olivereta, 46018 València, Valencia",
+      "consola_susti": "SUSTMHR30",
+      "manipulo_susti": "SUSTDUAL003",
+      "fecha_envio": "2026-05-20T17:02:00.000+0200",
+      "parent_key": "LEAS-6315",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "DONLY LASER",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00448",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-6306",
@@ -434,7 +434,7 @@
       "manipulo_susti": "SUSTDUAL011",
       "fecha_envio": "2026-04-23T16:13:00.000+0200",
       "parent_key": "LEAS-5837",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centro del vello y Belleza Denia (Damaris)",
       "consola_averiada": "90019",
       "manipulo_averiado": "30015",
@@ -472,7 +472,7 @@
     },
     {
       "key": "LEAS-5854",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Equipo enviado",
       "cliente": "Harmonie Salamanca",
       "loc": "Salamanca",
       "consola_susti": "SUSTMHR033",
@@ -494,7 +494,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-04-20T00:00:00.000+0200",
       "parent_key": "LEAS-5263",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centri Ideal Turin Torino",
       "consola_averiada": "369",
       "manipulo_averiado": "",
