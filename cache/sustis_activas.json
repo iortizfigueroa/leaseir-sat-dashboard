@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-21T13:46:02.390790+00:00",
+    "last_fetched_at": "2026-05-21T16:07:19.986738+00:00",
     "schema_version": 1,
-    "count": 50
+    "count": 51
   },
   "items": [
-    {
-      "key": "LEAS-6337",
-      "subtask_status": "Equipo enviado",
-      "cliente": "Sin Vello Republica Arggentina",
-      "loc": "Av. de la República Argentina, 20, Poniente Sur, 14004 Córdoba",
-      "consola_susti": "SUSTMHR011",
-      "manipulo_susti": "Mhp30074",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6322",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Sin Vello Republica Arggentina",
-      "consola_averiada": "C00231",
-      "manipulo_averiado": "H00231",
-      "modelo": "MHR"
-    },
     {
       "key": "LEAS-6316",
       "subtask_status": "En préstamo",
@@ -109,6 +94,36 @@
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6337",
+      "subtask_status": "En préstamo",
+      "cliente": "Sin Vello Republica Arggentina",
+      "loc": "Av. de la República Argentina, 20, Poniente Sur, 14004 Córdoba",
+      "consola_susti": "SUSTMHR011",
+      "manipulo_susti": "30074",
+      "fecha_envio": "2026-05-21T16:38:00.000+0200",
+      "parent_key": "LEAS-6322",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Republica Arggentina",
+      "consola_averiada": "C00231",
+      "manipulo_averiado": "H00231",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6339",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD043",
+      "fecha_envio": "2026-05-21T16:32:00.000+0200",
+      "parent_key": "LEAS-6305",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Cibeles holea SUSTQUAD009",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6323",
@@ -299,7 +314,7 @@
       "manipulo_susti": "H03258",
       "fecha_envio": "2026-05-07T13:59:00.000+0200",
       "parent_key": "LEAS-6049",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Smart Duck Lyon Part Dieu C03206 / H03206",
       "consola_averiada": "No aparece",
       "manipulo_averiado": "No aparece",
@@ -344,7 +359,7 @@
       "manipulo_susti": "40481",
       "fecha_envio": "2026-04-30T16:02:00.000+0200",
       "parent_key": "LEAS-6030",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Elha Oloriz",
       "consola_averiada": "C00491",
       "manipulo_averiado": "H00491",
