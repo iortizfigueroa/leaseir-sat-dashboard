@@ -232,6 +232,10 @@ def http_fetch_html(url, timeout=10, max_bytes=200_000):
         return ""
 
 
+# Coords servidas por la pagina de consentimiento de cookies UE (Gijón) — NO son del lugar real.
+# Si extraemos eso, devolvemos None para que caiga al fallback Nominatim con la direccion de texto.
+_GMAP_CONSENT_COORDS = {(43.50639385, -5.6786944)}
+
 def _extract_latlng_from_html(html):
     """Busca coords en el HTML de Google Maps. Soporta múltiples patrones."""
     if not html: return None
@@ -292,6 +296,13 @@ def _extract_latlng_patterns(s):
     return None
 
 
+def _is_consent_dummy(c):
+    if not c: return False
+    try:
+        return (round(float(c[0]), 6), round(float(c[1]), 6)) in {(43.506394, -5.678694)}
+    except Exception:
+        return False
+
 def extract_latlng_from_gmap_url(url):
     """Extrae (lat, lon) de un URL de Google Maps.
     Maneja:
@@ -332,6 +343,33 @@ def extract_latlng_from_gmap_url(url):
             try: return float(m.group(1)), float(m.group(2))
             except ValueError: pass
     return None
+
+
+_orig_extract_latlng_from_gmap_url = extract_latlng_from_gmap_url
+# Coords dummy adicionales que Google sirve en su HTML de consent/landing:
+#  - (37.0625, -95.677068)  → centro geografico USA (consent con gl=us)
+#  - (37.09024, -95.712891) → variante centro USA
+#  - (43.50639385, -5.6786944) → Gijón (consent default UE) — ya en _GMAP_CONSENT_COORDS
+_GMAP_DUMMY_COORDS = {
+    (43.506394, -5.678694),
+    (37.0625, -95.677068),
+    (37.09024, -95.712891),
+    (39.8283, -98.5795),
+}
+
+def _is_dummy_coord(c):
+    if not c: return False
+    try:
+        key = (round(float(c[0]), 6), round(float(c[1]), 6))
+    except Exception:
+        return False
+    return key in _GMAP_DUMMY_COORDS
+
+def extract_latlng_from_gmap_url(url):  # type: ignore[no-redef]
+    c = _orig_extract_latlng_from_gmap_url(url)
+    if _is_consent_dummy(c) or _is_dummy_coord(c):
+        return None
+    return c
 
 
 def collect_addresses():

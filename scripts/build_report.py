@@ -3737,6 +3737,8 @@ def build_html(cache, out_path, template_path):
         sustis_html = chains_html
 
     # Track record: guardar snapshot de KPIs hoy en cache/kpi_history.json (antes del render)
+    # Fix 2026-05-21: _tiempos_stats se calcula mas abajo (linea ~3850); inicializar aqui para evitar NameError
+    # que rompia silenciosamente el snapshot diario ("Evolucion diaria de KPIs" congelada el 18 mayo).
     _tiempos_stats = {}
     history = {}
     try:
