@@ -1502,6 +1502,8 @@ def collect_tiempos_data(cache, sustis_by_parent, sustis_envio_by_parent,
             "factura_cobrado": t.get("factura_cobrado"),
             "factura_pendiente": t.get("factura_pendiente"),
             "factura_estado": (t.get("factura_estado") or "").strip(),
+            "presupuesto_estado": (t.get("presupuesto_estado") or "").strip(),
+            "presupuesto_facturado": _compute_presupuesto_facturado(t),
         })
     return rows
 
@@ -1554,6 +1556,59 @@ def _estado_factura_badge(est):
             + html_escape(est) + '</span>')
 
 
+def _estado_ppto_badge(est):
+    """Badge HTML coloreado para estado de presupuesto (Aceptado/Pendiente/Cancelado)."""
+    if not est:
+        return ""
+    e = est.lower()
+    if e == "aceptado":
+        color, bg = "#854f0b", "#faeeda"   # ambar (en curso administrativo)
+    elif e == "cancelado":
+        color, bg = "#64748b", "#f1f5f9"   # gris
+    elif e == "pendiente":
+        color, bg = "#a32d2d", "#fcebeb"   # rojo (bloqueado)
+    else:
+        color, bg = "#64748b", "#f1f5f9"
+    return ('<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'
+            + bg + ';color:' + color + ';font-weight:600;font-size:10px">'
+            + html_escape(est) + '</span>')
+
+
+def _estado_facturado_badge(est):
+    """Badge HTML para 'Presupuesto facturado': Facturado/Pendiente/Cancelado."""
+    if not est:
+        return ""
+    e = est.lower()
+    if e == "facturado":
+        color, bg = "#0c447c", "#e6f1fb"   # azul (factura emitida)
+    elif e == "cancelado":
+        color, bg = "#64748b", "#f1f5f9"   # gris
+    elif e == "pendiente":
+        color, bg = "#a32d2d", "#fcebeb"   # rojo
+    else:
+        color, bg = "#64748b", "#f1f5f9"
+    return ('<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:'
+            + bg + ';color:' + color + ';font-weight:600;font-size:10px">'
+            + html_escape(est) + '</span>')
+
+
+def _compute_presupuesto_facturado(ticket):
+    """Devuelve 'Cancelado' | 'Facturado' | 'Pendiente' | '' segun el estado del ppto y existencia de factura.
+    - Si no hay presupuesto en el ticket → '' (no aplica)
+    - Si presupuesto_estado == Cancelado → Cancelado
+    - Si hay docNumber de factura (campo 'factura' no vacio) → Facturado
+    - Else → Pendiente
+    """
+    if not (ticket.get("presupuesto") or "").strip():
+        return ""
+    pe = (ticket.get("presupuesto_estado") or "").strip().lower()
+    if pe == "cancelado":
+        return "Cancelado"
+    if (ticket.get("factura") or "").strip():
+        return "Facturado"
+    return "Pendiente"
+
+
 TM_COLS = [
     ("chain", "Cadena", "text", True),
     ("k", "Ticket", "text", True),
@@ -1584,6 +1639,8 @@ TM_COLS = [
     ("disparos", "Disparos", "num", False),
     ("importe", "Importe", "num", False),
     ("presupuesto", "Presupuesto", "text", True),
+    ("presupuesto_estado", "Estado ppto.", "text", True),
+    ("presupuesto_facturado", "Ppto. facturado", "text", True),
     ("fventa", "Fecha venta", "date", False),
     ("entrada_taller", "Entrada taller", "date", False),
     ("salida_taller", "Salida taller", "date", False),
@@ -1679,6 +1736,10 @@ def _render_tm_detail(rows, prefix, extra_attrs_fn=None, intro_html="", enable_k
                 v = _format_money_eur(v)
             elif key == "factura_estado":
                 v = _estado_factura_badge(v)
+            elif key == "presupuesto_estado":
+                v = _estado_ppto_badge(v)
+            elif key == "presupuesto_facturado":
+                v = _estado_facturado_badge(v)
             else:
                 v = html_escape(str(v)) if v is not None else ""
             hide = "" if default_on else ' style="display:none"'
@@ -3369,6 +3430,214 @@ def build_detalle_section(cache, sustis_by_parent=None, sustis_maps=None):
     return "\n".join(body)
 
 
+
+def build_admin_section(cache):
+    """Renderiza la pestaña Administración: KPIs + matriz Ppto x Factura + tabla detalle filtrable.
+    Universo: tickets creados en 2026 con presupuesto o con cobertura (Garantia/Mantenimiento).
+    """
+    tickets = (cache or {}).get("tickets", {}) or {}
+    JIRA_URL = "https://leaseir.atlassian.net/browse/"
+
+    rows = []
+    for k, t in tickets.items():
+        created = (t.get("created") or "")[:4]
+        if created != "2026":
+            continue
+        gar = (t.get("garantia") or "").strip().lower() == "sí"
+        mtto = (t.get("mantenimiento") or "").strip().lower() == "sí"
+        ppto_code = (t.get("presupuesto") or "").strip()
+        ppto_estado = (t.get("presupuesto_estado") or "").strip()
+        ppto_facturado = _compute_presupuesto_facturado(t)
+        factura_estado = (t.get("factura_estado") or "").strip()
+        importe = t.get("importe") or t.get("factura_importe")
+        if not (ppto_code or gar or mtto):
+            continue
+        if gar or mtto:
+            bucket = "ok_cobertura"
+        elif (ppto_facturado.lower() == "cancelado") or (ppto_estado.lower() == "cancelado"):
+            bucket = "cancelado"
+        elif factura_estado.lower() == "vencido":
+            bucket = "factura_vencida"
+        elif factura_estado.lower() == "cobrado":
+            bucket = "ok_cobrada"
+        elif factura_estado.lower() == "pendiente":
+            bucket = "factura_emitida"
+        elif ppto_estado.lower() == "aceptado":
+            bucket = "sin_factura"
+        else:
+            bucket = "pdte_proforma"
+        rows.append({
+            "key": k,
+            "cliente": (t.get("cliente") or "").strip(),
+            "garantia": "Sí" if gar else "",
+            "mantenimiento": "Sí" if mtto else "",
+            "ppto_code": ppto_code,
+            "ppto_estado": ppto_estado,
+            "ppto_facturado": ppto_facturado,
+            "factura": (t.get("factura") or "").strip(),
+            "factura_estado": factura_estado,
+            "importe": importe if importe not in ("", None) else None,
+            "bucket": bucket,
+            "status": (t.get("current_status") or "").strip(),
+        })
+
+    def _count(b): return sum(1 for r in rows if r["bucket"] == b)
+    def _sum_eur(b):
+        total = 0.0
+        for r in rows:
+            if r["bucket"] != b: continue
+            try: total += float(r["importe"] or 0)
+            except (ValueError, TypeError): pass
+        return total
+    def _cadenas(b):
+        return len({(r["cliente"].split()[0] if r["cliente"] else "") for r in rows if r["bucket"] == b})
+
+    kpi_data = [
+        ("Pdte. proforma", _count("pdte_proforma"), _sum_eur("pdte_proforma"), _cadenas("pdte_proforma"), "#A32D2D"),
+        ("Sin factura",    _count("sin_factura"),    _sum_eur("sin_factura"),    _cadenas("sin_factura"),    "#854F0B"),
+        ("Factura vencida",_count("factura_vencida"),_sum_eur("factura_vencida"),_cadenas("factura_vencida"),"#A32D2D"),
+        ("OK · cobertura", _count("ok_cobertura"),   None,                       _cadenas("ok_cobertura"),   "#3B6D11"),
+    ]
+
+    parts = []
+    parts.append('<h2 style="margin-top:0">Administración</h2>')
+    parts.append('<div class="legend">Vista del flujo administrativo (proforma → factura) para los tickets de 2026 que requieren facturación o tienen cobertura (garantía/mantenimiento). '
+                 'Colores: <b style="color:#A32D2D">rojo</b> = bloqueado · <b style="color:#854F0B">ámbar</b> = en curso · '
+                 '<b style="color:#0C447C">azul</b> = factura emitida · <b style="color:#3B6D11">verde</b> = OK (cobrada o cobertura).</div>')
+
+    # KPI cards
+    parts.append('<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0 16px">')
+    for label, n, eur, cads, color in kpi_data:
+        if eur is not None:
+            eur_s = ("%.0f" % eur).replace(",", ".")
+            sub = '<div style="font-size:11px;color:var(--grey)">€' + eur_s + ' · ' + str(cads) + ' cadenas</div>'
+        else:
+            sub = '<div style="font-size:11px;color:var(--grey)">Garantía + Mtto</div>'
+        parts.append(
+            '<div style="background:#f8fafc;padding:14px;border-radius:8px">'
+            '<div style="font-size:12px;color:var(--grey)">' + html_escape(label) + '</div>'
+            '<div style="font-size:24px;font-weight:600;color:' + color + '">' + str(n) + '</div>'
+            + sub + '</div>'
+        )
+    parts.append('</div>')
+
+    # Matriz Ppto x Factura
+    def _row_html(label, ppto_pred):
+        n_none = sum(1 for r in rows if ppto_pred(r) and not (r["factura_estado"] or "") and r["bucket"] != "ok_cobertura")
+        n_pdte = sum(1 for r in rows if ppto_pred(r) and (r["factura_estado"] or "").lower() == "pendiente")
+        n_cobr = sum(1 for r in rows if ppto_pred(r) and (r["factura_estado"] or "").lower() == "cobrado")
+        n_venc = sum(1 for r in rows if ppto_pred(r) and (r["factura_estado"] or "").lower() == "vencido")
+        def _cell(n, bg, color):
+            if n == 0: return '<td style="padding:6px;text-align:center;color:#cbd5e1">—</td>'
+            return '<td style="padding:6px;text-align:center;background:' + bg + ';color:' + color + ';font-weight:600">' + str(n) + '</td>'
+        return ('<tr>'
+                '<td style="padding:6px;font-weight:600">' + label + '</td>'
+                + _cell(n_none, "#fcebeb", "#501313")
+                + _cell(n_pdte, "#fef9c3", "#854f0b")
+                + _cell(n_cobr, "#eaf3de", "#173404")
+                + _cell(n_venc, "#fcebeb", "#501313")
+                + '</tr>')
+
+    parts.append('<div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px;margin-bottom:16px">'
+                 '<div style="font-size:13px;font-weight:600;margin-bottom:10px">Cruce Presupuesto × Factura</div>'
+                 '<table style="width:100%;font-size:12px;border-collapse:collapse">'
+                 '<thead><tr>'
+                 '<th style="text-align:left;padding:6px;color:var(--grey);font-weight:500"></th>'
+                 '<th style="padding:6px;color:var(--grey);font-weight:500">F. Pendiente</th>'
+                 '<th style="padding:6px;color:var(--grey);font-weight:500">F. Emitida</th>'
+                 '<th style="padding:6px;color:var(--grey);font-weight:500">F. Cobrada</th>'
+                 '<th style="padding:6px;color:var(--grey);font-weight:500">F. Vencida</th>'
+                 '</tr></thead><tbody>')
+    parts.append(_row_html("Ppto pendiente", lambda r: (r["ppto_estado"] or "").lower() in ("pendiente","") and r["ppto_code"]))
+    parts.append(_row_html("Ppto aceptado", lambda r: (r["ppto_estado"] or "").lower() == "aceptado"))
+    parts.append(_row_html("Ppto cancelado", lambda r: (r["ppto_estado"] or "").lower() == "cancelado"))
+    n_cobertura = _count("ok_cobertura")
+    parts.append(
+        '<tr style="border-top:1px solid var(--line)">'
+        '<td style="padding:6px;font-weight:600;color:#26215C">Con cobertura</td>'
+        '<td colspan="4" style="padding:6px;text-align:center;background:#eeedfe;color:#26215c;font-weight:600">'
+        + str(n_cobertura) + ' (Garantía/Mantenimiento — no requieren facturación)</td></tr>'
+    )
+    parts.append('</tbody></table></div>')
+
+    # Tabla detalle
+    def _badge(text, bg, color):
+        if not text: return ""
+        return ('<span style="display:inline-block;padding:2px 7px;border-radius:10px;background:' + bg
+                + ';color:' + color + ';font-size:10px;font-weight:600">' + html_escape(text) + '</span>')
+
+    detail_rows_html = []
+    for r in sorted(rows, key=lambda x: (x["bucket"], x["key"])):
+        gar_b = _badge("Sí", "#eeedfe", "#26215c") if r["garantia"] else '<span style="color:#cbd5e1">—</span>'
+        mtto_b = _badge("Sí", "#faeeda", "#412402") if r["mantenimiento"] else '<span style="color:#cbd5e1">—</span>'
+        if r["bucket"] == "ok_cobertura":
+            label = "OK · Garantía" if r["garantia"] else "OK · Mtto"
+            pe_b = _badge(label, "#eaf3de", "#173404")
+            ppfact_b = '<span style="color:#94a3b8;font-size:11px">No aplica</span>'
+        else:
+            pe_b = _estado_ppto_badge(r["ppto_estado"]) or '<span style="color:#cbd5e1">—</span>'
+            ppfact_b = _estado_facturado_badge(r["ppto_facturado"]) or '<span style="color:#cbd5e1">—</span>'
+        fact_b = _estado_factura_badge(r["factura_estado"]) or '<span style="color:#cbd5e1">—</span>'
+        imp_s = ""
+        if r["importe"] not in (None, ""):
+            try: imp_s = ("%.0f €" % float(r["importe"])).replace(",", ".")
+            except (ValueError, TypeError): imp_s = ""
+        detail_rows_html.append(
+            '<tr data-bucket="' + r["bucket"] + '" data-gar="' + ("1" if r["garantia"] else "0") + '" data-mtto="' + ("1" if r["mantenimiento"] else "0") + '">'
+            '<td style="padding:6px"><a href="' + JIRA_URL + r["key"] + '" target="_blank" style="color:#0b3d91;font-weight:600">' + r["key"] + '</a></td>'
+            '<td style="padding:6px">' + html_escape(r["cliente"]) + '</td>'
+            '<td style="padding:6px;text-align:center">' + gar_b + '</td>'
+            '<td style="padding:6px;text-align:center">' + mtto_b + '</td>'
+            '<td style="padding:6px;text-align:center">' + pe_b + '</td>'
+            '<td style="padding:6px;text-align:center">' + ppfact_b + '</td>'
+            '<td style="padding:6px;text-align:center">' + fact_b + '</td>'
+            '<td style="padding:6px;text-align:right">' + imp_s + '</td>'
+            '</tr>'
+        )
+
+    parts.append('<div style="background:#fff;border:1px solid var(--line);border-radius:8px;padding:14px">'
+                 '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">'
+                 '<div style="font-size:13px;font-weight:600">Detalle (' + str(len(rows)) + ' tickets 2026)</div>'
+                 '<div style="display:flex;gap:6px" id="admin-filters">'
+                 '<button type="button" class="admin-filter active" data-flt="all" style="font-size:11px;padding:4px 10px;background:#f1efe8;color:#444441;border:none;border-radius:999px;cursor:pointer">Todos</button>'
+                 '<button type="button" class="admin-filter" data-flt="red" style="font-size:11px;padding:4px 10px;background:#fcebeb;color:#501313;border:none;border-radius:999px;cursor:pointer">Solo rojos</button>'
+                 '<button type="button" class="admin-filter" data-flt="gar" style="font-size:11px;padding:4px 10px;background:#eeedfe;color:#26215c;border:none;border-radius:999px;cursor:pointer">Garantía</button>'
+                 '<button type="button" class="admin-filter" data-flt="mtto" style="font-size:11px;padding:4px 10px;background:#faeeda;color:#412402;border:none;border-radius:999px;cursor:pointer">Mantenimiento</button>'
+                 '</div></div>'
+                 '<div class="scroller"><table style="width:100%;font-size:12px;border-collapse:collapse" id="admin-table">'
+                 '<thead><tr style="border-bottom:1px solid var(--line)">'
+                 '<th style="text-align:left;padding:6px;color:var(--grey);font-weight:500">LEAS</th>'
+                 '<th style="text-align:left;padding:6px;color:var(--grey);font-weight:500">Cliente</th>'
+                 '<th style="text-align:center;padding:6px;color:var(--grey);font-weight:500">Gar.</th>'
+                 '<th style="text-align:center;padding:6px;color:var(--grey);font-weight:500">Mtto.</th>'
+                 '<th style="text-align:center;padding:6px;color:var(--grey);font-weight:500">Estado ppto</th>'
+                 '<th style="text-align:center;padding:6px;color:var(--grey);font-weight:500">Ppto facturado</th>'
+                 '<th style="text-align:center;padding:6px;color:var(--grey);font-weight:500">Factura</th>'
+                 '<th style="text-align:right;padding:6px;color:var(--grey);font-weight:500">€</th>'
+                 '</tr></thead><tbody>')
+    parts.append("".join(detail_rows_html))
+    parts.append('</tbody></table></div></div>')
+    parts.append('<script>(function(){'
+                 'var REDS = ["pdte_proforma","sin_factura","factura_vencida"];'
+                 'var btns = document.querySelectorAll(".admin-filter");'
+                 'btns.forEach(function(b){'
+                 'b.addEventListener("click", function(){'
+                 'btns.forEach(function(x){ x.classList.remove("active"); });'
+                 'b.classList.add("active");'
+                 'var flt = b.dataset.flt;'
+                 'var rs = document.querySelectorAll("#admin-table tbody tr");'
+                 'rs.forEach(function(tr){'
+                 'var show = true;'
+                 'if(flt === "red") show = REDS.indexOf(tr.dataset.bucket) >= 0;'
+                 'else if(flt === "gar") show = tr.dataset.gar === "1";'
+                 'else if(flt === "mtto") show = tr.dataset.mtto === "1";'
+                 'tr.style.display = show ? "" : "none";'
+                 '});});});'
+                 '})();</script>')
+
+    return "".join(parts)
+
+
 def build_html(cache, out_path, template_path):
     today = date.today()
     try:
@@ -3711,6 +3980,11 @@ def build_html(cache, out_path, template_path):
 
     # Fase 2: pestaña "Por cadena"
     chains_html = ""
+    admin_html = ""
+    try:
+        admin_html = build_admin_section(cache)
+    except Exception as _e:
+        admin_html = f'<p style="color:#c0392b;padding:20px">Error generando Administración: {_e}</p>'
     try:
         from build_chains import build_chains_html
         airtable = None
@@ -4026,6 +4300,7 @@ def build_html(cache, out_path, template_path):
         "__MAP_SUSTIS__": json.dumps(map_markers_sustis),
         "__CHAINS_HTML__": chains_html,
         "__SUSTIS_HTML__": sustis_html,
+        "__ADMIN_HTML__": admin_html,
         "__PENDIENTES_TALLER_SUSTI__": str(pendientes_taller_susti),
         "__ENTRADAS_TALLER__": str(entradas_taller_count),
         "__KPI_PENDIENTES_TALLER_KEYS__": json.dumps(sorted(pendientes_taller_keys)),

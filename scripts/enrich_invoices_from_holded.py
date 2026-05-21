@@ -32,6 +32,28 @@ from urllib.error import URLError, HTTPError
 HOLDED_BASE = "https://api.holded.com/api/invoicing/v1/documents"
 PPTO_PAT = re.compile(r"E2[0-9]\d{3,6}", re.IGNORECASE)
 
+# Mapeo del status numérico de Holded estimates a etiqueta legible
+# Holded API devuelve: 0=Draft, 1=Sent/Pending, 2=Approved/Accepted, 3=Rejected, 4=Canceled
+# (los valores pueden variar segun config Holded; si aparece otro, queda como "Pendiente" por defecto)
+HOLDED_STATUS_LABEL = {
+    0: "Pendiente",
+    1: "Pendiente",
+    2: "Aceptado",
+    3: "Cancelado",
+    4: "Cancelado",
+}
+def map_estimate_status(raw):
+    """Mapea status crudo de Holded a Pendiente/Aceptado/Cancelado."""
+    try:
+        n = int(raw)
+    except (TypeError, ValueError):
+        # Si vino como string, normalizar
+        s = str(raw or "").strip().lower()
+        if s in ("approved", "accepted", "aceptado"): return "Aceptado"
+        if s in ("rejected", "canceled", "cancelled", "cancelado"): return "Cancelado"
+        return "Pendiente"
+    return HOLDED_STATUS_LABEL.get(n, "Pendiente")
+
 
 def fetch_all(doc_type, api_key, timeout=30):
     out = []
@@ -133,6 +155,18 @@ def build_estimate_to_invoice(estimates, invoices):
     return idx
 
 
+def build_estimate_docnum_to_status(estimates):
+    """Devuelve {docNumber_upper: (status_raw, status_label)} para cada estimate."""
+    out = {}
+    for e in estimates:
+        dn = _safe_str(e.get("docNumber")).strip().upper()
+        if not dn:
+            continue
+        raw = e.get("status")
+        out[dn] = (raw, map_estimate_status(raw))
+    return out
+
+
 def compute_invoice_state(total, paid, due_ts):
     total = total or 0
     paid = paid or 0
@@ -196,10 +230,17 @@ def main():
 
     idx = build_estimate_to_invoice(estimates, invoices)
     print(f"[enrich-invoices] {len(idx)} estimates con factura mapeada.")
+    est_status_idx = build_estimate_docnum_to_status(estimates)
+    print(f"[enrich-invoices] {len(est_status_idx)} estimates con status indexado.")
 
     enriched = 0
     no_match = 0
     for k, t, ppto in with_ppto:
+        # Estado del presupuesto: por defecto Pendiente si no tenemos status del estimate
+        ppto_status_raw, ppto_status_label = est_status_idx.get(ppto, (None, "Pendiente"))
+        t["presupuesto_status_raw"] = ppto_status_raw
+        t["presupuesto_estado"] = ppto_status_label
+
         inv = idx.get(ppto)
         if not inv:
             t["factura"] = ""

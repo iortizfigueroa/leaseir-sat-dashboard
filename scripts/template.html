@@ -383,6 +383,7 @@
   <nav class="sb-nav tabs1">
     <button type="button" data-view="total" class="active sb-item"><i class="ti ti-list-details"></i>Incidencias abiertas</button>
     <button type="button" data-view="stats" class="sb-item"><i class="ti ti-chart-line"></i>Estadísticas gestión</button>
+    <button type="button" data-view="admin" class="sb-item"><i class="ti ti-file-invoice"></i>Administración</button>
     <div class="sb-dropdown-wrap">
       <button type="button" data-view="chains" class="sb-item"><i class="ti ti-building"></i>Por cadena<span style="margin-left:auto;font-size:10px;opacity:0.6">▸</span></button>
       <div class="sb-submenu" id="sb-chains-submenu"></div>
@@ -430,6 +431,7 @@ __DEMO_BANNER__
 <select class="tabs1-select" id="tabs1-select" onchange="(function(v){document.querySelectorAll('.tabs1 button').forEach(b=>{if(b.dataset.view===v){b.click();}})}).call(null, this.value)">
   <option value="total">Incidencias abiertas</option>
   <option value="stats">Estadísticas de gestión</option>
+  <option value="admin">Administración</option>
   <option value="chains">Por cadena</option>
   <option value="sustis">Sustituciones</option>
 </select>
@@ -722,6 +724,10 @@ __ANUAL_AVERIAS__
 </div><!-- /stats-pane-averias -->
 
 </div><!-- /view-stats -->
+
+<div id="view-admin" class="view">
+__ADMIN_HTML__
+</div><!-- /view-admin -->
 
 <div id="view-chains" class="view">
 __CHAINS_HTML__
