@@ -3737,6 +3737,7 @@ def build_html(cache, out_path, template_path):
         sustis_html = chains_html
 
     # Track record: guardar snapshot de KPIs hoy en cache/kpi_history.json (antes del render)
+    _tiempos_stats = {}
     history = {}
     try:
         hist_path = None
