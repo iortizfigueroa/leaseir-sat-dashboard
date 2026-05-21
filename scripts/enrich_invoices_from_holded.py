@@ -33,13 +33,17 @@ HOLDED_BASE = "https://api.holded.com/api/invoicing/v1/documents"
 PPTO_PAT = re.compile(r"E2[0-9]\d{3,6}", re.IGNORECASE)
 
 # Mapeo del status numérico de Holded estimates a etiqueta legible
-# Holded API devuelve: 0=Draft, 1=Sent/Pending, 2=Approved/Accepted, 3=Rejected, 4=Canceled
-# (los valores pueden variar segun config Holded; si aparece otro, queda como "Pendiente" por defecto)
+# Valores reales observados en la cuenta Nobis Capital / Leaseir (confirmado por Nacho 2026-05-21):
+#   -1 → Cancelado / Rechazado (estimate borrado / cancelado en Holded)
+#    0 → Pendiente (enviado al cliente, esperando respuesta)
+#    1 → Aceptado (cliente aceptó el presupuesto)
+# Otros valores: por seguridad caen a "Pendiente" como default conservador.
 HOLDED_STATUS_LABEL = {
+    -1: "Cancelado",
     0: "Pendiente",
-    1: "Pendiente",
-    2: "Aceptado",
-    3: "Cancelado",
+    1: "Aceptado",
+    2: "Aceptado",      # variante por si aparece (algunos flujos: 2 = aceptado y facturado)
+    3: "Cancelado",     # variante por si aparece (3 = rejected en algunos flujos)
     4: "Cancelado",
 }
 def map_estimate_status(raw):
