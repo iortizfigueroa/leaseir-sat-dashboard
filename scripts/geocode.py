@@ -288,7 +288,17 @@ def _extract_latlng_patterns(s):
     if m:
         try: return float(m.group(1)), float(m.group(2))
         except ValueError: pass
-    # 3. @lat,lon — solo si no hay nada mejor (es la posición de cámara, no del centro)
+    # 3. /maps/search/LAT,+LON o /maps/search/LAT,LON (short links resueltos a search)
+    m = re.search(r"/maps/search/(-?\d+\.\d+),\s*\+?\s*(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # 4. /maps/search/LAT%2C%20%2BLON (URL-encoded)
+    m = re.search(r"/maps/search/(-?\d+\.\d+)%2C(?:%20)?(?:%2B)?(-?\d+\.\d+)", s)
+    if m:
+        try: return float(m.group(1)), float(m.group(2))
+        except ValueError: pass
+    # 5. @lat,lon — solo si no hay nada mejor (es la posición de cámara, no del centro)
     m = re.search(r"@(-?\d+\.\d+),(-?\d+\.\d+)", s)
     if m:
         try: return float(m.group(1)), float(m.group(2))
@@ -351,19 +361,26 @@ _orig_extract_latlng_from_gmap_url = extract_latlng_from_gmap_url
 #  - (37.09024, -95.712891) → variante centro USA
 #  - (43.50639385, -5.6786944) → Gijón (consent default UE) — ya en _GMAP_CONSENT_COORDS
 _GMAP_DUMMY_COORDS = {
-    (43.506394, -5.678694),
-    (37.0625, -95.677068),
-    (37.09024, -95.712891),
-    (39.8283, -98.5795),
+    (43.506394, -5.678694),   # Gijon (consent UE)
+    (37.0625, -95.677068),    # centro USA (consent gl=us)
+    (37.09024, -95.712891),   # variante centro USA
+    (39.8283, -98.5795),      # otro centro USA
+    (39.026799, -77.844326),  # consent USA Maryland — observado 2026-05-21
+    (39.02679945, -77.844326),# variante con mas decimales
 }
 
 def _is_dummy_coord(c):
+    """Compara con tolerancia: 3 decimales (~100m). Cubre variantes con distinto numero de decimales."""
     if not c: return False
     try:
-        key = (round(float(c[0]), 6), round(float(c[1]), 6))
+        lat3 = round(float(c[0]), 3)
+        lon3 = round(float(c[1]), 3)
     except Exception:
         return False
-    return key in _GMAP_DUMMY_COORDS
+    for dlat, dlon in _GMAP_DUMMY_COORDS:
+        if round(dlat, 3) == lat3 and round(dlon, 3) == lon3:
+            return True
+    return False
 
 def extract_latlng_from_gmap_url(url):  # type: ignore[no-redef]
     c = _orig_extract_latlng_from_gmap_url(url)
