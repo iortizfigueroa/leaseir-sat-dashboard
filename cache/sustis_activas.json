@@ -1,24 +1,54 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-22T16:12:23.123000+00:00",
+    "last_fetched_at": "2026-05-22T20:00:01.076095+00:00",
     "schema_version": 1,
-    "count": 47
+    "count": 50
   },
   "items": [
     {
-      "key": "LEAS-6367",
+      "key": "LEAS-6372",
       "subtask_status": "Solicitado",
+      "cliente": "Epil Point Aprilia",
+      "loc": "Via dei Lauri, 52d, 04011 Aprilia LT, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6371",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Aprilia",
+      "consola_averiada": "",
+      "manipulo_averiado": "40306",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-6368",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro Unico Tiburtina",
+      "loc": "Via Tiburtina, 573, 00157 Roma RM, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "H01025",
+      "fecha_envio": null,
+      "parent_key": "LEAS-6344",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Centro Unico Tiburtina",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6367",
+      "subtask_status": "Equipo enviado",
       "cliente": "Centro Unico Euroma 2",
       "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
       "consola_susti": null,
-      "manipulo_susti": null,
+      "manipulo_susti": "H00677",
       "fecha_envio": null,
       "parent_key": "LEAS-6365",
       "parent_status": "Pendiente recogida",
       "parent_cliente": "Centro Unico Euroma 2",
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
-      "modelo": ""
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6364",
@@ -244,6 +274,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
       "modelo": "MHR Quad"
+    },
+    {
+      "key": "LEAS-6370",
+      "subtask_status": "En préstamo",
+      "cliente": "Epil Point Pozzuoli",
+      "loc": "Via Giovanni de Fraia, 4, 80078 Pozzuoli NA, Italia",
+      "consola_susti": "91368",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-05-18T18:33:00.000+0200",
+      "parent_key": "LEAS-6369",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Epil Point Pozzuoli",
+      "consola_averiada": "91303",
+      "manipulo_averiado": "",
+      "modelo": ""
     },
     {
       "key": "LEAS-6291",
