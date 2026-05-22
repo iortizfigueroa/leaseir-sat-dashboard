@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-22T09:23:25.478870+00:00",
+    "last_fetched_at": "2026-05-22T10:13:23.481780+00:00",
     "schema_version": 1,
-    "count": 50
+    "count": 48
   },
   "items": [
     {
@@ -29,7 +29,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6238",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello San sebastian",
       "consola_averiada": "90747",
       "manipulo_averiado": "30279",
@@ -96,6 +96,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6348",
+      "subtask_status": "En préstamo",
+      "cliente": "Elha Jaen",
+      "loc": "Jaén",
+      "consola_susti": "C00503",
+      "manipulo_susti": "H01033",
+      "fecha_envio": "2026-05-22T12:03:00.000+0200",
+      "parent_key": "LEAS-6346",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Elha Jaen",
+      "consola_averiada": "C00774",
+      "manipulo_averiado": "H00774",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6337",
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Republica Arggentina",
@@ -126,6 +141,21 @@
       "modelo": "MHR Quad"
     },
     {
+      "key": "LEAS-6345",
+      "subtask_status": "En préstamo",
+      "cliente": "Cleanbody CC Nivaria",
+      "loc": "Av. Tres de Mayo, 9, 38003 Santa Cruz de Tenerife",
+      "consola_susti": null,
+      "manipulo_susti": "sustdual011",
+      "fecha_envio": "2026-05-21T11:51:00.000+0200",
+      "parent_key": "LEAS-6330",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Cleanbody",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": "MHR Dual"
+    },
+    {
       "key": "LEAS-6323",
       "subtask_status": "En préstamo",
       "cliente": "Ces Depilación TEMPLE",
@@ -134,7 +164,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-05-20T17:06:00.000+0200",
       "parent_key": "LEAS-6302",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Ces Depilación TEMPLE",
       "consola_averiada": "",
       "manipulo_averiado": "40183",
@@ -184,21 +214,6 @@
       "consola_averiada": "C00442",
       "manipulo_averiado": "H00442",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6144",
-      "subtask_status": "En préstamo",
-      "cliente": "Centro Unico Orio",
-      "loc": "Via Portico, 71, 24050 Orio al Serio BG, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H00677",
-      "fecha_envio": "2026-05-15T15:51:00.000+0200",
-      "parent_key": "LEAS-6142",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centro Unico Orio",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00212",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6259",
@@ -254,7 +269,7 @@
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-05-13T15:39:00.000+0200",
       "parent_key": "LEAS-6221",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Cadiz",
       "consola_averiada": "C00155",
       "manipulo_averiado": "H00155",
@@ -329,7 +344,7 @@
       "manipulo_susti": "sustquad018",
       "fecha_envio": "2026-05-06T12:27:00.000+0200",
       "parent_key": "LEAS-5958",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Avanti Clinics La Palma",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -397,7 +412,7 @@
     },
     {
       "key": "LEAS-6034",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Sin Vello Illescas",
       "loc": "Toleda",
       "consola_susti": "C00340",
@@ -424,21 +439,6 @@
       "consola_averiada": "90019",
       "manipulo_averiado": "30015",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-5999",
-      "subtask_status": "En préstamo",
-      "cliente": "Centri Unico Ostia",
-      "loc": "Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H01025",
-      "fecha_envio": "2026-04-22T15:39:00.000+0200",
-      "parent_key": "LEAS-5998",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centri Unico Ostia",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00240",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-5979",
@@ -529,21 +529,6 @@
       "consola_averiada": "552",
       "manipulo_averiado": "",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-5926",
-      "subtask_status": "En préstamo",
-      "cliente": "Avanti Sur Adeje",
-      "loc": "Adeje",
-      "consola_susti": null,
-      "manipulo_susti": "sustdual011",
-      "fecha_envio": "2026-04-15T14:01:00.000+0200",
-      "parent_key": "LEAS-5903",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Avanti Sur Adeje",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-5902",
@@ -694,21 +679,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "40557",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-5565",
-      "subtask_status": "En préstamo",
-      "cliente": "Elha Jaen",
-      "loc": "Jaen",
-      "consola_susti": "C00503",
-      "manipulo_susti": "H01033",
-      "fecha_envio": "2026-03-13T14:54:00.000+0100",
-      "parent_key": "LEAS-5564",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Jaen",
-      "consola_averiada": "C00774",
-      "manipulo_averiado": "H00774",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-5597",
