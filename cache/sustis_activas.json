@@ -1,10 +1,40 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-22T12:36:42.838576+00:00",
+    "last_fetched_at": "2026-05-22T14:43:35.911582+00:00",
     "schema_version": 1,
-    "count": 45
+    "count": 46
   },
   "items": [
+    {
+      "key": "LEAS-6364",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Dermasana PAmplona",
+      "loc": "Av. Carlos Iii, 12, 31002 Pamplona, Navarra",
+      "consola_susti": "91064",
+      "manipulo_susti": "sustquad035",
+      "fecha_envio": null,
+      "parent_key": "LEAS-6363",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Dermasana PAmplona",
+      "consola_averiada": "90240",
+      "manipulo_averiado": "40176",
+      "modelo": "MHR Quad"
+    },
+    {
+      "key": "LEAS-6361",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Elha Malaga",
+      "loc": "Malaga",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6360",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Malaga",
+      "consola_averiada": "90290",
+      "manipulo_averiado": "40294",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6316",
       "subtask_status": "En préstamo",
@@ -63,21 +93,6 @@
       "parent_cliente": "Sin Vello Alzira",
       "consola_averiada": "C00903",
       "manipulo_averiado": "H00903",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6217",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro Unico Appia",
-      "loc": "Via Appia Nuova, 115/A, 00182 Roma RM, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6216",
-      "parent_status": "Finalizado técnico externo",
-      "parent_cliente": "Centro Unico Appia",
-      "consola_averiada": "C00614",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -142,7 +157,7 @@
     },
     {
       "key": "LEAS-6339",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "",
       "loc": "",
       "consola_susti": null,
@@ -404,7 +419,7 @@
       "manipulo_susti": "SUSTDUAL011",
       "fecha_envio": "2026-04-23T16:13:00.000+0200",
       "parent_key": "LEAS-5837",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Centro del vello y Belleza Denia (Damaris)",
       "consola_averiada": "90019",
       "manipulo_averiado": "30015",
