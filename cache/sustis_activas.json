@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-22T10:13:23.481780+00:00",
+    "last_fetched_at": "2026-05-22T12:04:45.038449+00:00",
     "schema_version": 1,
-    "count": 48
+    "count": 45
   },
   "items": [
     {
@@ -96,6 +96,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6354",
+      "subtask_status": "En préstamo",
+      "cliente": "ELha Alcalde Poqueres",
+      "loc": "Lleida",
+      "consola_susti": "SUSTMHR018",
+      "manipulo_susti": "SUSTQUAD025",
+      "fecha_envio": "2026-05-22T13:33:00.000+0200",
+      "parent_key": "LEAS-6353",
+      "parent_status": "En cola taller",
+      "parent_cliente": "ELha Alcalde Poqueres",
+      "consola_averiada": "C00870",
+      "manipulo_averiado": "H00870",
+      "modelo": "MHR"
+    },
+    {
       "key": "LEAS-6348",
       "subtask_status": "En préstamo",
       "cliente": "Elha Jaen",
@@ -150,7 +165,7 @@
       "fecha_envio": "2026-05-21T11:51:00.000+0200",
       "parent_key": "LEAS-6330",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Cleanbody",
+      "parent_cliente": "Cleanbody CC LA villa",
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "MHR Dual"
@@ -164,7 +179,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-05-20T17:06:00.000+0200",
       "parent_key": "LEAS-6302",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Ces Depilación TEMPLE",
       "consola_averiada": "",
       "manipulo_averiado": "40183",
@@ -246,21 +261,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-5967",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Palencia",
-      "loc": "Palencia",
-      "consola_susti": null,
-      "manipulo_susti": "H01032",
-      "fecha_envio": "2026-05-14T11:11:00.000+0200",
-      "parent_key": "LEAS-5872",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Palencia",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00565",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6223",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Cadiz",
@@ -269,7 +269,7 @@
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-05-13T15:39:00.000+0200",
       "parent_key": "LEAS-6221",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Sin Vello Cadiz",
       "consola_averiada": "C00155",
       "manipulo_averiado": "H00155",
@@ -284,7 +284,7 @@
       "manipulo_susti": "SUSTDUAL017",
       "fecha_envio": "2026-05-13T15:01:00.000+0200",
       "parent_key": "LEAS-6229",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "MEL CLINICS Castellon",
       "consola_averiada": "91119",
       "manipulo_averiado": "40550",
@@ -393,36 +393,6 @@
       "parent_cliente": "Centro Unico Giugliano",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6053",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Santiago de compostela",
-      "loc": "Santiago de compostela",
-      "consola_susti": null,
-      "manipulo_susti": "H00107",
-      "fecha_envio": "2026-04-27T14:06:00.000+0200",
-      "parent_key": "LEAS-6024",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Santiago de compostela",
-      "consola_averiada": "C00191",
-      "manipulo_averiado": "H00191",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6034",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Illescas",
-      "loc": "Toleda",
-      "consola_susti": "C00340",
-      "manipulo_susti": "H00340",
-      "fecha_envio": "2026-04-24T09:02:00.000+0200",
-      "parent_key": "LEAS-6033",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Illescas",
-      "consola_averiada": "C00226",
-      "manipulo_averiado": "",
       "modelo": "XCell HR"
     },
     {
@@ -606,21 +576,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-5747",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "ELha Alcalde Poqueres",
-      "loc": "Lleida",
-      "consola_susti": "sustmhr018",
-      "manipulo_susti": "sustquad025",
-      "fecha_envio": "2026-04-06T09:56:00.000+0200",
-      "parent_key": "LEAS-4907",
-      "parent_status": "Resuelto",
-      "parent_cliente": "ELha Alcalde Poqueres",
-      "consola_averiada": "C00870",
-      "manipulo_averiado": "H00870",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-5737",
       "subtask_status": "En préstamo",
       "cliente": "Depil&Bell - 30751",
@@ -719,7 +674,7 @@
       "manipulo_susti": "H01012",
       "fecha_envio": "2025-12-12T14:30:00.000+0100",
       "parent_key": "LEAS-4350",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Brull",
       "consola_averiada": "",
       "manipulo_averiado": "H00141",

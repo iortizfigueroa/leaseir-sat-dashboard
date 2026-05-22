@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": 1,
-    "updated_at": "2026-05-22T10:13:58.722288+00:00"
+    "updated_at": "2026-05-22T12:05:25.290520+00:00"
   },
   "entries": {
     "alcala de henares": {
@@ -196,14 +196,15 @@
       "geocoded_at": "2026-05-15T23:51:02.788192+00:00"
     },
     "dermoscan": {
-      "lat": 51.1638175,
-      "lon": 10.4478313,
-      "display_name": "Alemania",
-      "query": "Alemania",
-      "strategy": "loc-city",
+      "lat": null,
+      "lon": null,
+      "display_name": null,
+      "query": "Dermoscan, Alemania",
+      "strategy": "gmap-url",
       "cliente": "Dermoscan",
       "loc": "Alemania",
-      "geocoded_at": "2026-05-16T00:23:46.074573+00:00"
+      "geocoded_at": "2026-05-22T12:05:21.618074+00:00",
+      "failed": true
     },
     "belgica luxlaser andre": {
       "lat": 50.6402809,
@@ -992,14 +993,14 @@
       "geocoded_at": "2026-05-16T00:00:03.564890+00:00"
     },
     "elha alcalde poqueres": {
-      "lat": 41.6147605,
-      "lon": 0.6267842,
-      "display_name": "Lérida, Segriá, Lérida, Cataluña, España",
-      "query": "Lleida",
-      "strategy": "loc-city",
+      "lat": 41.6219261,
+      "lon": 0.6227168,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://maps.app.goo.gl/BXmF1Lo9Y8wbtDve8",
+      "strategy": "gmap-url",
       "cliente": "ELha Alcalde Poqueres",
       "loc": "Lleida",
-      "geocoded_at": "2026-05-16T00:24:34.900799+00:00"
+      "geocoded_at": "2026-05-22T12:05:24.844269+00:00"
     },
     "depil&bell - 30751": {
       "lat": 42.1986396,
@@ -1437,6 +1438,16 @@
       "cliente": "Centro Unico Tiburtina",
       "loc": "Via Tiburtina, 573, 00157 Roma RM, Italia",
       "geocoded_at": "2026-05-22T10:13:58.390301+00:00"
+    },
+    "cc la villa, autopista del nte., 36, 38312 la orotava, santa cruz de tenerife": {
+      "lat": 28.3957818,
+      "lon": -16.5483575,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://maps.app.goo.gl/SMAyaBDoLkEHFv5R9",
+      "strategy": "gmap-url",
+      "cliente": "Cleanbody CC LA villa",
+      "loc": "cc la Villa, Autopista del Nte., 36, 38312 La Orotava, Santa Cruz de Tenerife",
+      "geocoded_at": "2026-05-22T12:05:23.306753+00:00"
     }
   }
 }
