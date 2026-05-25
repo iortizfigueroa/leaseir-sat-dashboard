@@ -1,23 +1,23 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-25T12:47:56.886120+00:00",
+    "last_fetched_at": "2026-05-25T15:35:55.168360+00:00",
     "schema_version": 1,
-    "count": 51
+    "count": 52
   },
   "items": [
     {
-      "key": "LEAS-6393",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "",
-      "loc": "",
+      "key": "LEAS-6395",
+      "subtask_status": "Solicitado",
+      "cliente": "Laser factory Figueres",
+      "loc": "Carrer Joan Maragall, 19, 17600 Figueres, Girona",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
-      "parent_key": "LEAS-6305",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Cibeles holea SUSTQUAD009",
+      "parent_key": "LEAS-6394",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Laser factory Figueres",
       "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
+      "manipulo_averiado": "H00509",
       "modelo": ""
     },
     {
@@ -138,6 +138,21 @@
       "parent_cliente": "SinVello! Sant Cugat del Valles",
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-6393",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": "91139",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-05-25T15:30:00.000+0200",
+      "parent_key": "LEAS-6305",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Cibeles holea SUSTQUAD009",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
       "modelo": ""
     },
     {
