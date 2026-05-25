@@ -1,23 +1,23 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-25T11:06:05.830840+00:00",
+    "last_fetched_at": "2026-05-25T11:52:47.645440+00:00",
     "schema_version": 1,
-    "count": 50
+    "count": 52
   },
   "items": [
     {
-      "key": "LEAS-6384",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin Vello Santiago de compostela",
-      "loc": "Rúa de San Pedro de Mezonzo, 35, 15701 Santiago de Compostela, A Coruña",
+      "key": "LEAS-6393",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "",
+      "loc": "",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
-      "parent_key": "LEAS-6383",
+      "parent_key": "LEAS-6305",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Sin Vello Santiago de compostela",
-      "consola_averiada": "C00191",
-      "manipulo_averiado": "H00191",
+      "parent_cliente": "Cibeles holea SUSTQUAD009",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
       "modelo": ""
     },
     {
@@ -141,6 +141,36 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6384",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Sin Vello Santiago de compostela",
+      "loc": "Rúa de San Pedro de Mezonzo, 35, 15701 Santiago de Compostela, A Coruña",
+      "consola_susti": "C00187",
+      "manipulo_susti": "H00340",
+      "fecha_envio": "2026-05-25T13:41:00.000+0200",
+      "parent_key": "LEAS-6383",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Santiago de compostela",
+      "consola_averiada": "C00191",
+      "manipulo_averiado": "H00191",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6392",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Epil Point Pisa",
+      "loc": "Lungarno Mediceo, 46, 56127 Pisa PI, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "40306",
+      "fecha_envio": "2026-05-25T13:20:00.000+0200",
+      "parent_key": "LEAS-6390",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Pisa",
+      "consola_averiada": "",
+      "manipulo_averiado": "40512",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-6354",
       "subtask_status": "En préstamo",
       "cliente": "ELha Alcalde Poqueres",
@@ -224,7 +254,7 @@
       "manipulo_susti": "sustdual011",
       "fecha_envio": "2026-05-21T11:51:00.000+0200",
       "parent_key": "LEAS-6330",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Cleanbody CC LA villa",
       "consola_averiada": "",
       "manipulo_averiado": "",
