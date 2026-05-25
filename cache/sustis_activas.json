@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-25T08:49:58.964925+00:00",
+    "last_fetched_at": "2026-05-25T09:11:05.916388+00:00",
     "schema_version": 1,
     "count": 49
   },
@@ -79,21 +79,6 @@
       "consola_averiada": "C00607",
       "manipulo_averiado": "",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6249",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin Vello San sebastian",
-      "loc": "sebastian",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6238",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Sin Vello San sebastian",
-      "consola_averiada": "90747",
-      "manipulo_averiado": "30279",
-      "modelo": ""
     },
     {
       "key": "LEAS-6244",
@@ -239,7 +224,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-05-20T17:06:00.000+0200",
       "parent_key": "LEAS-6302",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Ces Depilación TEMPLE",
       "consola_averiada": "",
       "manipulo_averiado": "40183",
@@ -304,6 +289,21 @@
       "consola_averiada": "C00442",
       "manipulo_averiado": "H00442",
       "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6249",
+      "subtask_status": "En préstamo",
+      "cliente": "Sin Vello San sebastian",
+      "loc": "sebastian",
+      "consola_susti": "90127",
+      "manipulo_susti": "SUTDUAL019",
+      "fecha_envio": "2026-05-18T11:05:00.000+0200",
+      "parent_key": "LEAS-6238",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Sin Vello San sebastian",
+      "consola_averiada": "90747",
+      "manipulo_averiado": "30279",
+      "modelo": ""
     },
     {
       "key": "LEAS-6259",
@@ -697,7 +697,7 @@
     },
     {
       "key": "LEAS-5597",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Touluse C03171",
       "loc": "Av. des Minimes, 31200 Toulouse, Francia,",
       "consola_susti": "C00326",
@@ -719,7 +719,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2025-12-22T11:17:00.000+0100",
       "parent_key": "LEAS-5030",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Novara",
       "consola_averiada": "91372",
       "manipulo_averiado": "",
