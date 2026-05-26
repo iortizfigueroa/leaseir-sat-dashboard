@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-26T09:54:57.608260+00:00",
+    "last_fetched_at": "2026-05-26T13:37:51.309694+00:00",
     "schema_version": 1,
-    "count": 52
+    "count": 49
   },
   "items": [
-    {
-      "key": "LEAS-6401",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Obispo",
-      "loc": "Av. del Obispo Angel Herrera Oria, 2, local 7, Cruz de Humilladero, 29007 Málaga",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6398",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Obispo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00520",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6395",
       "subtask_status": "Solicitado",
@@ -33,21 +18,6 @@
       "parent_cliente": "Laser factory Figueres",
       "consola_averiada": "",
       "manipulo_averiado": "H00509",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6372",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Aprilia",
-      "loc": "Via dei Lauri, 52d, 04011 Aprilia LT, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6371",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Point Aprilia",
-      "consola_averiada": "",
-      "manipulo_averiado": "40306",
       "modelo": ""
     },
     {
@@ -154,6 +124,21 @@
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6401",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Obispo",
+      "loc": "Av. del Obispo Angel Herrera Oria, 2, local 7, Cruz de Humilladero, 29007 Málaga",
+      "consola_susti": null,
+      "manipulo_susti": "H41003",
+      "fecha_envio": "2026-05-26T12:00:00.000+0200",
+      "parent_key": "LEAS-6398",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Obispo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00520",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6393",
@@ -434,7 +419,7 @@
       "manipulo_susti": "SUSTDUAL017",
       "fecha_envio": "2026-05-13T15:01:00.000+0200",
       "parent_key": "LEAS-6229",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "MEL CLINICS Castellon",
       "consola_averiada": "91119",
       "manipulo_averiado": "40550",
@@ -621,21 +606,6 @@
       "modelo": "MHR Quad"
     },
     {
-      "key": "LEAS-5919",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Estética Yai",
-      "loc": "Irún",
-      "consola_susti": "AHR0207",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-04-15T16:39:00.000+0200",
-      "parent_key": "LEAS-5918",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Estética Yai",
-      "consola_averiada": "552",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-5902",
       "subtask_status": "Gestionada recogida",
       "cliente": "Centri Unico Giugliano",
@@ -694,21 +664,6 @@
       "consola_averiada": "91292",
       "manipulo_averiado": "30605",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-5751",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Sabadell",
-      "loc": "matadepera 126",
-      "consola_susti": "91142",
-      "manipulo_susti": "40464",
-      "fecha_envio": "2026-04-06T11:44:00.000+0200",
-      "parent_key": "LEAS-5750",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Sabadell",
-      "consola_averiada": "C00480",
-      "manipulo_averiado": "H00480",
-      "modelo": ""
     },
     {
       "key": "LEAS-5737",
