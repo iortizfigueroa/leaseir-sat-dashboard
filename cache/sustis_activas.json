@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-26T08:42:44.513746+00:00",
+    "last_fetched_at": "2026-05-26T09:54:57.608260+00:00",
     "schema_version": 1,
-    "count": 51
+    "count": 52
   },
   "items": [
+    {
+      "key": "LEAS-6401",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Obispo",
+      "loc": "Av. del Obispo Angel Herrera Oria, 2, local 7, Cruz de Humilladero, 29007 Málaga",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6398",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Obispo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00520",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6395",
       "subtask_status": "Solicitado",
@@ -209,7 +224,7 @@
       "manipulo_susti": "H01033",
       "fecha_envio": "2026-05-22T12:03:00.000+0200",
       "parent_key": "LEAS-6346",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Elha Jaen",
       "consola_averiada": "C00774",
       "manipulo_averiado": "H00774",
@@ -232,14 +247,14 @@
     },
     {
       "key": "LEAS-6337",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Republica Arggentina",
       "loc": "Av. de la República Argentina, 20, Poniente Sur, 14004 Córdoba",
       "consola_susti": "SUSTMHR011",
       "manipulo_susti": "30074",
       "fecha_envio": "2026-05-21T16:38:00.000+0200",
       "parent_key": "LEAS-6322",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello Republica Arggentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -344,7 +359,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-05-18T16:10:00.000+0200",
       "parent_key": "LEAS-6290",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "En reparación",
       "parent_cliente": "Sin Vello Moratalaz",
       "consola_averiada": "C00442",
       "manipulo_averiado": "H00442",
@@ -682,7 +697,7 @@
     },
     {
       "key": "LEAS-5751",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Sabadell",
       "loc": "matadepera 126",
       "consola_susti": "91142",
