@@ -1,7 +1,7 @@
 {
   "_meta": {
     "version": 1,
-    "updated_at": "2026-05-27T12:31:27.697375+00:00"
+    "updated_at": "2026-05-27T14:03:30.781132+00:00"
   },
   "entries": {
     "alcala de henares": {
@@ -556,13 +556,14 @@
       "geocoded_at": "2026-05-17T20:33:10.491378+00:00"
     },
     "brull": {
-      "lat": 41.8168099,
-      "lon": 2.3052283,
-      "display_name": "el Brull, Osona, Barcelona, Cataluña, 08559, España",
-      "query": "Brull",
+      "lat": 41.3330567,
+      "lon": 1.9184119,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://maps.app.goo.gl/hS8rspytZoP9YpYQA",
+      "strategy": "gmap-url",
       "cliente": "Brull",
       "loc": "Begues",
-      "geocoded_at": "2026-05-15T23:58:25.542753+00:00"
+      "geocoded_at": "2026-05-27T14:03:23.910319+00:00"
     },
     "barcelona": {
       "lat": 41.4524357,
@@ -1524,14 +1525,15 @@
       "geocoded_at": "2026-05-23T14:51:52.235321+00:00"
     },
     "dermasana alcobendas": {
-      "lat": 40.5400082,
-      "lon": -3.6358494,
-      "display_name": "Alcobendas, Comunidad de Madrid, España",
+      "lat": null,
+      "lon": null,
+      "display_name": null,
       "query": "Alcobendas, Madrid",
       "strategy": "gmap-url",
       "cliente": "Dermasana Alcobendas",
       "loc": "Madrid",
-      "geocoded_at": "2026-05-27T12:31:26.177922+00:00"
+      "geocoded_at": "2026-05-27T14:03:24.438598+00:00",
+      "failed": true
     },
     "via tisia, 17, 96100 siracusa sr, italia": {
       "lat": 37.0835446,
@@ -1812,6 +1814,26 @@
       "cliente": "Elha Pg Lletres",
       "loc": "Pg. de les Lletres, 7, 08221 Terrassa, Barcelona",
       "geocoded_at": "2026-05-27T10:37:37.452267+00:00"
+    },
+    "brull - serial : comodín 9": {
+      "lat": 41.3330567,
+      "lon": 1.9184119,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://maps.app.goo.gl/hS8rspytZoP9YpYQA",
+      "strategy": "gmap-url",
+      "cliente": "Brull  - Serial : Comodín 9",
+      "loc": "Begues",
+      "geocoded_at": "2026-05-27T14:03:29.967159+00:00"
+    },
+    "plaça del gra, 5, 17600 figueres, girona": {
+      "lat": 42.2666548,
+      "lon": 2.9658102,
+      "display_name": "Google Maps URL del centro",
+      "query": "https://maps.app.goo.gl/Aof5qMkJkP1tHS719",
+      "strategy": "gmap-url",
+      "cliente": "Elha Plaça del Gra",
+      "loc": "Plaça del Gra, 5, 17600 Figueres, Girona",
+      "geocoded_at": "2026-05-27T14:03:30.385667+00:00"
     }
   }
 }
