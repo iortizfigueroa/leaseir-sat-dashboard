@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-27T06:36:49.560484+00:00",
+    "last_fetched_at": "2026-05-27T08:13:56.605627+00:00",
     "schema_version": 1,
     "count": 51
   },
@@ -66,21 +66,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6364",
-      "subtask_status": "En préstamo",
-      "cliente": "Dermasana PAmplona",
-      "loc": "Av. Carlos Iii, 12, 31002 Pamplona, Navarra",
-      "consola_susti": "91064",
-      "manipulo_susti": "sustquad035",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6363",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Dermasana PAmplona",
-      "consola_averiada": "90240",
-      "manipulo_averiado": "40176",
-      "modelo": "MHR Quad"
-    },
-    {
       "key": "LEAS-6316",
       "subtask_status": "En préstamo",
       "cliente": "Centro Unico Giugliano",
@@ -89,7 +74,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6310",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Centro Unico Giugliano",
       "consola_averiada": "C00607",
       "manipulo_averiado": "",
@@ -145,8 +130,8 @@
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Barakaldo",
       "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
-      "consola_susti": "sustmhr025",
-      "manipulo_susti": "sustdual010",
+      "consola_susti": "SUSTMHR025",
+      "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-05-26T19:15:00.000+0200",
       "parent_key": "LEAS-6411",
       "parent_status": "Pendiente recogida",
@@ -224,7 +209,7 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-05-22T13:33:00.000+0200",
       "parent_key": "LEAS-6353",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "ELha Alcalde Poqueres",
       "consola_averiada": "C00870",
       "manipulo_averiado": "H00870",
@@ -258,6 +243,21 @@
       "parent_cliente": "Elha Malaga",
       "consola_averiada": "90290",
       "manipulo_averiado": "40294",
+      "modelo": "MHR Quad"
+    },
+    {
+      "key": "LEAS-6364",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Dermasana PAmplona",
+      "loc": "Av. Carlos Iii, 12, 31002 Pamplona, Navarra",
+      "consola_susti": "91064",
+      "manipulo_susti": "SUSTQUAD035",
+      "fecha_envio": "2026-05-22T10:11:00.000+0200",
+      "parent_key": "LEAS-6363",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Dermasana PAmplona",
+      "consola_averiada": "90240",
+      "manipulo_averiado": "40176",
       "modelo": "MHR Quad"
     },
     {
@@ -749,7 +749,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2025-12-22T11:17:00.000+0100",
       "parent_key": "LEAS-5030",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Epil Point Novara",
       "consola_averiada": "91372",
       "manipulo_averiado": "",
@@ -764,7 +764,7 @@
       "manipulo_susti": "H01012",
       "fecha_envio": "2025-12-12T14:30:00.000+0100",
       "parent_key": "LEAS-4350",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Brull",
       "consola_averiada": "",
       "manipulo_averiado": "H00141",
