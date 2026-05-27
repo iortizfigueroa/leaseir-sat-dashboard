@@ -140,6 +140,11 @@ def fetch_issue(base, sess, key):
         params={"expand": "changelog", "fields": ",".join(FIELDS)},
         timeout=30,
     )
+    # Si el ticket ya no existe (borrado, movido a otro proyecto, o restringido
+    # por permisos) Jira devuelve 404. No queremos reventar el run entero por
+    # un solo ticket fantasma: devolvemos None y dejamos que main() lo skipee.
+    if r.status_code == 404:
+        return None
     r.raise_for_status()
     return r.json()
 
@@ -298,12 +303,22 @@ def main():
                 keys = list(keys) + backfill
 
     print(f"Fetching {len(keys)} tickets...")
+    missing = []
     for i, k in enumerate(keys, 1):
         issue = fetch_issue(base, sess, k)
-        cache["tickets"][k] = extract(issue)
+        if issue is None:
+            # 404: el ticket no existe o ya no es visible. Lo quitamos del cache
+            # si estaba para no volver a intentarlo en cada run.
+            missing.append(k)
+            cache.get("tickets", {}).pop(k, None)
+        else:
+            cache["tickets"][k] = extract(issue)
         if i % 20 == 0:
             print(f"  {i}/{len(keys)}")
         time.sleep(0.05)
+    if missing:
+        print(f"[update] {len(missing)} tickets no encontrados (404), eliminados del cache: "
+              + ", ".join(missing[:10]) + (" ..." if len(missing) > 10 else ""))
 
     save_cache(Path(args.cache), cache)
     print(f"Saved cache with {len(cache['tickets'])} tickets to {args.cache}")
