@@ -847,12 +847,24 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     # === MAPA por cadena ===
     _ge = geo_entries or {}
     import re as _re_local
-    def _addr_key(cli, loc):
+    def _addr_key(cli, loc, has_gmap=False):
         loc_c = _re_local.sub(r"\s+", " ", str(loc or "")).strip()
         cli_c = _re_local.sub(r"\s+", " ", str(cli or "")).strip()
+        if has_gmap:
+            if cli_c and loc_c: return f"{cli_c.lower()} @ {loc_c.lower()}"
+            if loc_c: return loc_c.lower()
+            if cli_c: return cli_c.lower()
+            return ""
         if loc_c and len(loc_c) > 8: return loc_c.lower()
         if cli_c: return cli_c.lower()
         return ""
+    def _resolve_key(cli, loc, has_gmap):
+        if has_gmap:
+            gk = _addr_key(cli, loc, has_gmap=True)
+            if gk in _ge: return gk
+        lk = _addr_key(cli, loc, has_gmap=False)
+        if lk in _ge: return lk
+        return _addr_key(cli, loc, has_gmap=has_gmap)
     STATE_COLORS = {
         "Abierto":"#3b82f6", "Recepcionado SAT":"#1d4ed8", "Pendiente recogida":"#7c3aed",
         "Gestionado transporte":"#8b5cf6", "Pendiente asignar técnico":"#0891b2",
@@ -877,7 +889,8 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
     for t in tickets_chain:
         if not is_open(t.get("current_status")): continue
         cli = t.get("cliente",""); loc = t.get("loc","")
-        key = _addr_key(cli, loc)
+        has_gmap_t = bool((t.get("gmap_url") or "").strip())
+        key = _resolve_key(cli, loc, has_gmap_t)
         g = _ge.get(key)
         no_geo = (not g or g.get("lat") is None)
         if no_geo:
@@ -906,7 +919,8 @@ def build_chain_pane(chain, tickets_chain, ventas, serial_year, max_known,
         for s in sustis_items:
             if chain_of_sustis(s) != chain: continue
             cli_s = s.get("cliente","") or s.get("parent_cliente",""); loc_s = s.get("loc","")
-            key_s = _addr_key(cli_s, loc_s)
+            has_gmap_s = bool((s.get("gmap_url") or "").strip())
+            key_s = _resolve_key(cli_s, loc_s, has_gmap_s)
             g_s = _ge.get(key_s)
             no_geo_s = (not g_s or g_s.get("lat") is None)
             if no_geo_s:

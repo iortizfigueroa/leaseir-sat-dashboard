@@ -4163,15 +4163,40 @@ def build_html(cache, out_path, template_path):
     except Exception:
         pass
 
-    def _addr_key_local(cliente, loc):
+    def _addr_key_local(cliente, loc, has_gmap=False):
+        """Calculo de clave de geocode. Debe coincidir con geocode.addr_key.
+        - has_gmap=True: granular (cliente @ loc) — evita colisiones entre centros
+          distintos de la misma cadena cuando loc es corto.
+        - has_gmap=False: retrocompat (loc si >8 chars, sino cliente).
+        """
         import re as _re
         loc_c = _re.sub(r"\s+", " ", str(loc or "")).strip()
         cli_c = _re.sub(r"\s+", " ", str(cliente or "")).strip()
+        if has_gmap:
+            if cli_c and loc_c: return f"{cli_c.lower()} @ {loc_c.lower()}"
+            if loc_c: return loc_c.lower()
+            if cli_c: return cli_c.lower()
+            return ""
         if loc_c and len(loc_c) > 8:
             return loc_c.lower()
         if cli_c:
             return cli_c.lower()
         return ""
+
+    def _resolve_geo_key(cliente, loc, has_gmap):
+        """Devuelve la clave que existe en geo_entries: prueba primero la granular
+        (cliente @ loc, valida cuando hubo gmap_url) y cae a la retrocompat si no
+        encuentra match. Asi el dashboard sigue mostrando puntos aunque la cache
+        Nominatim antigua siga usando la clave vieja."""
+        if has_gmap:
+            gk = _addr_key_local(cliente, loc, has_gmap=True)
+            if gk in geo_entries:
+                return gk
+        lk = _addr_key_local(cliente, loc, has_gmap=False)
+        if lk in geo_entries:
+            return lk
+        # Devolvemos la granular si tocaba (para que _no_geo sea verdad), sino la legacy
+        return _addr_key_local(cliente, loc, has_gmap=has_gmap)
 
     # Fallback Atlántico para tickets sin geocoding: lat≈36, lon≈-20 con offset hash-based
     # para que no se apilen todos en el mismo punto.
@@ -4186,7 +4211,8 @@ def build_html(cache, out_path, template_path):
     map_markers_incidencias = []
     for _k, _t in cache.get("tickets", {}).items():
         if not is_open(_t.get("current_status")): continue
-        _key = _addr_key_local(_t.get("cliente",""), _t.get("loc",""))
+        _has_gmap = bool((_t.get("gmap_url") or "").strip())
+        _key = _resolve_geo_key(_t.get("cliente",""), _t.get("loc",""), _has_gmap)
         _g = geo_entries.get(_key)
         _no_geo = (not _g or _g.get("lat") is None)
         if _no_geo:
@@ -4219,7 +4245,8 @@ def build_html(cache, out_path, template_path):
             _sd = json.loads(_sus_path.read_text(encoding="utf-8"))
             _now = datetime.now(timezone.utc)
             for _it in _sd.get("items", []) or []:
-                _key = _addr_key_local(_it.get("cliente","") or _it.get("parent_cliente",""), _it.get("loc",""))
+                _has_gmap_s = bool((_it.get("gmap_url") or "").strip())
+                _key = _resolve_geo_key(_it.get("cliente","") or _it.get("parent_cliente",""), _it.get("loc",""), _has_gmap_s)
                 _g = geo_entries.get(_key)
                 _no_geo_s = (not _g or _g.get("lat") is None)
                 _sub_key = _it.get("key","") or _it.get("parent_key","")

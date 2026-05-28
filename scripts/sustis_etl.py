@@ -937,12 +937,24 @@ def render_sustis_mapa_html(sustis_items):
         pass
 
     import re as _re
-    def _addr_key(cli, loc):
+    def _addr_key(cli, loc, has_gmap=False):
         loc_c = _re.sub(r"\s+", " ", str(loc or "")).strip()
         cli_c = _re.sub(r"\s+", " ", str(cli or "")).strip()
+        if has_gmap:
+            if cli_c and loc_c: return f"{cli_c.lower()} @ {loc_c.lower()}"
+            if loc_c: return loc_c.lower()
+            if cli_c: return cli_c.lower()
+            return ""
         if loc_c and len(loc_c) > 8: return loc_c.lower()
         if cli_c: return cli_c.lower()
         return ""
+    def _resolve_key(cli, loc, has_gmap):
+        if has_gmap:
+            gk = _addr_key(cli, loc, has_gmap=True)
+            if gk in geo_entries: return gk
+        lk = _addr_key(cli, loc, has_gmap=False)
+        if lk in geo_entries: return lk
+        return _addr_key(cli, loc, has_gmap=has_gmap)
 
     import hashlib as _hashlib
     def _atlantic_fb(key):
@@ -957,7 +969,8 @@ def render_sustis_mapa_html(sustis_items):
     for it in sustis_items:
         cli = it.get("cliente","") or it.get("parent_cliente","")
         loc = it.get("loc","")
-        key = _addr_key(cli, loc)
+        has_gmap = bool((it.get("gmap_url") or "").strip())
+        key = _resolve_key(cli, loc, has_gmap)
         g = geo_entries.get(key)
         no_geo = (not g or g.get("lat") is None)
         if no_geo:

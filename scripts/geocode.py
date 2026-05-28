@@ -89,8 +89,21 @@ def clean_address(s):
     return re.sub(r"\s+", " ", str(s)).strip()
 
 
-def addr_key(cliente, loc):
+def addr_key(cliente, loc, has_gmap=False):
+    """Construye la clave de cache para una direccion.
+
+    - has_gmap=True: cliente+loc concatenados (granular). Evita que dos centros
+      de la misma cadena con loc cortita (ej "Valencia", "Vallecas") colisionen
+      bajo la misma clave y compartan coords erroneas.
+    - has_gmap=False: logica antigua (loc si es larga, sino cliente). Mantiene
+      retrocompat con la cache Nominatim existente.
+    """
     loc, cliente = clean_address(loc), clean_address(cliente)
+    if has_gmap:
+        if cliente and loc: return f"{cliente.lower()} @ {loc.lower()}"
+        if loc: return loc.lower()
+        if cliente: return cliente.lower()
+        return ""
     if loc and len(loc) > 8: return loc.lower()
     if cliente: return cliente.lower()
     return ""
@@ -367,6 +380,7 @@ _GMAP_DUMMY_COORDS = {
     (39.8283, -98.5795),      # otro centro USA
     (39.026799, -77.844326),  # consent USA Maryland — observado 2026-05-21
     (39.02679945, -77.844326),# variante con mas decimales
+    (41.5933748, -93.6280064),# Des Moines, Iowa — consent USA observado 2026-05-28 en LEAS-6281/6446
 }
 
 def _is_dummy_coord(c):
@@ -391,27 +405,42 @@ def extract_latlng_from_gmap_url(url):  # type: ignore[no-redef]
 
 def collect_addresses():
     addresses = {}
-    # Pre-pass: tickets con gmap_url tienen prioridad — recorrer tickets primero y
-    # capturar gmap_url por addr_key (cualquier ticket abierto en ese centro lo usa).
-    gmap_by_key = {}  # addr_key -> gmap_url
+    # Pre-pass: capturamos el gmap_url canonico por clave granular (cliente+loc).
+    # Reglas de prioridad cuando hay varios candidatos con la misma clave:
+    #   1. Tickets abiertos (current_status en OPEN_STATUSES) > cerrados
+    #   2. Mas recientes (created mas reciente) > mas antiguos
+    # Esto evita que un ticket Finalizada con un gmap_url roto (ej redirect google.com/url?)
+    # gane sobre un ticket abierto con el URL corto bueno (maps.app.goo.gl/...).
+    gmap_candidates = {}  # key -> list of (is_open: bool, created: str, gmap_url: str, key_src: str)
     for cache_name in ["jira_status_timeline.json"]:
         path = CACHE_DIR / cache_name
         if not path.exists(): continue
         d = json.loads(path.read_text(encoding="utf-8"))
         for k, t in d.get("tickets", {}).items():
-            # Permitimos cualquier ticket (no solo abiertos) ya que gmap_url
-            # es semánticamente atributo del CENTRO no del ticket
             cliente = t.get("cliente", "")
             loc = t.get("loc", "")
             gmap_url = (t.get("gmap_url") or "").strip()
             if not gmap_url: continue
-            # Validación barata (sin fetch HTTP): debe parecer un URL de Google Maps
+            # Validacion barata (sin fetch HTTP): debe parecer un URL de Google Maps
             if not (gmap_url.startswith("http") and
                     ("google" in gmap_url or "goo.gl" in gmap_url)):
                 continue
-            key = addr_key(cliente, loc)
-            if key and key not in gmap_by_key:
-                gmap_by_key[key] = gmap_url
+            # Filtrar URLs redirect google.com/url?...&url=DESTINO de baja fidelidad:
+            # solo las admitimos como ultimo recurso (puntuan menos).
+            is_redirect = "google.com/url?" in gmap_url
+            is_open = t.get("current_status") in OPEN_STATUSES
+            created = t.get("created") or ""
+            key = addr_key(cliente, loc, has_gmap=True)
+            if not key: continue
+            gmap_candidates.setdefault(key, []).append(
+                (is_open, not is_redirect, created, gmap_url))
+
+    # Resolver el candidato ganador por clave: abiertos > cerrados, URL corto > redirect, mas reciente > antiguo
+    gmap_by_key = {}
+    for key, candidates in gmap_candidates.items():
+        # sort descending: True > False, fechas mas recientes primero
+        candidates.sort(key=lambda x: (x[0], x[1], x[2]), reverse=True)
+        gmap_by_key[key] = candidates[0][3]
 
     for cache_name, key_field in [("jira_status_timeline.json", "tickets"),
                                     ("sustis_activas.json", "items")]:
@@ -423,7 +452,13 @@ def collect_addresses():
                 if t.get("current_status") not in OPEN_STATUSES: continue
                 cliente = t.get("cliente", "")
                 loc = t.get("loc", "")
-                key = addr_key(cliente, loc)
+                has_gmap = bool((t.get("gmap_url") or "").strip())
+                # Si NO tiene gmap_url propio, intentamos heredarlo de otro ticket
+                # del mismo centro (cliente+loc) — pero solo si existe match exacto
+                # en la clave granular.
+                granular_key = addr_key(cliente, loc, has_gmap=True)
+                key = granular_key if (has_gmap or granular_key in gmap_by_key) \
+                                   else addr_key(cliente, loc, has_gmap=False)
                 if key and key not in addresses:
                     if key in gmap_by_key:
                         addresses[key] = {"query": gmap_by_key[key], "strategy": "gmap-url",
@@ -437,7 +472,10 @@ def collect_addresses():
             for it in d.get("items", []) or []:
                 cliente = it.get("cliente", "") or it.get("parent_cliente", "")
                 loc = it.get("loc", "")
-                key = addr_key(cliente, loc)
+                has_gmap = bool((it.get("gmap_url") or "").strip())
+                granular_key = addr_key(cliente, loc, has_gmap=True)
+                key = granular_key if (has_gmap or granular_key in gmap_by_key) \
+                                   else addr_key(cliente, loc, has_gmap=False)
                 if key and key not in addresses:
                     if key in gmap_by_key:
                         addresses[key] = {"query": gmap_by_key[key], "strategy": "gmap-url",
