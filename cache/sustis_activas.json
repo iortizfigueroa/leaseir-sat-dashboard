@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-28T08:13:18.698215+00:00",
+    "last_fetched_at": "2026-05-28T09:13:37.283095+00:00",
     "schema_version": 1,
-    "count": 50
+    "count": 49
   },
   "items": [
     {
@@ -111,21 +111,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6228",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin Vello Alzira",
-      "loc": "Valencia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6219",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Sin Vello Alzira",
-      "consola_averiada": "C00903",
-      "manipulo_averiado": "H00903",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6069",
       "subtask_status": "Solicitado",
       "cliente": "SinVello! Sant Cugat del Valles",
@@ -139,6 +124,21 @@
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6228",
+      "subtask_status": "En préstamo",
+      "cliente": "Sin Vello Alzira",
+      "loc": "Valencia",
+      "consola_susti": "C00552",
+      "manipulo_susti": "H00552",
+      "fecha_envio": "2026-05-28T10:44:00.000+0200",
+      "parent_key": "LEAS-6219",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Alzira",
+      "consola_averiada": "C00903",
+      "manipulo_averiado": "H00903",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6412",
@@ -269,7 +269,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-05-22T10:11:00.000+0200",
       "parent_key": "LEAS-6363",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Dermasana PAmplona",
       "consola_averiada": "90240",
       "manipulo_averiado": "40176",
@@ -419,8 +419,8 @@
       "manipulo_susti": "40518",
       "fecha_envio": "2026-05-15T14:30:00.000+0200",
       "parent_key": "LEAS-6258",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Ces Depilación SADA (DS0125)",
+      "parent_status": "Pendiente asignar técnico",
+      "parent_cliente": "Ces Depilación SADA (DS125)",
       "consola_averiada": "No aparece",
       "manipulo_averiado": "40367",
       "modelo": "MHR"
@@ -469,21 +469,6 @@
       "consola_averiada": "91119",
       "manipulo_averiado": "40550",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6178",
-      "subtask_status": "En préstamo",
-      "cliente": "Sin Vello Alzira",
-      "loc": "Av. del Parc, 4, 46600 Alzira, Valencia",
-      "consola_susti": "C00552",
-      "manipulo_susti": "H00552",
-      "fecha_envio": "2026-05-13T11:06:00.000+0200",
-      "parent_key": "LEAS-6036",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Sin Vello Alzira",
-      "consola_averiada": "C00268",
-      "manipulo_averiado": "H00268",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6183",
