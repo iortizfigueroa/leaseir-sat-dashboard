@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-28T13:54:06.779384+00:00",
+    "last_fetched_at": "2026-05-28T15:55:31.483789+00:00",
     "schema_version": 1,
     "count": 51
   },
   "items": [
-    {
-      "key": "LEAS-6456",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
-      "loc": "C. San Sebastián, 12, 29130 Alhaurín de la Torre, Málaga",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6455",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00683",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6450",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -74,7 +59,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6394",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Laser factory Figueres",
       "consola_averiada": "",
       "manipulo_averiado": "H00509",
@@ -154,6 +139,21 @@
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6456",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
+      "loc": "C. San Sebastián, 12, 29130 Alhaurín de la Torre, Málaga",
+      "consola_susti": null,
+      "manipulo_susti": "H00591",
+      "fecha_envio": "2026-05-28T17:06:00.000+0200",
+      "parent_key": "LEAS-6455",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00683",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6228",
@@ -509,7 +509,7 @@
       "manipulo_susti": "sustdual041",
       "fecha_envio": "2026-05-08T16:59:00.000+0200",
       "parent_key": "LEAS-6141",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Torremolinos",
       "consola_averiada": "C00311",
       "manipulo_averiado": "H00311",
