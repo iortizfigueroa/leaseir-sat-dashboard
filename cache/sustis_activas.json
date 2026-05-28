@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-05-28T09:13:37.283095+00:00",
+    "last_fetched_at": "2026-05-28T11:01:22.423060+00:00",
     "schema_version": 1,
-    "count": 49
+    "count": 50
   },
   "items": [
+    {
+      "key": "LEAS-6450",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Smart Duck Courbevoie",
+      "loc": "6 Pl. Charras, 92400 Courbevoie, Francia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6449",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Smart Duck Courbevoie",
+      "consola_averiada": "C03150",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6422",
       "subtask_status": "Solicitado",
@@ -344,7 +359,7 @@
       "manipulo_susti": "SUSTDUAL40",
       "fecha_envio": "2026-05-20T17:02:00.000+0200",
       "parent_key": "LEAS-6315",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "DONLY LASER",
       "consola_averiada": "",
       "manipulo_averiado": "H00448",
@@ -479,7 +494,7 @@
       "manipulo_susti": "sustdual041",
       "fecha_envio": "2026-05-08T16:59:00.000+0200",
       "parent_key": "LEAS-6141",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello Torremolinos",
       "consola_averiada": "C00311",
       "manipulo_averiado": "H00311",
