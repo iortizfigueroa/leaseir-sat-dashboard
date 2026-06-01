@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-01T10:15:53.341972+00:00",
+    "last_fetched_at": "2026-06-01T12:17:57.992187+00:00",
     "schema_version": 1,
-    "count": 52
+    "count": 51
   },
   "items": [
     {
@@ -81,21 +81,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6244",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin Vello Fuenlabrada",
-      "loc": "Fuenlabrada",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6243",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Sin Vello Fuenlabrada",
-      "consola_averiada": "C00215",
-      "manipulo_averiado": "H00215",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6069",
       "subtask_status": "Solicitado",
       "cliente": "SinVello! Sant Cugat del Valles",
@@ -109,6 +94,21 @@
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6244",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Sin Vello Fuenlabrada",
+      "loc": "Fuenlabrada",
+      "consola_susti": "sustmhr031",
+      "manipulo_susti": "sustdual005",
+      "fecha_envio": "2026-06-01T13:08:00.000+0200",
+      "parent_key": "LEAS-6243",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Fuenlabrada",
+      "consola_averiada": "C00215",
+      "manipulo_averiado": "H00215",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-6456",
@@ -187,14 +187,14 @@
     },
     {
       "key": "LEAS-6412",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Barakaldo",
       "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
       "consola_susti": "SUSTMHR025",
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-05-26T19:15:00.000+0200",
       "parent_key": "LEAS-6411",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Sin Vello Barakaldo",
       "consola_averiada": "C00444",
       "manipulo_averiado": "H00444",
@@ -209,7 +209,7 @@
       "manipulo_susti": "H41003",
       "fecha_envio": "2026-05-26T12:00:00.000+0200",
       "parent_key": "LEAS-6398",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Elha Obispo",
       "consola_averiada": "",
       "manipulo_averiado": "H00520",
@@ -232,14 +232,14 @@
     },
     {
       "key": "LEAS-6384",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Santiago de compostela",
       "loc": "Rúa de San Pedro de Mezonzo, 35, 15701 Santiago de Compostela, A Coruña",
       "consola_susti": "C00187",
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-05-25T13:41:00.000+0200",
       "parent_key": "LEAS-6383",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Sin Vello Santiago de compostela",
       "consola_averiada": "C00191",
       "manipulo_averiado": "H00191",
@@ -299,7 +299,7 @@
       "manipulo_susti": "SUSTQUAD016",
       "fecha_envio": "2026-05-22T10:15:00.000+0200",
       "parent_key": "LEAS-6360",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha Malaga",
       "consola_averiada": "90290",
       "manipulo_averiado": "40294",
@@ -330,7 +330,7 @@
       "fecha_envio": "2026-05-21T16:38:00.000+0200",
       "parent_key": "LEAS-6322",
       "parent_status": "En cola taller",
-      "parent_cliente": "Sin Vello Republica Arggentina",
+      "parent_cliente": "Sin Vello Republica Argentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
       "modelo": "MHR"
@@ -359,7 +359,7 @@
       "manipulo_susti": "sustdual011",
       "fecha_envio": "2026-05-21T11:51:00.000+0200",
       "parent_key": "LEAS-6330",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Cleanbody CC LA villa",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -427,14 +427,14 @@
     },
     {
       "key": "LEAS-6291",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Moratalaz",
       "loc": "Madrid",
       "consola_susti": "SUSTMHR031",
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-05-18T16:10:00.000+0200",
       "parent_key": "LEAS-6290",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Moratalaz",
       "consola_averiada": "C00442",
       "manipulo_averiado": "H00442",
@@ -614,7 +614,7 @@
       "manipulo_susti": "40534",
       "fecha_envio": "2026-04-20T13:01:00.000+0200",
       "parent_key": "LEAS-5853",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Harmonie Salamanca",
       "consola_averiada": "90522",
       "manipulo_averiado": "40422",
@@ -708,21 +708,6 @@
       "parent_cliente": "Sin Vello motril granada",
       "consola_averiada": "91292",
       "manipulo_averiado": "30605",
-      "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-5737",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Depil&Bell - 30751",
-      "loc": "Vigo",
-      "consola_susti": "DEMO",
-      "manipulo_susti": "SUSTDUAL042",
-      "fecha_envio": "2026-03-31T16:24:00.000+0200",
-      "parent_key": "LEAS-5736",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Depil&Bell - 30751  91107",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
       "modelo": "MHR Dual"
     },
     {
