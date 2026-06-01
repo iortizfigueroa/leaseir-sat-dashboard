@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-01T13:00:21.918460+00:00",
+    "last_fetched_at": "2026-06-01T14:45:53.377149+00:00",
     "schema_version": 1,
-    "count": 51
+    "count": 50
   },
   "items": [
     {
@@ -367,7 +367,7 @@
     },
     {
       "key": "LEAS-6323",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Ces Depilación TEMPLE",
       "loc": "Rúa Tapia, 44, bajo derecha, 15679 O Temple, A Coruña",
       "consola_susti": "91142",
@@ -419,7 +419,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-05-18T18:33:00.000+0200",
       "parent_key": "LEAS-6369",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Epil Point Pozzuoli",
       "consola_averiada": "91303",
       "manipulo_averiado": "40442",
@@ -457,11 +457,11 @@
     },
     {
       "key": "LEAS-6259",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Equipo enviado",
       "cliente": "Ces Depilación SADA (DS0125)",
       "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
       "consola_susti": "SUSTMHR015",
-      "manipulo_susti": "40518",
+      "manipulo_susti": "SUSTQUAD017",
       "fecha_envio": "2026-05-15T14:30:00.000+0200",
       "parent_key": "LEAS-6258",
       "parent_status": "En preparación presupuesto",
@@ -589,21 +589,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-5838",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Centro del vello y Belleza Denia (Damaris)",
-      "loc": "Denia",
-      "consola_susti": "90624",
-      "manipulo_susti": "SUSTDUAL011",
-      "fecha_envio": "2026-04-23T16:13:00.000+0200",
-      "parent_key": "LEAS-5837",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centro del vello y Belleza Denia (Damaris)",
-      "consola_averiada": "90019",
-      "manipulo_averiado": "30015",
-      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-5854",
@@ -764,7 +749,7 @@
       "manipulo_susti": "H01012",
       "fecha_envio": "2025-12-12T14:30:00.000+0100",
       "parent_key": "LEAS-4350",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Brull",
       "consola_averiada": "",
       "manipulo_averiado": "H00141",
