@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-02T10:01:35.287259+00:00",
+    "last_fetched_at": "2026-06-02T11:30:37.035162+00:00",
     "schema_version": 1,
     "count": 50
   },
@@ -81,21 +81,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6069",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello! Sant Cugat del Valles",
-      "loc": "Carrer de Sant Jordi, 27, 08172 Sant Cugat del Vallès, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6067",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "SinVello! Sant Cugat del Valles",
-      "consola_averiada": "C00540",
-      "manipulo_averiado": "H00540",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6244",
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Fuenlabrada",
@@ -123,6 +108,21 @@
       "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
       "consola_averiada": "",
       "manipulo_averiado": "H00683",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6069",
+      "subtask_status": "En préstamo",
+      "cliente": "SinVello! Sant Cugat del Valles",
+      "loc": "Carrer de Sant Jordi, 27, 08172 Sant Cugat del Vallès, Barcelona",
+      "consola_susti": "C03204",
+      "manipulo_susti": "H03204",
+      "fecha_envio": "2026-05-28T13:04:00.000+0200",
+      "parent_key": "LEAS-6067",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello! Sant Cugat del Valles",
+      "consola_averiada": "C00540",
+      "manipulo_averiado": "H00540",
       "modelo": "XCell HR"
     },
     {
@@ -449,7 +449,7 @@
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-05-18T11:05:00.000+0200",
       "parent_key": "LEAS-6238",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Sin Vello San sebastian",
       "consola_averiada": "90747",
       "manipulo_averiado": "30279",
@@ -494,7 +494,7 @@
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-05-13T15:39:00.000+0200",
       "parent_key": "LEAS-6221",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Sin Vello Cadiz",
       "consola_averiada": "C00155",
       "manipulo_averiado": "H00155",
