@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-03T10:05:13.736232+00:00",
+    "last_fetched_at": "2026-06-03T12:19:38.722999+00:00",
     "schema_version": 1,
-    "count": 53
+    "count": 54
   },
   "items": [
+    {
+      "key": "LEAS-6527",
+      "subtask_status": "Solicitado",
+      "cliente": "CN CLINICS Milaneo",
+      "loc": "Mailänder Platz 7, 70173 Stuttgart, Alemania",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6526",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "CN CLINICS Milaneo",
+      "consola_averiada": "",
+      "manipulo_averiado": "40357",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6524",
       "subtask_status": "Solicitado",
@@ -14,9 +29,9 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6523",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "CES DEPLACIÓN TEMPLE DS115",
-      "consola_averiada": "No aparece",
+      "consola_averiada": "115",
       "manipulo_averiado": "",
       "modelo": ""
     },
@@ -284,7 +299,7 @@
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-05-25T13:41:00.000+0200",
       "parent_key": "LEAS-6383",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Sin Vello Santiago de compostela",
       "consola_averiada": "C00191",
       "manipulo_averiado": "H00191",
@@ -524,7 +539,7 @@
       "manipulo_susti": "H01069",
       "fecha_envio": "2026-05-15T14:30:00.000+0200",
       "parent_key": "LEAS-6246",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Ibiza",
       "consola_averiada": "",
       "manipulo_averiado": "H03051",
