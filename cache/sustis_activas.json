@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-04T12:25:30.467569+00:00",
+    "last_fetched_at": "2026-06-04T13:42:14.401028+00:00",
     "schema_version": 1,
-    "count": 55
+    "count": 56
   },
   "items": [
+    {
+      "key": "LEAS-6551",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Cn Clinics Milaneo",
+      "loc": "Alemania",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6550",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Cn Clinics Milaneo",
+      "consola_averiada": "",
+      "manipulo_averiado": "40357",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6536",
       "subtask_status": "Solicitado",
@@ -389,7 +404,7 @@
       "manipulo_susti": "SUSTQUAD016",
       "fecha_envio": "2026-05-22T10:15:00.000+0200",
       "parent_key": "LEAS-6360",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Elha Malaga",
       "consola_averiada": "90290",
       "manipulo_averiado": "40294",
