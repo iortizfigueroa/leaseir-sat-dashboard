@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-04T08:35:28.564947+00:00",
+    "last_fetched_at": "2026-06-04T11:03:20.073856+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 54
   },
   "items": [
-    {
-      "key": "LEAS-6541",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin Vello Oviedo",
-      "loc": "Calle Miguel Ángel Blanco, 31, 33013 Oviedo, Asturias (C00366)",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6458",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Sin Vello Oviedo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00366",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6536",
       "subtask_status": "Solicitado",
@@ -141,6 +126,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6541",
+      "subtask_status": "En préstamo",
+      "cliente": "Sin Vello Oviedo",
+      "loc": "Calle Miguel Ángel Blanco, 31, 33013 Oviedo, Asturias (C00366)",
+      "consola_susti": "C00367",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-06-04T11:10:00.000+0200",
+      "parent_key": "LEAS-6458",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Oviedo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00366",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6517",
       "subtask_status": "Equipo enviado",
       "cliente": "",
@@ -246,21 +246,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6228",
-      "subtask_status": "En préstamo",
-      "cliente": "Sin Vello Alzira",
-      "loc": "Valencia",
-      "consola_susti": "C00552",
-      "manipulo_susti": "H00552",
-      "fecha_envio": "2026-05-28T10:44:00.000+0200",
-      "parent_key": "LEAS-6219",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Sin Vello Alzira",
-      "consola_averiada": "C00903",
-      "manipulo_averiado": "H00903",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6463",
       "subtask_status": "En préstamo",
       "cliente": "Epil Point Caserta",
@@ -329,7 +314,7 @@
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-05-25T13:41:00.000+0200",
       "parent_key": "LEAS-6383",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Sin Vello Santiago de compostela",
       "consola_averiada": "C00191",
       "manipulo_averiado": "H00191",
@@ -769,21 +754,6 @@
       "consola_averiada": "C00538",
       "manipulo_averiado": "H00538",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-5806",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello motril granada",
-      "loc": "Pl. Javier de Burgos, 1, 18600 Motril, Granada",
-      "consola_susti": "SUSTDUAL003Bis",
-      "manipulo_susti": "SUSTMHR013",
-      "fecha_envio": "2026-04-07T17:10:00.000+0200",
-      "parent_key": "LEAS-5740",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello motril granada",
-      "consola_averiada": "91292",
-      "manipulo_averiado": "30605",
-      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-5697",
