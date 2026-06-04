@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-04T07:07:31.017273+00:00",
+    "last_fetched_at": "2026-06-04T07:53:46.816296+00:00",
     "schema_version": 1,
-    "count": 55
+    "count": 56
   },
   "items": [
+    {
+      "key": "LEAS-6541",
+      "subtask_status": "Solicitado",
+      "cliente": "Sin Vello Oviedo",
+      "loc": "Calle Miguel Ángel Blanco, 31, 33013 Oviedo, Asturias (C00366)",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6458",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Oviedo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00366",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6536",
       "subtask_status": "Solicitado",
@@ -33,21 +48,6 @@
       "parent_cliente": "CN CLINICS Milaneo",
       "consola_averiada": "",
       "manipulo_averiado": "40357",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6524",
-      "subtask_status": "Solicitado",
-      "cliente": "CES DEPLACIÓN TEMPLE DS115",
-      "loc": "COSTA DA TAPIA, 44 BAJO DERECHA, O TEMPLE 15679 CAMBRE",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6523",
-      "parent_status": "Pendiente asignar técnico",
-      "parent_cliente": "CES DEPLACIÓN TEMPLE DS115",
-      "consola_averiada": "115",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -126,6 +126,21 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6524",
+      "subtask_status": "En préstamo",
+      "cliente": "CES DEPLACIÓN TEMPLE DS115",
+      "loc": "COSTA DA TAPIA, 44 BAJO DERECHA, O TEMPLE 15679 CAMBRE",
+      "consola_susti": "91142",
+      "manipulo_susti": "40551",
+      "fecha_envio": "2026-06-20T09:42:00.000+0200",
+      "parent_key": "LEAS-6523",
+      "parent_status": "Pendiente asignar técnico",
+      "parent_cliente": "CES DEPLACIÓN TEMPLE DS115",
+      "consola_averiada": "115",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-6517",
       "subtask_status": "Equipo enviado",
       "cliente": "",
@@ -162,7 +177,7 @@
       "loc": "Av. de Madrid, S/N, 45600 Talavera de la Reina, Toledo",
       "consola_susti": "90624",
       "manipulo_susti": "40464",
-      "fecha_envio": "2026-05-29T11:12:00.000+0200",
+      "fecha_envio": "2026-06-01T11:12:00.000+0200",
       "parent_key": "LEAS-6486",
       "parent_status": "Pendiente recogida",
       "parent_cliente": "Quora Clinics talavera",
