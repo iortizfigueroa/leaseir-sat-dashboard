@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-05T08:19:27.821306+00:00",
+    "last_fetched_at": "2026-06-05T09:41:42.696530+00:00",
     "schema_version": 1,
     "count": 57
   },
@@ -18,36 +18,6 @@
       "parent_cliente": "Epil Point Giugliano",
       "consola_averiada": "90793",
       "manipulo_averiado": "40413",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6551",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Cn Clinics Milaneo",
-      "loc": "Alemania",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6550",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Cn Clinics Milaneo",
-      "consola_averiada": "",
-      "manipulo_averiado": "40357",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6536",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Lumina  Salerno",
-      "loc": "Corso Giuseppe Garibaldi, 197, 84122 Salerno SA, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6535",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Epil Point Lumina  Salerno",
-      "consola_averiada": "91402",
-      "manipulo_averiado": "40727",
       "modelo": ""
     },
     {
@@ -184,6 +154,36 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00366",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6536",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Epil Point Lumina  Salerno",
+      "loc": "Corso Giuseppe Garibaldi, 197, 84122 Salerno SA, Italia",
+      "consola_susti": "SUSTMHR036",
+      "manipulo_susti": "40518",
+      "fecha_envio": "2026-06-04T10:43:00.000+0200",
+      "parent_key": "LEAS-6535",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Epil Point Lumina  Salerno",
+      "consola_averiada": "91402",
+      "manipulo_averiado": "40727",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6551",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Cn Clinics Milaneo",
+      "loc": "Alemania",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL003",
+      "fecha_envio": "2026-06-04T10:37:00.000+0200",
+      "parent_key": "LEAS-6550",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Cn Clinics Milaneo",
+      "consola_averiada": "",
+      "manipulo_averiado": "40357",
+      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-6517",
@@ -329,7 +329,7 @@
       "manipulo_susti": "H41003",
       "fecha_envio": "2026-05-26T12:00:00.000+0200",
       "parent_key": "LEAS-6398",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Elha Obispo",
       "consola_averiada": "",
       "manipulo_averiado": "H00520",
@@ -419,7 +419,7 @@
       "manipulo_susti": "SUSTQUAD016",
       "fecha_envio": "2026-05-22T10:15:00.000+0200",
       "parent_key": "LEAS-6360",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Elha Malaga",
       "consola_averiada": "90290",
       "manipulo_averiado": "40294",
@@ -502,7 +502,7 @@
     },
     {
       "key": "LEAS-6319",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "DONLY LASER",
       "loc": "Carrer del Brasil, 27, L'Olivereta, 46018 València, Valencia",
       "consola_susti": "SUSTMHR30",
@@ -622,7 +622,7 @@
     },
     {
       "key": "LEAS-6230",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "MEL CLINICS Castellon",
       "loc": "Castellon",
       "consola_susti": "SUSTMHR027",
