@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-06T07:26:26.045735+00:00",
+    "last_fetched_at": "2026-06-06T11:02:55.509223+00:00",
     "schema_version": 1,
-    "count": 58
+    "count": 55
   },
   "items": [
     {
@@ -153,21 +153,6 @@
       "parent_cliente": "Elha Naciosn Unides",
       "consola_averiada": "C00426",
       "manipulo_averiado": "H00426",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6541",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Oviedo",
-      "loc": "Calle Miguel Ángel Blanco, 31, 33013 Oviedo, Asturias (C00366)",
-      "consola_susti": "C00367",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-04T11:10:00.000+0200",
-      "parent_key": "LEAS-6458",
-      "parent_status": "En cola taller",
-      "parent_cliente": "SinVello Oviedo",
-      "consola_averiada": "C00366",
-      "manipulo_averiado": "H00366",
       "modelo": "XCell HR"
     },
     {
@@ -329,7 +314,7 @@
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-05-26T19:15:00.000+0200",
       "parent_key": "LEAS-6411",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Barakaldo",
       "consola_averiada": "C00444",
       "manipulo_averiado": "H00444",
@@ -367,14 +352,14 @@
     },
     {
       "key": "LEAS-6384",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Santiago de compostela",
       "loc": "Rúa de San Pedro de Mezonzo, 35, 15701 Santiago de Compostela, A Coruña",
       "consola_susti": "C00187",
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-05-25T13:41:00.000+0200",
       "parent_key": "LEAS-6383",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Santiago de compostela",
       "consola_averiada": "C00191",
       "manipulo_averiado": "H00191",
@@ -442,7 +427,7 @@
     },
     {
       "key": "LEAS-6364",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Dermasana PAmplona",
       "loc": "Av. Carlos Iii, 12, 31002 Pamplona, Navarra",
       "consola_susti": "91064",
@@ -464,7 +449,7 @@
       "manipulo_susti": "30074",
       "fecha_envio": "2026-05-21T16:38:00.000+0200",
       "parent_key": "LEAS-6322",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Sin Vello Republica Argentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -514,21 +499,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "40183",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-6319",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "DONLY LASER",
-      "loc": "Carrer del Brasil, 27, L'Olivereta, 46018 València, Valencia",
-      "consola_susti": "SUSTMHR30",
-      "manipulo_susti": "SUSTDUAL40",
-      "fecha_envio": "2026-05-20T17:02:00.000+0200",
-      "parent_key": "LEAS-6315",
-      "parent_status": "Resuelto",
-      "parent_cliente": "DONLY LASER",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00448",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-6306",
@@ -592,14 +562,14 @@
     },
     {
       "key": "LEAS-6259",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Ces Depilación SADA (DS0125)",
       "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
       "consola_susti": "SUSTMHR015",
       "manipulo_susti": "SUSTQUAD017",
       "fecha_envio": "2026-05-15T14:30:00.000+0200",
       "parent_key": "LEAS-6258",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Ces Depilación SADA (DS125)",
       "consola_averiada": "No aparece",
       "manipulo_averiado": "40367",
@@ -622,33 +592,18 @@
     },
     {
       "key": "LEAS-6223",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Cadiz",
       "loc": "Cadiz",
       "consola_susti": "C00107",
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-05-13T15:39:00.000+0200",
       "parent_key": "LEAS-6221",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Cadiz",
       "consola_averiada": "C00155",
       "manipulo_averiado": "H00155",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6230",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "MEL CLINICS Castellon",
-      "loc": "Castellon",
-      "consola_susti": "SUSTMHR027",
-      "manipulo_susti": "SUSTDUAL017",
-      "fecha_envio": "2026-05-13T15:01:00.000+0200",
-      "parent_key": "LEAS-6229",
-      "parent_status": "Resuelto",
-      "parent_cliente": "MEL CLINICS Castellon",
-      "consola_averiada": "91119",
-      "manipulo_averiado": "40550",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-6183",
