@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-08T09:04:53.528366+00:00",
+    "last_fetched_at": "2026-06-08T09:56:11.676623+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 55
   },
   "items": [
     {
@@ -89,7 +89,7 @@
       "manipulo_susti": "H00677",
       "fecha_envio": null,
       "parent_key": "LEAS-6365",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Centro Unico Euroma 2",
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
@@ -134,7 +134,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-05T11:00:00.000+0200",
       "parent_key": "LEAS-6569",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello Boadilla",
       "consola_averiada": "C00671",
       "manipulo_averiado": "H00671",
@@ -299,7 +299,7 @@
       "manipulo_susti": "40496",
       "fecha_envio": "2026-05-28T11:28:00.000+0200",
       "parent_key": "LEAS-6464",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Caserta",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -314,7 +314,7 @@
       "manipulo_susti": "40559",
       "fecha_envio": "2026-05-27T11:32:00.000+0200",
       "parent_key": "LEAS-6462",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Caserta",
       "consola_averiada": "91005",
       "manipulo_averiado": "",
@@ -322,7 +322,7 @@
     },
     {
       "key": "LEAS-6412",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Barakaldo",
       "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
       "consola_susti": "SUSTMHR025",
@@ -442,7 +442,7 @@
     },
     {
       "key": "LEAS-6364",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Dermasana PAmplona",
       "loc": "Av. Carlos Iii, 12, 31002 Pamplona, Navarra",
       "consola_susti": "91064",
@@ -516,21 +516,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6306",
-      "subtask_status": "En préstamo",
-      "cliente": "Cibeles holea SUSTQUAD009",
-      "loc": "Huelva",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUAD011",
-      "fecha_envio": "2026-05-19T09:53:00.000+0200",
-      "parent_key": "LEAS-6305",
-      "parent_status": "En cola taller",
-      "parent_cliente": "Cibeles holea SUSTQUAD009",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": "MHR Quad"
-    },
-    {
       "key": "LEAS-6370",
       "subtask_status": "En préstamo",
       "cliente": "Epil Point Pozzuoli",
@@ -562,14 +547,14 @@
     },
     {
       "key": "LEAS-6249",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello San sebastian",
       "loc": "sebastian",
       "consola_susti": "90127",
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-05-18T11:05:00.000+0200",
       "parent_key": "LEAS-6238",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello San sebastian",
       "consola_averiada": "90747",
       "manipulo_averiado": "30279",
