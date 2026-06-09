@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-09T11:02:29.197818+00:00",
+    "last_fetched_at": "2026-06-09T12:21:13.229742+00:00",
     "schema_version": 1,
-    "count": 59
+    "count": 57
   },
   "items": [
     {
@@ -126,21 +126,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6316",
-      "subtask_status": "En préstamo",
-      "cliente": "Centro Unico Giugliano",
-      "loc": "Via Santa Maria a Cubito, 80014 Giugliano in Campania NA, Italia",
-      "consola_susti": "C00476",
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6310",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centro Unico Giugliano",
-      "consola_averiada": "C00607",
-      "manipulo_averiado": "",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6524",
       "subtask_status": "En préstamo",
       "cliente": "CES DEPLACIÓN TEMPLE DS115",
@@ -184,6 +169,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00228",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-5786",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Limoneros",
+      "loc": "Almeria",
+      "consola_susti": "91094",
+      "manipulo_susti": "SUSTQUAD035 / 40481",
+      "fecha_envio": "2026-06-05T11:47:00.000+0200",
+      "parent_key": "LEAS-4912",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Limoneros",
+      "consola_averiada": "C00538",
+      "manipulo_averiado": "H00538",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6571",
@@ -329,7 +329,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-05-28T13:04:00.000+0200",
       "parent_key": "LEAS-6067",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "SinVello! Sant Cugat del Valles",
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
@@ -364,6 +364,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6316",
+      "subtask_status": "Gestionada recogida",
+      "cliente": "Centro Unico Giugliano",
+      "loc": "Via Santa Maria a Cubito, 80014 Giugliano in Campania NA, Italia",
+      "consola_susti": "C00476",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-05-27T13:20:00.000+0200",
+      "parent_key": "LEAS-6310",
+      "parent_status": "Resuelto",
+      "parent_cliente": "Centro Unico Giugliano",
+      "consola_averiada": "C00607",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6463",
@@ -498,21 +513,6 @@
       "parent_cliente": "Elha Malaga",
       "consola_averiada": "90290",
       "manipulo_averiado": "40294",
-      "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-6364",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Dermasana PAmplona",
-      "loc": "Av. Carlos Iii, 12, 31002 Pamplona, Navarra",
-      "consola_susti": "91064",
-      "manipulo_susti": "SUSTQUAD035",
-      "fecha_envio": "2026-05-22T10:11:00.000+0200",
-      "parent_key": "LEAS-6363",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Dermasana PAmplona",
-      "consola_averiada": "90240",
-      "manipulo_averiado": "40176",
       "modelo": "MHR Quad"
     },
     {
@@ -711,21 +711,6 @@
       "modelo": "MHR Quad"
     },
     {
-      "key": "LEAS-6032",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Elha Oloriz",
-      "loc": "Granada",
-      "consola_susti": "91094",
-      "manipulo_susti": "40481",
-      "fecha_envio": "2026-04-30T16:02:00.000+0200",
-      "parent_key": "LEAS-6030",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Oloriz",
-      "consola_averiada": "C00491",
-      "manipulo_averiado": "H00491",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6095",
       "subtask_status": "Gestionada recogida",
       "cliente": "Centro Unico Giugliano",
@@ -814,21 +799,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-5786",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Limoneros",
-      "loc": "Almeria",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": "2026-04-08T11:47:00.000+0200",
-      "parent_key": "LEAS-4912",
-      "parent_status": "Abierto",
-      "parent_cliente": "Elha Limoneros",
-      "consola_averiada": "C00538",
-      "manipulo_averiado": "H00538",
-      "modelo": ""
     },
     {
       "key": "LEAS-5697",
