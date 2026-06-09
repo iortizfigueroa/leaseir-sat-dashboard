@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-09T08:09:22.535294+00:00",
+    "last_fetched_at": "2026-06-09T09:46:51.770582+00:00",
     "schema_version": 1,
-    "count": 58
+    "count": 59
   },
   "items": [
     {
@@ -156,6 +156,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6596",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Sin Vello Las Palmas de Gran Canarias",
+      "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
+      "consola_susti": null,
+      "manipulo_susti": "H00751",
+      "fecha_envio": "2026-06-09T10:37:00.000+0200",
+      "parent_key": "LEAS-6576",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00359",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6582",
       "subtask_status": "Equipo enviado",
       "cliente": "Dermasana Alcobendas",
@@ -284,7 +299,7 @@
       "manipulo_susti": "40464",
       "fecha_envio": "2026-06-01T11:12:00.000+0200",
       "parent_key": "LEAS-6486",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Quora Clinics talavera",
       "consola_averiada": "90731",
       "manipulo_averiado": "40353",
@@ -344,7 +359,7 @@
       "manipulo_susti": "40496",
       "fecha_envio": "2026-05-28T11:28:00.000+0200",
       "parent_key": "LEAS-6464",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Epil Point Caserta",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -359,7 +374,7 @@
       "manipulo_susti": "40559",
       "fecha_envio": "2026-05-27T11:32:00.000+0200",
       "parent_key": "LEAS-6462",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Epil Point Caserta",
       "consola_averiada": "91005",
       "manipulo_averiado": "40405",
@@ -404,7 +419,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-05-25T15:30:00.000+0200",
       "parent_key": "LEAS-6305",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Cibeles holea SUSTQUAD009",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -524,7 +539,7 @@
       "manipulo_susti": "SUSTQUAD043",
       "fecha_envio": "2026-05-21T16:32:00.000+0200",
       "parent_key": "LEAS-6305",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Cibeles holea SUSTQUAD009",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -787,7 +802,7 @@
     },
     {
       "key": "LEAS-5843",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Smart Duck les halles",
       "loc": "smartduck les halles 6 rue du travail  67000 Strasbourg",
       "consola_susti": "C00591",
