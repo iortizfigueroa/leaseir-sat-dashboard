@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-10T10:07:19.984364+00:00",
+    "last_fetched_at": "2026-06-10T10:45:27.027366+00:00",
     "schema_version": 1,
     "count": 58
   },
@@ -141,6 +141,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6616",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Sin Vello Barakaldo",
+      "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
+      "consola_susti": "sustmhr025",
+      "manipulo_susti": "sustdual010",
+      "fecha_envio": "2026-06-10T12:14:00.000+0200",
+      "parent_key": "LEAS-6615",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Sin Vello Barakaldo",
+      "consola_averiada": "C00444",
+      "manipulo_averiado": "H00444",
+      "modelo": "MHR"
+    },
+    {
       "key": "LEAS-6603",
       "subtask_status": "Equipo enviado",
       "cliente": "",
@@ -179,7 +194,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-06-08T15:59:00.000+0200",
       "parent_key": "LEAS-6580",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Dermasana Alcobendas",
       "consola_averiada": "",
       "manipulo_averiado": "H00228",
@@ -411,21 +426,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6412",
-      "subtask_status": "En préstamo",
-      "cliente": "Sin Vello Barakaldo",
-      "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
-      "consola_susti": "SUSTMHR025",
-      "manipulo_susti": "SUSTDUAL010",
-      "fecha_envio": "2026-05-26T19:15:00.000+0200",
-      "parent_key": "LEAS-6411",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Barakaldo",
-      "consola_averiada": "C00444",
-      "manipulo_averiado": "H00444",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-6401",
       "subtask_status": "En préstamo",
       "cliente": "Elha Obispo",
@@ -479,7 +479,7 @@
       "manipulo_susti": "40306",
       "fecha_envio": "2026-05-25T13:20:00.000+0200",
       "parent_key": "LEAS-6390",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Pisa",
       "consola_averiada": "",
       "manipulo_averiado": "40512",
