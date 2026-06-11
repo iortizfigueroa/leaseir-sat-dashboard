@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-11T08:56:13.132838+00:00",
+    "last_fetched_at": "2026-06-11T11:05:28.522539+00:00",
     "schema_version": 1,
-    "count": 62
+    "count": 61
   },
   "items": [
     {
@@ -141,21 +141,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6368",
-      "subtask_status": "En préstamo",
-      "cliente": "Centro Unico Tiburtina",
-      "loc": "Via Tiburtina, 573, 00157 Roma RM, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H01025",
-      "fecha_envio": null,
-      "parent_key": "LEAS-6344",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Centro Unico Tiburtina",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6367",
       "subtask_status": "Equipo enviado",
       "cliente": "Centro Unico Euroma 2",
@@ -172,7 +157,7 @@
     },
     {
       "key": "LEAS-6524",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "CES DEPLACIÓN TEMPLE DS115",
       "loc": "COSTA DA TAPIA, 44 BAJO DERECHA, O TEMPLE 15679 CAMBRE",
       "consola_susti": "91142",
@@ -284,7 +269,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-05T11:00:00.000+0200",
       "parent_key": "LEAS-6569",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Boadilla",
       "consola_averiada": "C00671",
       "manipulo_averiado": "H00671",
@@ -337,7 +322,7 @@
     },
     {
       "key": "LEAS-6551",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Cn Clinics Milaneo",
       "loc": "Alemania",
       "consola_susti": null,
@@ -389,7 +374,7 @@
       "manipulo_susti": "40464",
       "fecha_envio": "2026-06-01T11:12:00.000+0200",
       "parent_key": "LEAS-6486",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Quora Clinics talavera",
       "consola_averiada": "90731",
       "manipulo_averiado": "40353",
@@ -539,7 +524,7 @@
       "manipulo_susti": "40306",
       "fecha_envio": "2026-05-25T13:20:00.000+0200",
       "parent_key": "LEAS-6390",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Epil Point Pisa",
       "consola_averiada": "",
       "manipulo_averiado": "40512",
@@ -637,7 +622,7 @@
     },
     {
       "key": "LEAS-6323",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Ces Depilación TEMPLE",
       "loc": "Rúa Tapia, 44, bajo derecha, 15679 O Temple, A Coruña",
       "consola_susti": "91142",
@@ -723,21 +708,6 @@
       "parent_cliente": "Sin Vello Ibiza",
       "consola_averiada": "",
       "manipulo_averiado": "H03051",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6223",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Cadiz",
-      "loc": "Cadiz",
-      "consola_susti": "C00107",
-      "manipulo_susti": "H01026",
-      "fecha_envio": "2026-05-13T15:39:00.000+0200",
-      "parent_key": "LEAS-6221",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Cadiz",
-      "consola_averiada": "C00155",
-      "manipulo_averiado": "H00155",
       "modelo": "XCell HR"
     },
     {
@@ -904,6 +874,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "40557",
       "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-5514",
+      "subtask_status": "Equipo devuelto",
+      "cliente": "Mirabelle",
+      "loc": "Centre d’estètica Mirabelle  Carrer de la Vistalegre, 9, 08921 Santa Coloma de Gramenet, Barcelona",
+      "consola_susti": "SUSTAHRS002",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-03-12T16:04:00.000+0100",
+      "parent_key": "LEAS-5513",
+      "parent_status": "Finalizada",
+      "parent_cliente": "Mirabelle",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
     },
     {
       "key": "LEAS-5031",
