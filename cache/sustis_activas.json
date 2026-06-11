@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-11T08:08:37.296651+00:00",
+    "last_fetched_at": "2026-06-11T08:56:13.132838+00:00",
     "schema_version": 1,
-    "count": 61
+    "count": 62
   },
   "items": [
+    {
+      "key": "LEAS-6636",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Zurimed Los fresnos",
+      "loc": "Gijón",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6635",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Zurimed Los fresnos",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00633",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6629",
       "subtask_status": "Solicitado",
@@ -374,7 +389,7 @@
       "manipulo_susti": "40464",
       "fecha_envio": "2026-06-01T11:12:00.000+0200",
       "parent_key": "LEAS-6486",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Quora Clinics talavera",
       "consola_averiada": "90731",
       "manipulo_averiado": "40353",
@@ -524,7 +539,7 @@
       "manipulo_susti": "40306",
       "fecha_envio": "2026-05-25T13:20:00.000+0200",
       "parent_key": "LEAS-6390",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Epil Point Pisa",
       "consola_averiada": "",
       "manipulo_averiado": "40512",
@@ -712,7 +727,7 @@
     },
     {
       "key": "LEAS-6223",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Sin Vello Cadiz",
       "loc": "Cadiz",
       "consola_susti": "C00107",
