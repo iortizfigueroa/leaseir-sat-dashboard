@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-11T12:59:55.430059+00:00",
+    "last_fetched_at": "2026-06-11T15:04:06.505796+00:00",
     "schema_version": 1,
     "count": 60
   },
   "items": [
-    {
-      "key": "LEAS-6636",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Zurimed Los fresnos",
-      "loc": "Gijón",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6635",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Zurimed Los fresnos",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00633",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6629",
       "subtask_status": "Solicitado",
@@ -33,21 +18,6 @@
       "parent_cliente": "Elha Rocafort",
       "consola_averiada": "-",
       "manipulo_averiado": "40669",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6627",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Pont Roma Eur",
-      "loc": "Roma",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6626",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Pont Roma Eur",
-      "consola_averiada": "",
-      "manipulo_averiado": "40449",
       "modelo": ""
     },
     {
@@ -171,6 +141,36 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6636",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Zurimed Los fresnos",
+      "loc": "Gijón",
+      "consola_susti": null,
+      "manipulo_susti": "H01064",
+      "fecha_envio": "2026-06-11T16:30:00.000+0200",
+      "parent_key": "LEAS-6635",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Zurimed Los fresnos",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00633",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6627",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Epil Pont Roma Eur",
+      "loc": "Roma",
+      "consola_susti": null,
+      "manipulo_susti": "40428",
+      "fecha_envio": "2026-06-11T16:28:00.000+0200",
+      "parent_key": "LEAS-6626",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Pont Roma Eur",
+      "consola_averiada": "",
+      "manipulo_averiado": "40449",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-6244",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Fuenlabrada",
@@ -209,7 +209,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-10T12:14:00.000+0200",
       "parent_key": "LEAS-6615",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Barakaldo",
       "consola_averiada": "C00444",
       "manipulo_averiado": "H00444",
@@ -299,7 +299,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-06-05T09:03:00.000+0200",
       "parent_key": "LEAS-6565",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Gran Capitan Granada",
       "consola_averiada": "90989",
       "manipulo_averiado": "30468",
@@ -434,7 +434,7 @@
       "manipulo_susti": "40496",
       "fecha_envio": "2026-05-28T11:28:00.000+0200",
       "parent_key": "LEAS-6464",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Epil Point Caserta",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -524,7 +524,7 @@
       "manipulo_susti": "40306",
       "fecha_envio": "2026-05-25T13:20:00.000+0200",
       "parent_key": "LEAS-6390",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Epil Point Pisa",
       "consola_averiada": "",
       "manipulo_averiado": "40512",
