@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-12T11:33:08.625958+00:00",
+    "last_fetched_at": "2026-06-12T12:19:32.705010+00:00",
     "schema_version": 1,
     "count": 60
   },
@@ -78,21 +78,6 @@
       "parent_cliente": "CN CLINICS Milaneo",
       "consola_averiada": "",
       "manipulo_averiado": "40357",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6450",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Smart Duck Courbevoie",
-      "loc": "6 Pl. Charras, 92400 Courbevoie, Francia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6449",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Smart Duck Courbevoie",
-      "consola_averiada": "C03150",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -276,6 +261,21 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6450",
+      "subtask_status": "En préstamo",
+      "cliente": "Smart Duck Courbevoie",
+      "loc": "6 Pl. Charras, 92400 Courbevoie, Francia",
+      "consola_susti": "C003258",
+      "manipulo_susti": "H003258",
+      "fecha_envio": "2026-06-08T13:42:00.000+0200",
+      "parent_key": "LEAS-6449",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Smart Duck Courbevoie",
+      "consola_averiada": "C03150",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-5786",
       "subtask_status": "En préstamo",
       "cliente": "Elha Limoneros",
@@ -364,6 +364,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "40357",
       "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-6660",
+      "subtask_status": "En préstamo",
+      "cliente": "Centri Unico Palermo Terrasanta",
+      "loc": "Palermo, Italia",
+      "consola_susti": "C00677",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-06-02T13:48:00.000+0200",
+      "parent_key": "LEAS-6418",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Centri Unico Palermo Terrasanta",
+      "consola_averiada": "C00676",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6517",
@@ -708,21 +723,6 @@
       "parent_cliente": "Sin Vello Ibiza",
       "consola_averiada": "",
       "manipulo_averiado": "H03051",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6174",
-      "subtask_status": "En préstamo",
-      "cliente": "Smart Duck Lyon Part Dieu C03206 / H03206",
-      "loc": "Lyon, Francia",
-      "consola_susti": "C03258",
-      "manipulo_susti": "H03258",
-      "fecha_envio": "2026-05-07T13:59:00.000+0200",
-      "parent_key": "LEAS-6049",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Smart Duck Lyon Part Dieu C03206 / H03206",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "No aparece",
       "modelo": "XCell HR"
     },
     {
