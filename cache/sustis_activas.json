@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-15T08:28:47.287093+00:00",
+    "last_fetched_at": "2026-06-15T10:34:56.154969+00:00",
     "schema_version": 1,
-    "count": 61
+    "count": 59
   },
   "items": [
     {
@@ -171,6 +171,21 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6677",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Castells",
+      "loc": "Lleida",
+      "consola_susti": "91129",
+      "manipulo_susti": "SUSTQUAD016",
+      "fecha_envio": "2026-06-12T10:55:00.000+0200",
+      "parent_key": "LEAS-4905",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Castells",
+      "consola_averiada": "C00510",
+      "manipulo_averiado": "H00510",
+      "modelo": "MHR Quad"
+    },
+    {
       "key": "LEAS-6636",
       "subtask_status": "Equipo enviado",
       "cliente": "Zurimed Los fresnos",
@@ -224,7 +239,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-10T16:52:00.000+0200",
       "parent_key": "LEAS-6580",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Dermasana Alcobendas",
       "consola_averiada": "C00228",
       "manipulo_averiado": "H00228",
@@ -239,7 +254,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-10T12:14:00.000+0200",
       "parent_key": "LEAS-6615",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Sin Vello Barakaldo",
       "consola_averiada": "C00444",
       "manipulo_averiado": "H00444",
@@ -284,7 +299,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-06-08T15:59:00.000+0200",
       "parent_key": "LEAS-6580",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Dermasana Alcobendas",
       "consola_averiada": "C00228",
       "manipulo_averiado": "H00228",
@@ -501,21 +516,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6316",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Centro Unico Giugliano",
-      "loc": "Via Santa Maria a Cubito, 80014 Giugliano in Campania NA, Italia",
-      "consola_susti": "C00476",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-05-27T13:20:00.000+0200",
-      "parent_key": "LEAS-6310",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centro Unico Giugliano",
-      "consola_averiada": "C00607",
-      "manipulo_averiado": "",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6463",
       "subtask_status": "En préstamo",
       "cliente": "Epil Point Caserta",
@@ -621,21 +621,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6361",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Elha Malaga",
-      "loc": "Malaga",
-      "consola_susti": "91129",
-      "manipulo_susti": "SUSTQUAD016",
-      "fecha_envio": "2026-05-22T10:15:00.000+0200",
-      "parent_key": "LEAS-6360",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Malaga",
-      "consola_averiada": "90290",
-      "manipulo_averiado": "40294",
-      "modelo": "MHR Quad"
-    },
-    {
       "key": "LEAS-6337",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Republica Arggentina",
@@ -697,14 +682,14 @@
     },
     {
       "key": "LEAS-6370",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Resuelto",
       "cliente": "Epil Point Pozzuoli",
       "loc": "Via Giovanni de Fraia, 4, 80078 Pozzuoli NA, Italia",
       "consola_susti": "91368",
       "manipulo_susti": null,
       "fecha_envio": "2026-05-18T18:33:00.000+0200",
       "parent_key": "LEAS-6369",
-      "parent_status": "Resuelto",
+      "parent_status": "Finalizada",
       "parent_cliente": "Epil Point Pozzuoli",
       "consola_averiada": "91303",
       "manipulo_averiado": "40442",
@@ -726,21 +711,6 @@
       "modelo": "MHR Dual"
     },
     {
-      "key": "LEAS-6259",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Ces Depilación SADA (DS0125)",
-      "loc": "Rúa de Bergondo, 2, bajo derecha, 15160 Sada, A Coruña",
-      "consola_susti": "SUSTMHR015",
-      "manipulo_susti": "SUSTQUAD017",
-      "fecha_envio": "2026-05-15T14:30:00.000+0200",
-      "parent_key": "LEAS-6258",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Ces Depilación SADA (DS125)",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "40367",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-6248",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Ibiza",
@@ -757,7 +727,7 @@
     },
     {
       "key": "LEAS-6122",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Avanti Clinics La Palma",
       "loc": "Av. Dr. Fleming, 7, 38760 Los Llanos, Santa Cruz de Tenerife",
       "consola_susti": null,
@@ -899,7 +869,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2025-12-22T11:17:00.000+0100",
       "parent_key": "LEAS-5030",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Epil Point Novara",
       "consola_averiada": "91372",
       "manipulo_averiado": "",
