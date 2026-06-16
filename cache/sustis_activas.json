@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-16T08:28:29.415822+00:00",
+    "last_fetched_at": "2026-06-16T09:37:27.358424+00:00",
     "schema_version": 1,
     "count": 62
   },
   "items": [
+    {
+      "key": "LEAS-6704",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello Caceres",
+      "loc": "C. Sta. Joaquina de Vedruna, 4, Centro-Casco Antiguo, 10001 Cáceres",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6703",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Caceres",
+      "consola_averiada": "C00194",
+      "manipulo_averiado": "H00194",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6701",
       "subtask_status": "Solicitado",
@@ -32,21 +47,6 @@
       "parent_status": "Gestionado transporte",
       "parent_cliente": "Clinicas Splau",
       "consola_averiada": "91087",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6689",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin  Vello San Jose",
-      "loc": "Sevilla",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6684",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Sin  Vello San Jose",
-      "consola_averiada": "C00527",
       "manipulo_averiado": "",
       "modelo": ""
     },
@@ -524,7 +524,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-05-28T13:04:00.000+0200",
       "parent_key": "LEAS-6067",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello! Sant Cugat del Valles",
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
@@ -577,7 +577,7 @@
     },
     {
       "key": "LEAS-6401",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Obispo",
       "loc": "Av. del Obispo Angel Herrera Oria, 2, local 7, Cruz de Humilladero, 29007 Málaga",
       "consola_susti": null,
@@ -607,7 +607,7 @@
     },
     {
       "key": "LEAS-6384",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Sin Vello Santiago de compostela",
       "loc": "Rúa de San Pedro de Mezonzo, 35, 15701 Santiago de Compostela, A Coruña",
       "consola_susti": "C00187",
