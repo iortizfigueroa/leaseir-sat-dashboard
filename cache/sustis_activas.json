@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-16T12:47:30.440558+00:00",
+    "last_fetched_at": "2026-06-16T14:30:01.068151+00:00",
     "schema_version": 1,
-    "count": 62
+    "count": 63
   },
   "items": [
+    {
+      "key": "LEAS-6723",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Elha Colombo",
+      "loc": "V. Colombo, 20r, 16121 Genova GE, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6722",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Colombo",
+      "consola_averiada": "C00604",
+      "manipulo_averiado": "H00604",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6719",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -18,21 +33,6 @@
       "parent_cliente": "Sin Vello Santa Cruz",
       "consola_averiada": "C00618",
       "manipulo_averiado": "H00618",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6713",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "SinVello Caceres",
-      "loc": "C. Sta. Joaquina de Vedruna, 4, Centro-Casco Antiguo, 10001 Cáceres",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6711",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Caceres",
-      "consola_averiada": "C00194",
-      "manipulo_averiado": "H00194",
       "modelo": ""
     },
     {
@@ -184,6 +184,36 @@
       "consola_averiada": "115",
       "manipulo_averiado": "",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6728",
+      "subtask_status": "En préstamo",
+      "cliente": "SinVello",
+      "loc": "República Argentina",
+      "consola_susti": "SUSTMHR011",
+      "manipulo_susti": "30074",
+      "fecha_envio": "2026-06-16T15:56:00.000+0200",
+      "parent_key": "LEAS-6721",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello",
+      "consola_averiada": "C00231",
+      "manipulo_averiado": "H00231",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6713",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Caceres",
+      "loc": "C. Sta. Joaquina de Vedruna, 4, Centro-Casco Antiguo, 10001 Cáceres",
+      "consola_susti": "sustmhr011",
+      "manipulo_susti": "30074",
+      "fecha_envio": "2026-06-16T14:33:00.000+0200",
+      "parent_key": "LEAS-6711",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Caceres",
+      "consola_averiada": "C00194",
+      "manipulo_averiado": "H00194",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-6716",
@@ -678,21 +708,6 @@
       "parent_cliente": "ELha Alcalde Poqueres",
       "consola_averiada": "C00870",
       "manipulo_averiado": "H00870",
-      "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6337",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Republica Arggentina",
-      "loc": "Av. de la República Argentina, 20, Poniente Sur, 14004 Córdoba",
-      "consola_susti": "SUSTMHR011",
-      "manipulo_susti": "30074",
-      "fecha_envio": "2026-05-21T16:38:00.000+0200",
-      "parent_key": "LEAS-6322",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Sin Vello Republica Argentina",
-      "consola_averiada": "C00231",
-      "manipulo_averiado": "H00231",
       "modelo": "MHR"
     },
     {
