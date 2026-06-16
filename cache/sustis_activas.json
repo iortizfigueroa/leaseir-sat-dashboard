@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-16T11:10:30.881719+00:00",
+    "last_fetched_at": "2026-06-16T12:26:31.743776+00:00",
     "schema_version": 1,
-    "count": 63
+    "count": 62
   },
   "items": [
+    {
+      "key": "LEAS-6719",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Sin Vello Santa Cruz",
+      "loc": "Tenerife",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6717",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Santa Cruz",
+      "consola_averiada": "C00618",
+      "manipulo_averiado": "H00618",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6713",
       "subtask_status": "Solicitado",
@@ -171,6 +186,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6716",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Santa Coloma",
+      "loc": "Barcelona",
+      "consola_susti": "C00503",
+      "manipulo_susti": "H01033",
+      "fecha_envio": "2026-06-16T13:47:00.000+0200",
+      "parent_key": "LEAS-5087",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Santa Coloma",
+      "consola_averiada": "C00519",
+      "manipulo_averiado": "H00519",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6686",
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Gracia",
@@ -187,14 +217,14 @@
     },
     {
       "key": "LEAS-6671",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Dermasana Santander",
       "loc": "C. Marcelino Sanz de Sautuola, 1, 39003 Santander, Cantabria",
       "consola_susti": "91064",
       "manipulo_susti": null,
       "fecha_envio": "2026-06-15T13:41:00.000+0200",
       "parent_key": "LEAS-6670",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Dermasana Santander",
       "consola_averiada": "90161",
       "manipulo_averiado": "",
@@ -292,14 +322,14 @@
     },
     {
       "key": "LEAS-6616",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Barakaldo",
       "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
       "consola_susti": "sustmhr025",
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-10T12:14:00.000+0200",
       "parent_key": "LEAS-6615",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Barakaldo",
       "consola_averiada": "C00444",
       "manipulo_averiado": "H00444",
@@ -449,7 +479,7 @@
       "manipulo_susti": "40518",
       "fecha_envio": "2026-06-04T10:43:00.000+0200",
       "parent_key": "LEAS-6535",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Lumina  Salerno",
       "consola_averiada": "91402",
       "manipulo_averiado": "40727",
@@ -524,7 +554,7 @@
       "manipulo_susti": "H00591",
       "fecha_envio": "2026-05-28T17:06:00.000+0200",
       "parent_key": "LEAS-6455",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
       "consola_averiada": "",
       "manipulo_averiado": "H00683",
@@ -621,21 +651,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6384",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Santiago de compostela",
-      "loc": "Rúa de San Pedro de Mezonzo, 35, 15701 Santiago de Compostela, A Coruña",
-      "consola_susti": "C00187",
-      "manipulo_susti": "H00340",
-      "fecha_envio": "2026-05-25T13:41:00.000+0200",
-      "parent_key": "LEAS-6383",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Santiago de compostela",
-      "consola_averiada": "C00191",
-      "manipulo_averiado": "H00191",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6392",
       "subtask_status": "En préstamo",
       "cliente": "Epil Point Pisa",
@@ -664,21 +679,6 @@
       "consola_averiada": "C00870",
       "manipulo_averiado": "H00870",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6348",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Elha Jaen",
-      "loc": "Jaén",
-      "consola_susti": "C00503",
-      "manipulo_susti": "H01033",
-      "fecha_envio": "2026-05-22T12:03:00.000+0200",
-      "parent_key": "LEAS-6346",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Jaen",
-      "consola_averiada": "C00774",
-      "manipulo_averiado": "H00774",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6337",
@@ -786,21 +786,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6122",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Avanti Clinics La Palma",
-      "loc": "Av. Dr. Fleming, 7, 38760 Los Llanos, Santa Cruz de Tenerife",
-      "consola_susti": null,
-      "manipulo_susti": "sustquad018",
-      "fecha_envio": "2026-05-06T12:27:00.000+0200",
-      "parent_key": "LEAS-5958",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Avanti Clinics La Palma",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR Quad"
-    },
-    {
       "key": "LEAS-6095",
       "subtask_status": "Gestionada recogida",
       "cliente": "Centro Unico Giugliano",
@@ -869,7 +854,7 @@
       "manipulo_susti": "SUSTQUAD028",
       "fecha_envio": "2026-04-15T16:41:00.000+0200",
       "parent_key": "LEAS-5851",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Devuelto a fábrica",
       "parent_cliente": "Único Life Jerez de la Frontera",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -922,14 +907,14 @@
     },
     {
       "key": "LEAS-5031",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Resuelto",
       "cliente": "Epil Point Novara",
       "loc": "italia",
       "consola_susti": "SUSTMHR016",
       "manipulo_susti": null,
       "fecha_envio": "2025-12-22T11:17:00.000+0100",
       "parent_key": "LEAS-5030",
-      "parent_status": "Resuelto",
+      "parent_status": "Finalizada",
       "parent_cliente": "Epil Point Novara",
       "consola_averiada": "91372",
       "manipulo_averiado": "",
@@ -937,7 +922,7 @@
     },
     {
       "key": "LEAS-4539",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Brull",
       "loc": "Brull",
       "consola_susti": null,
