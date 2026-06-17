@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-17T10:49:25.355959+00:00",
+    "last_fetched_at": "2026-06-17T11:12:29.209552+00:00",
     "schema_version": 1,
-    "count": 63
+    "count": 64
   },
   "items": [
+    {
+      "key": "LEAS-6737",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Quora Talavera",
+      "loc": "Talavera",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6736",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Quora Talavera",
+      "consola_averiada": "",
+      "manipulo_averiado": "40363",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6735",
       "subtask_status": "Solicitado",
@@ -164,7 +179,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-16T19:35:00.000+0200",
       "parent_key": "LEAS-6720",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "MAre Clinics CC Alcala Magna",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -284,7 +299,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-15T13:41:00.000+0200",
       "parent_key": "LEAS-6670",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Dermasana Santander",
       "consola_averiada": "90161",
       "manipulo_averiado": "",
@@ -494,7 +509,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-05T11:00:00.000+0200",
       "parent_key": "LEAS-6569",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Sin Vello Boadilla",
       "consola_averiada": "C00671",
       "manipulo_averiado": "H00671",
@@ -595,7 +610,7 @@
       "subtask_status": "En préstamo",
       "cliente": "Quora Clinics talavera",
       "loc": "Av. de Madrid, S/N, 45600 Talavera de la Reina, Toledo",
-      "consola_susti": "90624",
+      "consola_susti": null,
       "manipulo_susti": "40464",
       "fecha_envio": "2026-06-01T11:12:00.000+0200",
       "parent_key": "LEAS-6486",
@@ -704,7 +719,7 @@
       "manipulo_susti": "40306",
       "fecha_envio": "2026-05-25T13:20:00.000+0200",
       "parent_key": "LEAS-6390",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Epil Point Pisa",
       "consola_averiada": "",
       "manipulo_averiado": "40512",
