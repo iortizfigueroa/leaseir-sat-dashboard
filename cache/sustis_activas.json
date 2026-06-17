@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-17T12:19:28.670049+00:00",
+    "last_fetched_at": "2026-06-17T13:00:55.073416+00:00",
     "schema_version": 1,
-    "count": 67
+    "count": 66
   },
   "items": [
     {
@@ -224,7 +224,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-16T19:35:00.000+0200",
       "parent_key": "LEAS-6720",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "MAre Clinics CC Alcala Magna",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -344,7 +344,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-15T13:41:00.000+0200",
       "parent_key": "LEAS-6670",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Dermasana Santander",
       "consola_averiada": "90161",
       "manipulo_averiado": "",
@@ -441,21 +441,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6616",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Barakaldo",
-      "loc": "Av. A. Miranda, 3, Santa Teresa, 48901 San Vicente de Barakaldo, Biscay",
-      "consola_susti": "sustmhr025",
-      "manipulo_susti": "sustdual010",
-      "fecha_envio": "2026-06-10T12:14:00.000+0200",
-      "parent_key": "LEAS-6615",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Barakaldo",
-      "consola_averiada": "C00444",
-      "manipulo_averiado": "H00444",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-6603",
       "subtask_status": "En préstamo",
       "cliente": "",
@@ -472,14 +457,14 @@
     },
     {
       "key": "LEAS-6596",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Las Palmas de Gran Canarias",
       "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
       "consola_susti": null,
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-06-09T10:37:00.000+0200",
       "parent_key": "LEAS-6576",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
@@ -547,7 +532,7 @@
     },
     {
       "key": "LEAS-6571",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Boadilla",
       "loc": "Av. Isabel de Farnesio, 20, 28660 Boadilla del Monte, Madrid",
       "consola_susti": "C00552",
@@ -562,7 +547,7 @@
     },
     {
       "key": "LEAS-6566",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Gran Capitan Granada",
       "loc": "C. Emperatriz Eugenia, 4, Ronda, 18002 Granada",
       "consola_susti": "SUSTMHR027",
@@ -847,7 +832,7 @@
     },
     {
       "key": "LEAS-6248",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Ibiza",
       "loc": "Ibiza",
       "consola_susti": null,
