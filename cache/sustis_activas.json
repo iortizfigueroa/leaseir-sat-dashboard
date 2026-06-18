@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-18T09:28:04.907503+00:00",
+    "last_fetched_at": "2026-06-18T11:51:10.256706+00:00",
     "schema_version": 1,
-    "count": 67
+    "count": 66
   },
   "items": [
     {
@@ -33,21 +33,6 @@
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "91351",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6737",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Quora Talavera",
-      "loc": "Talavera",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6736",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Quora Talavera",
-      "consola_averiada": "",
-      "manipulo_averiado": "40363",
       "modelo": ""
     },
     {
@@ -247,18 +232,18 @@
     },
     {
       "key": "LEAS-6686",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Gracia",
       "loc": "Barcelona",
       "consola_susti": null,
-      "manipulo_susti": "H01026 / H01012",
+      "manipulo_susti": "H01026",
       "fecha_envio": "2026-06-17T11:45:00.000+0200",
       "parent_key": "LEAS-6683",
       "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
       "manipulo_averiado": "",
-      "modelo": ""
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6732",
@@ -269,7 +254,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-16T19:35:00.000+0200",
       "parent_key": "LEAS-6720",
-      "parent_status": "En cola taller",
+      "parent_status": "En reparación",
       "parent_cliente": "MAre Clinics CC Alcala Magna",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -434,7 +419,7 @@
       "manipulo_susti": "40428",
       "fecha_envio": "2026-06-11T16:28:00.000+0200",
       "parent_key": "LEAS-6626",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Epil Pont Roma Eur",
       "consola_averiada": "",
       "manipulo_averiado": "40449",
@@ -569,7 +554,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-05T11:00:00.000+0200",
       "parent_key": "LEAS-6569",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Sin Vello Boadilla",
       "consola_averiada": "C00671",
       "manipulo_averiado": "H00671",
