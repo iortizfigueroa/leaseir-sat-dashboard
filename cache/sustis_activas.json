@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-18T13:40:30.875964+00:00",
+    "last_fetched_at": "2026-06-18T16:13:58.769157+00:00",
     "schema_version": 1,
     "count": 66
   },
   "items": [
-    {
-      "key": "LEAS-6751",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Granollers",
-      "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6750",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Granollers",
-      "consola_averiada": "90994",
-      "manipulo_averiado": "30385",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6749",
       "subtask_status": "Solicitado",
@@ -33,21 +18,6 @@
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "91351",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6735",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "MArta Donly 30835",
-      "loc": "Valencia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6734",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "MArta Donly 30835",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
       "modelo": ""
     },
     {
@@ -186,6 +156,36 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6735",
+      "subtask_status": "Equipo enviado",
+      "cliente": "MArta Donly 30835",
+      "loc": "Valencia",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL019",
+      "fecha_envio": "2026-06-18T16:52:00.000+0200",
+      "parent_key": "LEAS-6734",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "MArta Donly 30835",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
+      "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-6751",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Granollers",
+      "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
+      "consola_susti": "91142",
+      "manipulo_susti": "40551",
+      "fecha_envio": "2026-06-18T16:49:00.000+0200",
+      "parent_key": "LEAS-6750",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Granollers",
+      "consola_averiada": "90994",
+      "manipulo_averiado": "30385",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-6744",
       "subtask_status": "Equipo enviado",
       "cliente": "Dglow mallorca",
@@ -232,18 +232,18 @@
     },
     {
       "key": "LEAS-6686",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Gracia",
       "loc": "Barcelona",
       "consola_susti": null,
-      "manipulo_susti": "H01026",
+      "manipulo_susti": "H01026 / H01012",
       "fecha_envio": "2026-06-17T11:45:00.000+0200",
       "parent_key": "LEAS-6683",
       "parent_status": "Gestionado transporte",
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
       "manipulo_averiado": "",
-      "modelo": "XCell HR"
+      "modelo": ""
     },
     {
       "key": "LEAS-6732",
@@ -254,7 +254,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-16T19:35:00.000+0200",
       "parent_key": "LEAS-6720",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "MAre Clinics CC Alcala Magna",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -374,7 +374,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-12T11:18:00.000+0200",
       "parent_key": "LEAS-6653",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
       "consola_averiada": "C00358",
       "manipulo_averiado": "",
