@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-19T09:16:40.367769+00:00",
+    "last_fetched_at": "2026-06-19T10:01:18.366869+00:00",
     "schema_version": 1,
     "count": 64
   },
@@ -139,6 +139,21 @@
       "consola_averiada": "115",
       "manipulo_averiado": "",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-6713",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Caceres",
+      "loc": "C. Sta. Joaquina de Vedruna, 4, Centro-Casco Antiguo, 10001 Cáceres",
+      "consola_susti": "C03204",
+      "manipulo_susti": "H03204",
+      "fecha_envio": "2026-06-19T14:33:00.000+0200",
+      "parent_key": "LEAS-6711",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Caceres",
+      "consola_averiada": "C00194",
+      "manipulo_averiado": "H00194",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6735",
@@ -306,21 +321,6 @@
       "modelo": "MHR"
     },
     {
-      "key": "LEAS-6713",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Caceres",
-      "loc": "C. Sta. Joaquina de Vedruna, 4, Centro-Casco Antiguo, 10001 Cáceres",
-      "consola_susti": "sustmhr011",
-      "manipulo_susti": "30074",
-      "fecha_envio": "2026-06-16T14:33:00.000+0200",
-      "parent_key": "LEAS-6711",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Caceres",
-      "consola_averiada": "C00194",
-      "manipulo_averiado": "H00194",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-6716",
       "subtask_status": "Equipo enviado",
       "cliente": "Elha Santa Coloma",
@@ -404,7 +404,7 @@
       "manipulo_susti": "40428",
       "fecha_envio": "2026-06-11T16:28:00.000+0200",
       "parent_key": "LEAS-6626",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Epil Pont Roma Eur",
       "consola_averiada": "",
       "manipulo_averiado": "40449",
@@ -659,7 +659,7 @@
       "manipulo_susti": "H00591",
       "fecha_envio": "2026-05-28T17:06:00.000+0200",
       "parent_key": "LEAS-6455",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
       "consola_averiada": "",
       "manipulo_averiado": "H00683",
@@ -667,14 +667,14 @@
     },
     {
       "key": "LEAS-6069",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello! Sant Cugat del Valles",
       "loc": "Carrer de Sant Jordi, 27, 08172 Sant Cugat del Vallès, Barcelona",
       "consola_susti": "C03204",
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-05-28T13:04:00.000+0200",
       "parent_key": "LEAS-6067",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "SinVello! Sant Cugat del Valles",
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
