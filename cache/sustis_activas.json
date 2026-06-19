@@ -1,23 +1,23 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-19T10:27:14.839580+00:00",
+    "last_fetched_at": "2026-06-19T12:57:30.534988+00:00",
     "schema_version": 1,
-    "count": 64
+    "count": 62
   },
   "items": [
     {
-      "key": "LEAS-6770",
+      "key": "LEAS-6772",
       "subtask_status": "Solicitado",
-      "cliente": "Medicanova Santander ( AHR0061)",
-      "loc": "C. Sta. Ana, 2, 39600 Camargo, Cantabria",
+      "cliente": "Centro Estetica Avanzada Ciudad Real",
+      "loc": "Avda. de Europa, 45 C.C. El Parque - Eroski Local L31-32, 13005 Ciudad Real",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
-      "parent_key": "LEAS-6769",
+      "parent_key": "LEAS-6771",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Medicanova Santander ( AHR0061)",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "",
+      "parent_cliente": "Centro Estetica Avanzada Ciudad Real",
+      "consola_averiada": "",
+      "manipulo_averiado": "40570",
       "modelo": ""
     },
     {
@@ -141,17 +141,17 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6524",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "CES DEPLACIÓN TEMPLE DS115",
-      "loc": "COSTA DA TAPIA, 44 BAJO DERECHA, O TEMPLE 15679 CAMBRE",
-      "consola_susti": "91142",
-      "manipulo_susti": "40551",
-      "fecha_envio": "2026-06-20T09:42:00.000+0200",
-      "parent_key": "LEAS-6523",
-      "parent_status": "Resuelto",
-      "parent_cliente": "CES DEPLACIÓN TEMPLE DS115",
-      "consola_averiada": "115",
+      "key": "LEAS-6770",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Medicanova Santander ( AHR0061)",
+      "loc": "C. Sta. Ana, 2, 39600 Camargo, Cantabria",
+      "consola_susti": "SUSTAHRS002",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-06-19T14:42:00.000+0200",
+      "parent_key": "LEAS-6769",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Medicanova Santander ( AHR0061)",
+      "consola_averiada": "No aparece",
       "manipulo_averiado": "",
       "modelo": ""
     },
@@ -250,7 +250,7 @@
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Gracia",
       "loc": "Barcelona",
-      "consola_susti": null,
+      "consola_susti": "C00187",
       "manipulo_susti": "H01026 / H01012",
       "fecha_envio": "2026-06-17T11:45:00.000+0200",
       "parent_key": "LEAS-6683",
@@ -258,7 +258,7 @@
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
       "manipulo_averiado": "",
-      "modelo": ""
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6732",
@@ -359,7 +359,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-15T13:41:00.000+0200",
       "parent_key": "LEAS-6670",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Dermasana Santander",
       "consola_averiada": "90161",
       "manipulo_averiado": "",
@@ -449,7 +449,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-10T16:52:00.000+0200",
       "parent_key": "LEAS-6580",
-      "parent_status": "Resuelto",
+      "parent_status": "Finalizada",
       "parent_cliente": "Dermasana Alcobendas",
       "consola_averiada": "C00228",
       "manipulo_averiado": "H00228",
@@ -464,7 +464,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-06-09T16:18:00.000+0200",
       "parent_key": "LEAS-4912",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "C00538",
       "manipulo_averiado": "H00538",
@@ -483,21 +483,6 @@
       "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6582",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Dermasana Alcobendas",
-      "loc": "Alcobendas",
-      "consola_susti": "C00591",
-      "manipulo_susti": "H01032",
-      "fecha_envio": "2026-06-08T15:59:00.000+0200",
-      "parent_key": "LEAS-6580",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Dermasana Alcobendas",
-      "consola_averiada": "C00228",
-      "manipulo_averiado": "H00228",
       "modelo": "XCell HR"
     },
     {
@@ -539,7 +524,7 @@
       "manipulo_susti": "40481",
       "fecha_envio": "2026-06-05T11:47:00.000+0200",
       "parent_key": "LEAS-4912",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "C00538",
       "manipulo_averiado": "H00538",
@@ -569,7 +554,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-06-05T09:03:00.000+0200",
       "parent_key": "LEAS-6565",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Sin Vello Gran Capitan Granada",
       "consola_averiada": "90989",
       "manipulo_averiado": "30468",
@@ -904,21 +889,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-5843",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Smart Duck les halles",
-      "loc": "smartduck les halles 6 rue du travail  67000 Strasbourg",
-      "consola_susti": "C00591",
-      "manipulo_susti": "H01064",
-      "fecha_envio": "2026-04-13T14:07:00.000+0200",
-      "parent_key": "LEAS-5774",
-      "parent_status": "Devuelto a fábrica",
-      "parent_cliente": "Smart Duck les halles",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-5697",
