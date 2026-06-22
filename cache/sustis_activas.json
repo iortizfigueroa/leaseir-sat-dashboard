@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-22T10:17:04.306656+00:00",
+    "last_fetched_at": "2026-06-22T12:12:37.356172+00:00",
     "schema_version": 1,
     "count": 63
   },
@@ -149,7 +149,7 @@
       "manipulo_susti": "H00677",
       "fecha_envio": null,
       "parent_key": "LEAS-6365",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Centro Unico Euroma 2",
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
@@ -276,6 +276,21 @@
       "modelo": "MHR Quad"
     },
     {
+      "key": "LEAS-6737",
+      "subtask_status": "En préstamo",
+      "cliente": "Quora Talavera",
+      "loc": "Talavera",
+      "consola_susti": null,
+      "manipulo_susti": "40464",
+      "fecha_envio": "2026-06-17T13:40:00.000+0200",
+      "parent_key": "LEAS-6736",
+      "parent_status": "Inspección de salida",
+      "parent_cliente": "Quora Talavera",
+      "consola_averiada": "",
+      "manipulo_averiado": "40363",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-6686",
       "subtask_status": "Equipo enviado",
       "cliente": "Sin Vello Gracia",
@@ -359,7 +374,7 @@
       "manipulo_susti": "30074",
       "fecha_envio": "2026-06-16T15:56:00.000+0200",
       "parent_key": "LEAS-6721",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "SinVello",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -562,14 +577,14 @@
     },
     {
       "key": "LEAS-6571",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Boadilla",
       "loc": "Av. Isabel de Farnesio, 20, 28660 Boadilla del Monte, Madrid",
       "consola_susti": "C00552",
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-05T11:00:00.000+0200",
       "parent_key": "LEAS-6569",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Boadilla",
       "consola_averiada": "C00671",
       "manipulo_averiado": "H00671",
@@ -584,7 +599,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-06-05T09:03:00.000+0200",
       "parent_key": "LEAS-6565",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Gran Capitan Granada",
       "consola_averiada": "90989",
       "manipulo_averiado": "30468",
@@ -664,21 +679,6 @@
       "consola_averiada": "C00426",
       "manipulo_averiado": "H00426",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6520",
-      "subtask_status": "En préstamo",
-      "cliente": "Quora Clinics talavera",
-      "loc": "Av. de Madrid, S/N, 45600 Talavera de la Reina, Toledo",
-      "consola_susti": null,
-      "manipulo_susti": "40464",
-      "fecha_envio": "2026-06-01T11:12:00.000+0200",
-      "parent_key": "LEAS-6486",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Quora Clinics talavera",
-      "consola_averiada": "90731",
-      "manipulo_averiado": "40353",
-      "modelo": ""
     },
     {
       "key": "LEAS-6456",
