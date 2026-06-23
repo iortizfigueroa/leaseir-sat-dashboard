@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-23T13:08:13.529401+00:00",
+    "last_fetched_at": "2026-06-23T16:16:22.941657+00:00",
     "schema_version": 1,
-    "count": 62
+    "count": 56
   },
   "items": [
     {
@@ -142,7 +142,7 @@
     },
     {
       "key": "LEAS-6367",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Centro Unico Euroma 2",
       "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
       "consola_susti": null,
@@ -154,6 +154,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6803",
+      "subtask_status": "Equipo enviado",
+      "cliente": "LAser y estetica",
+      "loc": "Ciudad Real",
+      "consola_susti": "91139",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-06-23T15:42:00.000+0200",
+      "parent_key": "LEAS-6802",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "LAser y estetica",
+      "consola_averiada": "91138",
+      "manipulo_averiado": "",
+      "modelo": ""
     },
     {
       "key": "LEAS-6685",
@@ -217,14 +232,14 @@
     },
     {
       "key": "LEAS-6735",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "MArta Donly 30835",
       "loc": "Valencia",
       "consola_susti": null,
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-06-18T16:52:00.000+0200",
       "parent_key": "LEAS-6734",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "MArta Donly 30835",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -247,7 +262,7 @@
     },
     {
       "key": "LEAS-6744",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Dglow mallorca",
       "loc": "Mallorca",
       "consola_susti": null,
@@ -262,7 +277,7 @@
     },
     {
       "key": "LEAS-6740",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Mar Tobajas",
       "loc": "Valencia",
       "consola_susti": "AHR0082",
@@ -277,7 +292,7 @@
     },
     {
       "key": "LEAS-6742",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Epil Point Taranto",
       "loc": "Italia",
       "consola_susti": null,
@@ -299,7 +314,7 @@
       "manipulo_susti": "40464",
       "fecha_envio": "2026-06-17T13:40:00.000+0200",
       "parent_key": "LEAS-6736",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Quora Talavera",
       "consola_averiada": "",
       "manipulo_averiado": "40363",
@@ -329,7 +344,7 @@
       "manipulo_susti": "sustdual010",
       "fecha_envio": "2026-06-16T19:35:00.000+0200",
       "parent_key": "LEAS-6720",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "MAre Clinics CC Alcala Magna",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -337,7 +352,7 @@
     },
     {
       "key": "LEAS-6723",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Elha Colombo",
       "loc": "V. Colombo, 20r, 16121 Genova GE, Italia",
       "consola_susti": null,
@@ -397,7 +412,7 @@
     },
     {
       "key": "LEAS-6716",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Elha Santa Coloma",
       "loc": "Barcelona",
       "consola_susti": "C00503",
@@ -419,7 +434,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-15T13:41:00.000+0200",
       "parent_key": "LEAS-6670",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Dermasana Santander",
       "consola_averiada": "90161",
       "manipulo_averiado": "",
@@ -442,7 +457,7 @@
     },
     {
       "key": "LEAS-6677",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Elha Castells",
       "loc": "Lleida",
       "consola_susti": "91129",
@@ -457,7 +472,7 @@
     },
     {
       "key": "LEAS-6636",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Zurimed Los fresnos",
       "loc": "Gijón",
       "consola_susti": null,
@@ -472,7 +487,7 @@
     },
     {
       "key": "LEAS-6627",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Epil Pont Roma Eur",
       "loc": "Roma",
       "consola_susti": null,
@@ -494,26 +509,11 @@
       "manipulo_susti": "sustdual005",
       "fecha_envio": "2026-06-11T13:08:00.000+0200",
       "parent_key": "LEAS-6243",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sin Vello Fuenlabrada",
       "consola_averiada": "C00215",
       "manipulo_averiado": "H00215",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6624",
-      "subtask_status": "Resuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": "C00591",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-10T16:52:00.000+0200",
-      "parent_key": "LEAS-6580",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Dermasana Alcobendas",
-      "consola_averiada": "C00228",
-      "manipulo_averiado": "H00228",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6603",
@@ -576,21 +576,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-5786",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Limoneros",
-      "loc": "Almeria",
-      "consola_susti": null,
-      "manipulo_susti": "40481",
-      "fecha_envio": "2026-06-05T11:47:00.000+0200",
-      "parent_key": "LEAS-4912",
-      "parent_status": "En reparación",
-      "parent_cliente": "Elha Limoneros",
-      "consola_averiada": "C00538",
-      "manipulo_averiado": "H00538",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6566",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Gran Capitan Granada",
@@ -614,7 +599,7 @@
       "manipulo_susti": "H01061",
       "fecha_envio": "2026-06-04T13:54:00.000+0200",
       "parent_key": "LEAS-6500",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Elha Naciosn Unides",
       "consola_averiada": "C00426",
       "manipulo_averiado": "H00426",
@@ -622,7 +607,7 @@
     },
     {
       "key": "LEAS-6536",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Epil Point Lumina  Salerno",
       "loc": "Corso Giuseppe Garibaldi, 197, 84122 Salerno SA, Italia",
       "consola_susti": "SUSTMHR036",
@@ -644,7 +629,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-06-04T10:37:00.000+0200",
       "parent_key": "LEAS-6550",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Cn Clinics Milaneo",
       "consola_averiada": "",
       "manipulo_averiado": "40357",
@@ -674,7 +659,7 @@
       "manipulo_susti": "H00326",
       "fecha_envio": "2026-06-02T11:15:00.000+0200",
       "parent_key": "LEAS-6500",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Elha Naciosn Unides",
       "consola_averiada": "C00426",
       "manipulo_averiado": "H00426",
@@ -689,7 +674,7 @@
       "manipulo_susti": "H00591",
       "fecha_envio": "2026-05-28T17:06:00.000+0200",
       "parent_key": "LEAS-6455",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
       "consola_averiada": "",
       "manipulo_averiado": "H00683",
@@ -712,7 +697,7 @@
     },
     {
       "key": "LEAS-6410",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Epil Point Pomigliano",
       "loc": "Via Ercole Cantone, 2, 80038 Pomigliano d'Arco NA, Italia",
       "consola_susti": null,
@@ -738,21 +723,6 @@
       "parent_cliente": "Epil Point Caserta",
       "consola_averiada": "91005",
       "manipulo_averiado": "40405",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6393",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": "91139",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-05-25T15:30:00.000+0200",
-      "parent_key": "LEAS-6305",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Cibeles holea SUSTQUAD009",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
       "modelo": ""
     },
     {
@@ -786,36 +756,6 @@
       "modelo": "MHR"
     },
     {
-      "key": "LEAS-6339",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUAD043",
-      "fecha_envio": "2026-05-21T16:32:00.000+0200",
-      "parent_key": "LEAS-6305",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Cibeles holea SUSTQUAD009",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-6370",
-      "subtask_status": "Resuelto",
-      "cliente": "Epil Point Pozzuoli",
-      "loc": "Via Giovanni de Fraia, 4, 80078 Pozzuoli NA, Italia",
-      "consola_susti": "91368",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-05-18T18:33:00.000+0200",
-      "parent_key": "LEAS-6369",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Epil Point Pozzuoli",
-      "consola_averiada": "91303",
-      "manipulo_averiado": "40442",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6248",
       "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Ibiza",
@@ -831,21 +771,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6095",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Centro Unico Giugliano",
-      "loc": "Via Santa Maria a Cubito, 80014 Giugliano in Campania NA, Italia",
-      "consola_susti": "H01042",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-04-29T11:40:00.000+0200",
-      "parent_key": "LEAS-6094",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Centro Unico Giugliano",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-5854",
       "subtask_status": "En préstamo",
       "cliente": "Harmonie Salamanca",
@@ -854,7 +779,7 @@
       "manipulo_susti": "40534",
       "fecha_envio": "2026-04-20T13:01:00.000+0200",
       "parent_key": "LEAS-5853",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Harmonie Salamanca",
       "consola_averiada": "90522",
       "manipulo_averiado": "40422",
@@ -919,21 +844,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "40557",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-5031",
-      "subtask_status": "Resuelto",
-      "cliente": "Epil Point Novara",
-      "loc": "italia",
-      "consola_susti": "SUSTMHR016",
-      "manipulo_susti": null,
-      "fecha_envio": "2025-12-22T11:17:00.000+0100",
-      "parent_key": "LEAS-5030",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Epil Point Novara",
-      "consola_averiada": "91372",
-      "manipulo_averiado": "",
-      "modelo": "MHR"
     }
   ]
 }
