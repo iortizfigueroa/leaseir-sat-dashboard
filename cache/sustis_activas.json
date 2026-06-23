@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-23T09:07:28.972730+00:00",
+    "last_fetched_at": "2026-06-23T11:22:14.564524+00:00",
     "schema_version": 1,
     "count": 62
   },
   "items": [
+    {
+      "key": "LEAS-6796",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "Epil Point Messina",
+      "loc": "Viale S. Martino, 156, 98123 Messina ME, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6795",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Messina",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6780",
       "subtask_status": "Solicitado",
@@ -509,7 +524,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-06-09T16:18:00.000+0200",
       "parent_key": "LEAS-4912",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "C00538",
       "manipulo_averiado": "H00538",
@@ -569,26 +584,11 @@
       "manipulo_susti": "40481",
       "fecha_envio": "2026-06-05T11:47:00.000+0200",
       "parent_key": "LEAS-4912",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "C00538",
       "manipulo_averiado": "H00538",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-6571",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Boadilla",
-      "loc": "Av. Isabel de Farnesio, 20, 28660 Boadilla del Monte, Madrid",
-      "consola_susti": "C00552",
-      "manipulo_susti": "H00552",
-      "fecha_envio": "2026-06-05T11:00:00.000+0200",
-      "parent_key": "LEAS-6569",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Boadilla",
-      "consola_averiada": "C00671",
-      "manipulo_averiado": "H00671",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6566",
@@ -832,7 +832,7 @@
     },
     {
       "key": "LEAS-6095",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Centro Unico Giugliano",
       "loc": "Via Santa Maria a Cubito, 80014 Giugliano in Campania NA, Italia",
       "consola_susti": "H01042",
