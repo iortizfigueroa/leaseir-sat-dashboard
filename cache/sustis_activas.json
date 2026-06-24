@@ -1,10 +1,40 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-24T12:05:09.072618+00:00",
+    "last_fetched_at": "2026-06-24T16:04:10.631545+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 59
   },
   "items": [
+    {
+      "key": "LEAS-6815",
+      "subtask_status": "Solicitado",
+      "cliente": "Epiil Point Matera",
+      "loc": "https://maps.app.goo.gl/RWJcDDHFV7EQ6Zk8A",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6809",
+      "parent_status": "Pendiente definir servicio externo",
+      "parent_cliente": "Epiil Point Matera",
+      "consola_averiada": "91061",
+      "manipulo_averiado": "40469",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-6814",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Sta Eulàlia",
+      "loc": "Carrer Santa Eulàlia, 5, 08902 L'Hospitalet de Llobregat, Barcelona",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6767",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Sta Eulàlia",
+      "consola_averiada": "C00687",
+      "manipulo_averiado": "H00687",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6796",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -154,6 +184,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6811",
+      "subtask_status": "Equipo enviado",
+      "cliente": "EPil Point Matera",
+      "loc": "Italia",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD043",
+      "fecha_envio": "2026-06-24T15:33:00.000+0200",
+      "parent_key": "LEAS-6808",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "EPil Point Matera",
+      "consola_averiada": "91353",
+      "manipulo_averiado": "40642",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6806",
@@ -464,7 +509,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-12T11:18:00.000+0200",
       "parent_key": "LEAS-6653",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
       "consola_averiada": "C00358",
       "manipulo_averiado": "",
@@ -509,7 +554,7 @@
       "manipulo_susti": "40428",
       "fecha_envio": "2026-06-11T16:28:00.000+0200",
       "parent_key": "LEAS-6626",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Epil Pont Roma Eur",
       "consola_averiada": "",
       "manipulo_averiado": "40449",
