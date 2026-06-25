@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-25T09:54:16.500228+00:00",
+    "last_fetched_at": "2026-06-25T11:10:51.142714+00:00",
     "schema_version": 1,
-    "count": 59
+    "count": 60
   },
   "items": [
+    {
+      "key": "LEAS-6824",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "CN CLINICS ALEMANIA",
+      "loc": "Thomas-Dehler-Straße 10, 81737 München-Ramersdorf-Perlach, Alemania",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6823",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "CN CLINICS ALEMANIA",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6815",
       "subtask_status": "Solicitado",
@@ -134,7 +149,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6552",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Giugliano",
       "consola_averiada": "90793",
       "manipulo_averiado": "40413",
@@ -434,7 +449,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-16T17:02:00.000+0200",
       "parent_key": "LEAS-6699",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente recogida",
       "parent_cliente": "Clinicas Splau",
       "consola_averiada": "91087",
       "manipulo_averiado": "",
@@ -599,7 +614,7 @@
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-06-09T10:37:00.000+0200",
       "parent_key": "LEAS-6576",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
