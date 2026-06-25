@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-25T11:10:51.142714+00:00",
+    "last_fetched_at": "2026-06-25T12:00:29.232729+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 59
   },
   "items": [
-    {
-      "key": "LEAS-6824",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "CN CLINICS ALEMANIA",
-      "loc": "Thomas-Dehler-Straße 10, 81737 München-Ramersdorf-Perlach, Alemania",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6823",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "CN CLINICS ALEMANIA",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6815",
       "subtask_status": "Solicitado",
@@ -33,21 +18,6 @@
       "parent_cliente": "Epiil Point Matera",
       "consola_averiada": "91061",
       "manipulo_averiado": "40469",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6814",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Sta Eulàlia",
-      "loc": "Carrer Santa Eulàlia, 5, 08902 L'Hospitalet de Llobregat, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6767",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Sta Eulàlia",
-      "consola_averiada": "C00687",
-      "manipulo_averiado": "H00687",
       "modelo": ""
     },
     {
@@ -89,7 +59,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6771",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Finalizado técnico externo",
       "parent_cliente": "Centro Estetica Avanzada Ciudad Real",
       "consola_averiada": "",
       "manipulo_averiado": "40570",
@@ -201,6 +171,36 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6824",
+      "subtask_status": "Equipo enviado",
+      "cliente": "CN CLINICS ALEMANIA",
+      "loc": "Thomas-Dehler-Straße 10, 81737 München-Ramersdorf-Perlach, Alemania",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL017",
+      "fecha_envio": "2026-06-25T13:46:00.000+0200",
+      "parent_key": "LEAS-6823",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "CN CLINICS ALEMANIA",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-6814",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Sta Eulàlia",
+      "loc": "Carrer Santa Eulàlia, 5, 08902 L'Hospitalet de Llobregat, Barcelona",
+      "consola_susti": "C00591",
+      "manipulo_susti": "H41003",
+      "fecha_envio": "2026-06-25T13:45:00.000+0200",
+      "parent_key": "LEAS-6767",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Sta Eulàlia",
+      "consola_averiada": "C00687",
+      "manipulo_averiado": "H00687",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6811",
       "subtask_status": "Equipo enviado",
       "cliente": "EPil Point Matera",
@@ -284,7 +284,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-19T14:42:00.000+0200",
       "parent_key": "LEAS-6769",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Medicanova Santander ( AHR0061)",
       "consola_averiada": "No aparece",
       "manipulo_averiado": "",
@@ -479,7 +479,7 @@
       "manipulo_susti": "30074",
       "fecha_envio": "2026-06-16T15:56:00.000+0200",
       "parent_key": "LEAS-6721",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -619,21 +619,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6588",
-      "subtask_status": "En préstamo",
-      "cliente": "Epil Point",
-      "loc": "Alessandria",
-      "consola_susti": "91415",
-      "manipulo_susti": "40751",
-      "fecha_envio": "2026-06-08T15:48:00.000+0200",
-      "parent_key": "LEAS-6586",
-      "parent_status": "Pendiente asignar técnico",
-      "parent_cliente": "Epil Point Alessandria",
-      "consola_averiada": "91410",
-      "manipulo_averiado": "40742",
-      "modelo": ""
     },
     {
       "key": "LEAS-6450",
