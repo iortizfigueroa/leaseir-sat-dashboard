@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-26T13:47:22.030660+00:00",
+    "last_fetched_at": "2026-06-26T16:02:35.715386+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 61
   },
   "items": [
-    {
-      "key": "LEAS-6839",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "SinVello La Laguna",
-      "loc": "C. Nuñez de la Peña, 41, 38203 La Laguna, Santa Cruz de Tenerife",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6832",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello La Laguna",
-      "consola_averiada": "C00868",
-      "manipulo_averiado": "H00868",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6834",
       "subtask_status": "Solicitado",
@@ -198,6 +183,36 @@
       "parent_cliente": "Centro Unico Euroma 2",
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6839",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello La Laguna",
+      "loc": "C. Nuñez de la Peña, 41, 38203 La Laguna, Santa Cruz de Tenerife",
+      "consola_susti": null,
+      "manipulo_susti": "H00107",
+      "fecha_envio": "2026-06-26T16:40:00.000+0200",
+      "parent_key": "LEAS-6832",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello La Laguna",
+      "consola_averiada": "C00868",
+      "manipulo_averiado": "H00868",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6841",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": null,
+      "manipulo_susti": "H00552",
+      "fecha_envio": "2026-06-26T16:32:00.000+0200",
+      "parent_key": "LEAS-6683",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Sin Vello Gracia",
+      "consola_averiada": "C00328",
+      "manipulo_averiado": "",
       "modelo": "XCell HR"
     },
     {
@@ -431,7 +446,7 @@
       "cliente": "Sin Vello Gracia",
       "loc": "Barcelona",
       "consola_susti": "C00187",
-      "manipulo_susti": "H01026 / H01012",
+      "manipulo_susti": "H01026 / H01012 / H00552",
       "fecha_envio": "2026-06-17T11:45:00.000+0200",
       "parent_key": "LEAS-6683",
       "parent_status": "Gestionado transporte",
@@ -644,7 +659,7 @@
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-06-09T10:37:00.000+0200",
       "parent_key": "LEAS-6576",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
@@ -659,7 +674,7 @@
       "manipulo_susti": "H003258",
       "fecha_envio": "2026-06-08T13:42:00.000+0200",
       "parent_key": "LEAS-6449",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Smart Duck Courbevoie",
       "consola_averiada": "C03150",
       "manipulo_averiado": "H03150",
