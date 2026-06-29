@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-29T12:00:03.885045+00:00",
+    "last_fetched_at": "2026-06-29T13:50:03.871311+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 57
   },
   "items": [
+    {
+      "key": "LEAS-6860",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello Palencia",
+      "loc": "C. Felipe Prieto, 2, 34001 Palencia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6850",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Palencia",
+      "consola_averiada": "C00565",
+      "manipulo_averiado": "H00565",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6834",
       "subtask_status": "Solicitado",
@@ -141,21 +156,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6422",
-      "subtask_status": "Solicitado",
-      "cliente": "isaac",
-      "loc": "Gijon",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6421",
-      "parent_status": "Cancelado",
-      "parent_cliente": "isaac",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6367",
       "subtask_status": "En préstamo",
       "cliente": "Centro Unico Euroma 2",
@@ -269,7 +269,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-23T15:42:00.000+0200",
       "parent_key": "LEAS-6802",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "LAser y estetica",
       "consola_averiada": "91138",
       "manipulo_averiado": "",
@@ -389,7 +389,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-17T16:34:00.000+0200",
       "parent_key": "LEAS-6739",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Mar Tobajas",
       "consola_averiada": "233",
       "manipulo_averiado": "",
@@ -412,7 +412,7 @@
     },
     {
       "key": "LEAS-6737",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Quora Talavera",
       "loc": "Talavera",
       "consola_susti": null,
@@ -454,21 +454,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6723",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Colombo",
-      "loc": "V. Colombo, 20r, 16121 Genova GE, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H41003",
-      "fecha_envio": "2026-06-16T17:04:00.000+0200",
-      "parent_key": "LEAS-6722",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Elha Colombo",
-      "consola_averiada": "C00604",
-      "manipulo_averiado": "H00604",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6700",
@@ -599,7 +584,7 @@
       "manipulo_susti": "40428",
       "fecha_envio": "2026-06-11T16:28:00.000+0200",
       "parent_key": "LEAS-6626",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Epil Pont Roma Eur",
       "consola_averiada": "",
       "manipulo_averiado": "40449",
@@ -679,21 +664,6 @@
       "consola_averiada": "C00426",
       "manipulo_averiado": "H00426",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6536",
-      "subtask_status": "En préstamo",
-      "cliente": "Epil Point Lumina  Salerno",
-      "loc": "Corso Giuseppe Garibaldi, 197, 84122 Salerno SA, Italia",
-      "consola_susti": "SUSTMHR036",
-      "manipulo_susti": "40518",
-      "fecha_envio": "2026-06-04T10:43:00.000+0200",
-      "parent_key": "LEAS-6535",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Epil Point Lumina  Salerno",
-      "consola_averiada": "91402",
-      "manipulo_averiado": "40727",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-6551",
@@ -839,7 +809,7 @@
       "manipulo_susti": "40534",
       "fecha_envio": "2026-04-20T13:01:00.000+0200",
       "parent_key": "LEAS-5853",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Harmonie Salamanca",
       "consola_averiada": "90522",
       "manipulo_averiado": "40422",
@@ -859,21 +829,6 @@
       "consola_averiada": "C00725",
       "manipulo_averiado": "H00725",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-5860",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Único Life Jerez de la Frontera",
-      "loc": "Jerez de la Frontera",
-      "consola_susti": "MHR90704",
-      "manipulo_susti": "SUSTQUAD028",
-      "fecha_envio": "2026-04-15T16:41:00.000+0200",
-      "parent_key": "LEAS-5851",
-      "parent_status": "Devuelto a fábrica",
-      "parent_cliente": "Único Life Jerez de la Frontera",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-5697",
