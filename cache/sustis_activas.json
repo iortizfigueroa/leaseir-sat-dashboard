@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-30T16:12:54.007089+00:00",
+    "last_fetched_at": "2026-06-30T20:30:56.343817+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 55
   },
   "items": [
     {
@@ -18,21 +18,6 @@
       "parent_cliente": "Epil Point Giugliano",
       "consola_averiada": "",
       "manipulo_averiado": "40476",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6860",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Palencia",
-      "loc": "C. Felipe Prieto, 2, 34001 Palencia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6850",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Palencia",
-      "consola_averiada": "C00565",
-      "manipulo_averiado": "H00565",
       "modelo": ""
     },
     {
@@ -169,6 +154,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6860",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Palencia",
+      "loc": "C. Felipe Prieto, 2, 34001 Palencia",
+      "consola_susti": "sustmhr031",
+      "manipulo_susti": "sustdual005",
+      "fecha_envio": "2026-06-30T19:08:00.000+0200",
+      "parent_key": "LEAS-6850",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Palencia",
+      "consola_averiada": "C00565",
+      "manipulo_averiado": "H00565",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-6839",
@@ -532,7 +532,7 @@
     },
     {
       "key": "LEAS-6654",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
       "loc": "C. Trasbolsa, 9, 11540 Sanlúcar de Barrameda, Cádiz",
       "consola_susti": "C00107",
@@ -589,21 +589,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "40449",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-6244",
-      "subtask_status": "En préstamo",
-      "cliente": "Sin Vello Fuenlabrada",
-      "loc": "Fuenlabrada",
-      "consola_susti": "sustmhr031",
-      "manipulo_susti": "sustdual005",
-      "fecha_envio": "2026-06-11T13:08:00.000+0200",
-      "parent_key": "LEAS-6243",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Sin Vello Fuenlabrada",
-      "consola_averiada": "C00215",
-      "manipulo_averiado": "H00215",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-6868",
