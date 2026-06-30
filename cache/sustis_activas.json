@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-06-30T09:24:22.379522+00:00",
+    "last_fetched_at": "2026-06-30T11:27:09.868722+00:00",
     "schema_version": 1,
     "count": 56
   },
   "items": [
+    {
+      "key": "LEAS-6880",
+      "subtask_status": "Solicitado",
+      "cliente": "Epil Point Giugliano",
+      "loc": "Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6849",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Epil Point Giugliano",
+      "consola_averiada": "",
+      "manipulo_averiado": "40476",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6860",
       "subtask_status": "Solicitado",
@@ -29,7 +44,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6833",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "91351",
       "manipulo_averiado": "40505",
@@ -184,6 +199,21 @@
       "consola_averiada": "C00328",
       "manipulo_averiado": "",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6874",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Epil Point Pomezia",
+      "loc": "Via Roma, 82, 00071 Pomezia RM, Italia Provincia: Roma",
+      "consola_susti": "90934",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-06-26T11:29:00.000+0200",
+      "parent_key": "LEAS-6873",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Epil Point Pomezia",
+      "consola_averiada": "91008",
+      "manipulo_averiado": "",
+      "modelo": ""
     },
     {
       "key": "LEAS-6824",
@@ -501,21 +531,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6671",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Dermasana Santander",
-      "loc": "C. Marcelino Sanz de Sautuola, 1, 39003 Santander, Cantabria",
-      "consola_susti": "91064",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-15T13:41:00.000+0200",
-      "parent_key": "LEAS-6670",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Dermasana Santander",
-      "consola_averiada": "90161",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6654",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
@@ -524,7 +539,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-12T11:18:00.000+0200",
       "parent_key": "LEAS-6653",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
       "consola_averiada": "C00358",
       "manipulo_averiado": "",
@@ -539,7 +554,7 @@
       "manipulo_susti": "SUSTQUAD016",
       "fecha_envio": "2026-06-12T10:55:00.000+0200",
       "parent_key": "LEAS-4905",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Elha Castells",
       "consola_averiada": "C00510",
       "manipulo_averiado": "H00510",
@@ -599,7 +614,7 @@
       "manipulo_susti": "SUSTDUAL040",
       "fecha_envio": "2026-06-11T10:21:00.000+0200",
       "parent_key": "LEAS-6867",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Zurimed Parque Principado",
       "consola_averiada": "",
       "manipulo_averiado": "40554",
@@ -708,21 +723,6 @@
       "parent_cliente": "Elha Naciosn Unides",
       "consola_averiada": "C00426",
       "manipulo_averiado": "H00426",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6456",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
-      "loc": "C. San Sebastián, 12, 29130 Alhaurín de la Torre, Málaga",
-      "consola_susti": null,
-      "manipulo_susti": "H00591",
-      "fecha_envio": "2026-05-28T17:06:00.000+0200",
-      "parent_key": "LEAS-6455",
-      "parent_status": "Resuelto",
-      "parent_cliente": "SinVello! Alhaurín de la Torre | Depilación Láser Diodo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00683",
       "modelo": "XCell HR"
     },
     {
