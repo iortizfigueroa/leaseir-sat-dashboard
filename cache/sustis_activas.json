@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-02T08:26:30.485436+00:00",
+    "last_fetched_at": "2026-07-02T11:19:53.391947+00:00",
     "schema_version": 1,
-    "count": 57
+    "count": 53
   },
   "items": [
     {
@@ -18,21 +18,6 @@
       "parent_cliente": "SinVello Leon",
       "consola_averiada": "C00250",
       "manipulo_averiado": "H00250",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6898",
-      "subtask_status": "Solicitado",
-      "cliente": "Los Fresnos Zurimed",
-      "loc": "C. Río de Oro, 3, Centro, 33209 Gijón, Asturias",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6896",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Los Fresnos Zurimed",
-      "consola_averiada": "C00569",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -186,6 +171,21 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6898",
+      "subtask_status": "Equipo devuelto",
+      "cliente": "Los Fresnos Zurimed",
+      "loc": "C. Río de Oro, 3, Centro, 33209 Gijón, Asturias",
+      "consola_susti": "C00340",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-02T10:34:00.000+0200",
+      "parent_key": "LEAS-6896",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Los Fresnos Zurimed",
+      "consola_averiada": "C00569",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6893",
       "subtask_status": "En préstamo",
       "cliente": "HArmonie Salamanca",
@@ -209,7 +209,7 @@
       "manipulo_susti": "sustdual005",
       "fecha_envio": "2026-06-30T19:08:00.000+0200",
       "parent_key": "LEAS-6850",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "SinVello Palencia",
       "consola_averiada": "C00565",
       "manipulo_averiado": "H00565",
@@ -284,7 +284,7 @@
       "manipulo_susti": "H41003",
       "fecha_envio": "2026-06-25T13:45:00.000+0200",
       "parent_key": "LEAS-6767",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha Sta Eulàlia",
       "consola_averiada": "C00687",
       "manipulo_averiado": "H00687",
@@ -306,30 +306,15 @@
       "modelo": "MHR Quad"
     },
     {
-      "key": "LEAS-6806",
-      "subtask_status": "En préstamo",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": "C00340",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-24T10:58:00.000+0200",
-      "parent_key": "LEAS-6635",
-      "parent_status": "En reparación",
-      "parent_cliente": "Zurimed Los fresnos",
-      "consola_averiada": "C00106",
-      "manipulo_averiado": "H00633",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6803",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Equipo devuelto",
       "cliente": "LAser y estetica",
       "loc": "Ciudad Real",
       "consola_susti": "91139",
       "manipulo_susti": null,
       "fecha_envio": "2026-06-23T15:42:00.000+0200",
       "parent_key": "LEAS-6802",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "LAser y estetica",
       "consola_averiada": "91138",
       "manipulo_averiado": "",
@@ -349,21 +334,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-6777",
-      "subtask_status": "En préstamo",
-      "cliente": "Epil Point Novara",
-      "loc": "Via Antonio Bianchini, 5, 28100 Novara NO, Italia",
-      "consola_susti": "SUSTMHR014",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-20T12:42:00.000+0200",
-      "parent_key": "LEAS-6776",
-      "parent_status": "Finalizado técnico externo",
-      "parent_cliente": "Epil Point Novara",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-6770",
@@ -419,7 +389,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-06-18T16:49:00.000+0200",
       "parent_key": "LEAS-6750",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Elha Granollers",
       "consola_averiada": "90994",
       "manipulo_averiado": "30385",
@@ -464,7 +434,7 @@
       "manipulo_susti": "SUSTQUAD017",
       "fecha_envio": "2026-06-17T16:30:00.000+0200",
       "parent_key": "LEAS-6741",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Epil Point Taranto",
       "consola_averiada": "",
       "manipulo_averiado": "40470",
@@ -502,7 +472,7 @@
     },
     {
       "key": "LEAS-6732",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "MAre Clinics CC Alcala Magna",
       "loc": "Madrid",
       "consola_susti": "sustmhr025",
@@ -599,7 +569,7 @@
       "manipulo_susti": "SUSTQUAD016",
       "fecha_envio": "2026-06-12T10:55:00.000+0200",
       "parent_key": "LEAS-4905",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Elha Castells",
       "consola_averiada": "C00510",
       "manipulo_averiado": "H00510",
@@ -614,7 +584,7 @@
       "manipulo_susti": "H01064",
       "fecha_envio": "2026-06-11T16:30:00.000+0200",
       "parent_key": "LEAS-6635",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Zurimed Los fresnos",
       "consola_averiada": "C00106",
       "manipulo_averiado": "H00633",
@@ -637,7 +607,7 @@
     },
     {
       "key": "LEAS-6868",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Zurimed Parque Principado",
       "loc": "Siero",
       "consola_susti": null,
@@ -697,7 +667,7 @@
     },
     {
       "key": "LEAS-6547",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "",
       "loc": "",
       "consola_susti": null,
@@ -712,7 +682,7 @@
     },
     {
       "key": "LEAS-6551",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Cn Clinics Milaneo",
       "loc": "Alemania",
       "consola_susti": null,
@@ -734,7 +704,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-02T13:48:00.000+0200",
       "parent_key": "LEAS-6418",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Centri Unico Palermo Terrasanta",
       "consola_averiada": "C00676",
       "manipulo_averiado": "",
@@ -742,7 +712,7 @@
     },
     {
       "key": "LEAS-6517",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "",
       "loc": "",
       "consola_susti": "C00326",
@@ -768,36 +738,6 @@
       "parent_cliente": "Epil Point Pomigliano",
       "consola_averiada": "",
       "manipulo_averiado": "40644",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6463",
-      "subtask_status": "En préstamo",
-      "cliente": "Epil Point Caserta",
-      "loc": "Via Roma, 94, 81100 Caserta CE, Italia",
-      "consola_susti": "90675",
-      "manipulo_susti": "40559",
-      "fecha_envio": "2026-05-27T11:32:00.000+0200",
-      "parent_key": "LEAS-6462",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Epil Point Caserta",
-      "consola_averiada": "91005",
-      "manipulo_averiado": "40405",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6392",
-      "subtask_status": "En préstamo",
-      "cliente": "Epil Point Pisa",
-      "loc": "Lungarno Mediceo, 46, 56127 Pisa PI, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "40306",
-      "fecha_envio": "2026-05-25T13:20:00.000+0200",
-      "parent_key": "LEAS-6390",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Epil Point Pisa",
-      "consola_averiada": "",
-      "manipulo_averiado": "40512",
       "modelo": ""
     },
     {
