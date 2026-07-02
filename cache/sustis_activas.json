@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-02T11:19:53.391947+00:00",
+    "last_fetched_at": "2026-07-02T11:46:00.993256+00:00",
     "schema_version": 1,
-    "count": 53
+    "count": 54
   },
   "items": [
+    {
+      "key": "LEAS-6910",
+      "subtask_status": "Solicitado",
+      "cliente": "Zurimed Los Fresnos",
+      "loc": "Gijón",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6909",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Zurimed Los Fresnos",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00569",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6901",
       "subtask_status": "Solicitado",
@@ -584,7 +599,7 @@
       "manipulo_susti": "H01064",
       "fecha_envio": "2026-06-11T16:30:00.000+0200",
       "parent_key": "LEAS-6635",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Zurimed Los fresnos",
       "consola_averiada": "C00106",
       "manipulo_averiado": "H00633",
@@ -614,7 +629,7 @@
       "manipulo_susti": "SUSTDUAL040",
       "fecha_envio": "2026-06-11T10:21:00.000+0200",
       "parent_key": "LEAS-6867",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Resuelto",
       "parent_cliente": "Zurimed Parque Principado",
       "consola_averiada": "",
       "manipulo_averiado": "40554",
