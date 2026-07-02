@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-02T11:52:52.462468+00:00",
+    "last_fetched_at": "2026-07-02T15:54:55.922384+00:00",
     "schema_version": 1,
-    "count": 54
+    "count": 56
   },
   "items": [
+    {
+      "key": "LEAS-6919",
+      "subtask_status": "Solicitado",
+      "cliente": "Epil Point Castellammare",
+      "loc": "Corso Vittorio Emanuele, 14, 80053 Castellammare di Stabia NA, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6918",
+      "parent_status": "Pendiente definir servicio externo",
+      "parent_cliente": "Epil Point Castellammare",
+      "consola_averiada": "91009",
+      "manipulo_averiado": "40447",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6910",
       "subtask_status": "Solicitado",
@@ -14,25 +29,10 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6909",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Zurimed Los Fresnos",
       "consola_averiada": "",
       "manipulo_averiado": "H00569",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6901",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Leon",
-      "loc": "C. Roa de la Vega, 8, 24002 León",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6899",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Leon",
-      "consola_averiada": "C00250",
-      "manipulo_averiado": "H00250",
       "modelo": ""
     },
     {
@@ -186,6 +186,36 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6901",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Leon",
+      "loc": "C. Roa de la Vega, 8, 24002 León",
+      "consola_susti": "SUSTMHR025",
+      "manipulo_susti": "SUSTDUAL003",
+      "fecha_envio": "2026-07-03T14:34:00.000+0200",
+      "parent_key": "LEAS-6899",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Leon",
+      "consola_averiada": "C00250",
+      "manipulo_averiado": "H00250",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6915",
+      "subtask_status": "Equipo enviado",
+      "cliente": "123 Clinics Tarragona",
+      "loc": "Carrer de l'Arquebisbe Josep Pont i Gol, 3, Local 2, 43005 Tarragona",
+      "consola_susti": "SUSTMHR011",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-02T17:11:00.000+0200",
+      "parent_key": "LEAS-6914",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "123 Clinics Tarragona",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": "MHR"
+    },
+    {
       "key": "LEAS-6898",
       "subtask_status": "Equipo devuelto",
       "cliente": "Los Fresnos Zurimed",
@@ -224,7 +254,7 @@
       "manipulo_susti": "sustdual005",
       "fecha_envio": "2026-06-30T19:08:00.000+0200",
       "parent_key": "LEAS-6850",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Palencia",
       "consola_averiada": "C00565",
       "manipulo_averiado": "H00565",
@@ -449,7 +479,7 @@
       "manipulo_susti": "SUSTQUAD017",
       "fecha_envio": "2026-06-17T16:30:00.000+0200",
       "parent_key": "LEAS-6741",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Epil Point Taranto",
       "consola_averiada": "",
       "manipulo_averiado": "40470",
@@ -584,7 +614,7 @@
       "manipulo_susti": "SUSTQUAD016",
       "fecha_envio": "2026-06-12T10:55:00.000+0200",
       "parent_key": "LEAS-4905",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Elha Castells",
       "consola_averiada": "C00510",
       "manipulo_averiado": "H00510",
@@ -622,7 +652,7 @@
     },
     {
       "key": "LEAS-6868",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Zurimed Parque Principado",
       "loc": "Siero",
       "consola_susti": null,
