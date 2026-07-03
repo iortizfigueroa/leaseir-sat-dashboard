@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-03T12:51:18.405705+00:00",
+    "last_fetched_at": "2026-07-03T15:45:45.916419+00:00",
     "schema_version": 1,
     "count": 58
   },
   "items": [
-    {
-      "key": "LEAS-6930",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Palencia",
-      "loc": "C. Felipe Prieto, 2, 34001 Palencia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6926",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Palencia",
-      "consola_averiada": "SUSTMHR031",
-      "manipulo_averiado": "SUSTDUAL005",
-      "modelo": ""
-    },
     {
       "key": "LEAS-6919",
       "subtask_status": "Solicitado",
@@ -201,8 +186,38 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6901",
+      "key": "LEAS-6930",
       "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Palencia",
+      "loc": "C. Felipe Prieto, 2, 34001 Palencia",
+      "consola_susti": "SUSTMHR027",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-03T17:11:00.000+0200",
+      "parent_key": "LEAS-6926",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Palencia",
+      "consola_averiada": "SUSTMHR031",
+      "manipulo_averiado": "SUSTDUAL005",
+      "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6935",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Mel cClinics Castellon",
+      "loc": "N-340, 64.5, 12006 Castelló de la Plana, Castellón",
+      "consola_susti": "91139",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-03T16:57:00.000+0200",
+      "parent_key": "LEAS-6934",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Mel cClinics Castellon",
+      "consola_averiada": "91119",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-6901",
+      "subtask_status": "En préstamo",
       "cliente": "SinVello Leon",
       "loc": "C. Roa de la Vega, 8, 24002 León",
       "consola_susti": "SUSTMHR025",
@@ -449,7 +464,7 @@
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-06-18T16:52:00.000+0200",
       "parent_key": "LEAS-6734",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Donly Láser 30835",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -464,7 +479,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-06-18T16:49:00.000+0200",
       "parent_key": "LEAS-6750",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Elha Granollers",
       "consola_averiada": "90994",
       "manipulo_averiado": "30385",
@@ -618,21 +633,6 @@
       "parent_cliente": "Elha Santa Coloma",
       "consola_averiada": "C00519",
       "manipulo_averiado": "H00519",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6654",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
-      "loc": "C. Trasbolsa, 9, 11540 Sanlúcar de Barrameda, Cádiz",
-      "consola_susti": "C00107",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-12T11:18:00.000+0200",
-      "parent_key": "LEAS-6653",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello  SAN LUCAR DE BARRAMEDA",
-      "consola_averiada": "C00358",
-      "manipulo_averiado": "",
       "modelo": "XCell HR"
     },
     {
