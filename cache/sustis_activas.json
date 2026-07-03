@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-03T10:57:54.808337+00:00",
+    "last_fetched_at": "2026-07-03T11:44:50.018398+00:00",
     "schema_version": 1,
     "count": 58
   },
@@ -18,21 +18,6 @@
       "parent_cliente": "SinVello Palencia",
       "consola_averiada": "SUSTMHR031",
       "manipulo_averiado": "SUSTDUAL005",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6929",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Limoneros",
-      "loc": "Ctra. de los Limoneros, 4, 04006 Almería",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6927",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Limoneros",
-      "consola_averiada": "90450",
-      "manipulo_averiado": "-",
       "modelo": ""
     },
     {
@@ -229,6 +214,21 @@
       "consola_averiada": "C00250",
       "manipulo_averiado": "H00250",
       "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-6929",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Limoneros",
+      "loc": "Ctra. de los Limoneros, 4, 04006 Almería",
+      "consola_susti": "91094",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-03T13:43:00.000+0200",
+      "parent_key": "LEAS-6927",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Limoneros",
+      "consola_averiada": "90450",
+      "manipulo_averiado": "-",
+      "modelo": ""
     },
     {
       "key": "LEAS-6915",
@@ -449,7 +449,7 @@
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-06-18T16:52:00.000+0200",
       "parent_key": "LEAS-6734",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Donly Láser 30835",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -464,7 +464,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-06-18T16:49:00.000+0200",
       "parent_key": "LEAS-6750",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Elha Granollers",
       "consola_averiada": "90994",
       "manipulo_averiado": "30385",
@@ -697,7 +697,7 @@
     },
     {
       "key": "LEAS-6603",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Equipo devuelto",
       "cliente": "",
       "loc": "",
       "consola_susti": "91094",
