@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-06T07:58:20.382068+00:00",
+    "last_fetched_at": "2026-07-06T08:42:16.472942+00:00",
     "schema_version": 1,
     "count": 52
   },
@@ -18,21 +18,6 @@
       "parent_cliente": "Epil Point Aversa",
       "consola_averiada": "91320",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6919",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Castellammare",
-      "loc": "Corso Vittorio Emanuele, 14, 80053 Castellammare di Stabia NA, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6918",
-      "parent_status": "Pendiente definir servicio externo",
-      "parent_cliente": "Epil Point Castellammare",
-      "consola_averiada": "91009",
-      "manipulo_averiado": "40447",
       "modelo": ""
     },
     {
@@ -291,6 +276,21 @@
       "modelo": "XCell HR"
     },
     {
+      "key": "LEAS-6919",
+      "subtask_status": "En préstamo",
+      "cliente": "Epil Point Castellammare",
+      "loc": "Corso Vittorio Emanuele, 14, 80053 Castellammare di Stabia NA, Italia",
+      "consola_susti": "90674",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-02T10:15:00.000+0200",
+      "parent_key": "LEAS-6918",
+      "parent_status": "Pendiente definir servicio externo",
+      "parent_cliente": "Epil Point Castellammare",
+      "consola_averiada": "91009",
+      "manipulo_averiado": "40447",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-6893",
       "subtask_status": "En préstamo",
       "cliente": "HArmonie Salamanca",
@@ -299,7 +299,7 @@
       "manipulo_susti": "40534",
       "fecha_envio": "2026-07-01T15:33:00.000+0200",
       "parent_key": "LEAS-6892",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "HArmonie Salamanca",
       "consola_averiada": "90943",
       "manipulo_averiado": "40245",
@@ -389,7 +389,7 @@
       "manipulo_susti": "H41003",
       "fecha_envio": "2026-06-25T13:45:00.000+0200",
       "parent_key": "LEAS-6767",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Elha Sta Eulàlia",
       "consola_averiada": "C00687",
       "manipulo_averiado": "H00687",
@@ -420,7 +420,7 @@
       "fecha_envio": "2026-06-23T15:42:00.000+0200",
       "parent_key": "LEAS-6802",
       "parent_status": "En cola taller",
-      "parent_cliente": "LAser y estetica",
+      "parent_cliente": "Leaseir SAT",
       "consola_averiada": "91138",
       "manipulo_averiado": "",
       "modelo": ""
@@ -689,7 +689,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-02T13:48:00.000+0200",
       "parent_key": "LEAS-6418",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Centri Unico Palermo Terrasanta",
       "consola_averiada": "C00676",
       "manipulo_averiado": "",
