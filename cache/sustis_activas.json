@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-07T12:14:33.561945+00:00",
+    "last_fetched_at": "2026-07-07T16:13:46.908023+00:00",
     "schema_version": 1,
-    "count": 54
+    "count": 52
   },
   "items": [
+    {
+      "key": "LEAS-6967",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Av. Roma",
+      "loc": "Av. de Roma, 5, 43005 Tarragona",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6966",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Av. Roma",
+      "consola_averiada": "-",
+      "manipulo_averiado": "40311",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6958",
       "subtask_status": "Solicitado",
@@ -21,36 +36,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6955",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Granollers",
-      "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6951",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Granollers",
-      "consola_averiada": "90886",
-      "manipulo_averiado": "-",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6938",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Aversa",
-      "loc": "Viale John Fitzgerald Kennedy, 26, 81031 Aversa CE, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6937",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Point Aversa",
-      "consola_averiada": "91320",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6910",
       "subtask_status": "Solicitado",
       "cliente": "Zurimed Los Fresnos",
@@ -63,21 +48,6 @@
       "parent_cliente": "Zurimed Los Fresnos",
       "consola_averiada": "",
       "manipulo_averiado": "H00569",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6880",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Giugliano",
-      "loc": "Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6849",
-      "parent_status": "Esperando inicio reparación",
-      "parent_cliente": "Epil Point Giugliano",
-      "consola_averiada": "",
-      "manipulo_averiado": "40476",
       "modelo": ""
     },
     {
@@ -108,21 +78,6 @@
       "parent_cliente": "Epiil Point Matera",
       "consola_averiada": "91061",
       "manipulo_averiado": "40469",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6796",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Epil Point Messina",
-      "loc": "Viale S. Martino, 156, 98123 Messina ME, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6795",
-      "parent_status": "Finalizado técnico externo",
-      "parent_cliente": "Epil Point Messina",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -214,6 +169,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00211",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6955",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Granollers",
+      "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
+      "consola_susti": "91064",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-07T16:48:00.000+0200",
+      "parent_key": "LEAS-6951",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Granollers",
+      "consola_averiada": "90886",
+      "manipulo_averiado": "-",
+      "modelo": ""
     },
     {
       "key": "LEAS-6930",
@@ -314,7 +284,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-02T10:15:00.000+0200",
       "parent_key": "LEAS-6918",
-      "parent_status": "Pendiente definir servicio externo",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Epil Point Castellammare",
       "consola_averiada": "91009",
       "manipulo_averiado": "40447",
@@ -419,7 +389,7 @@
       "manipulo_susti": "H41003",
       "fecha_envio": "2026-06-25T13:45:00.000+0200",
       "parent_key": "LEAS-6767",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Elha Sta Eulàlia",
       "consola_averiada": "C00687",
       "manipulo_averiado": "H00687",
@@ -667,14 +637,14 @@
     },
     {
       "key": "LEAS-6596",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Las Palmas de Gran Canarias",
       "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
       "consola_susti": null,
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-06-09T10:37:00.000+0200",
       "parent_key": "LEAS-6576",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
@@ -719,7 +689,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-02T13:48:00.000+0200",
       "parent_key": "LEAS-6418",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centri Unico Palermo Terrasanta",
       "consola_averiada": "C00676",
       "manipulo_averiado": "",
