@@ -1,10 +1,40 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-08T10:47:09.671692+00:00",
+    "last_fetched_at": "2026-07-08T11:22:06.492661+00:00",
     "schema_version": 1,
-    "count": 50
+    "count": 52
   },
   "items": [
+    {
+      "key": "LEAS-6976",
+      "subtask_status": "Solicitado",
+      "cliente": "Epil Point Lecce",
+      "loc": "Via Salvatore Trinchese, 87, 73100 Lecce LE, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6975",
+      "parent_status": "Enviado a técnico externo",
+      "parent_cliente": "Epil Point Lecce",
+      "consola_averiada": "",
+      "manipulo_averiado": "40413",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-6974",
+      "subtask_status": "Solicitado",
+      "cliente": "Epil Point Lecce",
+      "loc": "Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-6973",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Lecce",
+      "consola_averiada": "",
+      "manipulo_averiado": "40413",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6969",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -232,14 +262,14 @@
     },
     {
       "key": "LEAS-6929",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Elha Limoneros",
       "loc": "Ctra. de los Limoneros, 4, 04006 Almería",
       "consola_susti": "91094",
       "manipulo_susti": null,
       "fecha_envio": "2026-07-03T13:43:00.000+0200",
       "parent_key": "LEAS-6927",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -464,7 +494,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-06-19T14:33:00.000+0200",
       "parent_key": "LEAS-6711",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "SinVello Caceres",
       "consola_averiada": "C00194",
       "manipulo_averiado": "H00194",
@@ -509,7 +539,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-17T16:34:00.000+0200",
       "parent_key": "LEAS-6739",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Mar Tobajas",
       "consola_averiada": "354",
       "manipulo_averiado": "",
