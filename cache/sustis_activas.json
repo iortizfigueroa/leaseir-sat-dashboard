@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-09T08:18:46.025720+00:00",
+    "last_fetched_at": "2026-07-09T11:08:45.434808+00:00",
     "schema_version": 1,
-    "count": 54
+    "count": 52
   },
   "items": [
     {
@@ -18,51 +18,6 @@
       "parent_cliente": "Centro Unico Campania",
       "consola_averiada": "C00282",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6982",
-      "subtask_status": "Solicitado",
-      "cliente": "Sin Vello Las Palmas de Gran Canarias",
-      "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6981",
-      "parent_status": "Pendiente definir servicio externo",
-      "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00359",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6976",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Lecce",
-      "loc": "Via Salvatore Trinchese, 87, 73100 Lecce LE, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6975",
-      "parent_status": "Enviado a técnico externo",
-      "parent_cliente": "Epil Point Lecce",
-      "consola_averiada": "",
-      "manipulo_averiado": "40413",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6974",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Lecce",
-      "loc": "Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6973",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Point Lecce",
-      "consola_averiada": "",
-      "manipulo_averiado": "40413",
       "modelo": ""
     },
     {
@@ -201,6 +156,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6982",
+      "subtask_status": "En préstamo",
+      "cliente": "Sin Vello Las Palmas de Gran Canarias",
+      "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
+      "consola_susti": null,
+      "manipulo_susti": "H00751",
+      "fecha_envio": "2026-07-09T11:23:00.000+0200",
+      "parent_key": "LEAS-6981",
+      "parent_status": "Pendiente definir servicio externo",
+      "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00359",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-6969",
       "subtask_status": "Equipo enviado",
       "cliente": "SinVello Manacor",
@@ -214,6 +184,21 @@
       "consola_averiada": "C03173",
       "manipulo_averiado": "H03173",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-6976",
+      "subtask_status": "En préstamo",
+      "cliente": "Epil Point Lecce",
+      "loc": "Via Salvatore Trinchese, 87, 73100 Lecce LE, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD028",
+      "fecha_envio": "2026-07-08T11:56:00.000+0200",
+      "parent_key": "LEAS-6975",
+      "parent_status": "Enviado a técnico externo",
+      "parent_cliente": "Epil Point Lecce",
+      "consola_averiada": "",
+      "manipulo_averiado": "40413",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6955",
@@ -404,10 +389,10 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-26T16:32:00.000+0200",
       "parent_key": "LEAS-6683",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
-      "manipulo_averiado": "",
+      "manipulo_averiado": "H00328",
       "modelo": "XCell HR"
     },
     {
@@ -569,7 +554,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-17T16:34:00.000+0200",
       "parent_key": "LEAS-6739",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Mar Tobajas",
       "consola_averiada": "354",
       "manipulo_averiado": "",
@@ -584,10 +569,10 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-17T11:45:00.000+0200",
       "parent_key": "LEAS-6683",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
-      "manipulo_averiado": "",
+      "manipulo_averiado": "H00328",
       "modelo": "XCell HR"
     },
     {
@@ -599,8 +584,8 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-16T17:02:00.000+0200",
       "parent_key": "LEAS-6699",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Clinicas Splau",
+      "parent_status": "Pendiente asignar técnico",
+      "parent_cliente": "Clinicas Med Splau",
       "consola_averiada": "91087",
       "manipulo_averiado": "",
       "modelo": "MHR"
@@ -629,7 +614,7 @@
       "manipulo_susti": "H01033",
       "fecha_envio": "2026-06-16T13:47:00.000+0200",
       "parent_key": "LEAS-5087",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Elha Santa Coloma",
       "consola_averiada": "C00519",
       "manipulo_averiado": "H00519",
@@ -666,21 +651,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6596",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Las Palmas de Gran Canarias",
-      "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
-      "consola_susti": null,
-      "manipulo_susti": "H00751",
-      "fecha_envio": "2026-06-09T10:37:00.000+0200",
-      "parent_key": "LEAS-6576",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00359",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6450",
       "subtask_status": "En préstamo",
       "cliente": "Smart Duck Courbevoie",
@@ -697,7 +667,7 @@
     },
     {
       "key": "LEAS-6547",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "",
       "loc": "",
       "consola_susti": null,
@@ -727,7 +697,7 @@
     },
     {
       "key": "LEAS-6517",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "",
       "loc": "",
       "consola_susti": "C00326",
