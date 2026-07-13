@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-13T09:31:16.591571+00:00",
+    "last_fetched_at": "2026-07-13T10:51:03.416708+00:00",
     "schema_version": 2
   },
   "tickets": {
@@ -884,7 +884,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:40.408701+00:00",
+      "fetched_at": "2026-07-13T10:50:33.463705+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -8958,7 +8958,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:40.960543+00:00",
+      "fetched_at": "2026-07-13T10:50:34.053496+00:00",
       "presupuesto_status_raw": null,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -11644,7 +11644,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:38.830732+00:00",
+      "fetched_at": "2026-07-13T10:50:31.875344+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -15392,7 +15392,7 @@
           "Resuelto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:39.344070+00:00",
+      "fetched_at": "2026-07-13T10:50:32.609175+00:00",
       "presupuesto_status_raw": -1,
       "presupuesto_estado": "Cancelado",
       "factura": "",
@@ -58960,7 +58960,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:41.350864+00:00",
+      "fetched_at": "2026-07-13T10:50:34.396567+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -68321,7 +68321,7 @@
       "presupuesto": "",
       "ult_comentario": "",
       "transitions": [],
-      "fetched_at": "2026-07-13T09:30:41.628043+00:00"
+      "fetched_at": "2026-07-13T10:50:34.691741+00:00"
     },
     "LEAS-4907": {
       "key": "LEAS-4907",
@@ -70110,7 +70110,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:39.761999+00:00",
+      "fetched_at": "2026-07-13T10:50:33.058726+00:00",
       "presupuesto_status_raw": 1,
       "presupuesto_estado": "Aceptado",
       "factura": "SInv26-202600552",
@@ -80224,7 +80224,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:42.390074+00:00",
+      "fetched_at": "2026-07-13T10:50:35.088669+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -91469,7 +91469,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:42.803804+00:00",
+      "fetched_at": "2026-07-13T10:50:35.607638+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -151409,7 +151409,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:43.190591+00:00",
+      "fetched_at": "2026-07-13T10:50:35.986541+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -152937,7 +152937,7 @@
           "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:43.742065+00:00",
+      "fetched_at": "2026-07-13T10:50:36.532150+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -154672,7 +154672,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:38.225650+00:00",
+      "fetched_at": "2026-07-13T10:50:31.501499+00:00",
       "presupuesto_status_raw": 1,
       "presupuesto_estado": "Aceptado",
       "factura": "",
@@ -156576,7 +156576,7 @@
       "cliente": "Elha Unió",
       "loc": "Carrer de la Unió, 29, 08221 Terrassa, Barcelona",
       "created": "2026-06-01T12:40:21.465+0200",
-      "current_status": "Finalizado técnico externo",
+      "current_status": "Finalizada",
       "tipo": "Pantalla",
       "bloq": "Sí",
       "susti": "No",
@@ -156585,19 +156585,22 @@
       "hp": "",
       "garantia": "No",
       "descripcion": "La pantalla ha muerto, la máquina enciende pero la pantalla no",
-      "disparos": "",
+      "disparos": 0.0,
       "tec_taller": "",
       "asignado": "",
-      "importe": "",
+      "importe": 733.56,
       "tec_externo": "Carlos Mora",
-      "motivo": [],
+      "motivo": [
+        "Pantalla",
+        "Pila BIOS"
+      ],
       "cambios": [],
-      "gmap_url": "",
+      "gmap_url": "https://maps.app.goo.gl/XhNenjDo9dUMJFS3A",
       "forma_resolucion": "Técnico externo",
       "gestion": "Externa",
       "mantenimiento": "No",
-      "presupuesto": "",
-      "ult_comentario": "2026-06-02 Isaac Sanchez — nos avisa Carlos que ha cambiado pantalla y pila bios pero si vuelve el problema ya seria un cambio de PC.",
+      "presupuesto": "E261425",
+      "ult_comentario": "2026-07-13 Isaac Sanchez — se reclamo el parte a Carlos.",
       "transitions": [
         [
           "2026-06-01T13:46:51.514+0200",
@@ -156623,9 +156626,22 @@
           "2026-06-02T19:14:45.729+0200",
           "Enviado a técnico externo",
           "Finalizado técnico externo"
+        ],
+        [
+          "2026-07-13T12:31:46.455+0200",
+          "Finalizado técnico externo",
+          "Finalizada"
         ]
       ],
-      "fetched_at": "2026-06-03T06:33:59.378951+00:00"
+      "fetched_at": "2026-07-13T10:50:30.895000+00:00",
+      "presupuesto_status_raw": 1,
+      "presupuesto_estado": "Aceptado",
+      "factura": "",
+      "factura_importe": null,
+      "factura_cobrado": null,
+      "factura_pendiente": null,
+      "factura_estado": "",
+      "factura_fecha_venc": null
     },
     "LEAS-6496": {
       "key": "LEAS-6496",
@@ -156896,7 +156912,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:37.717727+00:00",
+      "fetched_at": "2026-07-13T10:50:30.532665+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -159381,7 +159397,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:44.122926+00:00",
+      "fetched_at": "2026-07-13T10:50:36.930848+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -161709,7 +161725,7 @@
           "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:37.316582+00:00"
+      "fetched_at": "2026-07-13T10:50:30.036214+00:00"
     },
     "LEAS-6597": {
       "key": "LEAS-6597",
@@ -163021,7 +163037,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:36.777982+00:00",
+      "fetched_at": "2026-07-13T10:50:29.656459+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -163275,9 +163291,9 @@
       "gestion": "Inicio",
       "mantenimiento": "",
       "presupuesto": "",
-      "ult_comentario": "2026-06-30 Borja Canteli Trabanco — Va a ir Oliver personalmente a probarlo Esta gestionandolo con Pol",
+      "ult_comentario": "2026-07-13 Borja Canteli Trabanco — seguimos ptes de que vaya Oliver , no tenian huecos en la clinica. Lo están usando con normalidad",
       "transitions": [],
-      "fetched_at": "2026-07-13T09:30:44.668960+00:00"
+      "fetched_at": "2026-07-13T10:50:29.173624+00:00"
     },
     "LEAS-6631": {
       "key": "LEAS-6631",
@@ -163591,7 +163607,7 @@
           "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:45.426751+00:00"
+      "fetched_at": "2026-07-13T10:50:37.430837+00:00"
     },
     "LEAS-6641": {
       "key": "LEAS-6641",
@@ -163824,7 +163840,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:45.774089+00:00"
+      "fetched_at": "2026-07-13T10:50:37.766804+00:00"
     },
     "LEAS-6647": {
       "key": "LEAS-6647",
@@ -164637,7 +164653,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:46.163684+00:00"
+      "fetched_at": "2026-07-13T10:50:38.350304+00:00"
     },
     "LEAS-6663": {
       "key": "LEAS-6663",
@@ -165710,7 +165726,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:36.263894+00:00"
+      "fetched_at": "2026-07-13T10:50:28.858214+00:00"
     },
     "LEAS-6681": {
       "key": "LEAS-6681",
@@ -166104,7 +166120,7 @@
           "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:35.627512+00:00"
+      "fetched_at": "2026-07-13T10:50:28.221869+00:00"
     },
     "LEAS-6698": {
       "key": "LEAS-6698",
@@ -166513,7 +166529,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:34.974873+00:00",
+      "fetched_at": "2026-07-13T10:50:27.851510+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -166871,7 +166887,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:46.694018+00:00",
+      "fetched_at": "2026-07-13T10:50:38.704065+00:00",
       "presupuesto_status_raw": 1,
       "presupuesto_estado": "Aceptado",
       "factura": "",
@@ -166998,7 +167014,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:47.085861+00:00"
+      "fetched_at": "2026-07-13T10:50:39.046583+00:00"
     },
     "LEAS-6714": {
       "key": "LEAS-6714",
@@ -168292,7 +168308,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:47.450850+00:00",
+      "fetched_at": "2026-07-13T10:50:39.442205+00:00",
       "presupuesto_status_raw": -1,
       "presupuesto_estado": "Cancelado",
       "factura": "",
@@ -168515,7 +168531,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:47.824721+00:00",
+      "fetched_at": "2026-07-13T10:50:39.761738+00:00",
       "presupuesto_status_raw": -1,
       "presupuesto_estado": "Cancelado",
       "factura": "",
@@ -169543,7 +169559,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:48.414720+00:00"
+      "fetched_at": "2026-07-13T10:50:40.113065+00:00"
     },
     "LEAS-6764": {
       "key": "LEAS-6764",
@@ -169742,7 +169758,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:48.769156+00:00"
+      "fetched_at": "2026-07-13T10:50:40.467229+00:00"
     },
     "LEAS-6769": {
       "key": "LEAS-6769",
@@ -169844,7 +169860,7 @@
           "Resuelto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:34.368477+00:00",
+      "fetched_at": "2026-07-13T10:50:27.458810+00:00",
       "presupuesto_status_raw": -1,
       "presupuesto_estado": "Cancelado",
       "factura": "",
@@ -169991,7 +170007,7 @@
           "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:33.764924+00:00"
+      "fetched_at": "2026-07-13T10:50:27.097792+00:00"
     },
     "LEAS-6771": {
       "key": "LEAS-6771",
@@ -170243,7 +170259,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:49.106811+00:00"
+      "fetched_at": "2026-07-13T10:50:40.792138+00:00"
     },
     "LEAS-6778": {
       "key": "LEAS-6778",
@@ -171353,7 +171369,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:49.452237+00:00"
+      "fetched_at": "2026-07-13T10:50:41.180141+00:00"
     },
     "LEAS-6805": {
       "key": "LEAS-6805",
@@ -171430,7 +171446,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:49.976122+00:00",
+      "fetched_at": "2026-07-13T10:50:41.681357+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -171560,7 +171576,7 @@
       "cliente": "EPil Point Matera",
       "loc": "Italia",
       "created": "2026-06-24T12:59:24.144+0200",
-      "current_status": "Gestionado transporte",
+      "current_status": "Pendiente asignar técnico",
       "tipo": "Energía",
       "bloq": "No",
       "susti": "Sí",
@@ -171607,9 +171623,14 @@
           "2026-07-08T09:29:56.085+0200",
           "Pendiente recogida",
           "Gestionado transporte"
+        ],
+        [
+          "2026-07-13T12:34:02.305+0200",
+          "Gestionado transporte",
+          "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:50.494444+00:00"
+      "fetched_at": "2026-07-13T10:50:26.564033+00:00"
     },
     "LEAS-6817": {
       "key": "LEAS-6817",
@@ -171850,7 +171871,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:50.978481+00:00"
+      "fetched_at": "2026-07-13T10:50:42.235451+00:00"
     },
     "LEAS-6821": {
       "key": "LEAS-6821",
@@ -172161,7 +172182,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:51.583749+00:00"
+      "fetched_at": "2026-07-13T10:50:42.549025+00:00"
     },
     "LEAS-6827": {
       "key": "LEAS-6827",
@@ -172286,7 +172307,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:51.904157+00:00",
+      "fetched_at": "2026-07-13T10:50:42.935568+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -172416,7 +172437,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:52.298039+00:00",
+      "fetched_at": "2026-07-13T10:50:43.345162+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -172568,7 +172589,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:33.293709+00:00"
+      "fetched_at": "2026-07-13T10:50:26.280306+00:00"
     },
     "LEAS-6836": {
       "key": "LEAS-6836",
@@ -172697,7 +172718,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:52.602488+00:00"
+      "fetched_at": "2026-07-13T10:50:43.652078+00:00"
     },
     "LEAS-6832": {
       "key": "LEAS-6832",
@@ -172754,7 +172775,7 @@
           "En cola taller"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:32.682889+00:00"
+      "fetched_at": "2026-07-13T10:50:25.761793+00:00"
     },
     "LEAS-6842": {
       "key": "LEAS-6842",
@@ -172828,7 +172849,7 @@
           "Finalizada"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:32.386566+00:00",
+      "fetched_at": "2026-07-13T10:50:25.234627+00:00",
       "presupuesto_status_raw": 1,
       "presupuesto_estado": "Aceptado",
       "factura": "",
@@ -172925,7 +172946,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:31.804755+00:00",
+      "fetched_at": "2026-07-13T10:50:24.893287+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -173114,7 +173135,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:52.900524+00:00"
+      "fetched_at": "2026-07-13T10:50:43.959899+00:00"
     },
     "LEAS-6855": {
       "key": "LEAS-6855",
@@ -173325,7 +173346,7 @@
           "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:53.276926+00:00"
+      "fetched_at": "2026-07-13T10:50:44.344763+00:00"
     },
     "LEAS-6852": {
       "key": "LEAS-6852",
@@ -173502,7 +173523,13 @@
       "importe": 7211.6,
       "tec_externo": "",
       "motivo": [],
-      "cambios": [],
+      "cambios": [
+        "Limpieza interior y exterior",
+        "Llenado de depósito",
+        "Calibrado y medición de energías",
+        "Diodo nuevo",
+        "Actualizar software"
+      ],
       "gmap_url": "https://maps.app.goo.gl/hoFr5bt2o8U2zHCU9",
       "forma_resolucion": "Reparación en taller",
       "gestion": "Interna",
@@ -173561,7 +173588,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:53.823414+00:00",
+      "fetched_at": "2026-07-13T10:50:23.735739+00:00",
       "presupuesto_status_raw": 1,
       "presupuesto_estado": "Aceptado",
       "factura": "",
@@ -173658,7 +173685,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:31.449685+00:00",
+      "fetched_at": "2026-07-13T10:50:24.376615+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -173857,7 +173884,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:54.311904+00:00"
+      "fetched_at": "2026-07-13T10:50:44.667929+00:00"
     },
     "LEAS-6866": {
       "key": "LEAS-6866",
@@ -173991,7 +174018,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:54.740092+00:00",
+      "fetched_at": "2026-07-13T10:50:45.137460+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -174133,7 +174160,7 @@
       "cliente": "Leaseir ( H01012)",
       "loc": "Calle MIchael Faraday nº26 nave 9 33211 Gijon",
       "created": "2026-06-30T11:18:07.752+0200",
-      "current_status": "Gestionado transporte",
+      "current_status": "Pendiente asignar técnico",
       "tipo": "Revisión",
       "bloq": "No",
       "susti": "No",
@@ -174170,9 +174197,14 @@
           "2026-06-30T11:18:44.512+0200",
           "Pendiente recogida",
           "Gestionado transporte"
+        ],
+        [
+          "2026-07-13T12:17:15.032+0200",
+          "Gestionado transporte",
+          "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:55.015757+00:00"
+      "fetched_at": "2026-07-13T10:50:23.121647+00:00"
     },
     "LEAS-6871": {
       "key": "LEAS-6871",
@@ -174219,7 +174251,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:55.314813+00:00"
+      "fetched_at": "2026-07-13T10:50:45.438719+00:00"
     },
     "LEAS-6870": {
       "key": "LEAS-6870",
@@ -174355,7 +174387,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:55.877778+00:00"
+      "fetched_at": "2026-07-13T10:50:45.835959+00:00"
     },
     "LEAS-6875": {
       "key": "LEAS-6875",
@@ -174407,7 +174439,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:56.193330+00:00"
+      "fetched_at": "2026-07-13T10:50:46.173845+00:00"
     },
     "LEAS-6873": {
       "key": "LEAS-6873",
@@ -174415,7 +174447,7 @@
       "cliente": "Epil Point Pomezia",
       "loc": "Via Roma, 82, 00071 Pomezia RM, Italia Provincia: Roma",
       "created": "2026-06-30T11:27:37.379+0200",
-      "current_status": "Presupuesto preparado pendiente de enviar",
+      "current_status": "Inspección de salida",
       "tipo": "Stop",
       "bloq": "Sí",
       "susti": "Sí",
@@ -174425,9 +174457,9 @@
       "garantia": "No",
       "descripcion": "La consola da Stop 6 con varios manipulos",
       "disparos": "",
-      "tec_taller": "",
-      "asignado": "Francisco Fernández Porrúa",
-      "importe": "",
+      "tec_taller": "Borja Canteli Trabanco",
+      "asignado": "",
+      "importe": 740.0,
       "tec_externo": "",
       "motivo": [],
       "cambios": [
@@ -174440,7 +174472,7 @@
       "forma_resolucion": "Reparación en taller",
       "gestion": "Interna",
       "mantenimiento": "No",
-      "presupuesto": "",
+      "presupuesto": "E261424",
       "ult_comentario": "",
       "transitions": [
         [
@@ -174497,9 +174529,37 @@
           "2026-07-09T08:19:58.538+0200",
           "En preparación presupuesto",
           "Presupuesto preparado pendiente de enviar"
+        ],
+        [
+          "2026-07-13T12:22:42.510+0200",
+          "Presupuesto preparado pendiente de enviar",
+          "Pendiente confirmación presupuesto"
+        ],
+        [
+          "2026-07-13T12:22:53.195+0200",
+          "Pendiente confirmación presupuesto",
+          "Esperando inicio reparación"
+        ],
+        [
+          "2026-07-13T12:23:13.795+0200",
+          "Esperando inicio reparación",
+          "En reparación"
+        ],
+        [
+          "2026-07-13T12:23:17.033+0200",
+          "En reparación",
+          "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:56.468266+00:00"
+      "fetched_at": "2026-07-13T10:50:22.553430+00:00",
+      "presupuesto_status_raw": 0,
+      "presupuesto_estado": "Pendiente",
+      "factura": "",
+      "factura_importe": null,
+      "factura_cobrado": null,
+      "factura_pendiente": null,
+      "factura_estado": "",
+      "factura_fecha_venc": null
     },
     "LEAS-6881": {
       "key": "LEAS-6881",
@@ -174772,7 +174832,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:56.959737+00:00",
+      "fetched_at": "2026-07-13T10:50:46.679933+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -174852,7 +174912,7 @@
           "Pendiente confirmación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:57.312751+00:00",
+      "fetched_at": "2026-07-13T10:50:46.992630+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -174989,7 +175049,7 @@
           "Inspección de salida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:31.029972+00:00",
+      "fetched_at": "2026-07-13T10:50:22.022259+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -175044,7 +175104,7 @@
           "Esperando respuesta cliente a presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:57.646065+00:00"
+      "fetched_at": "2026-07-13T10:50:47.579220+00:00"
     },
     "LEAS-6894": {
       "key": "LEAS-6894",
@@ -175101,7 +175161,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:57.943653+00:00"
+      "fetched_at": "2026-07-13T10:50:47.834952+00:00"
     },
     "LEAS-6892": {
       "key": "LEAS-6892",
@@ -175163,7 +175223,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:58.278587+00:00"
+      "fetched_at": "2026-07-13T10:50:48.133800+00:00"
     },
     "LEAS-6899": {
       "key": "LEAS-6899",
@@ -175240,7 +175300,7 @@
           "Esperando inicio reparación"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:30.623648+00:00",
+      "fetched_at": "2026-07-13T10:50:21.601333+00:00",
       "presupuesto_status_raw": 1,
       "presupuesto_estado": "Aceptado",
       "factura": "",
@@ -175305,7 +175365,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:58.616705+00:00"
+      "fetched_at": "2026-07-13T10:50:48.475916+00:00"
     },
     "LEAS-6903": {
       "key": "LEAS-6903",
@@ -175352,7 +175412,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:58.968884+00:00"
+      "fetched_at": "2026-07-13T10:50:48.805189+00:00"
     },
     "LEAS-6902": {
       "key": "LEAS-6902",
@@ -175414,7 +175474,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:59.434979+00:00"
+      "fetched_at": "2026-07-13T10:50:49.361032+00:00"
     },
     "LEAS-6908": {
       "key": "LEAS-6908",
@@ -175461,7 +175521,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:59.872079+00:00"
+      "fetched_at": "2026-07-13T10:50:49.658149+00:00"
     },
     "LEAS-6907": {
       "key": "LEAS-6907",
@@ -175503,7 +175563,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:00.181989+00:00"
+      "fetched_at": "2026-07-13T10:50:49.960384+00:00"
     },
     "LEAS-6906": {
       "key": "LEAS-6906",
@@ -175550,7 +175610,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:00.493088+00:00"
+      "fetched_at": "2026-07-13T10:50:50.304389+00:00"
     },
     "LEAS-6912": {
       "key": "LEAS-6912",
@@ -175597,7 +175657,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:00.808516+00:00"
+      "fetched_at": "2026-07-13T10:50:50.635608+00:00"
     },
     "LEAS-6909": {
       "key": "LEAS-6909",
@@ -175654,7 +175714,7 @@
           "En cola taller"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:01.147581+00:00"
+      "fetched_at": "2026-07-13T10:50:50.930631+00:00"
     },
     "LEAS-6920": {
       "key": "LEAS-6920",
@@ -175706,7 +175766,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:01.496640+00:00"
+      "fetched_at": "2026-07-13T10:50:51.268921+00:00"
     },
     "LEAS-6918": {
       "key": "LEAS-6918",
@@ -175714,7 +175774,7 @@
       "cliente": "Epil Point Castellammare",
       "loc": "Corso Vittorio Emanuele, 14, 80053 Castellammare di Stabia NA, Italia",
       "created": "2026-07-02T16:28:57.030+0200",
-      "current_status": "Gestionado transporte",
+      "current_status": "Pendiente asignar técnico",
       "tipo": "Temperatura",
       "bloq": "Sí",
       "susti": "Sí",
@@ -175766,9 +175826,14 @@
           "2026-07-07T14:39:25.392+0200",
           "Pendiente recogida",
           "Gestionado transporte"
+        ],
+        [
+          "2026-07-13T12:16:12.723+0200",
+          "Gestionado transporte",
+          "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:01.873132+00:00"
+      "fetched_at": "2026-07-13T10:50:21.236296+00:00"
     },
     "LEAS-6917": {
       "key": "LEAS-6917",
@@ -175904,7 +175969,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:02.253317+00:00"
+      "fetched_at": "2026-07-13T10:50:51.718300+00:00"
     },
     "LEAS-6913": {
       "key": "LEAS-6913",
@@ -175951,7 +176016,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:02.557019+00:00"
+      "fetched_at": "2026-07-13T10:50:52.271153+00:00"
     },
     "LEAS-6921": {
       "key": "LEAS-6921",
@@ -175993,7 +176058,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:03.226352+00:00",
+      "fetched_at": "2026-07-13T10:50:52.597036+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -176100,7 +176165,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:03.609506+00:00"
+      "fetched_at": "2026-07-13T10:50:53.165264+00:00"
     },
     "LEAS-6926": {
       "key": "LEAS-6926",
@@ -176145,9 +176210,34 @@
           "2026-07-07T18:36:19.295+0200",
           "Pendiente recogida",
           "Gestionado transporte"
+        ],
+        [
+          "2026-07-13T12:46:22.312+0200",
+          "Gestionado transporte",
+          "Pendiente recogida"
+        ],
+        [
+          "2026-07-13T12:46:28.184+0200",
+          "Pendiente recogida",
+          "Abierto"
+        ],
+        [
+          "2026-07-13T12:46:43.981+0200",
+          "Abierto",
+          "Recepcionado SAT"
+        ],
+        [
+          "2026-07-13T12:46:46.371+0200",
+          "Recepcionado SAT",
+          "Pendiente recogida"
+        ],
+        [
+          "2026-07-13T12:47:01.451+0200",
+          "Pendiente recogida",
+          "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:04.210553+00:00"
+      "fetched_at": "2026-07-13T10:50:20.502435+00:00"
     },
     "LEAS-6928": {
       "key": "LEAS-6928",
@@ -176199,7 +176289,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:04.620698+00:00"
+      "fetched_at": "2026-07-13T10:50:53.491352+00:00"
     },
     "LEAS-6927": {
       "key": "LEAS-6927",
@@ -176251,7 +176341,7 @@
           "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:30.019932+00:00"
+      "fetched_at": "2026-07-13T10:50:20.201964+00:00"
     },
     "LEAS-6934": {
       "key": "LEAS-6934",
@@ -176293,7 +176383,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:05.080321+00:00"
+      "fetched_at": "2026-07-13T10:50:53.880057+00:00"
     },
     "LEAS-6932": {
       "key": "LEAS-6932",
@@ -176365,13 +176455,13 @@
       "cliente": "Epil Point Aversa",
       "loc": "Viale John Fitzgerald Kennedy, 26, 81031 Aversa CE, Italia",
       "created": "2026-07-03T18:09:30.311+0200",
-      "current_status": "Gestionado transporte",
+      "current_status": "Pendiente asignar técnico",
       "tipo": "Energía",
       "bloq": "Sí",
       "susti": "Sí",
       "fventa": "2023-06-20",
       "consola": "91320",
-      "hp": "",
+      "hp": "40616",
       "garantia": "Sí",
       "descripcion": "Los clientes no siente el diodo , han probado camabiar piezas de mano y es la consola",
       "disparos": "",
@@ -176402,9 +176492,14 @@
           "2026-07-07T14:37:49.574+0200",
           "Pendiente recogida",
           "Gestionado transporte"
+        ],
+        [
+          "2026-07-13T12:11:37.832+0200",
+          "Gestionado transporte",
+          "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:05.432542+00:00"
+      "fetched_at": "2026-07-13T10:50:19.757187+00:00"
     },
     "LEAS-6936": {
       "key": "LEAS-6936",
@@ -176473,7 +176568,7 @@
           "Presupuesto preparado pendiente de enviar"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:05.844471+00:00"
+      "fetched_at": "2026-07-13T10:50:54.285836+00:00"
     },
     "LEAS-6939": {
       "key": "LEAS-6939",
@@ -176525,7 +176620,7 @@
           "Pendiente asignar técnico"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:29.452573+00:00"
+      "fetched_at": "2026-07-13T10:50:19.177061+00:00"
     },
     "LEAS-6941": {
       "key": "LEAS-6941",
@@ -176567,7 +176662,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:06.358390+00:00"
+      "fetched_at": "2026-07-13T10:50:54.623085+00:00"
     },
     "LEAS-6942": {
       "key": "LEAS-6942",
@@ -176629,7 +176724,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:06.704734+00:00"
+      "fetched_at": "2026-07-13T10:50:55.166399+00:00"
     },
     "LEAS-6943": {
       "key": "LEAS-6943",
@@ -176637,7 +176732,7 @@
       "cliente": "BARANGUER MAYEN MARIA JOSE  Estètic Arenys  AHR0526  AHR 0526 AHR526",
       "loc": "Riera del Pare Fita, 53, 08350 Arenys de Mar, Barcelona",
       "created": "2026-07-06T11:14:28.413+0200",
-      "current_status": "Finalizado técnico externo",
+      "current_status": "Finalizada",
       "tipo": "Otros",
       "bloq": "No",
       "susti": "No",
@@ -176646,18 +176741,20 @@
       "hp": "",
       "garantia": "Sí",
       "descripcion": "El schucko se le ha vuelto a romper en menos de 6 meses",
-      "disparos": "",
+      "disparos": 917560.0,
       "tec_taller": "",
       "asignado": "",
-      "importe": "",
+      "importe": 1.21,
       "tec_externo": "Carlos Mora",
-      "motivo": [],
+      "motivo": [
+        "Otros"
+      ],
       "cambios": [],
       "gmap_url": "https://maps.app.goo.gl/J29VQ1hHDLTZny5M8",
       "forma_resolucion": "Técnico externo",
       "gestion": "Externa",
       "mantenimiento": "No",
-      "presupuesto": "",
+      "presupuesto": "E261423",
       "ult_comentario": "2026-07-10 Gonzalo",
       "transitions": [
         [
@@ -176684,9 +176781,22 @@
           "2026-07-10T16:22:10.815+0200",
           "Enviado a técnico externo",
           "Finalizado técnico externo"
+        ],
+        [
+          "2026-07-13T12:16:25.876+0200",
+          "Finalizado técnico externo",
+          "Finalizada"
         ]
       ],
-      "fetched_at": "2026-07-11T06:26:37.356709+00:00"
+      "fetched_at": "2026-07-13T10:50:18.607746+00:00",
+      "presupuesto_status_raw": -1,
+      "presupuesto_estado": "Cancelado",
+      "factura": "",
+      "factura_importe": null,
+      "factura_cobrado": null,
+      "factura_pendiente": null,
+      "factura_estado": "",
+      "factura_fecha_venc": null
     },
     "LEAS-6947": {
       "key": "LEAS-6947",
@@ -176694,7 +176804,7 @@
       "cliente": "Centro Unico Ostia",
       "loc": "Via delle Baleniere, 15, 00121 Lido di Ostia RM, Italia",
       "created": "2026-07-06T12:19:41.283+0200",
-      "current_status": "Enviado a técnico externo",
+      "current_status": "Cancelado",
       "tipo": "Pantalla",
       "bloq": "Sí",
       "susti": "No",
@@ -176715,7 +176825,7 @@
       "gestion": "Externa",
       "mantenimiento": "No",
       "presupuesto": "",
-      "ult_comentario": "2026-07-06 Gonzalo — No han puesto bien el interlock",
+      "ult_comentario": "2026-07-13 Gonzalo — No han puesto bien el interlock , al ponerlo de nuevo bien funciona sin problema",
       "transitions": [
         [
           "2026-07-06T12:20:19.644+0200",
@@ -176736,9 +176846,29 @@
           "2026-07-06T12:20:50.335+0200",
           "Esperando respuesta cliente a presupuesto",
           "Enviado a técnico externo"
+        ],
+        [
+          "2026-07-13T11:36:17.156+0200",
+          "Enviado a técnico externo",
+          "Esperando respuesta cliente a presupuesto"
+        ],
+        [
+          "2026-07-13T11:36:19.070+0200",
+          "Esperando respuesta cliente a presupuesto",
+          "Pendiente definir servicio externo"
+        ],
+        [
+          "2026-07-13T11:36:21.632+0200",
+          "Pendiente definir servicio externo",
+          "Abierto"
+        ],
+        [
+          "2026-07-13T11:36:29.868+0200",
+          "Abierto",
+          "Cancelado"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:07.288413+00:00"
+      "fetched_at": "2026-07-13T10:50:17.604180+00:00"
     },
     "LEAS-6946": {
       "key": "LEAS-6946",
@@ -176834,7 +176964,7 @@
           "Devuelto a cliente"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:07.977707+00:00",
+      "fetched_at": "2026-07-13T10:50:55.632980+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -176904,7 +177034,7 @@
           "En preparación presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:28.752650+00:00"
+      "fetched_at": "2026-07-13T10:50:17.973289+00:00"
     },
     "LEAS-6944": {
       "key": "LEAS-6944",
@@ -176956,7 +177086,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:08.416370+00:00"
+      "fetched_at": "2026-07-13T10:50:55.950952+00:00"
     },
     "LEAS-6950": {
       "key": "LEAS-6950",
@@ -177070,7 +177200,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:08.731884+00:00"
+      "fetched_at": "2026-07-13T10:50:56.266052+00:00"
     },
     "LEAS-6951": {
       "key": "LEAS-6951",
@@ -177122,7 +177252,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:09.081352+00:00"
+      "fetched_at": "2026-07-13T10:50:56.580050+00:00"
     },
     "LEAS-6954": {
       "key": "LEAS-6954",
@@ -177174,7 +177304,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:09.353947+00:00"
+      "fetched_at": "2026-07-13T10:50:56.842591+00:00"
     },
     "LEAS-6953": {
       "key": "LEAS-6953",
@@ -177268,7 +177398,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:09.758835+00:00"
+      "fetched_at": "2026-07-13T10:50:57.163214+00:00"
     },
     "LEAS-6959": {
       "key": "LEAS-6959",
@@ -177387,7 +177517,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:10.164362+00:00"
+      "fetched_at": "2026-07-13T10:50:57.542537+00:00"
     },
     "LEAS-6963": {
       "key": "LEAS-6963",
@@ -177429,7 +177559,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:10.520510+00:00"
+      "fetched_at": "2026-07-13T10:50:57.925942+00:00"
     },
     "LEAS-6962": {
       "key": "LEAS-6962",
@@ -177481,7 +177611,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:10.883784+00:00"
+      "fetched_at": "2026-07-13T10:50:58.254844+00:00"
     },
     "LEAS-6961": {
       "key": "LEAS-6961",
@@ -177533,7 +177663,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:11.352813+00:00"
+      "fetched_at": "2026-07-13T10:50:58.642285+00:00"
     },
     "LEAS-6968": {
       "key": "LEAS-6968",
@@ -177564,7 +177694,7 @@
       "presupuesto": "",
       "ult_comentario": "2026-07-07 Isaac Sanchez — se han solicitado videos al cliente para ver a que se refiere con que se saltan disparos.",
       "transitions": [],
-      "fetched_at": "2026-07-13T09:31:11.664105+00:00"
+      "fetched_at": "2026-07-13T10:50:58.965533+00:00"
     },
     "LEAS-6970": {
       "key": "LEAS-6970",
@@ -177572,7 +177702,7 @@
       "cliente": "Elha Pisuerga",
       "loc": "C. del Pisuerga, 19, Les Corts, 08028 Barcelona",
       "created": "2026-07-07T19:20:21.599+0200",
-      "current_status": "Enviado a técnico externo",
+      "current_status": "Finalizado técnico externo",
       "tipo": "Pantalla",
       "bloq": "Sí",
       "susti": "No",
@@ -177593,7 +177723,7 @@
       "gestion": "Externa",
       "mantenimiento": "No",
       "presupuesto": "",
-      "ult_comentario": "2026-07-10 Isaac Sanchez — va carlos hoy a las 14:30",
+      "ult_comentario": "2026-07-13 Isaac Sanchez",
       "transitions": [
         [
           "2026-07-07T19:24:57.718+0200",
@@ -177614,9 +177744,14 @@
           "2026-07-07T19:48:16.188+0200",
           "Esperando respuesta cliente a presupuesto",
           "Enviado a técnico externo"
+        ],
+        [
+          "2026-07-13T12:47:36.677+0200",
+          "Enviado a técnico externo",
+          "Finalizado técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:12.007807+00:00"
+      "fetched_at": "2026-07-13T10:50:17.056709+00:00"
     },
     "LEAS-6972": {
       "key": "LEAS-6972",
@@ -177658,7 +177793,7 @@
           "Pendiente recogida"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:12.332248+00:00"
+      "fetched_at": "2026-07-13T10:50:59.371854+00:00"
     },
     "LEAS-6971": {
       "key": "LEAS-6971",
@@ -177797,7 +177932,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:12.695789+00:00"
+      "fetched_at": "2026-07-13T10:50:59.811750+00:00"
     },
     "LEAS-6973": {
       "key": "LEAS-6973",
@@ -177896,7 +178031,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:13.082039+00:00"
+      "fetched_at": "2026-07-13T10:51:00.137147+00:00"
     },
     "LEAS-6986": {
       "key": "LEAS-6986",
@@ -177943,7 +178078,7 @@
           "Esperando respuesta cliente a presupuesto"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:13.358559+00:00"
+      "fetched_at": "2026-07-13T10:51:00.447643+00:00"
     },
     "LEAS-6981": {
       "key": "LEAS-6981",
@@ -177995,7 +178130,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:13.651940+00:00"
+      "fetched_at": "2026-07-13T10:51:00.810027+00:00"
     },
     "LEAS-6980": {
       "key": "LEAS-6980",
@@ -178084,7 +178219,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:14.159826+00:00"
+      "fetched_at": "2026-07-13T10:51:01.160828+00:00"
     },
     "LEAS-6987": {
       "key": "LEAS-6987",
@@ -178126,7 +178261,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:14.442573+00:00"
+      "fetched_at": "2026-07-13T10:51:01.431449+00:00"
     },
     "LEAS-6988": {
       "key": "LEAS-6988",
@@ -178178,7 +178313,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:14.729014+00:00"
+      "fetched_at": "2026-07-13T10:51:01.737782+00:00"
     },
     "LEAS-6995": {
       "key": "LEAS-6995",
@@ -178230,7 +178365,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:15.023521+00:00"
+      "fetched_at": "2026-07-13T10:51:02.043915+00:00"
     },
     "LEAS-6991": {
       "key": "LEAS-6991",
@@ -178282,7 +178417,7 @@
           "En reparación"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:15.455619+00:00",
+      "fetched_at": "2026-07-13T10:51:02.382340+00:00",
       "presupuesto_status_raw": 0,
       "presupuesto_estado": "Pendiente",
       "factura": "",
@@ -178414,7 +178549,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:15.943241+00:00"
+      "fetched_at": "2026-07-13T10:51:02.694734+00:00"
     },
     "LEAS-7001": {
       "key": "LEAS-7001",
@@ -178456,7 +178591,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:16.228782+00:00"
+      "fetched_at": "2026-07-13T10:51:02.999147+00:00"
     },
     "LEAS-6998": {
       "key": "LEAS-6998",
@@ -178508,7 +178643,7 @@
           "Enviado a técnico externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:31:16.541383+00:00"
+      "fetched_at": "2026-07-13T10:51:03.366468+00:00"
     },
     "LEAS-7004": {
       "key": "LEAS-7004",
@@ -178555,7 +178690,7 @@
           "Gestionado transporte"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:28.373108+00:00"
+      "fetched_at": "2026-07-13T10:50:16.446326+00:00"
     },
     "LEAS-7006": {
       "key": "LEAS-7006",
@@ -178586,7 +178721,7 @@
       "presupuesto": "",
       "ult_comentario": "",
       "transitions": [],
-      "fetched_at": "2026-07-13T09:30:27.761122+00:00"
+      "fetched_at": "2026-07-13T10:50:15.930328+00:00"
     },
     "LEAS-7009": {
       "key": "LEAS-7009",
@@ -178617,7 +178752,7 @@
       "presupuesto": "",
       "ult_comentario": "",
       "transitions": [],
-      "fetched_at": "2026-07-13T09:30:25.936301+00:00"
+      "fetched_at": "2026-07-13T10:50:14.717635+00:00"
     },
     "LEAS-7008": {
       "key": "LEAS-7008",
@@ -178654,7 +178789,7 @@
           "Cancelado"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:26.507466+00:00"
+      "fetched_at": "2026-07-13T10:50:15.042336+00:00"
     },
     "LEAS-7007": {
       "key": "LEAS-7007",
@@ -178683,7 +178818,7 @@
       "gestion": "Externa",
       "mantenimiento": "No",
       "presupuesto": "",
-      "ult_comentario": "2026-07-13 Gonzalo — No tiene garantia ni contrato , se envia técnico",
+      "ult_comentario": "2026-07-13 Isaac Sanchez — es un laser en alquiler.",
       "transitions": [
         [
           "2026-07-13T10:25:39.195+0200",
@@ -178696,7 +178831,7 @@
           "Pendiente definir servicio externo"
         ]
       ],
-      "fetched_at": "2026-07-13T09:30:27.143634+00:00"
+      "fetched_at": "2026-07-13T10:50:15.671304+00:00"
     },
     "LEAS-7010": {
       "key": "LEAS-7010",
@@ -178727,7 +178862,85 @@
       "presupuesto": "",
       "ult_comentario": "",
       "transitions": [],
-      "fetched_at": "2026-07-13T09:30:25.385006+00:00"
+      "fetched_at": "2026-07-13T10:50:14.341807+00:00"
+    },
+    "LEAS-7012": {
+      "key": "LEAS-7012",
+      "summary": "Petición de servicio técnico",
+      "cliente": "SinVello Santander",
+      "loc": "C. San Fernando, 36, 39010 Santander, Cantabria",
+      "created": "2026-07-13T11:44:20.820+0200",
+      "current_status": "Abierto",
+      "tipo": "Otros",
+      "bloq": "No",
+      "susti": "",
+      "fventa": "",
+      "consola": "C00711",
+      "hp": "H00711",
+      "garantia": "",
+      "descripcion": "Me dicen que intentan apretar los tornillos que se le mandaron del soporte, pero es como si estuviera pasado de rosca, adjunto video, y luego tambien intentan apretar el tornillo del umbilical y no pueden, les baila me dicen.",
+      "disparos": "",
+      "tec_taller": "",
+      "asignado": "",
+      "importe": "",
+      "tec_externo": "",
+      "motivo": [],
+      "cambios": [],
+      "gmap_url": "https://maps.app.goo.gl/A1mNJ4EvuL1cXyqW6",
+      "forma_resolucion": "",
+      "gestion": "Inicio",
+      "mantenimiento": "",
+      "presupuesto": "",
+      "ult_comentario": "",
+      "transitions": [],
+      "fetched_at": "2026-07-13T10:50:13.162944+00:00"
+    },
+    "LEAS-7011": {
+      "key": "LEAS-7011",
+      "summary": "Petición de servicio técnico",
+      "cliente": "Ces DEpilacion",
+      "loc": "Cambre",
+      "created": "2026-07-13T11:39:07.168+0200",
+      "current_status": "Gestionado transporte",
+      "tipo": "Umbilical",
+      "bloq": "No",
+      "susti": "No",
+      "fventa": "2016-06-14",
+      "consola": "90007",
+      "hp": "40005",
+      "garantia": "No",
+      "descripcion": "suelto el tornillo de nylon. roto elinterlock",
+      "disparos": "",
+      "tec_taller": "",
+      "asignado": "",
+      "importe": "",
+      "tec_externo": "",
+      "motivo": [],
+      "cambios": [],
+      "gmap_url": "https://maps.app.goo.gl/y6G43qZ58GDwrKqM9",
+      "forma_resolucion": "Reparación en taller",
+      "gestion": "Interna",
+      "mantenimiento": "Sí",
+      "presupuesto": "",
+      "ult_comentario": "",
+      "transitions": [
+        [
+          "2026-07-13T11:39:50.680+0200",
+          "Abierto",
+          "Recepcionado SAT"
+        ],
+        [
+          "2026-07-13T11:39:54.320+0200",
+          "Recepcionado SAT",
+          "Pendiente recogida"
+        ],
+        [
+          "2026-07-13T11:46:31.292+0200",
+          "Pendiente recogida",
+          "Gestionado transporte"
+        ]
+      ],
+      "fetched_at": "2026-07-13T10:50:13.771655+00:00"
     }
   }
 }
