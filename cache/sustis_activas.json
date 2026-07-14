@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-14T12:32:37.104796+00:00",
+    "last_fetched_at": "2026-07-14T15:12:19.220102+00:00",
     "schema_version": 1,
     "count": 54
   },
   "items": [
-    {
-      "key": "LEAS-7028",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "SinVello! Tomares | Depilación Láser Diodo",
-      "loc": "Av. del Aljarafe, 14, Local 12, 41940 Tomares, Sevilla",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7027",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello! Tomares | Depilación Láser Diodo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00260",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7022",
       "subtask_status": "Solicitado",
@@ -141,21 +126,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6772",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro Estetica Avanzada Ciudad Real",
-      "loc": "Avda. de Europa, 45 C.C. El Parque - Eroski Local L31-32, 13005 Ciudad Real",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6771",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Centro Estetica Avanzada Ciudad Real",
-      "consola_averiada": "",
-      "manipulo_averiado": "40570",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6704",
       "subtask_status": "Solicitado",
       "cliente": "SinVello Caceres",
@@ -201,6 +171,36 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-6772",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro Estetica Avanzada Ciudad Real",
+      "loc": "Avda. de Europa, 45 C.C. El Parque - Eroski Local L31-32, 13005 Ciudad Real",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD035",
+      "fecha_envio": "2026-07-14T15:08:00.000+0200",
+      "parent_key": "LEAS-6771",
+      "parent_status": "Finalizada",
+      "parent_cliente": "Centro Estetica Avanzada Ciudad Real",
+      "consola_averiada": "",
+      "manipulo_averiado": "40570",
+      "modelo": "MHR Quad"
+    },
+    {
+      "key": "LEAS-7028",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello! Tomares | Depilación Láser Diodo",
+      "loc": "Av. del Aljarafe, 14, Local 12, 41940 Tomares, Sevilla",
+      "consola_susti": null,
+      "manipulo_susti": "H00340",
+      "fecha_envio": "2026-07-14T13:50:00.000+0200",
+      "parent_key": "LEAS-7027",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello! Tomares | Depilación Láser Diodo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00260",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-7003",
       "subtask_status": "Equipo enviado",
       "cliente": "",
@@ -209,7 +209,7 @@
       "manipulo_susti": "H01042",
       "fecha_envio": "2026-07-10T15:44:00.000+0200",
       "parent_key": "LEAS-6743",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Dglow mallorca",
       "consola_averiada": "",
       "manipulo_averiado": "H00276",
@@ -269,7 +269,7 @@
       "manipulo_susti": "H00677",
       "fecha_envio": "2026-07-08T12:00:00.000+0200",
       "parent_key": "LEAS-7023",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Centro unico Globo",
       "consola_averiada": "",
       "manipulo_averiado": "H00674",
