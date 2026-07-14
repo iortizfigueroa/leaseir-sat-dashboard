@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-14T08:56:12.617737+00:00",
+    "last_fetched_at": "2026-07-14T11:01:12.496240+00:00",
     "schema_version": 1,
-    "count": 51
+    "count": 53
   },
   "items": [
+    {
+      "key": "LEAS-7022",
+      "subtask_status": "Solicitado",
+      "cliente": "Malie Morea",
+      "loc": "Centro Comercial La Morea Dirección: Barrio La Morea, s/n, 31191 Cordovilla, Navarra",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7020",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Malie Morea",
+      "consola_averiada": "90600",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-6999",
       "subtask_status": "Solicitado",
@@ -224,10 +239,25 @@
       "manipulo_susti": "H01069",
       "fecha_envio": "2026-07-08T15:26:00.000+0200",
       "parent_key": "LEAS-6960",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "SinVello Manacor",
       "consola_averiada": "C03173",
       "manipulo_averiado": "H03173",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-7024",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro unico Globo",
+      "loc": "C.C. IL GLOBO, Via Italia, 197, 20874 Busnago MB, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "H00677",
+      "fecha_envio": "2026-07-08T12:00:00.000+0200",
+      "parent_key": "LEAS-7023",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro unico Globo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00674",
       "modelo": "XCell HR"
     },
     {
@@ -374,7 +404,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-02T10:15:00.000+0200",
       "parent_key": "LEAS-6918",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Epil Point Castellammare",
       "consola_averiada": "91009",
       "manipulo_averiado": "40447",
@@ -644,7 +674,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-16T16:59:00.000+0200",
       "parent_key": "LEAS-6717",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Sin Vello Santa Cruz",
       "consola_averiada": "C00618",
       "manipulo_averiado": "H00618",
