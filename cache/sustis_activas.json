@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-16T07:07:51.117533+00:00",
+    "last_fetched_at": "2026-07-16T08:17:02.528855+00:00",
     "schema_version": 1,
-    "count": 55
+    "count": 54
   },
   "items": [
     {
@@ -374,7 +374,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-07-03T14:34:00.000+0200",
       "parent_key": "LEAS-6899",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "SinVello Leon",
       "consola_averiada": "C00250",
       "manipulo_averiado": "H00250",
@@ -704,7 +704,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-16T16:59:00.000+0200",
       "parent_key": "LEAS-6717",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Sin Vello Santa Cruz",
       "consola_averiada": "C00618",
       "manipulo_averiado": "H00618",
@@ -772,7 +772,7 @@
     },
     {
       "key": "LEAS-6354",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "ELha Alcalde Poqueres",
       "loc": "Lleida",
       "consola_susti": "SUSTMHR018",
@@ -787,7 +787,7 @@
     },
     {
       "key": "LEAS-5939",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "ELha Caceres",
       "loc": "Caceres",
       "consola_susti": "91096",
@@ -814,21 +814,6 @@
       "consola_averiada": "C00996",
       "manipulo_averiado": "H00996",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-5630",
-      "subtask_status": "En préstamo",
-      "cliente": "Clínicas Med Splau",
-      "loc": "Cornellà de Llobregat, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTDUAL022",
-      "fecha_envio": "2026-03-19T10:36:00.000+0100",
-      "parent_key": "LEAS-5598",
-      "parent_status": "Cancelado",
-      "parent_cliente": "Clínicas Med Splau",
-      "consola_averiada": "",
-      "manipulo_averiado": "40557",
-      "modelo": "MHR Dual"
     }
   ]
 }
