@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-16T15:22:09.349172+00:00",
+    "last_fetched_at": "2026-07-16T19:41:45.357439+00:00",
     "schema_version": 1,
-    "count": 55
+    "count": 56
   },
   "items": [
     {
@@ -186,15 +186,30 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7041",
+      "key": "LEAS-7054",
       "subtask_status": "Equipo enviado",
+      "cliente": "Centro Unico Boccea",
+      "loc": "Via di Boccea, 122, 00166 Roma RM, Italia",
+      "consola_susti": "c00677",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-16T19:26:00.000+0200",
+      "parent_key": "LEAS-7052",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro Unico Boccea",
+      "consola_averiada": "C00283",
+      "manipulo_averiado": "H00283",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-7041",
+      "subtask_status": "En préstamo",
       "cliente": "",
       "loc": "",
       "consola_susti": "SUSTMHR030",
       "manipulo_susti": null,
       "fecha_envio": "2026-07-15T17:02:00.000+0200",
       "parent_key": "LEAS-6927",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -404,7 +419,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-03T13:43:00.000+0200",
       "parent_key": "LEAS-6927",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -509,7 +524,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-26T16:32:00.000+0200",
       "parent_key": "LEAS-6683",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
       "manipulo_averiado": "H00328",
@@ -689,7 +704,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-06-17T11:45:00.000+0200",
       "parent_key": "LEAS-6683",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Sin Vello Gracia",
       "consola_averiada": "C00328",
       "manipulo_averiado": "H00328",
