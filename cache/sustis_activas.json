@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-17T11:01:30.368302+00:00",
+    "last_fetched_at": "2026-07-17T13:12:53.005740+00:00",
     "schema_version": 1,
     "count": 53
   },
   "items": [
-    {
-      "key": "LEAS-7051",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha  Cinisello Balsamo",
-      "loc": "Via Giovanni Frova, 26, 20092 Cinisello Balsamo MI, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7047",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha  Cinisello Balsamo",
-      "consola_averiada": "-",
-      "manipulo_averiado": "H03048",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7022",
       "subtask_status": "Solicitado",
@@ -74,7 +59,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-6833",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "91351",
       "manipulo_averiado": "40505",
@@ -124,6 +109,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "40357",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7051",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha  Cinisello Balsamo",
+      "loc": "Via Giovanni Frova, 26, 20092 Cinisello Balsamo MI, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "H00326",
+      "fecha_envio": "2026-07-17T13:27:00.000+0200",
+      "parent_key": "LEAS-7047",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha  Cinisello Balsamo",
+      "consola_averiada": "-",
+      "manipulo_averiado": "H03048",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7056",
@@ -689,7 +689,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-16T16:59:00.000+0200",
       "parent_key": "LEAS-6717",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Sin Vello Santa Cruz",
       "consola_averiada": "C00618",
       "manipulo_averiado": "H00618",
