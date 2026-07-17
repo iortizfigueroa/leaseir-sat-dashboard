@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-17T07:05:20.177847+00:00",
+    "last_fetched_at": "2026-07-17T07:31:44.665739+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 53
   },
   "items": [
     {
@@ -32,21 +32,6 @@
       "parent_status": "Pendiente recogida",
       "parent_cliente": "Malie Morea",
       "consola_averiada": "90600",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6999",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Albano Laziale",
-      "loc": "Corso Giacomo Matteotti, 173 00041 - Albano Laziale RM",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6851",
-      "parent_status": "Finalizado técnico externo",
-      "parent_cliente": "Epil Point Albano Laziale",
-      "consola_averiada": "91181",
       "manipulo_averiado": "",
       "modelo": ""
     },
@@ -81,21 +66,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6958",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Jaén",
-      "loc": "Av. Eduardo García Maroto, 22, 23005 Jaén",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6953",
-      "parent_status": "Cancelado",
-      "parent_cliente": "Elha Jaén",
-      "consola_averiada": "C00774",
-      "manipulo_averiado": "H00774",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6834",
       "subtask_status": "Solicitado",
       "cliente": "Epil Point Lecce",
@@ -108,21 +78,6 @@
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "91351",
       "manipulo_averiado": "40505",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6815",
-      "subtask_status": "Solicitado",
-      "cliente": "Epiil Point Matera",
-      "loc": "https://maps.app.goo.gl/RWJcDDHFV7EQ6Zk8A",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6809",
-      "parent_status": "Finalizado técnico externo",
-      "parent_cliente": "Epiil Point Matera",
-      "consola_averiada": "91061",
-      "manipulo_averiado": "40469",
       "modelo": ""
     },
     {
@@ -156,21 +111,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6701",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Parma",
-      "loc": "Strada Giuseppe Mazzini, 31, 43121 Parma PR, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6643",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Point Parma",
-      "consola_averiada": "91411",
-      "manipulo_averiado": "40743",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6527",
       "subtask_status": "Solicitado",
       "cliente": "CN CLINICS Milaneo",
@@ -183,6 +123,21 @@
       "parent_cliente": "CN CLINICS Milaneo",
       "consola_averiada": "",
       "manipulo_averiado": "40357",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7056",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Mar Tobajas",
+      "loc": "Valencia",
+      "consola_susti": "AHR0082",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-17T09:27:00.000+0200",
+      "parent_key": "LEAS-7055",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Mar Tobajas",
+      "consola_averiada": "233",
+      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -532,7 +487,7 @@
     },
     {
       "key": "LEAS-6874",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Epil Point Pomezia",
       "loc": "Via Roma, 82, 00071 Pomezia RM, Italia Provincia: Roma",
       "consola_susti": "90934",
@@ -547,7 +502,7 @@
     },
     {
       "key": "LEAS-6824",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "CN CLINICS ALEMANIA",
       "loc": "Thomas-Dehler-Straße 10, 81737 München-Ramersdorf-Perlach, Alemania",
       "consola_susti": null,
@@ -577,7 +532,7 @@
     },
     {
       "key": "LEAS-6811",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "EPil Point Matera",
       "loc": "Italia",
       "consola_susti": null,
@@ -588,6 +543,21 @@
       "parent_cliente": "EPil Point Matera",
       "consola_averiada": "91353",
       "manipulo_averiado": "40642",
+      "modelo": "MHR Quad"
+    },
+    {
+      "key": "LEAS-6815",
+      "subtask_status": "En préstamo",
+      "cliente": "Epiil Point Matera",
+      "loc": "https://maps.app.goo.gl/RWJcDDHFV7EQ6Zk8A",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUADA043",
+      "fecha_envio": "2026-06-24T09:05:00.000+0200",
+      "parent_key": "LEAS-6809",
+      "parent_status": "Finalizado técnico externo",
+      "parent_cliente": "Epiil Point Matera",
+      "consola_averiada": "91061",
+      "manipulo_averiado": "40469",
       "modelo": "MHR Quad"
     },
     {
@@ -681,21 +651,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6740",
-      "subtask_status": "En préstamo",
-      "cliente": "Mar Tobajas",
-      "loc": "Valencia",
-      "consola_susti": "AHR0082",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-17T16:34:00.000+0200",
-      "parent_key": "LEAS-6739",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Mar Tobajas",
-      "consola_averiada": "354",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6686",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Gracia",
@@ -772,7 +727,7 @@
     },
     {
       "key": "LEAS-6450",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Smart Duck Courbevoie",
       "loc": "6 Pl. Charras, 92400 Courbevoie, Francia",
       "consola_susti": "C003258",
