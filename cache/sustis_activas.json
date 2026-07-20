@@ -1,10 +1,55 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-20T09:16:50.382122+00:00",
+    "last_fetched_at": "2026-07-20T11:33:48.190357+00:00",
     "schema_version": 1,
-    "count": 53
+    "count": 55
   },
   "items": [
+    {
+      "key": "LEAS-7072",
+      "subtask_status": "Solicitado",
+      "cliente": "Clinica  Dra Villafañe ( Quora Talavera)",
+      "loc": "Centro Comercial Los Alfares Dirección: Av. de Madrid, S/N, 45600 Talavera de la Reina, Toledo",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7071",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Clinica  Dra Villafañe ( Quora Talavera)",
+      "consola_averiada": "90731",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7070",
+      "subtask_status": "Solicitado",
+      "cliente": "Quora Valladolid",
+      "loc": "Valladolid",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7069",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Quora Valladolid",
+      "consola_averiada": "90730",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7068",
+      "subtask_status": "Solicitado",
+      "cliente": "Sin Vello Torremolinos",
+      "loc": "C. Río Bergantes, 21, 29620 Torremolinos, Málaga",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7065",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Torremolinos",
+      "consola_averiada": "00311",
+      "manipulo_averiado": "00311",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7022",
       "subtask_status": "Solicitado",
@@ -109,6 +154,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "40357",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7067",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Sin Vello Manacor",
+      "loc": "Passeig del Ferrocarril, 62, 07500 Manacor, Illes Balears",
+      "consola_susti": "C00107",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-07-20T13:21:00.000+0200",
+      "parent_key": "LEAS-7064",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sin Vello Manacor",
+      "consola_averiada": "03173",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7051",
@@ -359,7 +419,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-07-03T14:34:00.000+0200",
       "parent_key": "LEAS-6899",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Leon",
       "consola_averiada": "C00250",
       "manipulo_averiado": "H00250",
@@ -457,14 +517,14 @@
     },
     {
       "key": "LEAS-6839",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello La Laguna",
       "loc": "C. Nuñez de la Peña, 41, 38203 La Laguna, Santa Cruz de Tenerife",
       "consola_susti": null,
       "manipulo_susti": "H00107",
       "fecha_envio": "2026-06-26T16:40:00.000+0200",
       "parent_key": "LEAS-6832",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "SinVello La Laguna",
       "consola_averiada": "C00868",
       "manipulo_averiado": "H00868",
@@ -621,21 +681,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-6735",
-      "subtask_status": "Resuelto",
-      "cliente": "MArta Donly 30835",
-      "loc": "Valencia",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTDUAL019",
-      "fecha_envio": "2026-06-18T16:52:00.000+0200",
-      "parent_key": "LEAS-6734",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Donly Láser 30835",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": "MHR Dual"
-    },
-    {
       "key": "LEAS-6751",
       "subtask_status": "Gestionada recogida",
       "cliente": "Elha Granollers",
@@ -674,7 +719,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-06-16T17:02:00.000+0200",
       "parent_key": "LEAS-6699",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Clinicas Med Splau",
       "consola_averiada": "91087",
       "manipulo_averiado": "",
@@ -738,21 +783,6 @@
       "parent_cliente": "Smart Duck Courbevoie",
       "consola_averiada": "C03150",
       "manipulo_averiado": "H03150",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6660",
-      "subtask_status": "En préstamo",
-      "cliente": "Centri Unico Palermo Terrasanta",
-      "loc": "Palermo, Italia",
-      "consola_susti": "C00677",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-02T13:48:00.000+0200",
-      "parent_key": "LEAS-6418",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centri Unico Palermo Terrasanta",
-      "consola_averiada": "C00676",
-      "manipulo_averiado": "",
       "modelo": "XCell HR"
     },
     {
