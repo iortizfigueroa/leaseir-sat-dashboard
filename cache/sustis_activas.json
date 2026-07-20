@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-20T16:02:23.394239+00:00",
+    "last_fetched_at": "2026-07-20T20:06:56.533255+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 55
   },
   "items": [
     {
@@ -427,14 +427,14 @@
     },
     {
       "key": "LEAS-6901",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Leon",
       "loc": "C. Roa de la Vega, 8, 24002 León",
       "consola_susti": "SUSTMHR025",
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-07-03T14:34:00.000+0200",
       "parent_key": "LEAS-6899",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "SinVello Leon",
       "consola_averiada": "C00250",
       "manipulo_averiado": "H00250",
@@ -514,21 +514,6 @@
       "consola_averiada": "90943",
       "manipulo_averiado": "40245",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6860",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "SinVello Palencia",
-      "loc": "C. Felipe Prieto, 2, 34001 Palencia",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTDUAL005",
-      "fecha_envio": "2026-06-30T19:08:00.000+0200",
-      "parent_key": "LEAS-6850",
-      "parent_status": "Resuelto",
-      "parent_cliente": "SinVello Palencia",
-      "consola_averiada": "C00565",
-      "manipulo_averiado": "H00565",
-      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-6839",
