@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-22T11:23:49.979211+00:00",
+    "last_fetched_at": "2026-07-22T12:35:57.346164+00:00",
     "schema_version": 1,
-    "count": 49
+    "count": 45
   },
   "items": [
+    {
+      "key": "LEAS-7109",
+      "subtask_status": "Solicitado",
+      "cliente": "Sinvello Leon",
+      "loc": "C. Roa de la Vega, 8, 24002 León",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7108",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sinvello Leon",
+      "consola_averiada": "00250",
+      "manipulo_averiado": "00250",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7078",
       "subtask_status": "Solicitado",
@@ -157,7 +172,7 @@
     },
     {
       "key": "LEAS-7051",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Elha  Cinisello Balsamo",
       "loc": "Via Giovanni Frova, 26, 20092 Cinisello Balsamo MI, Italia",
       "consola_susti": null,
@@ -261,21 +276,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-7003",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": null,
-      "manipulo_susti": "H01042",
-      "fecha_envio": "2026-07-10T15:44:00.000+0200",
-      "parent_key": "LEAS-6743",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Dglow mallorca",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00276",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-7000",
       "subtask_status": "En préstamo",
       "cliente": "CleanBody CC NIVARIA",
@@ -359,7 +359,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-07T16:48:00.000+0200",
       "parent_key": "LEAS-6951",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Elha Granollers",
       "consola_averiada": "90886",
       "manipulo_averiado": "-",
@@ -442,14 +442,14 @@
     },
     {
       "key": "LEAS-6919",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Resuelto",
       "cliente": "Epil Point Castellammare",
       "loc": "Corso Vittorio Emanuele, 14, 80053 Castellammare di Stabia NA, Italia",
       "consola_susti": "90674",
       "manipulo_susti": null,
       "fecha_envio": "2026-07-02T10:15:00.000+0200",
       "parent_key": "LEAS-6918",
-      "parent_status": "Resuelto",
+      "parent_status": "Finalizada",
       "parent_cliente": "Epil Point Castellammare",
       "consola_averiada": "91009",
       "manipulo_averiado": "40447",
@@ -487,14 +487,14 @@
     },
     {
       "key": "LEAS-6874",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Resuelto",
       "cliente": "Epil Point Pomezia",
       "loc": "Via Roma, 82, 00071 Pomezia RM, Italia Provincia: Roma",
       "consola_susti": "90934",
       "manipulo_susti": null,
       "fecha_envio": "2026-06-26T11:29:00.000+0200",
       "parent_key": "LEAS-6873",
-      "parent_status": "Resuelto",
+      "parent_status": "Finalizada",
       "parent_cliente": "Epil Point Pomezia",
       "consola_averiada": "91008",
       "manipulo_averiado": "",
@@ -514,36 +514,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-6814",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Sta Eulàlia",
-      "loc": "Carrer Santa Eulàlia, 5, 08902 L'Hospitalet de Llobregat, Barcelona",
-      "consola_susti": "C00591",
-      "manipulo_susti": "H41003",
-      "fecha_envio": "2026-06-25T13:45:00.000+0200",
-      "parent_key": "LEAS-6767",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Sta Eulàlia",
-      "consola_averiada": "C00687",
-      "manipulo_averiado": "H00687",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6811",
-      "subtask_status": "En préstamo",
-      "cliente": "EPil Point Matera",
-      "loc": "Italia",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUAD043",
-      "fecha_envio": "2026-06-24T15:33:00.000+0200",
-      "parent_key": "LEAS-6808",
-      "parent_status": "Resuelto",
-      "parent_cliente": "EPil Point Matera",
-      "consola_averiada": "91353",
-      "manipulo_averiado": "40642",
-      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6815",
@@ -591,21 +561,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-6770",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Medicanova Santander ( AHR0061)",
-      "loc": "C. Sta. Ana, 2, 39600 Camargo, Cantabria",
-      "consola_susti": "SUSTAHRS002",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-19T14:42:00.000+0200",
-      "parent_key": "LEAS-6769",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Medicanova Santander ( AHR0061)",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-6713",
       "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Caceres",
@@ -619,21 +574,6 @@
       "consola_averiada": "C00194",
       "manipulo_averiado": "H00194",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6751",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Granollers",
-      "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
-      "consola_susti": "91142",
-      "manipulo_susti": "40551",
-      "fecha_envio": "2026-06-18T16:49:00.000+0200",
-      "parent_key": "LEAS-6750",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Granollers",
-      "consola_averiada": "90994",
-      "manipulo_averiado": "30385",
-      "modelo": ""
     },
     {
       "key": "LEAS-6686",
