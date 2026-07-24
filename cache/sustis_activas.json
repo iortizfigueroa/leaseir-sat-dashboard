@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-24T11:16:14.280762+00:00",
+    "last_fetched_at": "2026-07-24T11:45:20.679603+00:00",
     "schema_version": 1,
     "count": 42
   },
@@ -79,6 +79,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "40357",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7140",
+      "subtask_status": "En préstamo",
+      "cliente": "Smart duck paris 15 Convention",
+      "loc": "332 Rue de Vaugirard, 75015 Paris, Francia",
+      "consola_susti": "C003258",
+      "manipulo_susti": "H003258",
+      "fecha_envio": "2026-07-24T13:26:00.000+0200",
+      "parent_key": "LEAS-7121",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Smart duck paris 15 Convention",
+      "consola_averiada": "C03104",
+      "manipulo_averiado": "H03104",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7109",
@@ -194,7 +209,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-17T09:27:00.000+0200",
       "parent_key": "LEAS-7055",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Mar Tobajas",
       "consola_averiada": "233",
       "manipulo_averiado": "",
@@ -604,21 +619,6 @@
       "consola_averiada": "C00510",
       "manipulo_averiado": "H00510",
       "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-6450",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Smart Duck Courbevoie",
-      "loc": "6 Pl. Charras, 92400 Courbevoie, Francia",
-      "consola_susti": "C003258",
-      "manipulo_susti": "H003258",
-      "fecha_envio": "2026-06-08T13:42:00.000+0200",
-      "parent_key": "LEAS-6449",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Smart Duck Courbevoie",
-      "consola_averiada": "C03150",
-      "manipulo_averiado": "H03150",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-5697",
