@@ -1,13 +1,13 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-27T07:06:20.083730+00:00",
+    "last_fetched_at": "2026-07-27T07:53:51.170616+00:00",
     "schema_version": 1,
-    "count": 44
+    "count": 43
   },
   "items": [
     {
       "key": "LEAS-6985",
-      "subtask_status": "Solicitado",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
       "cliente": "Centro Unico Campania",
       "loc": "SS87, 87, 81025 Marcianise CE, Italia",
       "consola_susti": null,
@@ -18,36 +18,6 @@
       "parent_cliente": "Centro Unico Campania",
       "consola_averiada": "C00282",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6780",
-      "subtask_status": "Solicitado",
-      "cliente": "Centri Unico Campania BS00019",
-      "loc": "Marcianise, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6779",
-      "parent_status": "En reparación",
-      "parent_cliente": "Centri Unico Campania BS00019",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-6704",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Caceres",
-      "loc": "C. Sta. Joaquina de Vedruna, 4, Centro-Casco Antiguo, 10001 Cáceres",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-6703",
-      "parent_status": "Cancelado",
-      "parent_cliente": "SinVello Caceres",
-      "consola_averiada": "C00194",
-      "manipulo_averiado": "H00194",
       "modelo": ""
     },
     {
@@ -239,7 +209,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-17T09:27:00.000+0200",
       "parent_key": "LEAS-7055",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Mar Tobajas",
       "consola_averiada": "233",
       "manipulo_averiado": "",
@@ -434,7 +404,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-03T16:57:00.000+0200",
       "parent_key": "LEAS-6934",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Mel cClinics Castellon",
       "consola_averiada": "91119",
       "manipulo_averiado": "",
@@ -544,6 +514,21 @@
       "consola_averiada": "91061",
       "manipulo_averiado": "40469",
       "modelo": "MHR Quad"
+    },
+    {
+      "key": "LEAS-6780",
+      "subtask_status": "En préstamo",
+      "cliente": "Centri Unico Campania BS00019",
+      "loc": "Marcianise, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "BS SUST008",
+      "fecha_envio": "2026-06-23T09:44:00.000+0200",
+      "parent_key": "LEAS-6779",
+      "parent_status": "En reparación",
+      "parent_cliente": "Centri Unico Campania BS00019",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
+      "modelo": ""
     },
     {
       "key": "LEAS-6685",
