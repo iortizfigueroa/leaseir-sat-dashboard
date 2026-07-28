@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-28T08:02:12.073802+00:00",
+    "last_fetched_at": "2026-07-28T10:45:17.507566+00:00",
     "schema_version": 1,
-    "count": 37
+    "count": 38
   },
   "items": [
     {
@@ -34,6 +34,21 @@
       "consola_averiada": "C00311",
       "manipulo_averiado": "H00311",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-7162",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": "SUSTMHR018",
+      "manipulo_susti": "SUSTDUAL040",
+      "fecha_envio": "2026-07-27T10:41:00.000+0200",
+      "parent_key": "LEAS-6960",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_cliente": "SinVello Manacor",
+      "consola_averiada": "C03173",
+      "manipulo_averiado": "H03173",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-7148",
@@ -89,7 +104,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-07-22T16:50:00.000+0200",
       "parent_key": "LEAS-7108",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "En reparación",
       "parent_cliente": "Sinvello Leon",
       "consola_averiada": "00250",
       "manipulo_averiado": "00250",
@@ -119,7 +134,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-21T17:00:00.000+0200",
       "parent_key": "LEAS-7077",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "En reparación",
       "parent_cliente": "Zurimed los Fresnos  , Ex-unico",
       "consola_averiada": "C00106",
       "manipulo_averiado": "",
@@ -127,7 +142,7 @@
     },
     {
       "key": "LEAS-7068",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sin Vello Torremolinos",
       "loc": "C. Río Bergantes, 21, 29620 Torremolinos, Málaga",
       "consola_susti": "SUSTMHR025",
@@ -149,7 +164,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-20T16:10:00.000+0200",
       "parent_key": "LEAS-7069",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Quora Valladolid",
       "consola_averiada": "90730",
       "manipulo_averiado": "",
@@ -359,7 +374,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-03T16:57:00.000+0200",
       "parent_key": "LEAS-6934",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Mel cClinics Castellon",
       "consola_averiada": "91119",
       "manipulo_averiado": "",
