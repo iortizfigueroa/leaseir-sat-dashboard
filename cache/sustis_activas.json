@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-28T11:33:07.713493+00:00",
+    "last_fetched_at": "2026-07-28T15:55:25.165626+00:00",
     "schema_version": 1,
-    "count": 38
+    "count": 37
   },
   "items": [
     {
@@ -164,7 +164,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-20T16:10:00.000+0200",
       "parent_key": "LEAS-7069",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Quora Valladolid",
       "consola_averiada": "90730",
       "manipulo_averiado": "",
@@ -179,7 +179,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-20T16:07:00.000+0200",
       "parent_key": "LEAS-7071",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Clinica  Dra Villafañe ( Quora Talavera)",
       "consola_averiada": "90731",
       "manipulo_averiado": "",
@@ -254,7 +254,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-07-16T13:48:00.000+0200",
       "parent_key": "LEAS-7087",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centro de Estética avanzada Ciudad Real",
       "consola_averiada": "",
       "manipulo_averiado": "40570",
@@ -269,7 +269,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-15T17:02:00.000+0200",
       "parent_key": "LEAS-6927",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -329,7 +329,7 @@
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-07-09T11:23:00.000+0200",
       "parent_key": "LEAS-6981",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
       "consola_averiada": "",
       "manipulo_averiado": "H00359",
@@ -352,7 +352,7 @@
     },
     {
       "key": "LEAS-6955",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Elha Granollers",
       "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
       "consola_susti": "91064",
@@ -374,7 +374,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-03T16:57:00.000+0200",
       "parent_key": "LEAS-6934",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Mel cClinics Castellon",
       "consola_averiada": "91119",
       "manipulo_averiado": "",
@@ -389,7 +389,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-03T13:43:00.000+0200",
       "parent_key": "LEAS-6927",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -404,7 +404,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-02T17:11:00.000+0200",
       "parent_key": "LEAS-6914",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "123 Clinics Tarragona",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -412,7 +412,7 @@
     },
     {
       "key": "LEAS-6893",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "HArmonie Salamanca",
       "loc": "Salamanca",
       "consola_susti": "SUSTMHR033",
@@ -454,21 +454,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-6815",
-      "subtask_status": "En préstamo",
-      "cliente": "Epiil Point Matera",
-      "loc": "https://maps.app.goo.gl/RWJcDDHFV7EQ6Zk8A",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUADA043",
-      "fecha_envio": "2026-06-24T09:05:00.000+0200",
-      "parent_key": "LEAS-6809",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Epiil Point Matera",
-      "consola_averiada": "91061",
-      "manipulo_averiado": "40469",
-      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-6780",
@@ -547,7 +532,7 @@
     },
     {
       "key": "LEAS-6716",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Elha Santa Coloma",
       "loc": "Barcelona",
       "consola_susti": "C00503",
