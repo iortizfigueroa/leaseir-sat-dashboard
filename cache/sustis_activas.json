@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-07-30T09:34:29.201179+00:00",
+    "last_fetched_at": "2026-07-30T11:26:35.002415+00:00",
     "schema_version": 1,
-    "count": 39
+    "count": 40
   },
   "items": [
+    {
+      "key": "LEAS-7189",
+      "subtask_status": "Solicitado",
+      "cliente": "Centro Unico Boccea",
+      "loc": "Via di Boccea, 122, 00166 Roma RM, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7188",
+      "parent_status": "Pendiente asignar técnico",
+      "parent_cliente": "Centro Unico Boccea SRF00014",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7151",
       "subtask_status": "Solicitado",
@@ -127,7 +142,7 @@
     },
     {
       "key": "LEAS-7109",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Sinvello Leon",
       "loc": "C. Roa de la Vega, 8, 24002 León",
       "consola_susti": "91142",
@@ -164,7 +179,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-21T17:00:00.000+0200",
       "parent_key": "LEAS-7077",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Zurimed los Fresnos  , Ex-unico",
       "consola_averiada": "C00106",
       "manipulo_averiado": "",
@@ -517,7 +532,7 @@
     },
     {
       "key": "LEAS-6686",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Sin Vello Gracia",
       "loc": "Barcelona",
       "consola_susti": "C00187",
@@ -532,7 +547,7 @@
     },
     {
       "key": "LEAS-6700",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Clinicas Splau",
       "loc": "Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
       "consola_susti": "SUSTMHR013",
