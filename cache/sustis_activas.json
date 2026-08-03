@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-03T07:47:32.472816+00:00",
+    "last_fetched_at": "2026-08-03T12:28:06.934096+00:00",
     "schema_version": 1,
-    "count": 41
+    "count": 37
   },
   "items": [
     {
@@ -156,21 +156,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-7109",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sinvello Leon",
-      "loc": "C. Roa de la Vega, 8, 24002 León",
-      "consola_susti": "91142",
-      "manipulo_susti": "SUSTDUAL005",
-      "fecha_envio": "2026-07-22T16:50:00.000+0200",
-      "parent_key": "LEAS-7108",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sinvello Leon",
-      "consola_averiada": "C00250",
-      "manipulo_averiado": "H00250",
-      "modelo": "MHR Dual"
-    },
-    {
       "key": "LEAS-7112",
       "subtask_status": "En préstamo",
       "cliente": "",
@@ -179,25 +164,10 @@
       "manipulo_susti": "H01061",
       "fecha_envio": "2026-07-22T16:41:00.000+0200",
       "parent_key": "LEAS-7047",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Elha  Cinisello Balsamo",
       "consola_averiada": "-",
       "manipulo_averiado": "H03048",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7078",
-      "subtask_status": "En préstamo",
-      "cliente": "Zurimed los Fresnos  , Ex-unico",
-      "loc": "C. Río de Oro, 3, Centro, 33209 Gijón, Asturias",
-      "consola_susti": "C00552",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-07-21T17:00:00.000+0200",
-      "parent_key": "LEAS-7077",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Zurimed los Fresnos  , Ex-unico",
-      "consola_averiada": "C00106",
-      "manipulo_averiado": "",
       "modelo": "XCell HR"
     },
     {
@@ -269,7 +239,7 @@
       "manipulo_susti": "H00326",
       "fecha_envio": "2026-07-17T13:27:00.000+0200",
       "parent_key": "LEAS-7047",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Elha  Cinisello Balsamo",
       "consola_averiada": "-",
       "manipulo_averiado": "H03048",
@@ -277,7 +247,7 @@
     },
     {
       "key": "LEAS-7056",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Mar Tobajas",
       "loc": "Valencia",
       "consola_susti": "AHR0082",
@@ -382,7 +352,7 @@
     },
     {
       "key": "LEAS-6982",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Sin Vello Las Palmas de Gran Canarias",
       "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
       "consola_susti": null,
@@ -471,21 +441,6 @@
       "modelo": "MHR"
     },
     {
-      "key": "LEAS-6893",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "HArmonie Salamanca",
-      "loc": "Salamanca",
-      "consola_susti": "SUSTMHR033",
-      "manipulo_susti": "40534",
-      "fecha_envio": "2026-07-01T15:33:00.000+0200",
-      "parent_key": "LEAS-6892",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Harmonie Salamanca",
-      "consola_averiada": "90943",
-      "manipulo_averiado": "40245",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-6841",
       "subtask_status": "Gestionada recogida",
       "cliente": "",
@@ -559,21 +514,6 @@
       "consola_averiada": "C00328",
       "manipulo_averiado": "H00328",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6700",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Clinicas Splau",
-      "loc": "Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
-      "consola_susti": "SUSTMHR013",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-16T17:02:00.000+0200",
-      "parent_key": "LEAS-6699",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Clinicas Med Splau",
-      "consola_averiada": "91087",
-      "manipulo_averiado": "",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-6719",
