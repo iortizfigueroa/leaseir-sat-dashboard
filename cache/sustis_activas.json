@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-05T06:43:08.251594+00:00",
+    "last_fetched_at": "2026-08-05T11:19:34.291929+00:00",
     "schema_version": 1,
-    "count": 32
+    "count": 31
   },
   "items": [
+    {
+      "key": "LEAS-7227",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Limoneros",
+      "loc": "Ctra. de los Limoneros, 4, 04006 Almería",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7224",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Limoneros",
+      "consola_averiada": "90450",
+      "manipulo_averiado": "-",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7189",
       "subtask_status": "Solicitado",
@@ -37,7 +52,7 @@
     },
     {
       "key": "LEAS-7191",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Harmonie Salamanca",
       "loc": "C. Condes de Crespo Rascón, 56, 37002 Salamanca",
       "consola_susti": null,
@@ -67,7 +82,7 @@
     },
     {
       "key": "LEAS-7177",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sinvello Ventas",
       "loc": "C. de Ricardo Ortiz, 30, Cdad. Lineal, 28017 Madrid",
       "consola_susti": "C00340",
@@ -97,7 +112,7 @@
     },
     {
       "key": "LEAS-7162",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "",
       "loc": "",
       "consola_susti": "SUSTMHR018",
@@ -321,23 +336,8 @@
       "modelo": "MHR Dual"
     },
     {
-      "key": "LEAS-6982",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Las Palmas de Gran Canarias",
-      "loc": "C. Fernando Guanarteme, 11, local 3 y 4, 35007 Las Palmas de Gran Canaria, Las Palmas",
-      "consola_susti": null,
-      "manipulo_susti": "H00751",
-      "fecha_envio": "2026-07-09T11:23:00.000+0200",
-      "parent_key": "LEAS-6981",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Las Palmas de Gran Canarias",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00359",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-6969",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Manacor",
       "loc": "Passeig del Ferrocarril, 62, 07500 Manacor, Illes Balears",
       "consola_susti": null,
@@ -349,21 +349,6 @@
       "consola_averiada": "C03173",
       "manipulo_averiado": "H03173",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-6955",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha Granollers",
-      "loc": "Carrer d'Alfons IV, 81, 08402 Granollers, Barcelona",
-      "consola_susti": "91064",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-07-07T16:48:00.000+0200",
-      "parent_key": "LEAS-6951",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Elha Granollers",
-      "consola_averiada": "90886",
-      "manipulo_averiado": "-",
-      "modelo": ""
     },
     {
       "key": "LEAS-6935",
