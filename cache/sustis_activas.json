@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-10T10:40:49.794298+00:00",
+    "last_fetched_at": "2026-08-10T14:45:17.691236+00:00",
     "schema_version": 1,
-    "count": 32
+    "count": 25
   },
   "items": [
-    {
-      "key": "LEAS-7258",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Miraflores",
-      "loc": "Calle Ntra. Sra. de los Clarines, 20, Bailén-Miraflores, 29011 Málaga",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7256",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Miraflores",
-      "consola_averiada": "C00660",
-      "manipulo_averiado": "H00660",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7251",
       "subtask_status": "Solicitado",
@@ -36,34 +21,34 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7189",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro Unico Boccea",
-      "loc": "Via di Boccea, 122, 00166 Roma RM, Italia",
+      "key": "LEAS-7271",
+      "subtask_status": "En préstamo",
+      "cliente": "Epil Point Lecce",
+      "loc": "Via Salvatore Trinchese, 87, 73100 Lecce LE, Italia",
       "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7188",
-      "parent_status": "Pendiente asignar técnico",
-      "parent_cliente": "Centro Unico Boccea SRF00014",
+      "manipulo_susti": "SUSTQUAD028",
+      "fecha_envio": "2026-08-10T16:02:00.000+0200",
+      "parent_key": "LEAS-7270",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": ""
+      "manipulo_averiado": "40413",
+      "modelo": "MHR Quad"
     },
     {
-      "key": "LEAS-7151",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro Unico Euroma2",
-      "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7084",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Centro Unico Euroma2",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00211",
-      "modelo": ""
+      "key": "LEAS-7258",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Miraflores",
+      "loc": "Calle Ntra. Sra. de los Clarines, 20, Bailén-Miraflores, 29011 Málaga",
+      "consola_susti": "C00187",
+      "manipulo_susti": "H01013",
+      "fecha_envio": "2026-08-07T12:41:00.000+0200",
+      "parent_key": "LEAS-7256",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Miraflores",
+      "consola_averiada": "C00660",
+      "manipulo_averiado": "H00660",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7247",
@@ -97,7 +82,7 @@
     },
     {
       "key": "LEAS-7237",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Smart Duck Labege C003342/H03342",
       "loc": "130 Rue Pierre et Marie Curie, 31670 Labège, Francia",
       "consola_susti": "C00326",
@@ -119,25 +104,10 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-07-30T16:43:00.000+0200",
       "parent_key": "LEAS-7190",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "Harmonie Salamanca",
       "consola_averiada": "",
       "manipulo_averiado": "40245",
-      "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-7184",
-      "subtask_status": "En préstamo",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUAD028",
-      "fecha_envio": "2026-07-30T08:57:00.000+0200",
-      "parent_key": "LEAS-7179",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Epil Point Lecce",
-      "consola_averiada": "",
-      "manipulo_averiado": "40413",
       "modelo": "MHR Quad"
     },
     {
@@ -246,51 +216,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-7068",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Torremolinos",
-      "loc": "C. Río Bergantes, 21, 29620 Torremolinos, Málaga",
-      "consola_susti": "SUSTMHR025",
-      "manipulo_susti": "SUSTDUAL019",
-      "fecha_envio": "2026-07-21T14:27:00.000+0200",
-      "parent_key": "LEAS-7065",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Sin Vello Torremolinos",
-      "consola_averiada": "C00311",
-      "manipulo_averiado": "H00311",
-      "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-7070",
-      "subtask_status": "En préstamo",
-      "cliente": "Quora Valladolid",
-      "loc": "Valladolid",
-      "consola_susti": "91096",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-07-20T16:10:00.000+0200",
-      "parent_key": "LEAS-7069",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Quora Valladolid",
-      "consola_averiada": "90730",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7072",
-      "subtask_status": "En préstamo",
-      "cliente": "Clinica  Dra Villafañe ( Quora Talavera)",
-      "loc": "Centro Comercial Los Alfares Dirección: Av. de Madrid, S/N, 45600 Talavera de la Reina, Toledo",
-      "consola_susti": "SUSTMHR027",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-07-20T16:07:00.000+0200",
-      "parent_key": "LEAS-7071",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Clinica  Dra Villafañe ( Quora Talavera)",
-      "consola_averiada": "90731",
-      "manipulo_averiado": "",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-7067",
       "subtask_status": "En préstamo",
       "cliente": "Sin Vello Manacor",
@@ -303,21 +228,6 @@
       "parent_cliente": "Sin Vello Manacor",
       "consola_averiada": "C03173",
       "manipulo_averiado": "",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7051",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Elha  Cinisello Balsamo",
-      "loc": "Via Giovanni Frova, 26, 20092 Cinisello Balsamo MI, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H00326",
-      "fecha_envio": "2026-07-17T13:27:00.000+0200",
-      "parent_key": "LEAS-7047",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Elha  Cinisello Balsamo",
-      "consola_averiada": "-",
-      "manipulo_averiado": "H03048",
       "modelo": "XCell HR"
     },
     {
@@ -337,7 +247,7 @@
     },
     {
       "key": "LEAS-7028",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello! Tomares | Depilación Láser Diodo",
       "loc": "Av. del Aljarafe, 14, Local 12, 41940 Tomares, Sevilla",
       "consola_susti": null,
@@ -439,21 +349,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-6719",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Sin Vello Santa Cruz",
-      "loc": "Tenerife",
-      "consola_susti": "C00367",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-06-16T16:59:00.000+0200",
-      "parent_key": "LEAS-6717",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Santa Cruz",
-      "consola_averiada": "C00618",
-      "manipulo_averiado": "H00618",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-6716",
