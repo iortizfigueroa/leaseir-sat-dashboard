@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-11T11:32:49.674635+00:00",
+    "last_fetched_at": "2026-08-11T13:32:57.171318+00:00",
     "schema_version": 1,
-    "count": 25
+    "count": 24
   },
   "items": [
     {
@@ -37,14 +37,14 @@
     },
     {
       "key": "LEAS-7258",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "SinVello Miraflores",
       "loc": "Calle Ntra. Sra. de los Clarines, 20, Bailén-Miraflores, 29011 Málaga",
       "consola_susti": "C00187",
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-08-07T12:41:00.000+0200",
       "parent_key": "LEAS-7256",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "SinVello Miraflores",
       "consola_averiada": "C00660",
       "manipulo_averiado": "H00660",
@@ -59,7 +59,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-06T08:49:00.000+0200",
       "parent_key": "LEAS-7240",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Elha El Prat de Llobregat",
       "consola_averiada": "91190",
       "manipulo_averiado": "-",
@@ -74,7 +74,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-06T08:45:00.000+0200",
       "parent_key": "LEAS-7224",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -104,7 +104,7 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-07-30T16:43:00.000+0200",
       "parent_key": "LEAS-7190",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Harmonie Salamanca",
       "consola_averiada": "",
       "manipulo_averiado": "40245",
@@ -319,21 +319,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-6824",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "CN CLINICS ALEMANIA",
-      "loc": "Thomas-Dehler-Straße 10, 81737 München-Ramersdorf-Perlach, Alemania",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTDUAL017",
-      "fecha_envio": "2026-06-25T13:46:00.000+0200",
-      "parent_key": "LEAS-6823",
-      "parent_status": "Resuelto",
-      "parent_cliente": "CN CLINICS ALEMANIA",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-6780",
