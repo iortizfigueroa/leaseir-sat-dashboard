@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-14T08:41:47.890808+00:00",
+    "last_fetched_at": "2026-08-14T10:30:43.986733+00:00",
     "schema_version": 1,
-    "count": 22
+    "count": 20
   },
   "items": [
     {
@@ -22,7 +22,7 @@
     },
     {
       "key": "LEAS-7285",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "SinVello Cadiz",
       "loc": "Av. Ana de Viya, 30, Loc D, 11009 Cádiz",
       "consola_susti": "C00552",
@@ -89,7 +89,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-06T08:45:00.000+0200",
       "parent_key": "LEAS-7224",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90450",
       "manipulo_averiado": "-",
@@ -149,7 +149,7 @@
       "manipulo_susti": "H41003",
       "fecha_envio": "2026-07-27T17:10:00.000+0200",
       "parent_key": "LEAS-7065",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "Sin Vello Torremolinos",
       "consola_averiada": "C00311",
       "manipulo_averiado": "H00311",
@@ -179,7 +179,7 @@
       "manipulo_susti": "h00410",
       "fecha_envio": "2026-07-24T18:34:00.000+0200",
       "parent_key": "LEAS-7146",
-      "parent_status": "En cola taller",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Laser Factory Hospitalet",
       "consola_averiada": "C03291",
       "manipulo_averiado": "H03291",
@@ -244,36 +244,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00260",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7000",
-      "subtask_status": "En préstamo",
-      "cliente": "CleanBody CC NIVARIA",
-      "loc": "Av. Tres de Mayo, 9, 38003 Santa Cruz de Tenerife",
-      "consola_susti": null,
-      "manipulo_susti": "sustdual011",
-      "fecha_envio": "2026-07-10T12:37:00.000+0200",
-      "parent_key": "LEAS-6820",
-      "parent_status": "Cancelado",
-      "parent_cliente": "CleanBody CC NIVARIA",
-      "consola_averiada": "",
-      "manipulo_averiado": "30521",
-      "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-6935",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Mel cClinics Castellon",
-      "loc": "N-340, 64.5, 12006 Castelló de la Plana, Castellón",
-      "consola_susti": "91139",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-07-03T16:57:00.000+0200",
-      "parent_key": "LEAS-6934",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Mel cClinics Castellon",
-      "consola_averiada": "91119",
-      "manipulo_averiado": "",
-      "modelo": ""
     },
     {
       "key": "LEAS-6915",
