@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-19T09:55:19.280474+00:00",
+    "last_fetched_at": "2026-08-19T14:18:41.892670+00:00",
     "schema_version": 1,
-    "count": 19
+    "count": 21
   },
   "items": [
+    {
+      "key": "LEAS-7328",
+      "subtask_status": "Solicitado",
+      "cliente": "Cleanbody La Villa SUSTMHR026",
+      "loc": "Tenerife",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7297",
+      "parent_status": "Resuelto",
+      "parent_cliente": "Cleanbody La Villa SUSTMHR026",
+      "consola_averiada": "No aparece",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7251",
       "subtask_status": "Solicitado",
@@ -19,6 +34,21 @@
       "consola_averiada": "C00869",
       "manipulo_averiado": "H00869",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7330",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Jerez",
+      "loc": "Avenida de Arcos, C. Mosa, 52, 11405 Jerez de la Frontera, Cádiz",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL005",
+      "fecha_envio": "2026-08-19T15:25:00.000+0200",
+      "parent_key": "LEAS-7324",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Jerez",
+      "consola_averiada": "90860",
+      "manipulo_averiado": "30361",
+      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-7285",
@@ -194,7 +224,7 @@
       "manipulo_susti": "H003258",
       "fecha_envio": "2026-07-24T13:26:00.000+0200",
       "parent_key": "LEAS-7121",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Smart duck paris 15 Convention",
       "consola_averiada": "C03104",
       "manipulo_averiado": "H03104",
@@ -239,7 +269,7 @@
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-07-14T13:50:00.000+0200",
       "parent_key": "LEAS-7027",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello! Tomares | Depilación Láser Diodo",
       "consola_averiada": "",
       "manipulo_averiado": "H00260",
