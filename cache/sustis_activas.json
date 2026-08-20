@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-20T09:56:18.805521+00:00",
+    "last_fetched_at": "2026-08-20T14:22:25.766780+00:00",
     "schema_version": 1,
-    "count": 21
+    "count": 22
   },
   "items": [
+    {
+      "key": "LEAS-7333",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "cliente": "EPIL POINT - Specialisti in Epilazione Laser",
+      "loc": "Via Ferdinando I d'Aragona, 96, 76121 Barletta BT, Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7332",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "EPIL POINT - Specialisti in Epilazione Laser",
+      "consola_averiada": "",
+      "manipulo_averiado": "40600",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7328",
       "subtask_status": "Solicitado",
@@ -74,7 +89,7 @@
       "manipulo_susti": "SUSTQUAD028",
       "fecha_envio": "2026-08-10T16:02:00.000+0200",
       "parent_key": "LEAS-7270",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "",
       "manipulo_averiado": "40413",
@@ -104,7 +119,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-06T08:49:00.000+0200",
       "parent_key": "LEAS-7240",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Elha El Prat de Llobregat",
       "consola_averiada": "91190",
       "manipulo_averiado": "-",
@@ -164,7 +179,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-07-29T10:25:00.000+0200",
       "parent_key": "LEAS-7074",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sinvello Ventas",
       "consola_averiada": "00588",
       "manipulo_averiado": "00588",
