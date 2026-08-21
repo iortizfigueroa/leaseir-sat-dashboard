@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-21T14:20:17.053870+00:00",
+    "last_fetched_at": "2026-08-21T19:07:08.047837+00:00",
     "schema_version": 1,
     "count": 22
   },
   "items": [
-    {
-      "key": "LEAS-7333",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "EPIL POINT - Specialisti in Epilazione Laser",
-      "loc": "Via Ferdinando I d'Aragona, 96, 76121 Barletta BT, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7332",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "EPIL POINT - Specialisti in Epilazione Laser",
-      "consola_averiada": "",
-      "manipulo_averiado": "40600",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7328",
       "subtask_status": "Solicitado",
@@ -49,6 +34,21 @@
       "consola_averiada": "C00869",
       "manipulo_averiado": "H00869",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7333",
+      "subtask_status": "Equipo enviado",
+      "cliente": "EPIL POINT - Specialisti in Epilazione Laser",
+      "loc": "Via Ferdinando I d'Aragona, 96, 76121 Barletta BT, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD012",
+      "fecha_envio": "2026-08-21T17:39:00.000+0200",
+      "parent_key": "LEAS-7332",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "EPIL POINT - Specialisti in Epilazione Laser",
+      "consola_averiada": "",
+      "manipulo_averiado": "40600",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-7330",
@@ -89,7 +89,7 @@
       "manipulo_susti": "SUSTQUAD028",
       "fecha_envio": "2026-08-10T16:02:00.000+0200",
       "parent_key": "LEAS-7270",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "",
       "manipulo_averiado": "40413",
