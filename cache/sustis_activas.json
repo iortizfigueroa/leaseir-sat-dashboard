@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-08-26T10:03:59.965983+00:00",
+    "last_fetched_at": "2026-08-26T14:28:59.405313+00:00",
     "schema_version": 1,
     "count": 27
   },
   "items": [
-    {
-      "key": "LEAS-7372",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello El Palo",
-      "loc": "C. Escultor Marín Higuero, 6, Málaga-Este, 29017 Málaga",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7371",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello El Palo",
-      "consola_averiada": "C03075",
-      "manipulo_averiado": "H03075",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7366",
       "subtask_status": "Solicitado",
@@ -29,25 +14,10 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7360",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "SinVello Ibiza",
       "consola_averiada": "C03051",
       "manipulo_averiado": "H03051",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7328",
-      "subtask_status": "Solicitado",
-      "cliente": "Cleanbody La Villa SUSTMHR026",
-      "loc": "Tenerife",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7297",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Cleanbody La Villa SUSTMHR026",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -64,6 +34,21 @@
       "consola_averiada": "C00869",
       "manipulo_averiado": "H00869",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7372",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello El Palo",
+      "loc": "C. Escultor Marín Higuero, 6, Málaga-Este, 29017 Málaga",
+      "consola_susti": null,
+      "manipulo_susti": "H01069",
+      "fecha_envio": "2026-08-26T13:17:00.000+0200",
+      "parent_key": "LEAS-7371",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello El Palo",
+      "consola_averiada": "C03075",
+      "manipulo_averiado": "H03075",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7359",
@@ -94,6 +79,21 @@
       "consola_averiada": "91122",
       "manipulo_averiado": "40554",
       "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-7375",
+      "subtask_status": "En préstamo",
+      "cliente": "Cleanbody CC La Villa ( 30267 )",
+      "loc": "cc la Villa, Autopista del Nte., 36, 38312 La Orotava, Santa Cruz de Tenerife.",
+      "consola_susti": "C00367",
+      "manipulo_susti": "H00751",
+      "fecha_envio": "2026-08-24T14:52:00.000+0200",
+      "parent_key": "LEAS-7374",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Cleanbody CC La Villa ( 30267 )",
+      "consola_averiada": "90737",
+      "manipulo_averiado": "No aparece",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7357",
@@ -344,7 +344,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-07-16T19:26:00.000+0200",
       "parent_key": "LEAS-7052",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Centro Unico Boccea",
       "consola_averiada": "C00283",
       "manipulo_averiado": "H00283",
