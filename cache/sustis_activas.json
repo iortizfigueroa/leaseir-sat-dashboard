@@ -1,13 +1,28 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-04T08:52:29.538840+00:00",
+    "last_fetched_at": "2026-09-04T13:37:33.980526+00:00",
     "schema_version": 1,
-    "count": 35
+    "count": 36
   },
   "items": [
     {
-      "key": "LEAS-7475",
+      "key": "LEAS-7477",
       "subtask_status": "Solicitado",
+      "cliente": "Sinvello Zaragoza Catedral",
+      "loc": "C. de Espoz y Mina, 29, Casco Antiguo, 50003 Zaragoza",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7456",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sinvello Zaragoza Catedral",
+      "consola_averiada": "C00295",
+      "manipulo_averiado": "H01018",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7475",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
       "cliente": "Dermasana Albuferas",
       "loc": "Av. de la Albufera, 34, Puente de Vallecas, 28038 Madrid",
       "consola_susti": null,
@@ -104,7 +119,7 @@
       "manipulo_susti": "SUSTSINGLE021",
       "fecha_envio": "2026-08-28T10:09:00.000+0200",
       "parent_key": "LEAS-6768",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "CVL Distribuidor Aparatología Estética (Samuel)",
       "consola_averiada": "90790",
       "manipulo_averiado": "20171",
@@ -149,7 +164,7 @@
       "manipulo_susti": "SUSTDUAL017",
       "fecha_envio": "2026-08-26T16:36:00.000+0200",
       "parent_key": "LEAS-7360",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Ibiza",
       "consola_averiada": "C03051",
       "manipulo_averiado": "H03051",
@@ -157,7 +172,7 @@
     },
     {
       "key": "LEAS-7372",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello El Palo",
       "loc": "C. Escultor Marín Higuero, 6, Málaga-Este, 29017 Málaga",
       "consola_susti": null,
@@ -247,14 +262,14 @@
     },
     {
       "key": "LEAS-7330",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Jerez",
       "loc": "Avenida de Arcos, C. Mosa, 52, 11405 Jerez de la Frontera, Cádiz",
       "consola_susti": null,
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-08-19T15:25:00.000+0200",
       "parent_key": "LEAS-7324",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "SinVello Jerez",
       "consola_averiada": "90860",
       "manipulo_averiado": "30361",
@@ -434,7 +449,7 @@
       "manipulo_susti": "H003258",
       "fecha_envio": "2026-07-24T13:26:00.000+0200",
       "parent_key": "LEAS-7121",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Smart duck paris 15 Convention",
       "consola_averiada": "C03104",
       "manipulo_averiado": "H03104",
@@ -502,7 +517,7 @@
     },
     {
       "key": "LEAS-6716",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Santa Coloma",
       "loc": "Barcelona",
       "consola_susti": "C00503",
