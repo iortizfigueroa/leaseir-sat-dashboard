@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-09T11:49:28.564872+00:00",
+    "last_fetched_at": "2026-09-09T13:48:09.590600+00:00",
     "schema_version": 1,
     "count": 36
   },
   "items": [
+    {
+      "key": "LEAS-7534",
+      "subtask_status": "Solicitado",
+      "cliente": "Sinvello Zamora",
+      "loc": "Av. del Príncipe de Asturias, 13, 49012 Zamora",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7526",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Sinvello Zamora",
+      "consola_averiada": "C00708",
+      "manipulo_averiado": "H00708",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7529",
       "subtask_status": "Solicitado",
@@ -21,21 +36,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7515",
-      "subtask_status": "Solicitado",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7443",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Vilanova",
-      "consola_averiada": "C00494",
-      "manipulo_averiado": "H00494",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7418",
       "subtask_status": "Solicitado",
       "cliente": "Centro Unico Palermo",
@@ -44,7 +44,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7416",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente recogida",
       "parent_cliente": "Centro Unico Palermo",
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
@@ -64,6 +64,21 @@
       "consola_averiada": "C00869",
       "manipulo_averiado": "H00869",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7515",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": "C00503",
+      "manipulo_susti": "H01033",
+      "fecha_envio": "2026-09-09T15:46:00.000+0200",
+      "parent_key": "LEAS-7443",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Vilanova",
+      "consola_averiada": "C00494",
+      "manipulo_averiado": "H00494",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7468",
@@ -119,7 +134,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-09-07T16:17:00.000+0200",
       "parent_key": "LEAS-7490",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "SinVello! Cádiz",
       "consola_averiada": "C00801",
       "manipulo_averiado": "H00801",
@@ -134,7 +149,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-09-07T12:23:00.000+0200",
       "parent_key": "LEAS-7490",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "SinVello! Cádiz",
       "consola_averiada": "C00801",
       "manipulo_averiado": "H00801",
@@ -262,7 +277,7 @@
     },
     {
       "key": "LEAS-7372",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello El Palo",
       "loc": "C. Escultor Marín Higuero, 6, Málaga-Este, 29017 Málaga",
       "consola_susti": null,
@@ -284,10 +299,10 @@
       "manipulo_susti": "H01025",
       "fecha_envio": "2026-08-25T10:40:00.000+0200",
       "parent_key": "LEAS-7358",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Centri Unico Olbia",
       "consola_averiada": "",
-      "manipulo_averiado": "",
+      "manipulo_averiado": "H00197",
       "modelo": "XCell HR"
     },
     {
@@ -322,7 +337,7 @@
     },
     {
       "key": "LEAS-7330",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello Jerez",
       "loc": "Avenida de Arcos, C. Mosa, 52, 11405 Jerez de la Frontera, Cádiz",
       "consola_susti": null,
@@ -498,21 +513,6 @@
       "parent_cliente": "Elha  Cinisello Balsamo",
       "consola_averiada": "-",
       "manipulo_averiado": "H03048",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7054",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Centro Unico Boccea",
-      "loc": "Via di Boccea, 122, 00166 Roma RM, Italia",
-      "consola_susti": "c00677",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-07-16T19:26:00.000+0200",
-      "parent_key": "LEAS-7052",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centro Unico Boccea",
-      "consola_averiada": "C00283",
-      "manipulo_averiado": "H00283",
       "modelo": "XCell HR"
     },
     {
