@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-09T06:40:56.310892+00:00",
+    "last_fetched_at": "2026-09-09T08:59:15.139585+00:00",
     "schema_version": 1,
-    "count": 37
+    "count": 38
   },
   "items": [
+    {
+      "key": "LEAS-7529",
+      "subtask_status": "Solicitado",
+      "cliente": "Dermasana Calle alcala",
+      "loc": "C. Alcalá, 180, Salamanca, 28028 Madrid",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7527",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Dermasana Calle alcala",
+      "consola_averiada": "C00166",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7515",
       "subtask_status": "Solicitado",
@@ -29,7 +44,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7467",
-      "parent_status": "Pendiente definir servicio externo",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Epil Point  Sesto Firenze",
       "consola_averiada": "",
       "manipulo_averiado": "40504",
@@ -164,7 +179,7 @@
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-08-31T10:17:00.000+0200",
       "parent_key": "LEAS-7412",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Sinvello Provenza",
       "consola_averiada": "C00329",
       "manipulo_averiado": "H00329",
@@ -194,7 +209,7 @@
       "manipulo_susti": "SUSTSINGLE021",
       "fecha_envio": "2026-08-28T10:09:00.000+0200",
       "parent_key": "LEAS-6768",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "CVL Distribuidor Aparatología Estética (Samuel)",
       "consola_averiada": "90790",
       "manipulo_averiado": "20171",
@@ -389,7 +404,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-08-07T12:41:00.000+0200",
       "parent_key": "LEAS-7256",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello Miraflores",
       "consola_averiada": "C00660",
       "manipulo_averiado": "H00660",
