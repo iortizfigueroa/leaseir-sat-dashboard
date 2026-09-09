@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-09T08:59:15.139585+00:00",
+    "last_fetched_at": "2026-09-09T11:49:28.564872+00:00",
     "schema_version": 1,
-    "count": 38
+    "count": 36
   },
   "items": [
     {
@@ -36,21 +36,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7468",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point  Sesto Firenze",
-      "loc": "Via A. Gramsci, 268, 50019 Sesto Fiorentino FI, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7467",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "Epil Point  Sesto Firenze",
-      "consola_averiada": "",
-      "manipulo_averiado": "40504",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7418",
       "subtask_status": "Solicitado",
       "cliente": "Centro Unico Palermo",
@@ -59,7 +44,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7416",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Centro Unico Palermo",
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
@@ -78,6 +63,21 @@
       "parent_cliente": "SinVello Albacete",
       "consola_averiada": "C00869",
       "manipulo_averiado": "H00869",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7468",
+      "subtask_status": "Gestionada recogida",
+      "cliente": "Epil Point  Sesto Firenze",
+      "loc": "Via A. Gramsci, 268, 50019 Sesto Fiorentino FI, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "40306",
+      "fecha_envio": "2026-09-09T11:04:00.000+0200",
+      "parent_key": "LEAS-7467",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Epil Point  Sesto Firenze",
+      "consola_averiada": "",
+      "manipulo_averiado": "40504",
       "modelo": ""
     },
     {
@@ -299,7 +299,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-08-25T10:06:00.000+0200",
       "parent_key": "LEAS-7355",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Zurimed Parque principado",
       "consola_averiada": "91122",
       "manipulo_averiado": "40554",
@@ -319,36 +319,6 @@
       "consola_averiada": "90737",
       "manipulo_averiado": "No aparece",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7357",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "SinVello Granada Constitucion",
-      "loc": "Av. de la Constitución, 27, Beiro, 18014 Granada",
-      "consola_susti": null,
-      "manipulo_susti": "H01012",
-      "fecha_envio": "2026-08-24T09:46:00.000+0200",
-      "parent_key": "LEAS-7299",
-      "parent_status": "En cola taller",
-      "parent_cliente": "SinVello Granada Constitucion",
-      "consola_averiada": "c00989",
-      "manipulo_averiado": "h00989",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7333",
-      "subtask_status": "En préstamo",
-      "cliente": "EPIL POINT - Specialisti in Epilazione Laser",
-      "loc": "Via Ferdinando I d'Aragona, 96, 76121 Barletta BT, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUAD012",
-      "fecha_envio": "2026-08-21T17:39:00.000+0200",
-      "parent_key": "LEAS-7332",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "EPIL POINT - Specialisti in Epilazione Laser",
-      "consola_averiada": "",
-      "manipulo_averiado": "40600",
-      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-7330",
