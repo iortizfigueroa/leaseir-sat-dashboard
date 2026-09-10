@@ -1,23 +1,23 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-10T16:02:25.932124+00:00",
+    "last_fetched_at": "2026-09-10T17:17:14.338469+00:00",
     "schema_version": 1,
-    "count": 32
+    "count": 33
   },
   "items": [
     {
-      "key": "LEAS-7543",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "",
-      "loc": "",
+      "key": "LEAS-7563",
+      "subtask_status": "Solicitado",
+      "cliente": "Dermasana Princesa",
+      "loc": "Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
-      "parent_key": "LEAS-7486",
+      "parent_key": "LEAS-7561",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Laser Factory Sabadell",
-      "consola_averiada": "C00478",
-      "manipulo_averiado": "H00478",
+      "parent_cliente": "Dermasana Princesa",
+      "consola_averiada": "C00238",
+      "manipulo_averiado": "H00238",
       "modelo": ""
     },
     {
@@ -34,6 +34,21 @@
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7543",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": "C00410",
+      "manipulo_susti": "H00410",
+      "fecha_envio": "2026-09-10T18:10:00.000+0200",
+      "parent_key": "LEAS-7486",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Laser Factory Sabadell",
+      "consola_averiada": "C00478",
+      "manipulo_averiado": "H00478",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7475",
@@ -82,14 +97,14 @@
     },
     {
       "key": "LEAS-7529",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Dermasana Calle alcala",
       "loc": "C. Alcalá, 180, Salamanca, 28028 Madrid",
       "consola_susti": "C00107",
       "manipulo_susti": null,
       "fecha_envio": "2026-09-09T15:48:00.000+0200",
       "parent_key": "LEAS-7527",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Dermasana Calle alcala",
       "consola_averiada": "C00166",
       "manipulo_averiado": "",
@@ -194,7 +209,7 @@
       "manipulo_susti": "H01012",
       "fecha_envio": "2026-09-04T16:59:00.000+0200",
       "parent_key": "LEAS-7456",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Sinvello Zaragoza Catedral",
       "consola_averiada": "C00295",
       "manipulo_averiado": "H01018",
