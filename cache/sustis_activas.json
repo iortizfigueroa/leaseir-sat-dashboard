@@ -1,23 +1,38 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-11T13:41:03.958125+00:00",
+    "last_fetched_at": "2026-09-11T17:19:13.850082+00:00",
     "schema_version": 1,
-    "count": 33
+    "count": 35
   },
   "items": [
     {
-      "key": "LEAS-7563",
+      "key": "LEAS-7577",
       "subtask_status": "Solicitado",
-      "cliente": "Dermasana Princesa",
-      "loc": "Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
+      "cliente": "smartduck Labege",
+      "loc": "130 Rue Pierre et Marie Curie, 31670 Labège, Francia",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
-      "parent_key": "LEAS-7561",
+      "parent_key": "LEAS-7576",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "smartduck Labege",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7575",
+      "subtask_status": "Solicitado",
+      "cliente": "Centri Unico Globo",
+      "loc": "Italia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7438",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Dermasana Princesa",
-      "consola_averiada": "C00238",
-      "manipulo_averiado": "H00238",
+      "parent_cliente": "Centri Unico Globo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00674",
       "modelo": ""
     },
     {
@@ -33,6 +48,21 @@
       "parent_cliente": "Centro Unico Palermo",
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7563",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Dermasana Princesa",
+      "loc": "Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
+      "consola_susti": "91119",
+      "manipulo_susti": "40551",
+      "fecha_envio": "2026-09-11T16:31:00.000+0200",
+      "parent_key": "LEAS-7561",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Dermasana Princesa",
+      "consola_averiada": "C00238",
+      "manipulo_averiado": "H00238",
       "modelo": ""
     },
     {
@@ -397,14 +427,14 @@
     },
     {
       "key": "LEAS-7258",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Miraflores",
       "loc": "Calle Ntra. Sra. de los Clarines, 20, Bailén-Miraflores, 29011 Málaga",
       "consola_susti": "C00187",
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-08-07T12:41:00.000+0200",
       "parent_key": "LEAS-7256",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "SinVello Miraflores",
       "consola_averiada": "C00660",
       "manipulo_averiado": "H00660",
