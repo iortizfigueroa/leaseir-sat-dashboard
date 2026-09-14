@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-14T09:54:03.480216+00:00",
+    "last_fetched_at": "2026-09-14T15:57:07.156496+00:00",
     "schema_version": 1,
-    "count": 35
+    "count": 36
   },
   "items": [
     {
@@ -36,8 +36,23 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-7584",
+      "subtask_status": "En préstamo",
+      "cliente": "Epil Point Aversa",
+      "loc": "Viale John Fitzgerald Kennedy, 26, 81031 Aversa CE, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "40518",
+      "fecha_envio": "2026-09-14T13:49:00.000+0200",
+      "parent_key": "LEAS-7583",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Epil Point Aversa",
+      "consola_averiada": "",
+      "manipulo_averiado": "40374",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-7563",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Dermasana Princesa",
       "loc": "Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
       "consola_susti": "91119",
@@ -194,7 +209,7 @@
       "manipulo_susti": "40481",
       "fecha_envio": "2026-09-07T16:23:00.000+0200",
       "parent_key": "LEAS-7503",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Clinica Cibeles Holea",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -329,7 +344,7 @@
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-08-28T10:03:00.000+0200",
       "parent_key": "LEAS-7299",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Granada Constitucion",
       "consola_averiada": "c00989",
       "manipulo_averiado": "h00989",
@@ -359,7 +374,7 @@
       "manipulo_susti": "H01025",
       "fecha_envio": "2026-08-25T10:40:00.000+0200",
       "parent_key": "LEAS-7358",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Centri Unico Olbia",
       "consola_averiada": "",
       "manipulo_averiado": "H00197",
