@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-16T21:33:02.572361+00:00",
+    "last_fetched_at": "2026-09-17T07:57:02.921894+00:00",
     "schema_version": 1,
     "count": 44
   },
@@ -154,6 +154,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7649",
+      "subtask_status": "En préstamo",
+      "cliente": "smartduck Asnieres sur Seine",
+      "loc": "43 Rue Gallieni, 92600 Asnières-sur-Seine, Francia",
+      "consola_susti": "C03258",
+      "manipulo_susti": "H03258",
+      "fecha_envio": "2026-09-16T09:40:00.000+0200",
+      "parent_key": "LEAS-7618",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "smartduck Asnieres sur Seine",
+      "consola_averiada": "C03292",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7584",
@@ -359,7 +374,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-09-07T16:17:00.000+0200",
       "parent_key": "LEAS-7490",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello! Cádiz",
       "consola_averiada": "C00801",
       "manipulo_averiado": "H00801",
@@ -374,7 +389,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-09-07T12:23:00.000+0200",
       "parent_key": "LEAS-7490",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello! Cádiz",
       "consola_averiada": "C00801",
       "manipulo_averiado": "H00801",
@@ -419,7 +434,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-28T17:11:00.000+0200",
       "parent_key": "LEAS-7343",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Elha Sta teresa",
       "consola_averiada": "90245",
       "manipulo_averiado": "40161",
@@ -434,7 +449,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-28T13:35:00.000+0200",
       "parent_key": "LEAS-7450",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "No filters cliente de Dinamica impulso Yolanda Jaramillo  AHR0110",
       "consola_averiada": "110",
       "manipulo_averiado": "No aparece",
@@ -524,7 +539,7 @@
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-08-24T14:52:00.000+0200",
       "parent_key": "LEAS-7374",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Cleanbody CC La Villa ( 30267 )",
       "consola_averiada": "90737",
       "manipulo_averiado": "No aparece",
@@ -634,21 +649,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "40245",
       "modelo": "MHR Quad"
-    },
-    {
-      "key": "LEAS-7140",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "Smart duck paris 15 Convention",
-      "loc": "332 Rue de Vaugirard, 75015 Paris, Francia",
-      "consola_susti": "C03258",
-      "manipulo_susti": "H03258",
-      "fecha_envio": "2026-07-24T13:26:00.000+0200",
-      "parent_key": "LEAS-7121",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Smart duck paris 15 Convention",
-      "consola_averiada": "C03104",
-      "manipulo_averiado": "H03104",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-5697",
