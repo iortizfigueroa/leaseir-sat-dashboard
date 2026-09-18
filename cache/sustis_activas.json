@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-18T13:42:33.607568+00:00",
+    "last_fetched_at": "2026-09-18T17:16:55.769184+00:00",
     "schema_version": 1,
-    "count": 46
+    "count": 47
   },
   "items": [
-    {
-      "key": "LEAS-7682",
-      "subtask_status": "Solicitado",
-      "cliente": "Malie Estetica Avanzada",
-      "loc": "Bo. Txiki-Erdi, 7, 20170 Usurbil, Gipuzkoa",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7681",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Malie Estetica Avanzada",
-      "consola_averiada": "",
-      "manipulo_averiado": "40288",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7672",
       "subtask_status": "Solicitado",
@@ -124,6 +109,36 @@
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7684",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello San Sebastian",
+      "loc": "Reyes Catolicos Kalea, 18, 20006 Donostia / San Sebastián, Gipuzkoa",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL003",
+      "fecha_envio": "2026-09-18T16:40:00.000+0200",
+      "parent_key": "LEAS-7595",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello San Sebastian",
+      "consola_averiada": "90747",
+      "manipulo_averiado": "30279",
+      "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-7682",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Malie Estetica Avanzada",
+      "loc": "Bo. Txiki-Erdi, 7, 20170 Usurbil, Gipuzkoa",
+      "consola_susti": "91127",
+      "manipulo_susti": "SUSTDUAL005",
+      "fecha_envio": "2026-09-18T16:08:00.000+0200",
+      "parent_key": "LEAS-7681",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Malie Estetica Avanzada",
+      "consola_averiada": "",
+      "manipulo_averiado": "40288",
+      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-7637",
@@ -419,7 +434,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-09-07T16:20:00.000+0200",
       "parent_key": "LEAS-7466",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sinvello Teatinos",
       "consola_averiada": "C00913",
       "manipulo_averiado": "H00913",
@@ -479,7 +494,7 @@
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-08-31T10:17:00.000+0200",
       "parent_key": "LEAS-7412",
-      "parent_status": "Inspección de salida",
+      "parent_status": "En reparación",
       "parent_cliente": "Sinvello Provenza",
       "consola_averiada": "C00329",
       "manipulo_averiado": "H00329",
