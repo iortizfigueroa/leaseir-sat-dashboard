@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-22T09:19:49.132855+00:00",
+    "last_fetched_at": "2026-09-22T14:06:28.142253+00:00",
     "schema_version": 1,
-    "count": 48
+    "count": 47
   },
   "items": [
     {
@@ -29,7 +29,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7561",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Dermasana Princesa",
       "consola_averiada": "C00238",
       "manipulo_averiado": "H00238",
@@ -96,36 +96,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7623",
-      "subtask_status": "Solicitado",
-      "cliente": "Clinica Med Splau Barcelona  ( 91087 40579 )",
-      "loc": "Av. del Baix Llobregat, s/n, 08940 Cornellà de Llobregat, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7622",
-      "parent_status": "Finalizado técnico externo",
-      "parent_cliente": "Clinica Med Splau Barcelona  ( 91087 40579 )",
-      "consola_averiada": "91087",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7575",
-      "subtask_status": "Solicitado",
-      "cliente": "Centri Unico Globo",
-      "loc": "Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7438",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Centri Unico Globo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00674",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7418",
       "subtask_status": "Solicitado",
       "cliente": "Centro Unico Palermo",
@@ -139,6 +109,21 @@
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7575",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centri Unico Globo",
+      "loc": "Italia",
+      "consola_susti": null,
+      "manipulo_susti": "H01025",
+      "fecha_envio": "2026-09-22T11:21:00.000+0200",
+      "parent_key": "LEAS-7438",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centri Unico Globo",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00674",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7684",
@@ -262,14 +247,14 @@
     },
     {
       "key": "LEAS-7621",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "CLINIC AND ESTHETIC By Skincare Addict  ( AHR0484)",
       "loc": "Calle de St Josep de calassanç 9 Valencia",
       "consola_susti": "AHR0082",
       "manipulo_susti": null,
       "fecha_envio": "2026-09-16T16:33:00.000+0200",
       "parent_key": "LEAS-7620",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "CLINIC AND ESTHETIC By Skincare Addict  ( AHR0484)",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -314,7 +299,7 @@
       "manipulo_susti": "40518",
       "fecha_envio": "2026-09-14T13:49:00.000+0200",
       "parent_key": "LEAS-7583",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Epil Point Aversa",
       "consola_averiada": "",
       "manipulo_averiado": "40374",
@@ -344,7 +329,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-09-11T16:31:00.000+0200",
       "parent_key": "LEAS-7561",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Dermasana Princesa",
       "consola_averiada": "C00238",
       "manipulo_averiado": "H00238",
@@ -389,7 +374,7 @@
       "manipulo_susti": "H00410",
       "fecha_envio": "2026-09-10T18:10:00.000+0200",
       "parent_key": "LEAS-7486",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Laser Factory Sabadell",
       "consola_averiada": "C00478",
       "manipulo_averiado": "H00478",
@@ -592,7 +577,7 @@
     },
     {
       "key": "LEAS-7366",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello Ibiza",
       "loc": "Carrer dels Polls, 23, 07817 Sant Josep de sa Talaia, Illes Balears",
       "consola_susti": "SUSTMHR025",
@@ -652,7 +637,7 @@
     },
     {
       "key": "LEAS-7258",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello Miraflores",
       "loc": "Calle Ntra. Sra. de los Clarines, 20, Bailén-Miraflores, 29011 Málaga",
       "consola_susti": "C00187",
@@ -704,7 +689,7 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-07-30T16:43:00.000+0200",
       "parent_key": "LEAS-7190",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Harmonie Salamanca",
       "consola_averiada": "",
       "manipulo_averiado": "40245",
