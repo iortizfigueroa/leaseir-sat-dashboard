@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-21T22:08:05.097049+00:00",
+    "last_fetched_at": "2026-09-22T09:19:49.132855+00:00",
     "schema_version": 1,
-    "count": 47
+    "count": 48
   },
   "items": [
+    {
+      "key": "LEAS-7706",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello Granada Constitucion",
+      "loc": "Av. de la Constitución, 27, Beiro, 18014 Granada",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7695",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Granada Constitucion",
+      "consola_averiada": "C00555",
+      "manipulo_averiado": "H00555",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7702",
       "subtask_status": "Solicitado",
@@ -93,21 +108,6 @@
       "parent_cliente": "Clinica Med Splau Barcelona  ( 91087 40579 )",
       "consola_averiada": "91087",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7605",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "SinVello Jerez",
-      "loc": "Avenida de Arcos, C. Mosa, 52, 11405 Jerez de la Frontera, Cádiz",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7600",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Jerez",
-      "consola_averiada": "90860",
-      "manipulo_averiado": "30361",
       "modelo": ""
     },
     {
@@ -289,6 +289,21 @@
       "consola_averiada": "C03292",
       "manipulo_averiado": "",
       "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-7605",
+      "subtask_status": "En préstamo",
+      "cliente": "SinVello Jerez",
+      "loc": "Avenida de Arcos, C. Mosa, 52, 11405 Jerez de la Frontera, Cádiz",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL019",
+      "fecha_envio": "2026-09-15T10:59:00.000+0200",
+      "parent_key": "LEAS-7600",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello Jerez",
+      "consola_averiada": "90860",
+      "manipulo_averiado": "30361",
+      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-7584",
@@ -479,7 +494,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-09-07T16:17:00.000+0200",
       "parent_key": "LEAS-7490",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "SinVello! Cádiz",
       "consola_averiada": "C00801",
       "manipulo_averiado": "H00801",
@@ -494,7 +509,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-09-07T12:23:00.000+0200",
       "parent_key": "LEAS-7490",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "SinVello! Cádiz",
       "consola_averiada": "C00801",
       "manipulo_averiado": "H00801",
@@ -524,7 +539,7 @@
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-08-31T10:17:00.000+0200",
       "parent_key": "LEAS-7412",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Sinvello Provenza",
       "consola_averiada": "C00329",
       "manipulo_averiado": "H00329",
@@ -554,7 +569,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-28T13:35:00.000+0200",
       "parent_key": "LEAS-7450",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "No filters cliente de Dinamica impulso Yolanda Jaramillo  AHR0110",
       "consola_averiada": "110",
       "manipulo_averiado": "No aparece",
@@ -592,7 +607,7 @@
     },
     {
       "key": "LEAS-7359",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Resuelto",
       "cliente": "Centri Unico Olbia",
       "loc": "Cerdeña, Italia",
       "consola_susti": null,
@@ -674,7 +689,7 @@
       "manipulo_susti": "H00326",
       "fecha_envio": "2026-08-05T13:45:00.000+0200",
       "parent_key": "LEAS-7576",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "smartduck Labege",
       "consola_averiada": "No aparece",
       "manipulo_averiado": "No aparece",
