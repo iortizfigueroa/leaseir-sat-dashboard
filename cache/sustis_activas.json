@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-22T14:06:28.142253+00:00",
+    "last_fetched_at": "2026-09-22T17:47:18.511369+00:00",
     "schema_version": 1,
     "count": 47
   },
   "items": [
-    {
-      "key": "LEAS-7706",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Granada Constitucion",
-      "loc": "Av. de la Constitución, 27, Beiro, 18014 Granada",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7695",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Granada Constitucion",
-      "consola_averiada": "C00555",
-      "manipulo_averiado": "H00555",
-      "modelo": ""
-    },
     {
       "key": "LEAS-7702",
       "subtask_status": "Solicitado",
@@ -89,7 +74,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7638",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "CAvitbell",
       "consola_averiada": "",
       "manipulo_averiado": "30117",
@@ -109,6 +94,21 @@
       "consola_averiada": "C00676",
       "manipulo_averiado": "H00676",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7706",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Granada Constitucion",
+      "loc": "Av. de la Constitución, 27, Beiro, 18014 Granada",
+      "consola_susti": null,
+      "manipulo_susti": "H01013",
+      "fecha_envio": "2026-09-22T17:30:00.000+0200",
+      "parent_key": "LEAS-7695",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Granada Constitucion",
+      "consola_averiada": "C00555",
+      "manipulo_averiado": "H00555",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7575",
@@ -524,7 +524,7 @@
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-08-31T10:17:00.000+0200",
       "parent_key": "LEAS-7412",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Sinvello Provenza",
       "consola_averiada": "C00329",
       "manipulo_averiado": "H00329",
@@ -614,7 +614,7 @@
       "manipulo_susti": "H00751",
       "fecha_envio": "2026-08-24T14:52:00.000+0200",
       "parent_key": "LEAS-7374",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Cleanbody CC La Villa ( 30267 )",
       "consola_averiada": "90737",
       "manipulo_averiado": "No aparece",
