@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-25T09:38:23.200180+00:00",
+    "last_fetched_at": "2026-09-25T14:40:33.419418+00:00",
     "schema_version": 1,
-    "count": 48
+    "count": 49
   },
   "items": [
+    {
+      "key": "LEAS-7757",
+      "subtask_status": "Solicitado",
+      "cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
+      "loc": "Pl. de San Antón, 6, Loc 1, 41410 Carmona, Sevilla",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7756",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7731",
       "subtask_status": "Solicitado",
@@ -179,7 +194,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-09-17T16:26:00.000+0200",
       "parent_key": "LEAS-7636",
-      "parent_status": "En reparación",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "CEntros Zurimed  (40528)",
       "consola_averiada": "91063",
       "manipulo_averiado": "",
@@ -314,7 +329,7 @@
       "manipulo_susti": "40518",
       "fecha_envio": "2026-09-14T13:49:00.000+0200",
       "parent_key": "LEAS-7583",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Epil Point Aversa",
       "consola_averiada": "",
       "manipulo_averiado": "40374",
@@ -329,7 +344,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-09-14T09:21:00.000+0200",
       "parent_key": "LEAS-7599",
-      "parent_status": "En cola taller",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90289",
       "manipulo_averiado": "-",
@@ -344,7 +359,7 @@
       "manipulo_susti": "40551",
       "fecha_envio": "2026-09-11T16:31:00.000+0200",
       "parent_key": "LEAS-7561",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Dermasana Princesa",
       "consola_averiada": "C00238",
       "manipulo_averiado": "H00238",
@@ -461,7 +476,7 @@
       "cliente": "Clinica Cibeles Holea",
       "loc": "Ronda Exterior Zona Sur, s/n, CENTRO COMERCIAL HOLEA, 21007 Huelva",
       "consola_susti": "91129",
-      "manipulo_susti": "40481",
+      "manipulo_susti": "40464",
       "fecha_envio": "2026-09-07T16:23:00.000+0200",
       "parent_key": "LEAS-7503",
       "parent_status": "En cola taller",
