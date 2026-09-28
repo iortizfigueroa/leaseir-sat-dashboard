@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-09-28T12:40:35.448379+00:00",
+    "last_fetched_at": "2026-09-28T17:45:37.125407+00:00",
     "schema_version": 1,
-    "count": 48
+    "count": 49
   },
   "items": [
+    {
+      "key": "LEAS-7779",
+      "subtask_status": "Solicitado",
+      "cliente": "Oksana Sagan",
+      "loc": "Corso della Repubblica 115, Pozzuoli",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7714",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Oksana Sagan",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7774",
       "subtask_status": "Solicitado",
@@ -21,21 +36,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7766",
-      "subtask_status": "Solicitado",
-      "cliente": "Clínica Ónix 8",
-      "loc": "C. Londres, Oeste, 10005 Cáceres",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7764",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Clínica Ónix 8",
-      "consola_averiada": "C00371",
-      "manipulo_averiado": "H00371",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7757",
       "subtask_status": "Solicitado",
       "cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
@@ -46,21 +46,6 @@
       "parent_key": "LEAS-7756",
       "parent_status": "Pendiente recogida",
       "parent_cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7731",
-      "subtask_status": "Solicitado",
-      "cliente": "Unico - Centro C.C. Euroma2 Roma  SRF10016 BSSUST005",
-      "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7730",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Unico - Centro C.C. Euroma2 Roma  SRF10016 BSSUST005",
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
@@ -96,6 +81,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-7766",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Clínica Ónix 8",
+      "loc": "C. Londres, Oeste, 10005 Cáceres",
+      "consola_susti": "SUSTMHR033",
+      "manipulo_susti": "SUSTQUAD025",
+      "fecha_envio": "2026-09-28T17:00:00.000+0200",
+      "parent_key": "LEAS-7764",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Clínica Ónix 8",
+      "consola_averiada": "C00371",
+      "manipulo_averiado": "H00371",
+      "modelo": "MHR"
+    },
+    {
       "key": "LEAS-7775",
       "subtask_status": "En préstamo",
       "cliente": "Dermasana Princesa",
@@ -124,6 +124,21 @@
       "consola_averiada": "C03045",
       "manipulo_averiado": "H03045",
       "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-7731",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Unico - Centro C.C. Euroma2 Roma  SRF10016 BSSUST005",
+      "loc": "Viale dell'Oceano Pacifico, 83, 00144 Roma RM, Italia",
+      "consola_susti": "SRF10018",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-09-28T00:30:00.000+0200",
+      "parent_key": "LEAS-7730",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Unico - Centro C.C. Euroma2 Roma  SRF10016 BSSUST005",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
     },
     {
       "key": "LEAS-7728",
@@ -164,7 +179,7 @@
       "manipulo_susti": "SUSTDUAL040",
       "fecha_envio": "2026-09-23T10:27:00.000+0200",
       "parent_key": "LEAS-7719",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Antequera",
       "consola_averiada": "90703",
       "manipulo_averiado": "30214",
@@ -179,7 +194,7 @@
       "manipulo_susti": "SUSTDUAL017",
       "fecha_envio": "2026-09-23T10:16:00.000+0200",
       "parent_key": "LEAS-7718",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Mairena",
       "consola_averiada": "90933",
       "manipulo_averiado": "30427",
@@ -404,7 +419,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-09-14T09:21:00.000+0200",
       "parent_key": "LEAS-7599",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Elha Limoneros",
       "consola_averiada": "90289",
       "manipulo_averiado": "-",
@@ -449,7 +464,7 @@
       "manipulo_susti": "H00410",
       "fecha_envio": "2026-09-10T18:10:00.000+0200",
       "parent_key": "LEAS-7486",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Laser Factory Sabadell",
       "consola_averiada": "C00478",
       "manipulo_averiado": "H00478",
@@ -599,7 +614,7 @@
       "manipulo_susti": "SUSTDUAL010",
       "fecha_envio": "2026-08-31T10:17:00.000+0200",
       "parent_key": "LEAS-7412",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sinvello Provenza",
       "consola_averiada": "C00329",
       "manipulo_averiado": "H00329",
@@ -614,7 +629,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-08-28T17:11:00.000+0200",
       "parent_key": "LEAS-7343",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Elha Sta teresa",
       "consola_averiada": "90245",
       "manipulo_averiado": "40161",
@@ -674,7 +689,7 @@
       "manipulo_susti": "SUSTQUAD028",
       "fecha_envio": "2026-08-10T16:02:00.000+0200",
       "parent_key": "LEAS-7270",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Epil Point Lecce",
       "consola_averiada": "",
       "manipulo_averiado": "40413",
