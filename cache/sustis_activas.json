@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-06T16:04:26.514464+00:00",
+    "last_fetched_at": "2026-10-06T19:08:32.584466+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 61
   },
   "items": [
     {
@@ -202,18 +202,33 @@
     },
     {
       "key": "LEAS-7690",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
+      "subtask_status": "Equipo enviado",
       "cliente": "SinVello Valladolid",
       "loc": "C. José María Lacort, 9, 47002 Valladolid",
       "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
+      "manipulo_susti": "sustdual010",
+      "fecha_envio": "2026-10-06T19:14:00.000+0200",
       "parent_key": "LEAS-7687",
       "parent_status": "Pendiente recogida",
       "parent_cliente": "SinVello Valladolid",
       "consola_averiada": "90769",
       "manipulo_averiado": "30301",
-      "modelo": ""
+      "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-7906",
+      "subtask_status": "En préstamo",
+      "cliente": "Dermasana Calle Alcala",
+      "loc": "C. Alcalá, 180, Salamanca, 28028 Madrid",
+      "consola_susti": "C00107",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-10-06T18:38:00.000+0200",
+      "parent_key": "LEAS-7904",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Dermasana Calle Alcala",
+      "consola_averiada": "C00166",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-7808",
