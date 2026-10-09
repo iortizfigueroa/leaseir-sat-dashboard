@@ -1,38 +1,23 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-09T08:52:01.430095+00:00",
+    "last_fetched_at": "2026-10-09T11:21:33.297678+00:00",
     "schema_version": 1,
-    "count": 61
+    "count": 60
   },
   "items": [
     {
-      "key": "LEAS-7937",
+      "key": "LEAS-7947",
       "subtask_status": "Solicitado",
-      "cliente": "SinVello Sevilla Este",
-      "loc": "Av. de las Ciencias, 63, 41020 Sevilla",
+      "cliente": "Laser Factory Avd. Madrid",
+      "loc": "Av. de Madrid, 190, Sants-Montjuïc, 08028 Barcelona",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
-      "parent_key": "LEAS-7936",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Sevilla Este",
-      "consola_averiada": "C00232",
-      "manipulo_averiado": "H00232",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7931",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Sants",
-      "loc": "Carrer de Carreras i Candi, 89, Sants-Montjuïc, 08028 Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7890",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Sants",
-      "consola_averiada": "C00743",
-      "manipulo_averiado": "H00743",
+      "parent_key": "LEAS-7941",
+      "parent_status": "Enviado a técnico externo",
+      "parent_cliente": "Laser Factory Avd. Madrid",
+      "consola_averiada": "C00433",
+      "manipulo_averiado": "H00433",
       "modelo": ""
     },
     {
@@ -171,6 +156,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-7931",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Sants",
+      "loc": "Carrer de Carreras i Candi, 89, Sants-Montjuïc, 08028 Barcelona",
+      "consola_susti": null,
+      "manipulo_susti": "H00552",
+      "fecha_envio": "2026-10-09T13:10:00.000+0200",
+      "parent_key": "LEAS-7890",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Sants",
+      "consola_averiada": "C00743",
+      "manipulo_averiado": "H00743",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-7892",
       "subtask_status": "En préstamo",
       "cliente": "Paula Estetica, estetica radiante",
@@ -179,7 +179,7 @@
       "manipulo_susti": "BS00030",
       "fecha_envio": "2026-10-08T18:02:00.000+0200",
       "parent_key": "LEAS-7891",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Paula Estetica, estetica radiante",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -269,7 +269,7 @@
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-10-07T09:55:00.000+0200",
       "parent_key": "LEAS-7878",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "SinVello Jerez",
       "consola_averiada": "90860",
       "manipulo_averiado": "30361",
@@ -547,7 +547,7 @@
     },
     {
       "key": "LEAS-7721",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello Antequera",
       "loc": "C. Diego Ponce, 10, 29200 Antequera, Málaga",
       "consola_susti": null,
@@ -618,21 +618,6 @@
       "parent_cliente": "SinVello San Sebastian",
       "consola_averiada": "90747",
       "manipulo_averiado": "30279",
-      "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-7682",
-      "subtask_status": "En préstamo",
-      "cliente": "Malie Estetica Avanzada",
-      "loc": "Bo. Txiki-Erdi, 7, 20170 Usurbil, Gipuzkoa",
-      "consola_susti": "90127",
-      "manipulo_susti": "SUSTDUAL005",
-      "fecha_envio": "2026-09-18T16:08:00.000+0200",
-      "parent_key": "LEAS-7681",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Malie Estetica Avanzada",
-      "consola_averiada": "90601",
-      "manipulo_averiado": "40288",
       "modelo": "MHR Dual"
     },
     {
@@ -742,7 +727,7 @@
     },
     {
       "key": "LEAS-7573",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Laser Center Milano - Carducci",
       "loc": "V. Giosuè Carducci, 12, 20123 Milano MI, Italia",
       "consola_susti": null,
@@ -892,7 +877,7 @@
     },
     {
       "key": "LEAS-7577",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "smartduck Labege",
       "loc": "130 Rue Pierre et Marie Curie, 31670 Labège, Francia",
       "consola_susti": "C00326",
