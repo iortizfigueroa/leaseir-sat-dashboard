@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-08T23:30:58.965653+00:00",
+    "last_fetched_at": "2026-10-09T08:52:01.430095+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 61
   },
   "items": [
+    {
+      "key": "LEAS-7937",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello Sevilla Este",
+      "loc": "Av. de las Ciencias, 63, 41020 Sevilla",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7936",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Sevilla Este",
+      "consola_averiada": "C00232",
+      "manipulo_averiado": "H00232",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7931",
       "subtask_status": "Solicitado",
@@ -44,7 +59,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7879",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Nantara Laser (Solmanía)",
       "consola_averiada": "",
       "manipulo_averiado": "40057",
@@ -494,7 +509,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-09-24T15:00:00.000+0200",
       "parent_key": "LEAS-7724",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello Algeciras",
       "consola_averiada": "C00518",
       "manipulo_averiado": "H00518",
