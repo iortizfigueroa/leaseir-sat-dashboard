@@ -1,10 +1,55 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-09T11:24:40.107125+00:00",
+    "last_fetched_at": "2026-10-09T16:24:01.733042+00:00",
     "schema_version": 1,
-    "count": 60
+    "count": 64
   },
   "items": [
+    {
+      "key": "LEAS-7962",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Valladolid",
+      "loc": "C. de Fray Luis de León, 23, 47002 Valladolid",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7961",
+      "parent_status": "Abierto",
+      "parent_cliente": "Elha Valladolid",
+      "consola_averiada": "-",
+      "manipulo_averiado": "40307",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7959",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello Torrelavega",
+      "loc": "C. Pablo Iglesias, 3, 39300 Torrelavega, Cantabria",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7957",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Torrelavega",
+      "consola_averiada": "C00926",
+      "manipulo_averiado": "H00926",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7956",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Vía Augusta",
+      "loc": "Via Augusta, 80, Gràcia, 08006 Barcelona",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7955",
+      "parent_status": "Enviado a técnico externo",
+      "parent_cliente": "Elha Vía Augusta",
+      "consola_averiada": "-",
+      "manipulo_averiado": "40261",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7947",
       "subtask_status": "Solicitado",
@@ -37,14 +82,14 @@
     },
     {
       "key": "LEAS-7880",
-      "subtask_status": "Solicitado",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
       "cliente": "Nantara Laser (Solmanía)",
       "loc": "Segovia",
       "consola_susti": null,
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7879",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Nantara Laser (Solmanía)",
       "consola_averiada": "",
       "manipulo_averiado": "40057",
@@ -153,6 +198,36 @@
       "parent_cliente": "Sin Vello Pozuelo",
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7954",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Republica Argentina",
+      "loc": "Av. de la República Argentina, 20, Poniente Sur, 14004 Córdoba",
+      "consola_susti": null,
+      "manipulo_susti": "H01013",
+      "fecha_envio": "2026-10-09T18:06:00.000+0200",
+      "parent_key": "LEAS-7950",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Republica Argentina",
+      "consola_averiada": "C00231",
+      "manipulo_averiado": "H00231",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-7952",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro Unico Roma Est",
+      "loc": "V. Collatina, 858, 00132 Roma RM, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "FS0023",
+      "fecha_envio": "2026-10-09T13:47:00.000+0200",
+      "parent_key": "LEAS-7935",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro Unico Roma Est",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -546,21 +621,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-7721",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "SinVello Antequera",
-      "loc": "C. Diego Ponce, 10, 29200 Antequera, Málaga",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTDUAL040",
-      "fecha_envio": "2026-09-23T10:27:00.000+0200",
-      "parent_key": "LEAS-7719",
-      "parent_status": "Resuelto",
-      "parent_cliente": "SinVello Antequera",
-      "consola_averiada": "90703",
-      "manipulo_averiado": "30214",
-      "modelo": "MHR Dual"
-    },
-    {
       "key": "LEAS-7720",
       "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Mairena",
@@ -832,7 +892,7 @@
     },
     {
       "key": "LEAS-7408",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "En préstamo",
       "cliente": "Elha Sta teresa",
       "loc": "Carrer Santa Teresa, 55, 08302 Mataró, Barcelona",
       "consola_susti": "SUSTMHR013",
