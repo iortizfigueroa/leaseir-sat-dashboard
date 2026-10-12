@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-11T22:17:53.778995+00:00",
+    "last_fetched_at": "2026-10-12T12:01:35.864569+00:00",
     "schema_version": 1,
-    "count": 64
+    "count": 58
   },
   "items": [
     {
@@ -14,7 +14,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7961",
-      "parent_status": "Abierto",
+      "parent_status": "Pendiente recogida",
       "parent_cliente": "Elha Valladolid",
       "consola_averiada": "-",
       "manipulo_averiado": "40307",
@@ -123,21 +123,6 @@
       "parent_cliente": "Corpodem",
       "consola_averiada": "",
       "manipulo_averiado": "H00853",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7823",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "smartduck Portet-sur-Garonne",
-      "loc": "8 Chem. des Genêts, 31120 Portet-sur-Garonne, Francia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7822",
-      "parent_status": "Enviado a técnico externo",
-      "parent_cliente": "smartduck Portet-sur-Garonne",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -336,6 +321,21 @@
       "modelo": "MHR"
     },
     {
+      "key": "LEAS-7823",
+      "subtask_status": "En préstamo",
+      "cliente": "smartduck Portet-sur-Garonne",
+      "loc": "8 Chem. des Genêts, 31120 Portet-sur-Garonne, Francia",
+      "consola_susti": "C00326",
+      "manipulo_susti": "H00326",
+      "fecha_envio": "2026-10-07T11:40:00.000+0200",
+      "parent_key": "LEAS-7822",
+      "parent_status": "Enviado a técnico externo",
+      "parent_cliente": "smartduck Portet-sur-Garonne",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": "XCell HR"
+    },
+    {
       "key": "LEAS-7911",
       "subtask_status": "En préstamo",
       "cliente": "SinVello Jerez",
@@ -427,7 +427,7 @@
     },
     {
       "key": "LEAS-7851",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Smart duck voltaire, pieza de mano H03357",
       "loc": "75 Bd Voltaire, 75011 Paris, Francia",
       "consola_susti": "C03314",
@@ -494,7 +494,7 @@
       "manipulo_susti": "40515",
       "fecha_envio": "2026-09-29T13:58:00.000+0200",
       "parent_key": "LEAS-7789",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Beleco Fan  Mallorca HP40580",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -606,21 +606,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-7792",
-      "subtask_status": "Equipo enviado",
-      "cliente": "Centro Unico Tirburtina",
-      "loc": "Via Tiburtina, 573, 00157 Roma RM, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "C00368",
-      "fecha_envio": "2026-09-23T17:48:00.000+0200",
-      "parent_key": "LEAS-7791",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Centro Unico Tirburtina",
-      "consola_averiada": "C00368",
-      "manipulo_averiado": "",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-7720",
       "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Mairena",
@@ -637,32 +622,17 @@
     },
     {
       "key": "LEAS-7706",
-      "subtask_status": "Equipo devuelto",
+      "subtask_status": "Resuelto",
       "cliente": "SinVello Granada Constitucion",
       "loc": "Av. de la Constitución, 27, Beiro, 18014 Granada",
       "consola_susti": null,
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-09-22T17:30:00.000+0200",
       "parent_key": "LEAS-7695",
-      "parent_status": "Resuelto",
+      "parent_status": "Finalizada",
       "parent_cliente": "SinVello Granada Constitucion",
       "consola_averiada": "C00555",
       "manipulo_averiado": "H00555",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7575",
-      "subtask_status": "En préstamo",
-      "cliente": "Centri Unico Globo",
-      "loc": "Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H01025",
-      "fecha_envio": "2026-09-22T11:21:00.000+0200",
-      "parent_key": "LEAS-7438",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Centri Unico Globo",
-      "consola_averiada": "",
-      "manipulo_averiado": "H00674",
       "modelo": "XCell HR"
     },
     {
@@ -711,21 +681,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7644",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Malie morea Pamplona Centro Comercial La Morea",
-      "loc": "Barrio La Morea, s/n, 31191 Cordovilla, Navarra",
-      "consola_susti": "91094",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-09-17T16:03:00.000+0200",
-      "parent_key": "LEAS-7643",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Malie morea Pamplona Centro Comercial La Morea",
-      "consola_averiada": "90600",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7674",
       "subtask_status": "En préstamo",
       "cliente": "Natur Belle Vomero SRF0028",
@@ -739,21 +694,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-7630",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Sin Vello Montilla",
-      "loc": "Av. de María Auxiliadora, 2, 14550 Montilla, Córdoba",
-      "consola_susti": "SUSTMHR018",
-      "manipulo_susti": "30074",
-      "fecha_envio": "2026-09-16T16:55:00.000+0200",
-      "parent_key": "LEAS-7628",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Sin Vello Montilla",
-      "consola_averiada": "C00655",
-      "manipulo_averiado": "H00655",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-7621",
@@ -817,7 +757,7 @@
     },
     {
       "key": "LEAS-7475",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Dermasana Albuferas",
       "loc": "Av. de la Albufera, 34, Puente de Vallecas, 28038 Madrid",
       "consola_susti": "91096",
@@ -919,36 +859,6 @@
       "consola_averiada": "110",
       "manipulo_averiado": "No aparece",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-7418",
-      "subtask_status": "En préstamo",
-      "cliente": "Centro Unico Palermo",
-      "loc": "Corso Buenos Aires, 61, 20124 Milano MI, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "H00476",
-      "fecha_envio": "2026-08-26T17:21:00.000+0200",
-      "parent_key": "LEAS-7416",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Centro Unico Palermo",
-      "consola_averiada": "C00676",
-      "manipulo_averiado": "H00676",
-      "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7577",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "smartduck Labege",
-      "loc": "130 Rue Pierre et Marie Curie, 31670 Labège, Francia",
-      "consola_susti": "C00326",
-      "manipulo_susti": "H00326",
-      "fecha_envio": "2026-08-05T13:45:00.000+0200",
-      "parent_key": "LEAS-7576",
-      "parent_status": "Resuelto",
-      "parent_cliente": "smartduck Labege",
-      "consola_averiada": "No aparece",
-      "manipulo_averiado": "No aparece",
-      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-5697",
