@@ -1,10 +1,40 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-14T10:52:44.276914+00:00",
+    "last_fetched_at": "2026-10-14T14:35:42.053213+00:00",
     "schema_version": 1,
-    "count": 57
+    "count": 58
   },
   "items": [
+    {
+      "key": "LEAS-7999",
+      "subtask_status": "Solicitado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7890",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello Sants",
+      "consola_averiada": "C00743",
+      "manipulo_averiado": "H00743",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-7998",
+      "subtask_status": "Solicitado",
+      "cliente": "Stop Vello",
+      "loc": "Av. Doctor, Av. Beltrán Báguena, 4 acc, 46360 Buñol, Valencia",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-7996",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Stop Vello",
+      "consola_averiada": "",
+      "manipulo_averiado": "30293",
+      "modelo": ""
+    },
     {
       "key": "LEAS-7981",
       "subtask_status": "Solicitado",
@@ -44,7 +74,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7941",
-      "parent_status": "Enviado a técnico externo",
+      "parent_status": "Finalizado técnico externo",
       "parent_cliente": "Laser Factory Avd. Madrid",
       "consola_averiada": "C00433",
       "manipulo_averiado": "H00433",
@@ -209,7 +239,7 @@
       "manipulo_susti": "BS00030",
       "fecha_envio": "2026-10-08T18:02:00.000+0200",
       "parent_key": "LEAS-7891",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Paula Estetica, estetica radiante",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -420,9 +450,9 @@
       "fecha_envio": "2026-10-01T09:45:00.000+0200",
       "parent_key": "LEAS-7850",
       "parent_status": "Gestionado transporte",
-      "parent_cliente": "Smart duck voltaire, pieza de mano H03357",
+      "parent_cliente": "Smart duck voltaire, pieza de mano",
       "consola_averiada": "",
-      "manipulo_averiado": "",
+      "manipulo_averiado": "H00661",
       "modelo": "XCell HR"
     },
     {
@@ -456,21 +486,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-7757",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
-      "loc": "Pl. de San Antón, 6, Loc 1, 41410 Carmona, Sevilla",
-      "consola_susti": "91127",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-09-29T17:00:00.000+0200",
-      "parent_key": "LEAS-7756",
-      "parent_status": "En preparación presupuesto",
-      "parent_cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7790",
       "subtask_status": "En préstamo",
       "cliente": "Beleco Fan  Mallorca HP40580",
@@ -479,7 +494,7 @@
       "manipulo_susti": "40515",
       "fecha_envio": "2026-09-29T13:58:00.000+0200",
       "parent_key": "LEAS-7789",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Beleco Fan  Mallorca HP40580",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
