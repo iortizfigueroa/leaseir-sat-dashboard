@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-19T22:34:13.599894+00:00",
+    "last_fetched_at": "2026-10-20T09:27:03.475917+00:00",
     "schema_version": 1,
-    "count": 59
+    "count": 57
   },
   "items": [
-    {
-      "key": "LEAS-8036",
-      "subtask_status": "Solicitado",
-      "cliente": "Centro unico Campania BS0019",
-      "loc": "SS87, 87, 81025 Marcianise CE, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8035",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Centro unico Campania BS0019",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
     {
       "key": "LEAS-8014",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -59,7 +44,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-7941",
-      "parent_status": "Finalizado técnico externo",
+      "parent_status": "Finalizada",
       "parent_cliente": "Laser Factory Avd. Madrid",
       "consola_averiada": "C00433",
       "manipulo_averiado": "H00433",
@@ -78,21 +63,6 @@
       "parent_cliente": "SinVello San Sebastian",
       "consola_averiada": "90747",
       "manipulo_averiado": "30279",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7869",
-      "subtask_status": "Solicitado",
-      "cliente": "Laser Factory - Terrassa",
-      "loc": "Carrer dels Gavatxons, 12, 08221 Terrassa, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7740",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Laser Factory - Terrassa",
-      "consola_averiada": "C00376",
-      "manipulo_averiado": "H00376",
       "modelo": ""
     },
     {
@@ -171,19 +141,19 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-8026",
+      "key": "LEAS-8036",
       "subtask_status": "Equipo enviado",
-      "cliente": "Centro Unico Ostia",
-      "loc": "Via delle Baleniere, 15, 00121 Lido di Ostia RM, Italia",
+      "cliente": "Centro unico Campania BS0019",
+      "loc": "SS87, 87, 81025 Marcianise CE, Italia",
       "consola_susti": null,
-      "manipulo_susti": "H01061",
-      "fecha_envio": "2026-10-19T17:00:00.000+0200",
-      "parent_key": "LEAS-8025",
+      "manipulo_susti": "SUSTBS010",
+      "fecha_envio": "2026-10-19T10:13:00.000+0200",
+      "parent_key": "LEAS-8035",
       "parent_status": "Pendiente recogida",
-      "parent_cliente": "Centro Unico Ostia",
+      "parent_cliente": "Centro unico Campania BS0019",
       "consola_averiada": "",
-      "manipulo_averiado": "H00240",
-      "modelo": "XCell HR"
+      "manipulo_averiado": "",
+      "modelo": ""
     },
     {
       "key": "LEAS-8042",
@@ -449,7 +419,7 @@
       "manipulo_susti": "SUSTSINGLE021",
       "fecha_envio": "2026-10-07T17:00:00.000+0200",
       "parent_key": "LEAS-7893",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "BEAUTY Centre d'estètica  20076",
       "consola_averiada": "90159",
       "manipulo_averiado": "No aparece",
@@ -479,7 +449,7 @@
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-10-07T09:55:00.000+0200",
       "parent_key": "LEAS-7878",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "SinVello Jerez",
       "consola_averiada": "90860",
       "manipulo_averiado": "30361",
@@ -524,7 +494,7 @@
       "manipulo_susti": "sustdual043",
       "fecha_envio": "2026-10-01T10:48:00.000+0200",
       "parent_key": "LEAS-7777",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "Sin Vello Fuengirola",
       "consola_averiada": "",
       "manipulo_averiado": "30801",
@@ -614,7 +584,7 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-09-28T17:00:00.000+0200",
       "parent_key": "LEAS-7764",
-      "parent_status": "En cola taller",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Clínica Ónix 8",
       "consola_averiada": "C00371",
       "manipulo_averiado": "H00371",
