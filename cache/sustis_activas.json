@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-20T21:48:11.026954+00:00",
+    "last_fetched_at": "2026-10-21T09:23:33.478416+00:00",
     "schema_version": 1,
     "count": 59
   },
   "items": [
-    {
-      "key": "LEAS-8095",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Bergamo",
-      "loc": "Via Sant'Alessandro, 5, 24122 Bergamo BG, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8093",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Point Bergamo",
-      "consola_averiada": "91358",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
     {
       "key": "LEAS-8014",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -124,6 +109,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-8095",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Epil Point Bergamo",
+      "loc": "Via Sant'Alessandro, 5, 24122 Bergamo BG, Italia",
+      "consola_susti": "SUSTMHR014",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-10-21T09:57:00.000+0200",
+      "parent_key": "LEAS-8093",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Bergamo",
+      "consola_averiada": "91358",
+      "manipulo_averiado": "",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-8090",
@@ -284,7 +284,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-10-13T17:00:00.000+0200",
       "parent_key": "LEAS-7957",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Torrelavega",
       "consola_averiada": "C00926",
       "manipulo_averiado": "H00926",
@@ -299,7 +299,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-10-09T18:06:00.000+0200",
       "parent_key": "LEAS-7950",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Republica Argentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -487,7 +487,7 @@
     },
     {
       "key": "LEAS-7690",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello Valladolid",
       "loc": "C. José María Lacort, 9, 47002 Valladolid",
       "consola_susti": null,
@@ -509,7 +509,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-06T18:38:00.000+0200",
       "parent_key": "LEAS-7904",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Dermasana Calle Alcala",
       "consola_averiada": "C00166",
       "manipulo_averiado": "",
@@ -584,7 +584,7 @@
       "manipulo_susti": "H01069",
       "fecha_envio": "2026-09-29T17:00:00.000+0200",
       "parent_key": "LEAS-7786",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "SinVello Lorca",
       "consola_averiada": "C00658",
       "manipulo_averiado": "H00658",
@@ -614,7 +614,7 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-09-28T17:00:00.000+0200",
       "parent_key": "LEAS-7764",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Clínica Ónix 8",
       "consola_averiada": "C00371",
       "manipulo_averiado": "H00371",
@@ -682,7 +682,7 @@
     },
     {
       "key": "LEAS-7728",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "SinVello Algeciras",
       "loc": "Av. Virgen del Carmen, 32, 11204 Algeciras, Cádiz",
       "consola_susti": null,
@@ -772,7 +772,7 @@
     },
     {
       "key": "LEAS-7621",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "CLINIC AND ESTHETIC By Skincare Addict  ( AHR0484)",
       "loc": "Calle de St Josep de calassanç 9 Valencia",
       "consola_susti": "AHR0082",
