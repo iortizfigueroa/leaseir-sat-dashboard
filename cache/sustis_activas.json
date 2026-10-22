@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-21T21:54:11.747206+00:00",
+    "last_fetched_at": "2026-10-22T09:26:10.049358+00:00",
     "schema_version": 1,
-    "count": 61
+    "count": 60
   },
   "items": [
-    {
-      "key": "LEAS-8112",
-      "subtask_status": "Solicitado",
-      "cliente": "Epil Point Genova 40755",
-      "loc": "Via Sestri, 71 R, 16153 Genova GE, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8110",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Epil Point Genova 40755",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": ""
-    },
     {
       "key": "LEAS-8014",
       "subtask_status": "Esperando respuesta cliente a presupuesto",
@@ -66,21 +51,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7903",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello San Sebastian",
-      "loc": "Reyes Catolicos Kalea, 18, 20006 Donostia / San Sebastián, Gipuzkoa",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-7902",
-      "parent_status": "Finalizada",
-      "parent_cliente": "SinVello San Sebastian",
-      "consola_averiada": "90747",
-      "manipulo_averiado": "30279",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7811",
       "subtask_status": "Solicitado",
       "cliente": "Centro Unico Rende",
@@ -124,6 +94,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-8112",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Epil Point Genova 40755",
+      "loc": "Via Sestri, 71 R, 16153 Genova GE, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD033",
+      "fecha_envio": "2026-10-22T09:16:00.000+0200",
+      "parent_key": "LEAS-8110",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Epil Point Genova 40755",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-8113",
@@ -269,7 +254,7 @@
       "manipulo_susti": "H01033",
       "fecha_envio": "2026-10-14T17:00:00.000+0200",
       "parent_key": "LEAS-7890",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "SinVello Sants",
       "consola_averiada": "C00743",
       "manipulo_averiado": "H00743",
@@ -314,7 +299,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-10-13T17:00:00.000+0200",
       "parent_key": "LEAS-7957",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "SinVello Torrelavega",
       "consola_averiada": "C00926",
       "manipulo_averiado": "H00926",
@@ -374,7 +359,7 @@
       "manipulo_susti": "H00552",
       "fecha_envio": "2026-10-09T13:10:00.000+0200",
       "parent_key": "LEAS-7890",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "SinVello Sants",
       "consola_averiada": "C00743",
       "manipulo_averiado": "H00743",
@@ -509,7 +494,7 @@
       "manipulo_susti": "SUSTDUAL019",
       "fecha_envio": "2026-10-07T09:55:00.000+0200",
       "parent_key": "LEAS-7878",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "SinVello Jerez",
       "consola_averiada": "90860",
       "manipulo_averiado": "30361",
@@ -554,7 +539,7 @@
       "manipulo_susti": "sustdual043",
       "fecha_envio": "2026-10-01T10:48:00.000+0200",
       "parent_key": "LEAS-7777",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "En cola taller",
       "parent_cliente": "Sin Vello Fuengirola",
       "consola_averiada": "",
       "manipulo_averiado": "30801",
@@ -584,7 +569,7 @@
       "manipulo_susti": "h03314",
       "fecha_envio": "2026-10-01T09:45:00.000+0200",
       "parent_key": "LEAS-7850",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "Smart duck voltaire, pieza de mano",
       "consola_averiada": "",
       "manipulo_averiado": "H00661",
