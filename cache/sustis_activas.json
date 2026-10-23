@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-22T21:51:33.657445+00:00",
+    "last_fetched_at": "2026-10-23T09:22:36.882164+00:00",
     "schema_version": 1,
     "count": 61
   },
@@ -67,7 +67,7 @@
     },
     {
       "key": "LEAS-7779",
-      "subtask_status": "Solicitado",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
       "cliente": "Oksana Sagan",
       "loc": "Corso della Repubblica 115, Pozzuoli",
       "consola_susti": null,
@@ -239,7 +239,7 @@
       "manipulo_susti": "SUSTDUAL40",
       "fecha_envio": "2026-10-19T00:30:00.000+0200",
       "parent_key": "LEAS-8023",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Andujar",
       "consola_averiada": "90667",
       "manipulo_averiado": "30244",
@@ -284,7 +284,7 @@
       "manipulo_susti": "H01033",
       "fecha_envio": "2026-10-14T17:00:00.000+0200",
       "parent_key": "LEAS-7890",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "SinVello Sants",
       "consola_averiada": "C00743",
       "manipulo_averiado": "H00743",
@@ -344,7 +344,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-10-09T18:06:00.000+0200",
       "parent_key": "LEAS-7950",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Pendiente confirmación presupuesto",
       "parent_cliente": "SinVello Republica Argentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -374,7 +374,7 @@
       "manipulo_susti": "FS0023",
       "fecha_envio": "2026-10-09T13:47:00.000+0200",
       "parent_key": "LEAS-7935",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Centro Unico Roma Est",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -817,7 +817,7 @@
     },
     {
       "key": "LEAS-7475",
-      "subtask_status": "Equipo devuelto",
+      "subtask_status": "Resuelto",
       "cliente": "Dermasana Albuferas",
       "loc": "Av. de la Albufera, 34, Puente de Vallecas, 28038 Madrid",
       "consola_susti": "91096",
