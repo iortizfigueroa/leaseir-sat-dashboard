@@ -1,10 +1,40 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-27T15:27:50.379350+00:00",
+    "last_fetched_at": "2026-10-27T19:00:55.714441+00:00",
     "schema_version": 1,
-    "count": 54
+    "count": 56
   },
   "items": [
+    {
+      "key": "LEAS-8190",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello El Pilar",
+      "loc": "C. de la Isla de Arosa, 35, Fuencarral-El Pardo, 28035 Madrid",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8184",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello El Pilar",
+      "consola_averiada": "C00469",
+      "manipulo_averiado": "H00469",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-8187",
+      "subtask_status": "Solicitado",
+      "cliente": "Elha Jaén",
+      "loc": "Av. Eduardo García Maroto, 22, 23005 Jaén",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8176",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Jaén",
+      "consola_averiada": "C03346",
+      "manipulo_averiado": "H03346",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8162",
       "subtask_status": "Solicitado",
@@ -344,7 +374,7 @@
       "manipulo_susti": "H01033",
       "fecha_envio": "2026-10-14T17:00:00.000+0200",
       "parent_key": "LEAS-7890",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Sants",
       "consola_averiada": "C00743",
       "manipulo_averiado": "H00743",
@@ -389,7 +419,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-10-13T17:00:00.000+0200",
       "parent_key": "LEAS-7957",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Torrelavega",
       "consola_averiada": "C00926",
       "manipulo_averiado": "H00926",
@@ -404,7 +434,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-10-09T18:06:00.000+0200",
       "parent_key": "LEAS-7950",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Republica Argentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -487,7 +517,7 @@
     },
     {
       "key": "LEAS-7863",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Corpodem",
       "loc": "6 Rue de Soyouz, 31240 L'Union, Francia",
       "consola_susti": null,
@@ -644,7 +674,7 @@
       "manipulo_susti": "H01069",
       "fecha_envio": "2026-09-29T17:00:00.000+0200",
       "parent_key": "LEAS-7786",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello Lorca",
       "consola_averiada": "C00658",
       "manipulo_averiado": "H00658",
