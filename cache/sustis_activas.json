@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-26T22:50:25.171035+00:00",
+    "last_fetched_at": "2026-10-27T09:50:21.919544+00:00",
     "schema_version": 1,
-    "count": 58
+    "count": 59
   },
   "items": [
     {
@@ -78,6 +78,21 @@
       "parent_cliente": "Sin Vello Pozuelo",
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-8178",
+      "subtask_status": "Equipo enviado",
+      "cliente": "CLINIC AND ESTHETIC By Skincare Addict ( AHR00484)",
+      "loc": "Calle de St Josep de calassanç 9 Valencia",
+      "consola_susti": "SUSTAHRD005",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-10-27T17:00:00.000+0100",
+      "parent_key": "LEAS-8170",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "CLINIC AND ESTHETIC By Skincare Addict ( AHR00484)",
+      "consola_averiada": "484",
+      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -269,7 +284,7 @@
       "manipulo_susti": "SUSTDUAL40",
       "fecha_envio": "2026-10-19T00:30:00.000+0200",
       "parent_key": "LEAS-8023",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "SinVello Andujar",
       "consola_averiada": "90667",
       "manipulo_averiado": "30244",
@@ -389,7 +404,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-10-09T18:06:00.000+0200",
       "parent_key": "LEAS-7950",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "SinVello Republica Argentina",
       "consola_averiada": "C00231",
       "manipulo_averiado": "H00231",
@@ -584,7 +599,7 @@
       "manipulo_susti": "sustdual043",
       "fecha_envio": "2026-10-01T10:48:00.000+0200",
       "parent_key": "LEAS-7777",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Sin Vello Fuengirola",
       "consola_averiada": "",
       "manipulo_averiado": "30801",
@@ -614,7 +629,7 @@
       "manipulo_susti": "H01012",
       "fecha_envio": "2026-09-30T19:05:00.000+0200",
       "parent_key": "LEAS-7804",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "SinVello Sant Cugat del Valles",
       "consola_averiada": "C00540",
       "manipulo_averiado": "H00540",
@@ -659,7 +674,7 @@
       "manipulo_susti": "SUSTQUAD025",
       "fecha_envio": "2026-09-28T17:00:00.000+0200",
       "parent_key": "LEAS-7764",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Clínica Ónix 8",
       "consola_averiada": "C00371",
       "manipulo_averiado": "H00371",
@@ -719,7 +734,7 @@
       "manipulo_susti": "SUSTDUAL003",
       "fecha_envio": "2026-09-25T13:02:00.000+0200",
       "parent_key": "LEAS-7756",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
       "consola_averiada": "",
       "manipulo_averiado": "",
