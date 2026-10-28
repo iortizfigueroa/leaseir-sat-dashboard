@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-28T08:43:53.962296+00:00",
+    "last_fetched_at": "2026-10-28T10:36:21.696000+00:00",
     "schema_version": 1,
     "count": 57
   },
   "items": [
+    {
+      "key": "LEAS-8202",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello Tomares",
+      "loc": "Av. del Aljarafe, 14, Local 12, 41940 Tomares, Sevilla",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8172",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello Tomares",
+      "consola_averiada": "C00260",
+      "manipulo_averiado": "H00260",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8190",
       "subtask_status": "Solicitado",
@@ -179,7 +194,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-22T17:00:00.000+0200",
       "parent_key": "LEAS-8123",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Harmonie",
       "consola_averiada": "90522",
       "manipulo_averiado": "",
@@ -307,7 +322,7 @@
     },
     {
       "key": "LEAS-8036",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Centro unico Campania BS0019",
       "loc": "SS87, 87, 81025 Marcianise CE, Italia",
       "consola_susti": null,
@@ -329,7 +344,7 @@
       "manipulo_susti": "SUSTDUAL40",
       "fecha_envio": "2026-10-19T00:30:00.000+0200",
       "parent_key": "LEAS-8023",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "SinVello Andujar",
       "consola_averiada": "90667",
       "manipulo_averiado": "30244",
@@ -786,21 +801,6 @@
       "modelo": "MHR"
     },
     {
-      "key": "LEAS-7722",
-      "subtask_status": "Resuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": "c00591",
-      "manipulo_susti": "H00591",
-      "fecha_envio": "2026-09-23T19:15:00.000+0200",
-      "parent_key": "LEAS-7595",
-      "parent_status": "Finalizada",
-      "parent_cliente": "SinVello San Sebastian",
-      "consola_averiada": "90747",
-      "manipulo_averiado": "30279",
-      "modelo": "XCell HR"
-    },
-    {
       "key": "LEAS-7646",
       "subtask_status": "Gestionada recogida",
       "cliente": "Clínica MED medicina estética depilación  ( 40579 )",
@@ -832,7 +832,7 @@
     },
     {
       "key": "LEAS-7408",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Elha Sta teresa",
       "loc": "Carrer Santa Teresa, 55, 08302 Mataró, Barcelona",
       "consola_susti": "SUSTMHR013",
