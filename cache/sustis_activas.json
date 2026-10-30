@@ -1,6 +1,6 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-10-30T16:04:07.691479+00:00",
+    "last_fetched_at": "2026-10-30T18:55:11.354160+00:00",
     "schema_version": 1,
     "count": 66
   },
@@ -63,21 +63,6 @@
       "parent_cliente": "SinVello Alicante Gran Via",
       "consola_averiada": "C00656",
       "manipulo_averiado": "H00656",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-8187",
-      "subtask_status": "Solicitado",
-      "cliente": "Elha Jaén",
-      "loc": "Av. Eduardo García Maroto, 22, 23005 Jaén",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8176",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Elha Jaén",
-      "consola_averiada": "C03346",
-      "manipulo_averiado": "H03346",
       "modelo": ""
     },
     {
@@ -199,6 +184,21 @@
       "consola_averiada": "C00337",
       "manipulo_averiado": "H00337",
       "modelo": "MHR"
+    },
+    {
+      "key": "LEAS-8187",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Elha Jaén",
+      "loc": "Av. Eduardo García Maroto, 22, 23005 Jaén",
+      "consola_susti": "C03204",
+      "manipulo_susti": "H01026",
+      "fecha_envio": "2026-10-29T17:54:00.000+0100",
+      "parent_key": "LEAS-8176",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Elha Jaén",
+      "consola_averiada": "C03346",
+      "manipulo_averiado": "H03346",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-8234",
@@ -337,7 +337,7 @@
     },
     {
       "key": "LEAS-8155",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "SinVello Andujar",
       "loc": "Calle Dr. Montoro, 6, 23740 Andújar, Jaén",
       "consola_susti": "91096",
