@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-03T11:57:49.040941+00:00",
+    "last_fetched_at": "2026-11-03T17:11:44.147126+00:00",
     "schema_version": 1,
-    "count": 67
+    "count": 68
   },
   "items": [
     {
@@ -344,7 +344,7 @@
       "manipulo_susti": "FCSUST014",
       "fecha_envio": "2026-10-27T09:08:00.000+0100",
       "parent_key": "LEAS-8199",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "Centro Unico Libia  FC00022",
       "consola_averiada": "SRF",
       "manipulo_averiado": "No aparece",
@@ -674,7 +674,7 @@
       "manipulo_susti": "FC0020",
       "fecha_envio": "2026-10-09T13:47:00.000+0200",
       "parent_key": "LEAS-7935",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Centro Unico Roma Est",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -749,7 +749,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-10-07T17:00:00.000+0200",
       "parent_key": "LEAS-7870",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Smart Duck Lyon",
       "consola_averiada": "",
       "manipulo_averiado": "H03206",
@@ -779,7 +779,7 @@
       "manipulo_susti": "SUSTSINGLE021",
       "fecha_envio": "2026-10-07T17:00:00.000+0200",
       "parent_key": "LEAS-7893",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "BEAUTY Centre d'estètica  20076",
       "consola_averiada": "90159",
       "manipulo_averiado": "No aparece",
@@ -979,6 +979,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-7605",
+      "subtask_status": "Resuelto",
+      "cliente": "SinVello Jerez",
+      "loc": "Avenida de Arcos, C. Mosa, 52, 11405 Jerez de la Frontera, Cádiz",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL019",
+      "fecha_envio": "2026-09-15T10:59:00.000+0200",
+      "parent_key": "LEAS-7600",
+      "parent_status": "Finalizada",
+      "parent_cliente": "SinVello Jerez",
+      "consola_averiada": "90860",
+      "manipulo_averiado": "30361",
+      "modelo": "MHR Dual"
     },
     {
       "key": "LEAS-7189",
