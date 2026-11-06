@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-06T12:08:50.831486+00:00",
+    "last_fetched_at": "2026-11-06T16:52:12.947620+00:00",
     "schema_version": 1,
-    "count": 64
+    "count": 62
   },
   "items": [
-    {
-      "key": "LEAS-8375",
-      "subtask_status": "Solicitado",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8211",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Centro Unico Rende FCSUST010",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": ""
-    },
     {
       "key": "LEAS-8370",
       "subtask_status": "Solicitado",
@@ -126,21 +111,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-8157",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Terrassa",
-      "loc": "Carrer de la Font Vella, 42, 08221 Terrassa, Barcelona",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8152",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
-      "parent_cliente": "SinVello Terrassa",
-      "consola_averiada": "H00962",
-      "manipulo_averiado": "C00962",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7956",
       "subtask_status": "Solicitado",
       "cliente": "Elha Vía Augusta",
@@ -183,6 +153,21 @@
       "parent_cliente": "Sin Vello Pozuelo",
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-8375",
+      "subtask_status": "Equipo enviado",
+      "cliente": "",
+      "loc": "",
+      "consola_susti": null,
+      "manipulo_susti": "FCSUST005",
+      "fecha_envio": "2026-11-06T17:00:00.000+0100",
+      "parent_key": "LEAS-8211",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro Unico Rende FCSUST010",
+      "consola_averiada": "",
+      "manipulo_averiado": "No aparece",
       "modelo": ""
     },
     {
@@ -299,7 +284,7 @@
       "manipulo_susti": "BSSUST0012",
       "fecha_envio": "2026-10-29T15:15:00.000+0100",
       "parent_key": "LEAS-8235",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Centro Unico Porta di Roma BSSUST002",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -344,7 +329,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-10-28T18:45:00.000+0100",
       "parent_key": "LEAS-8184",
-      "parent_status": "Pendiente confirmación presupuesto",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "SinVello El Pilar",
       "consola_averiada": "C00469",
       "manipulo_averiado": "H00469",
@@ -352,7 +337,7 @@
     },
     {
       "key": "LEAS-8233",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "Gestionada recogida",
       "cliente": "",
       "loc": "",
       "consola_susti": "90127",
@@ -424,21 +409,6 @@
       "consola_averiada": "90667",
       "manipulo_averiado": "sustdual40",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-8125",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Harmonie",
-      "loc": "C. Condes de Crespo Rascón, 56, 37002 Salamanca",
-      "consola_susti": "91127",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-10-22T17:00:00.000+0200",
-      "parent_key": "LEAS-8123",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Harmonie",
-      "consola_averiada": "90522",
-      "manipulo_averiado": "",
-      "modelo": ""
     },
     {
       "key": "LEAS-8128",
@@ -742,14 +712,14 @@
     },
     {
       "key": "LEAS-7915",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "",
       "loc": "",
       "consola_susti": null,
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-10-07T17:00:00.000+0200",
       "parent_key": "LEAS-7759",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Dermasana Princesa",
       "consola_averiada": "C00374",
       "manipulo_averiado": "H00374",
@@ -847,14 +817,14 @@
     },
     {
       "key": "LEAS-7775",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Dermasana Princesa",
       "loc": "Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
       "consola_susti": "91119",
       "manipulo_susti": "40551",
       "fecha_envio": "2026-09-28T11:55:00.000+0200",
       "parent_key": "LEAS-7759",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Dermasana Princesa",
       "consola_averiada": "C00374",
       "manipulo_averiado": "H00374",
