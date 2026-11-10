@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-10T12:41:23.559328+00:00",
+    "last_fetched_at": "2026-11-10T17:11:07.030813+00:00",
     "schema_version": 1,
     "count": 64
   },
   "items": [
+    {
+      "key": "LEAS-8440",
+      "subtask_status": "Solicitado",
+      "cliente": "Deseja AHR0500 AHR500 AHR 500 AHR-500",
+      "loc": "Giedraičių g. 46-29, Vilnius, 09301 Vilniaus m. sav., Lituania",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8437",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Deseja AHR0500 AHR500 AHR 500 AHR-500",
+      "consola_averiada": "AHR500",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8421",
       "subtask_status": "Solicitado",
@@ -111,21 +126,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-8231",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello Badajoz",
-      "loc": "Av del Perú, 34B, 06011 Badajoz",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8214",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "SinVello Badajoz",
-      "consola_averiada": "C00673",
-      "manipulo_averiado": "H00673",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-8219",
       "subtask_status": "Solicitado",
       "cliente": "Sinvello Arrecife Lanzarote",
@@ -184,6 +184,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-8231",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello Badajoz",
+      "loc": "Av del Perú, 34B, 06011 Badajoz",
+      "consola_susti": "C00591",
+      "manipulo_susti": "H00591",
+      "fecha_envio": "2026-11-10T17:00:00.000+0100",
+      "parent_key": "LEAS-8214",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello Badajoz",
+      "consola_averiada": "C00673",
+      "manipulo_averiado": "H00673",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-8375",
@@ -299,7 +314,7 @@
       "manipulo_susti": "sustdual011",
       "fecha_envio": "2026-10-30T12:12:00.000+0100",
       "parent_key": "LEAS-8126",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Avanti Tenerife",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -319,21 +334,6 @@
       "consola_averiada": "C03346",
       "manipulo_averiado": "H03346",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-8236",
-      "subtask_status": "En préstamo",
-      "cliente": "Centro Unico Porta di Roma BSSUST002",
-      "loc": "C.C. Porta di Roma, Via Alberto Lionello, 201, 00139 Roma RM, Italia",
-      "consola_susti": null,
-      "manipulo_susti": "BSSUST0012",
-      "fecha_envio": "2026-10-29T15:15:00.000+0100",
-      "parent_key": "LEAS-8235",
-      "parent_status": "Esperando inicio reparación",
-      "parent_cliente": "Centro Unico Porta di Roma BSSUST002",
-      "consola_averiada": "",
-      "manipulo_averiado": "No aparece",
-      "modelo": ""
     },
     {
       "key": "LEAS-8202",
@@ -464,7 +464,7 @@
       "manipulo_susti": "sustquad018",
       "fecha_envio": "2026-10-22T15:46:00.000+0200",
       "parent_key": "LEAS-8126",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Avanti Tenerife",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -487,14 +487,14 @@
     },
     {
       "key": "LEAS-8112",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Epil Point Genova 40755",
       "loc": "Via Sestri, 71 R, 16153 Genova GE, Italia",
       "consola_susti": null,
       "manipulo_susti": "SUSTQUAD033",
       "fecha_envio": "2026-10-22T09:16:00.000+0200",
       "parent_key": "LEAS-8110",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Finalizado técnico externo",
       "parent_cliente": "Epil Point Genova 40755",
       "consola_averiada": "",
       "manipulo_averiado": "No aparece",
@@ -704,7 +704,7 @@
       "manipulo_susti": "40481",
       "fecha_envio": "2026-10-08T17:00:00.000+0200",
       "parent_key": "LEAS-7824",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Elha Obispo",
       "consola_averiada": "C00520",
       "manipulo_averiado": "H00520",
