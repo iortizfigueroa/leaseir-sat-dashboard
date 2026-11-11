@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-10T23:39:15.175634+00:00",
+    "last_fetched_at": "2026-11-11T11:54:39.106996+00:00",
     "schema_version": 1,
-    "count": 64
+    "count": 65
   },
   "items": [
+    {
+      "key": "LEAS-8453",
+      "subtask_status": "Solicitado",
+      "cliente": "Unico - Centro C.C. Campania Caserta",
+      "loc": "https://maps.app.goo.gl/8KZPb7t7TCzJNh3x9",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8452",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Unico - Centro C.C. Campania Caserta",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00282",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8440",
       "subtask_status": "Solicitado",
@@ -89,7 +104,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-8360",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha",
       "consola_averiada": "C03221",
       "manipulo_averiado": "H03221",
@@ -112,7 +127,7 @@
     },
     {
       "key": "LEAS-8306",
-      "subtask_status": "Solicitado",
+      "subtask_status": "Esperando respuesta cliente a presupuesto",
       "cliente": "Malie Urbil",
       "loc": "Bo. Txiki-Erdi, 7, 20170 Usurbil, Gipuzkoa",
       "consola_susti": null,
@@ -184,6 +199,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-8451",
+      "subtask_status": "En préstamo",
+      "cliente": "Beleco Fan Mallorca",
+      "loc": "FAN Mallorca Shopping, Carrer del Cardenal Rossell, 168, local 7 (lo-8, Platja de Palma i Pla de Sant Jordi, 07007 Palma, Balearic Islands",
+      "consola_susti": "sustmhr030",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-11-11T10:10:00.000+0100",
+      "parent_key": "LEAS-8449",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Beleco Fan Mallorca",
+      "consola_averiada": "91130",
+      "manipulo_averiado": "",
+      "modelo": "MHR"
     },
     {
       "key": "LEAS-8231",
@@ -397,7 +427,7 @@
     },
     {
       "key": "LEAS-8178",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "CLINIC AND ESTHETIC By Skincare Addict ( AHR00484)",
       "loc": "Calle de St Josep de calassanç 9 Valencia",
       "consola_susti": "SUSTAHRD005",
@@ -457,7 +487,7 @@
     },
     {
       "key": "LEAS-8128",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Avanti Tenerife",
       "loc": "C/Lisboa S/N C.C & Ocio X Sur , Planta Baja L-15 38660 Adeje",
       "consola_susti": null,
@@ -539,7 +569,7 @@
       "manipulo_susti": "20245",
       "fecha_envio": "2026-10-19T17:00:00.000+0200",
       "parent_key": "LEAS-8060",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Pantera Sevilla",
       "consola_averiada": "91390",
       "manipulo_averiado": "20249",
@@ -591,21 +621,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-8014",
-      "subtask_status": "En préstamo",
-      "cliente": "Beleco Fan  Mallorca",
-      "loc": "FAN Mallorca Shopping, Carrer del Cardenal Rossell, 168, local 7 (lo-8, Platja de Palma i Pla de Sant Jordi, 07007 Palma, Balearic Islands",
-      "consola_susti": "SUSTMHR030",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-10-15T12:06:00.000+0200",
-      "parent_key": "LEAS-8013",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Beleco Fan  Mallorca",
-      "consola_averiada": "91190",
-      "manipulo_averiado": "",
-      "modelo": "MHR"
-    },
-    {
       "key": "LEAS-7998",
       "subtask_status": "Equipo devuelto",
       "cliente": "Stop Vello",
@@ -637,7 +652,7 @@
     },
     {
       "key": "LEAS-7880",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Nantara Laser (Solmanía)",
       "loc": "Segovia",
       "consola_susti": null,
@@ -892,7 +907,7 @@
     },
     {
       "key": "LEAS-7855",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "",
       "loc": "",
       "consola_susti": "sustmhr025",
