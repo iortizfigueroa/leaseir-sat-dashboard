@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-11T11:54:39.106996+00:00",
+    "last_fetched_at": "2026-11-11T17:18:24.461251+00:00",
     "schema_version": 1,
-    "count": 65
+    "count": 58
   },
   "items": [
+    {
+      "key": "LEAS-8463",
+      "subtask_status": "Solicitado",
+      "cliente": "Leaseir Sat  BSSUST010",
+      "loc": "C. Guillermo Marconi, 266, Periurbano - Rural, 33211 Gijón, Asturias",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8461",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Leaseir Sat",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8453",
       "subtask_status": "Solicitado",
@@ -126,21 +141,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-8306",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Malie Urbil",
-      "loc": "Bo. Txiki-Erdi, 7, 20170 Usurbil, Gipuzkoa",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8305",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Malie Urbil",
-      "consola_averiada": "",
-      "manipulo_averiado": "40288",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-8219",
       "subtask_status": "Solicitado",
       "cliente": "Sinvello Arrecife Lanzarote",
@@ -199,6 +199,21 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-8306",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Malie Urbil",
+      "loc": "Bo. Txiki-Erdi, 7, 20170 Usurbil, Gipuzkoa",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTQUAD035",
+      "fecha_envio": "2026-11-11T17:00:00.000+0100",
+      "parent_key": "LEAS-8305",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Malie Urbil",
+      "consola_averiada": "",
+      "manipulo_averiado": "40288",
+      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-8451",
@@ -411,21 +426,6 @@
       "modelo": "XCell HR"
     },
     {
-      "key": "LEAS-8233",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": "90127",
-      "manipulo_susti": null,
-      "fecha_envio": "2026-10-28T17:00:00.000+0100",
-      "parent_key": "LEAS-8123",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Harmonie",
-      "consola_averiada": "90522",
-      "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-8178",
       "subtask_status": "En préstamo",
       "cliente": "CLINIC AND ESTHETIC By Skincare Addict ( AHR00484)",
@@ -434,7 +434,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-27T17:00:00.000+0100",
       "parent_key": "LEAS-8170",
-      "parent_status": "En cola taller",
+      "parent_status": "En preparación presupuesto",
       "parent_cliente": "CLINIC AND ESTHETIC By Skincare Addict ( AHR00484)",
       "consola_averiada": "484",
       "manipulo_averiado": "",
@@ -484,21 +484,6 @@
       "consola_averiada": "90667",
       "manipulo_averiado": "sustdual40",
       "modelo": "MHR Dual"
-    },
-    {
-      "key": "LEAS-8128",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Avanti Tenerife",
-      "loc": "C/Lisboa S/N C.C & Ocio X Sur , Planta Baja L-15 38660 Adeje",
-      "consola_susti": null,
-      "manipulo_susti": "sustquad018",
-      "fecha_envio": "2026-10-22T15:46:00.000+0200",
-      "parent_key": "LEAS-8126",
-      "parent_status": "Devuelto a cliente",
-      "parent_cliente": "Avanti Tenerife",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-7779",
@@ -569,7 +554,7 @@
       "manipulo_susti": "20245",
       "fecha_envio": "2026-10-19T17:00:00.000+0200",
       "parent_key": "LEAS-8060",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Pantera Sevilla",
       "consola_averiada": "91390",
       "manipulo_averiado": "20249",
@@ -621,21 +606,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7998",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Stop Vello",
-      "loc": "Av. Doctor, Av. Beltrán Báguena, 4 acc, 46360 Buñol, Valencia",
-      "consola_susti": null,
-      "manipulo_susti": "30074",
-      "fecha_envio": "2026-10-14T17:00:00.000+0200",
-      "parent_key": "LEAS-7996",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Stop Vello",
-      "consola_averiada": "",
-      "manipulo_averiado": "30293",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7981",
       "subtask_status": "En préstamo",
       "cliente": "SinVello A Coruña",
@@ -667,14 +637,14 @@
     },
     {
       "key": "LEAS-7952",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "Centro Unico Roma Est",
       "loc": "V. Collatina, 858, 00132 Roma RM, Italia",
       "consola_susti": null,
       "manipulo_susti": "FC0020",
       "fecha_envio": "2026-10-09T13:47:00.000+0200",
       "parent_key": "LEAS-7935",
-      "parent_status": "Devuelto a cliente",
+      "parent_status": "Resuelto",
       "parent_cliente": "Centro Unico Roma Est",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -742,7 +712,7 @@
     },
     {
       "key": "LEAS-7919",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Resuelto",
       "cliente": "Smart Duck Lyon",
       "loc": "Lyon, Francia",
       "consola_susti": null,
@@ -754,21 +724,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "H03206",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7915",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": null,
-      "manipulo_susti": "SUSTQUAD035",
-      "fecha_envio": "2026-10-07T17:00:00.000+0200",
-      "parent_key": "LEAS-7759",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Dermasana Princesa",
-      "consola_averiada": "C00374",
-      "manipulo_averiado": "H00374",
-      "modelo": "MHR Quad"
     },
     {
       "key": "LEAS-7900",
@@ -846,36 +801,6 @@
       "modelo": ""
     },
     {
-      "key": "LEAS-7766",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Clínica Ónix 8",
-      "loc": "C. Londres, Oeste, 10005 Cáceres",
-      "consola_susti": "SUSTMHR033",
-      "manipulo_susti": "SUSTQUAD025",
-      "fecha_envio": "2026-09-28T17:00:00.000+0200",
-      "parent_key": "LEAS-7764",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Clínica Ónix 8",
-      "consola_averiada": "C00371",
-      "manipulo_averiado": "H00371",
-      "modelo": "MHR"
-    },
-    {
-      "key": "LEAS-7775",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "Dermasana Princesa",
-      "loc": "Calle de la Princesa, 67, Moncloa - Aravaca, 28008 Madrid",
-      "consola_susti": "91119",
-      "manipulo_susti": "40551",
-      "fecha_envio": "2026-09-28T11:55:00.000+0200",
-      "parent_key": "LEAS-7759",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Dermasana Princesa",
-      "consola_averiada": "C00374",
-      "manipulo_averiado": "H00374",
-      "modelo": ""
-    },
-    {
       "key": "LEAS-7768",
       "subtask_status": "En préstamo",
       "cliente": "Elha Pintor Felo Monzon",
@@ -904,21 +829,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-7855",
-      "subtask_status": "Equipo devuelto",
-      "cliente": "",
-      "loc": "",
-      "consola_susti": "sustmhr025",
-      "manipulo_susti": "SUSTDUAL003",
-      "fecha_envio": "2026-09-25T13:02:00.000+0200",
-      "parent_key": "LEAS-7756",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Mercedes Gamaza Laser y Spa ( 30754 / 91080 )",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-7646",
@@ -964,21 +874,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "",
       "modelo": ""
-    },
-    {
-      "key": "LEAS-5697",
-      "subtask_status": "Resuelto",
-      "cliente": "Smart Duck Paris",
-      "loc": "Paris",
-      "consola_susti": "C03143",
-      "manipulo_susti": "H03143",
-      "fecha_envio": "2026-03-19T12:26:00.000+0100",
-      "parent_key": "LEAS-5623",
-      "parent_status": "Finalizada",
-      "parent_cliente": "Smart Duck Paris",
-      "consola_averiada": "C00996",
-      "manipulo_averiado": "H00996",
-      "modelo": "XCell HR"
     }
   ]
 }
