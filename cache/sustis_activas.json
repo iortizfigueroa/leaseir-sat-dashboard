@@ -1,25 +1,10 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-12T12:45:18.416046+00:00",
+    "last_fetched_at": "2026-11-12T17:40:43.780583+00:00",
     "schema_version": 1,
-    "count": 59
+    "count": 60
   },
   "items": [
-    {
-      "key": "LEAS-8480",
-      "subtask_status": "Solicitado",
-      "cliente": "Zugan Tolosa",
-      "loc": "C/ San Francisco, 24, 20400 Tolosa, Gipuzkoa",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8478",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Zugan Tolosa",
-      "consola_averiada": "",
-      "manipulo_averiado": "30496",
-      "modelo": ""
-    },
     {
       "key": "LEAS-8463",
       "subtask_status": "Solicitado",
@@ -29,7 +14,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-8461",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Leaseir Sat",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -78,21 +63,6 @@
       "parent_cliente": "SinVello Zoco",
       "consola_averiada": "90896",
       "manipulo_averiado": "30395",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-8397",
-      "subtask_status": "Solicitado",
-      "cliente": "Smart Duck Annecy",
-      "loc": "44 Av. de Genève, 74000 Annecy, Francia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8364",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Smart Duck Annecy",
-      "consola_averiada": "",
-      "manipulo_averiado": "H03209",
       "modelo": ""
     },
     {
@@ -214,6 +184,51 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
       "modelo": ""
+    },
+    {
+      "key": "LEAS-8480",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Zugan Tolosa",
+      "loc": "C/ San Francisco, 24, 20400 Tolosa, Gipuzkoa",
+      "consola_susti": null,
+      "manipulo_susti": "SUSTDUAL043",
+      "fecha_envio": "2026-11-12T17:00:00.000+0100",
+      "parent_key": "LEAS-8478",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Zugan Tolosa",
+      "consola_averiada": "",
+      "manipulo_averiado": "30496",
+      "modelo": "MHR Dual"
+    },
+    {
+      "key": "LEAS-8397",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Smart Duck Annecy",
+      "loc": "44 Av. de Genève, 74000 Annecy, Francia",
+      "consola_susti": null,
+      "manipulo_susti": "SUST55360",
+      "fecha_envio": "2026-11-12T17:00:00.000+0100",
+      "parent_key": "LEAS-8364",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Smart Duck Annecy",
+      "consola_averiada": "",
+      "manipulo_averiado": "H03209",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-8482",
+      "subtask_status": "En préstamo",
+      "cliente": "Smart Duck Grenoble",
+      "loc": "29 Cr Berriat, 38000 Grenoble, Francia",
+      "consola_susti": null,
+      "manipulo_susti": "H03204",
+      "fecha_envio": "2026-11-12T15:26:00.000+0100",
+      "parent_key": "LEAS-8481",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "Smart Duck Grenoble",
+      "consola_averiada": "",
+      "manipulo_averiado": "H03207",
+      "modelo": "XCell HR"
     },
     {
       "key": "LEAS-8306",
@@ -389,7 +404,7 @@
       "manipulo_susti": "H01026",
       "fecha_envio": "2026-10-29T17:54:00.000+0100",
       "parent_key": "LEAS-8176",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Elha Jaén",
       "consola_averiada": "C03346",
       "manipulo_averiado": "H03346",
@@ -539,7 +554,7 @@
       "manipulo_susti": "H01032",
       "fecha_envio": "2026-10-21T17:00:00.000+0200",
       "parent_key": "LEAS-8098",
-      "parent_status": "En reparación",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Smart Duck Lyon Bellecour",
       "consola_averiada": "",
       "manipulo_averiado": "H03205",
@@ -779,7 +794,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-06T18:38:00.000+0200",
       "parent_key": "LEAS-7904",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Dermasana Calle Alcala",
       "consola_averiada": "C00166",
       "manipulo_averiado": "",
