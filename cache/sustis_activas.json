@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-12T00:56:28.854977+00:00",
+    "last_fetched_at": "2026-11-12T12:45:18.416046+00:00",
     "schema_version": 1,
-    "count": 58
+    "count": 59
   },
   "items": [
+    {
+      "key": "LEAS-8480",
+      "subtask_status": "Solicitado",
+      "cliente": "Zugan Tolosa",
+      "loc": "C/ San Francisco, 24, 20400 Tolosa, Gipuzkoa",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8478",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Zugan Tolosa",
+      "consola_averiada": "",
+      "manipulo_averiado": "30496",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8463",
       "subtask_status": "Solicitado",
@@ -14,7 +29,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-8461",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Leaseir Sat",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -269,7 +284,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-11-05T13:13:00.000+0100",
       "parent_key": "LEAS-8353",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Gestionado transporte",
       "parent_cliente": "FAN Mallorca Shopping",
       "consola_averiada": "",
       "manipulo_averiado": "40562",
@@ -314,7 +329,7 @@
       "manipulo_susti": "sustdual019",
       "fecha_envio": "2026-11-04T11:56:00.000+0100",
       "parent_key": "LEAS-8227",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "En cola taller",
       "parent_cliente": "Clinica Indalo Santurci",
       "consola_averiada": "90250",
       "manipulo_averiado": "20103",
@@ -434,7 +449,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-27T17:00:00.000+0100",
       "parent_key": "LEAS-8170",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "CLINIC AND ESTHETIC By Skincare Addict ( AHR00484)",
       "consola_averiada": "484",
       "manipulo_averiado": "",
@@ -562,7 +577,7 @@
     },
     {
       "key": "LEAS-8036",
-      "subtask_status": "Gestionada recogida",
+      "subtask_status": "Equipo devuelto",
       "cliente": "Centro unico Campania BS0019",
       "loc": "SS87, 87, 81025 Marcianise CE, Italia",
       "consola_susti": null,
@@ -764,7 +779,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-06T18:38:00.000+0200",
       "parent_key": "LEAS-7904",
-      "parent_status": "En cola taller",
+      "parent_status": "En reparación",
       "parent_cliente": "Dermasana Calle Alcala",
       "consola_averiada": "C00166",
       "manipulo_averiado": "",
