@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-16T12:47:34.492717+00:00",
+    "last_fetched_at": "2026-11-16T19:44:59.426049+00:00",
     "schema_version": 1,
-    "count": 57
+    "count": 56
   },
   "items": [
     {
@@ -59,7 +59,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-8360",
-      "parent_status": "Presupuesto preparado pendiente de enviar",
+      "parent_status": "Esperando inicio reparación",
       "parent_cliente": "Elha",
       "consola_averiada": "C03221",
       "manipulo_averiado": "H03221",
@@ -209,7 +209,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-11-12T15:26:00.000+0100",
       "parent_key": "LEAS-8481",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Smart Duck Grenoble",
       "consola_averiada": "",
       "manipulo_averiado": "H03207",
@@ -494,7 +494,7 @@
       "manipulo_susti": "H03258",
       "fecha_envio": "2026-10-26T17:00:00.000+0100",
       "parent_key": "LEAS-8164",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Smart Duck Cannes",
       "consola_averiada": "C03178",
       "manipulo_averiado": "H03178",
@@ -524,7 +524,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-22T14:23:00.000+0200",
       "parent_key": "LEAS-7714",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Oksana Sagan",
       "consola_averiada": "",
       "manipulo_averiado": "",
@@ -569,7 +569,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-21T09:57:00.000+0200",
       "parent_key": "LEAS-8093",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Bergamo",
       "consola_averiada": "91358",
       "manipulo_averiado": "",
@@ -724,21 +724,6 @@
       "consola_averiada": "",
       "manipulo_averiado": "H00853",
       "modelo": "XCell HR"
-    },
-    {
-      "key": "LEAS-7900",
-      "subtask_status": "Gestionada recogida",
-      "cliente": "BEAUTY Centre d'estètica 90159 20076",
-      "loc": "Ctra. de Barcelona, 40, 08187 Santa Eulàlia de Ronçana, Barcelona",
-      "consola_susti": "SUSTMHR011",
-      "manipulo_susti": "SUSTSINGLE021",
-      "fecha_envio": "2026-10-07T17:00:00.000+0200",
-      "parent_key": "LEAS-7893",
-      "parent_status": "Resuelto",
-      "parent_cliente": "BEAUTY Centre d'estètica  20076",
-      "consola_averiada": "90159",
-      "manipulo_averiado": "No aparece",
-      "modelo": "MHR"
     },
     {
       "key": "LEAS-7823",
