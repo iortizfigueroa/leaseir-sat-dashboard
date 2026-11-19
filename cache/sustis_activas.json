@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-19T13:11:03.356589+00:00",
+    "last_fetched_at": "2026-11-19T18:25:37.939801+00:00",
     "schema_version": 1,
-    "count": 59
+    "count": 60
   },
   "items": [
     {
@@ -74,7 +74,7 @@
       "manipulo_susti": null,
       "fecha_envio": null,
       "parent_key": "LEAS-8389",
-      "parent_status": "Pendiente recogida",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Epil Point Roma EUR",
       "consola_averiada": "91307",
       "manipulo_averiado": "",
@@ -168,6 +168,36 @@
       "parent_cliente": "Sin Vello Pozuelo",
       "consola_averiada": "",
       "manipulo_averiado": "H00262",
+      "modelo": ""
+    },
+    {
+      "key": "LEAS-8598",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro Unico Campania",
+      "loc": "SS87, 87, 81025 Marcianise CE, Italia",
+      "consola_susti": "C00677",
+      "manipulo_susti": null,
+      "fecha_envio": "2026-11-19T17:57:00.000+0100",
+      "parent_key": "LEAS-8597",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro Unico Campania",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00562",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-8592",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro Unico ROma Est BS00021",
+      "loc": "V. Collatina, 858, 00132 Roma RM, Italia",
+      "consola_susti": null,
+      "manipulo_susti": "BSSUT002",
+      "fecha_envio": "2026-11-19T14:31:00.000+0100",
+      "parent_key": "LEAS-8591",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro Unico ROma Est BS00021",
+      "consola_averiada": "No aparece",
+      "manipulo_averiado": "No aparece",
       "modelo": ""
     },
     {
@@ -284,7 +314,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-11-12T15:26:00.000+0100",
       "parent_key": "LEAS-8481",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "Smart Duck Grenoble",
       "consola_averiada": "",
       "manipulo_averiado": "H03207",
@@ -554,7 +584,7 @@
       "manipulo_susti": "FCSUST014",
       "fecha_envio": "2026-10-27T09:08:00.000+0100",
       "parent_key": "LEAS-8199",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "Centro Unico Libia  FC00021",
       "consola_averiada": "SRF",
       "manipulo_averiado": "No aparece",
@@ -704,7 +734,7 @@
       "manipulo_susti": "H00340",
       "fecha_envio": "2026-10-14T17:00:00.000+0200",
       "parent_key": "LEAS-7975",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello A Coruña",
       "consola_averiada": "C00912",
       "manipulo_averiado": "H00912",
@@ -723,21 +753,6 @@
       "parent_cliente": "Nantara Laser (Solmanía)",
       "consola_averiada": "",
       "manipulo_averiado": "40057",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-7892",
-      "subtask_status": "En préstamo",
-      "cliente": "Paula Estetica, estetica radiante",
-      "loc": "Parque Astur, Pedrero, 50, Centro Comercial, 33468 Trasona, Asturias",
-      "consola_susti": "SRF00030",
-      "manipulo_susti": "BS00030",
-      "fecha_envio": "2026-10-08T18:02:00.000+0200",
-      "parent_key": "LEAS-7891",
-      "parent_status": "Resuelto",
-      "parent_cliente": "Paula Estetica, estetica radiante SRF00027 / BS00031 / FC00031 / FS00027",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
