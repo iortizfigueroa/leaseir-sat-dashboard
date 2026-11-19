@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-19T08:21:25.492981+00:00",
+    "last_fetched_at": "2026-11-19T09:24:37.942039+00:00",
     "schema_version": 1,
-    "count": 56
+    "count": 57
   },
   "items": [
+    {
+      "key": "LEAS-8577",
+      "subtask_status": "Solicitado",
+      "cliente": "SinVello! Zaragoza",
+      "loc": "C/ Espoz y Mina, 29, Zaragoza",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8566",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "SinVello! Zaragoza",
+      "consola_averiada": "C00745",
+      "manipulo_averiado": "H00745",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8556",
       "subtask_status": "Solicitado",
@@ -239,7 +254,7 @@
       "manipulo_susti": "H03204",
       "fecha_envio": "2026-11-12T15:26:00.000+0100",
       "parent_key": "LEAS-8481",
-      "parent_status": "En reparación",
+      "parent_status": "Inspección de salida",
       "parent_cliente": "Smart Duck Grenoble",
       "consola_averiada": "",
       "manipulo_averiado": "H03207",
@@ -277,7 +292,7 @@
     },
     {
       "key": "LEAS-8231",
-      "subtask_status": "En préstamo",
+      "subtask_status": "Gestionada recogida",
       "cliente": "SinVello Badajoz",
       "loc": "Av del Perú, 34B, 06011 Badajoz",
       "consola_susti": "C00591",
@@ -449,7 +464,7 @@
       "manipulo_susti": "H01061",
       "fecha_envio": "2026-10-29T13:34:00.000+0100",
       "parent_key": "LEAS-8172",
-      "parent_status": "En preparación presupuesto",
+      "parent_status": "Presupuesto preparado pendiente de enviar",
       "parent_cliente": "SinVello Tomares",
       "consola_averiada": "C00260",
       "manipulo_averiado": "H00260",
@@ -599,7 +614,7 @@
       "manipulo_susti": null,
       "fecha_envio": "2026-10-21T09:57:00.000+0200",
       "parent_key": "LEAS-8093",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "Epil Point Bergamo",
       "consola_averiada": "91358",
       "manipulo_averiado": "",
