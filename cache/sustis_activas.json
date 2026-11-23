@@ -1,10 +1,25 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-23T14:42:11.226608+00:00",
+    "last_fetched_at": "2026-11-23T21:35:08.937362+00:00",
     "schema_version": 1,
-    "count": 66
+    "count": 67
   },
   "items": [
+    {
+      "key": "LEAS-8674",
+      "subtask_status": "Solicitado",
+      "cliente": "Dermasana Fuenlabrada",
+      "loc": "C. de Portugal, 42, 28943 Fuenlabrada, Madrid",
+      "consola_susti": null,
+      "manipulo_susti": null,
+      "fecha_envio": null,
+      "parent_key": "LEAS-8671",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Dermasana Fuenlabrada",
+      "consola_averiada": "",
+      "manipulo_averiado": "40439",
+      "modelo": ""
+    },
     {
       "key": "LEAS-8640",
       "subtask_status": "Solicitado",
@@ -48,21 +63,6 @@
       "parent_cliente": "SinVello! Elche",
       "consola_averiada": "C00450",
       "manipulo_averiado": "H00450",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-8604",
-      "subtask_status": "Esperando respuesta cliente a presupuesto",
-      "cliente": "Centro unico Rende SRF00036",
-      "loc": "c/o Ccle Metropolis, Via Kennedy, 4, 87036 Rende CS, Italia",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8585",
-      "parent_status": "Pendiente recogida",
-      "parent_cliente": "Centro unico Rende SRF00036",
-      "consola_averiada": "",
-      "manipulo_averiado": "",
       "modelo": ""
     },
     {
@@ -231,6 +231,21 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-8604",
+      "subtask_status": "Equipo enviado",
+      "cliente": "Centro unico Rende SRF00036",
+      "loc": "c/o Ccle Metropolis, Via Kennedy, 4, 87036 Rende CS, Italia",
+      "consola_susti": "SRF00030",
+      "manipulo_susti": "FS00036 BS00036   FCSUST012",
+      "fecha_envio": "2026-11-23T16:28:00.000+0100",
+      "parent_key": "LEAS-8585",
+      "parent_status": "Pendiente recogida",
+      "parent_cliente": "Centro unico Rende SRF00036",
+      "consola_averiada": "",
+      "manipulo_averiado": "",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-8619",
       "subtask_status": "Equipo enviado",
       "cliente": "SinVello! Albacete",
@@ -322,7 +337,7 @@
     },
     {
       "key": "LEAS-8552",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "Sinvello Valladolid",
       "loc": "C. José María Lacort, 9, 47002 Valladolid",
       "consola_susti": "sustmhr011",
@@ -359,7 +374,7 @@
       "manipulo_susti": "30074",
       "fecha_envio": "2026-11-16T18:49:00.000+0100",
       "parent_key": "LEAS-8478",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "Zugan Tolosa",
       "consola_averiada": "",
       "manipulo_averiado": "30496",
@@ -374,7 +389,7 @@
       "manipulo_susti": "sust55361",
       "fecha_envio": "2026-11-14T11:24:00.000+0100",
       "parent_key": "LEAS-8493",
-      "parent_status": "Gestionado transporte",
+      "parent_status": "Pendiente asignar técnico",
       "parent_cliente": "SinVello Zaragoza Goya",
       "consola_averiada": "C03021",
       "manipulo_averiado": "H03021",
@@ -434,7 +449,7 @@
       "manipulo_susti": "SUSTQUAD035",
       "fecha_envio": "2026-11-11T17:00:00.000+0100",
       "parent_key": "LEAS-8305",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "Malie Urbil",
       "consola_averiada": "",
       "manipulo_averiado": "40288",
@@ -524,7 +539,7 @@
       "manipulo_susti": "H01069",
       "fecha_envio": "2026-11-05T11:59:00.000+0100",
       "parent_key": "LEAS-8232",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Jerez",
       "consola_averiada": "30361",
       "manipulo_averiado": "90860",
@@ -644,7 +659,7 @@
       "manipulo_susti": "H01013",
       "fecha_envio": "2026-10-28T18:45:00.000+0100",
       "parent_key": "LEAS-8184",
-      "parent_status": "Esperando inicio reparación",
+      "parent_status": "En reparación",
       "parent_cliente": "SinVello El Pilar",
       "consola_averiada": "C00469",
       "manipulo_averiado": "H00469",
