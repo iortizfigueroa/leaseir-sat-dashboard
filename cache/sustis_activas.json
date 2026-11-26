@@ -1,8 +1,8 @@
 {
   "_meta": {
-    "last_fetched_at": "2026-11-26T13:56:00.234967+00:00",
+    "last_fetched_at": "2026-11-26T19:10:44.453700+00:00",
     "schema_version": 1,
-    "count": 66
+    "count": 67
   },
   "items": [
     {
@@ -48,21 +48,6 @@
       "parent_cliente": "EP MILANO REGINA",
       "consola_averiada": "91371",
       "manipulo_averiado": "",
-      "modelo": ""
-    },
-    {
-      "key": "LEAS-8628",
-      "subtask_status": "Solicitado",
-      "cliente": "SinVello! Elche",
-      "loc": "C/ Fra Jaume Torre, 40, Elche",
-      "consola_susti": null,
-      "manipulo_susti": null,
-      "fecha_envio": null,
-      "parent_key": "LEAS-8625",
-      "parent_status": "Gestionado transporte",
-      "parent_cliente": "SinVello! Elche",
-      "consola_averiada": "C00450",
-      "manipulo_averiado": "H00450",
       "modelo": ""
     },
     {
@@ -216,6 +201,36 @@
       "modelo": ""
     },
     {
+      "key": "LEAS-8628",
+      "subtask_status": "Equipo enviado",
+      "cliente": "SinVello! Elche",
+      "loc": "C/ Fra Jaume Torre, 40, Elche",
+      "consola_susti": null,
+      "manipulo_susti": "H01012",
+      "fecha_envio": "2026-11-26T16:37:00.000+0100",
+      "parent_key": "LEAS-8625",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "SinVello! Elche",
+      "consola_averiada": "C00450",
+      "manipulo_averiado": "H00450",
+      "modelo": "XCell HR"
+    },
+    {
+      "key": "LEAS-8750",
+      "subtask_status": "En préstamo",
+      "cliente": "ZURIMED LOS FRESNOS",
+      "loc": "C. Río de Oro, 3, Centro, 33209 Gijón, Asturias",
+      "consola_susti": null,
+      "manipulo_susti": "41003",
+      "fecha_envio": "2026-11-26T15:35:00.000+0100",
+      "parent_key": "LEAS-8749",
+      "parent_status": "Gestionado transporte",
+      "parent_cliente": "ZURIMED LOS FRESNOS",
+      "consola_averiada": "",
+      "manipulo_averiado": "H00633",
+      "modelo": ""
+    },
+    {
       "key": "LEAS-8518",
       "subtask_status": "Equipo enviado",
       "cliente": "Helena Cordero",
@@ -262,14 +277,14 @@
     },
     {
       "key": "LEAS-8619",
-      "subtask_status": "Equipo enviado",
+      "subtask_status": "En préstamo",
       "cliente": "SinVello! Albacete",
       "loc": "C/ Miguel López de Legazpi 1, esq. Avda. Menéndez Pidal, Albacete",
       "consola_susti": null,
       "manipulo_susti": "SUST55362",
       "fecha_envio": "2026-11-23T13:08:00.000+0100",
       "parent_key": "LEAS-8607",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello! Albacete",
       "consola_averiada": "C00869",
       "manipulo_averiado": "H00869",
@@ -419,7 +434,7 @@
       "manipulo_susti": "SUSTDUAL040",
       "fecha_envio": "2026-11-13T14:18:00.000+0100",
       "parent_key": "LEAS-8414",
-      "parent_status": "Inspección de salida",
+      "parent_status": "Devuelto a cliente",
       "parent_cliente": "SinVello Zoco",
       "consola_averiada": "90896",
       "manipulo_averiado": "30395",
@@ -494,7 +509,7 @@
       "manipulo_susti": "H00591",
       "fecha_envio": "2026-11-10T17:00:00.000+0100",
       "parent_key": "LEAS-8214",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "SinVello Badajoz",
       "consola_averiada": "C00673",
       "manipulo_averiado": "H00673",
@@ -539,7 +554,7 @@
       "manipulo_susti": "SUSTDUAL005",
       "fecha_envio": "2026-11-05T13:13:00.000+0100",
       "parent_key": "LEAS-8353",
-      "parent_status": "Pendiente asignar técnico",
+      "parent_status": "En cola taller",
       "parent_cliente": "FAN Mallorca Shopping",
       "consola_averiada": "",
       "manipulo_averiado": "40562",
